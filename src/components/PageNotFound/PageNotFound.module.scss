@@ -1,0 +1,11 @@
+@import 'shared';
+
+.root {
+  position: relative;
+  width: 100%;
+
+  .title {
+    @include typography-h1;
+    padding-top: px(80);
+  }
+}

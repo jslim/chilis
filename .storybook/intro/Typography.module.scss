@@ -1,0 +1,37 @@
+@import 'shared';
+
+.root {
+  width: 100vw;
+  display: grid;
+  text-align: left;
+  grid-template-columns: 25% 75%;
+
+  .item {
+    border-bottom: 1px solid rgba($white, 0.4);
+    padding: px(30) px(15);
+    font-family: monospace;
+
+    .figma {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .sass {
+      font-size: 12px;
+    }
+  }
+
+  p {
+    border-bottom: 1px solid rgba($white, 0.4);
+    padding: px(30) px(15);
+    word-break: break-all;
+  }
+
+  .h1 {
+    @include typography-h1;
+  }
+
+  .paragraph {
+    @include typography-paragraph;
+  }
+}

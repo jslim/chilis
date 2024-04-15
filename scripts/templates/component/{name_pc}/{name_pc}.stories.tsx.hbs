@@ -1,0 +1,21 @@
+import type { StoryFn } from '@storybook/react'
+import type { {{#if imperativeHandle}}ViewHandle, {{/if}}ViewProps } from './{{name_pc}}.view'
+
+{{#if imperativeHandle}}
+import { useRef } from 'react'
+
+{{/if}}
+import { View } from './{{name_pc}}.view'
+
+export default { title: 'components/{{name_pc}}' }
+
+export const Default: StoryFn<ViewProps> = (args) => {
+{{#if imperativeHandle}}
+  const handleRef = useRef<ViewHandle>(null)
+{{/if}}
+  return <View {...args} {{#if imperativeHandle}}handleRef={handleRef} {{/if}}/>
+}
+
+Default.args = {}
+
+Default.argTypes = {}

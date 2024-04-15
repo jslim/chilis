@@ -1,0 +1,33 @@
+{
+  "featureFlags": {
+    "javascriptRequired": {
+      "label": "Javascript Required",
+      "enabled": true
+    },
+    "optimizedImages": {
+      "label": "Optimized Images",
+      "enabled": false
+    },
+    "pageTransitions": {
+      "label": "Page Transitions",
+      "enabled": true,
+      "hot": true
+    },
+    "dynamicResponsiveness": {
+      "label": "Dynamic Responsiveness",
+      "enabled": false,
+      "hot": true
+    }
+  },
+  "resizeDebounceTime": 10,
+  "websiteUrl": "https://localhost:3000",
+  "dnsPrefetch": {
+    "development": [],
+    "production": ["https://www.google-analytics.com", "https://www.googletagmanager.com"],
+    "test": []
+  },
+  "analytics": {
+    "gtmIds": { "prod": "GTM-0000000", "stage": "GTM-0000000", "dev": "GTM-0000000", "local": "" },
+    "gtmParams": { "prod": "", "stage": "", "dev": "", "local": "" }
+  }
+}

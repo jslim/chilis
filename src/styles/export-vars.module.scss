@@ -1,0 +1,12 @@
+/* stylelint-disable */
+@import 'shared';
+
+:export {
+  // breakpoints
+  breakpoint-mobile: $breakpoint-mobile;
+  breakpoint-tablet: $breakpoint-tablet;
+  breakpoint-desktop: $breakpoint-desktop;
+  // color
+  color-white: $white;
+  color-black: $black;
+}

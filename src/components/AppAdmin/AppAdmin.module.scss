@@ -1,0 +1,72 @@
+@import 'shared';
+
+.root {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 12px;
+  font-family: monospace !important;
+  text-align: left;
+  background: rgba($black, 0.8);
+  border-radius: 10px 0 0;
+  color: $white;
+  z-index: 00110011;
+
+  .basic {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
+    &.open {
+      padding: 0 0 0 10px;
+
+      div {
+        margin: 0 auto 0 0;
+      }
+    }
+
+    button {
+      @include flex-center;
+      @include box(20px, 30px);
+    }
+  }
+
+  .details {
+    position: relative;
+    border-top: 1px solid rgba($white, 0.2);
+
+    .content {
+      .section {
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+
+        &:not(:last-child) {
+          padding-bottom: 5px;
+          border-bottom: 1px solid rgba($white, 0.2);
+        }
+
+        .title {
+          font-size: inherit;
+          padding: 10px 0;
+          cursor: pointer;
+        }
+
+        ul {
+          li {
+            padding: 0 0 5px 10px;
+
+            label {
+              display: flex;
+              gap: 5px;
+            }
+          }
+        }
+
+        .reset {
+          margin: 0 0 0 auto;
+        }
+      }
+    }
+  }
+}

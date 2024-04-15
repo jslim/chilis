@@ -1,0 +1,33 @@
+@import 'shared';
+
+.root {
+  position: relative;
+  width: 100%;
+
+  .title {
+    @include typography-h1;
+    padding-top: px(80);
+    width: px(240);
+    margin: 0 auto;
+  }
+
+  .description {
+    max-width: px(720);
+    margin: 0 auto;
+    padding: px(80) px(20);
+    text-align: left;
+
+    h2 {
+      margin: 0 0 px(40);
+    }
+
+    h3 {
+      margin: 0 0 px(30);
+    }
+
+    p,
+    li {
+      margin: 0 0 px(20);
+    }
+  }
+}

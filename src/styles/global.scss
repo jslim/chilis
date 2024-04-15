@@ -1,0 +1,150 @@
+@use 'sass:math';
+
+// For Tailwind support, uncomment the following lines.
+// It is enabled by default on Storybook
+// @import 'tailwindcss/base';
+// @import 'tailwindcss/components';
+// @import 'tailwindcss/utilities';
+
+// Globals
+// Global styling, normalize overwritten
+
+@import 'shared';
+
+html {
+  box-sizing: border-box;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
+  -webkit-overflow-scrolling: touch;
+  text-size-adjust: none;
+  font-size: 10px;
+  text-align: center;
+
+  &.dynamic {
+    // ====================================================================
+    // Dynamic responsiveness.
+    // Keeps everything in proportion on slightly diffeent screen sizes. When enabled we will not have to worry about
+    // overlaps happening on narrow devices such as iPhone 5 (320px wide) or too much space on large devices like
+    // iPhone 8 Plus (414px wide). We just need to make sure to use the px() mixing FOR EVERYTHING (except things that
+    // are required to be 1px, like hairline borders). Just copy the value you see on Figma and everything should stay
+    // proportional at all times.
+    // ====================================================================
+
+    font-size: #{math.div(math.round(math.div(100, $design-width-mobile) * 10000), 1000)}vw;
+
+    @include media-tablet {
+      font-size: #{math.div(math.round(math.div(100, $design-width-tablet) * 10000), 1000)}vw;
+    }
+
+    @include media-desktop {
+      font-size: #{math.div(math.round(math.div(100, $design-width-desktop) * 10000), 1000)}vw;
+    }
+  }
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: px(16);
+  word-break: keep-all;
+}
+
+*,
+*::before,
+*::after {
+  @include font-body;
+  box-sizing: inherit;
+
+  .mobile & {
+    user-select: none;
+  }
+}
+
+main {
+  min-height: 100vh;
+  padding-top: $navbar-height-mobile;
+
+  @include media-tablet {
+    padding-top: $navbar-height-desktop;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+dl,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li,
+dt,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @include font-heading;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 0;
+  text-align: inherit;
+  letter-spacing: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+  display: inline-block;
+  margin: 0;
+  text-decoration: none;
+  appearance: none;
+  color: currentcolor;
+}
+
+button,
+input,
+select,
+a {
+  &:focus {
+    outline-offset: 4px;
+  }
+
+  &:focus:not(.focus-visible) {
+    outline: none;
+  }
+}
+
+i {
+  font-style: normal;
+}
+
+svg {
+  display: block;
+  overflow: visible;
+  fill: currentcolor;
+}
