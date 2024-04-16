@@ -17,7 +17,7 @@ import * as sns from "aws-cdk-lib/aws-sns";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { RemovalPolicy, SecretValue } from "aws-cdk-lib/core";
 
-import { FRONTEND_NAME } from "@/libs/config";
+import { REPO_NAME } from "@/libs/config";
 import { detectStage } from "@/libs/detect-stage";
 import { ENVS_TARGET } from "@/libs/stack-data";
 
@@ -29,7 +29,6 @@ const adminEmails = [
   // 'name@mediamonks.com'
 ];
 
-const REPO_NAME = FRONTEND_NAME;
 const REPO_OWNER = "Experience-Monks";
 const BRANCH = "main";
 
