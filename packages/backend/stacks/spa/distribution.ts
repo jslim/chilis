@@ -54,36 +54,36 @@ export function FrontendDistribution({ stack, app }: StackContext) {
   );
 
   // Assume you have a hosted zone for your domain in Route 53
-  const hostedZone = route53.HostedZone.fromLookup(
-    stack,
-    `${app.stage}-frontend-hostedzone`,
-    {
-      domainName: domainName,
-    }
-  );
+  // const hostedZone = route53.HostedZone.fromLookup(
+  //   stack,
+  //   `${app.stage}-frontend-hostedzone`,
+  //   {
+  //     domainName: domainName,
+  //   }
+  // );
 
-  const certificate = new acm.DnsValidatedCertificate(
-    stack,
-    `${app.stage}-frontend-domain-certificate`,
-    {
-      domainName: domainName,
-      hostedZone,
-      validation: acm.CertificateValidation.fromDns(hostedZone),
-    }
-  );
+  // const certificate = new acm.DnsValidatedCertificate(
+  //   stack,
+  //   `${app.stage}-frontend-domain-certificate`,
+  //   {
+  //     domainName: domainName,
+  //     hostedZone,
+  //     validation: acm.CertificateValidation.fromDns(hostedZone),
+  //   }
+  // );
 
   const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     dev: {
       deploy: true,
     },
     path: "packages/frontend",
-    buildOutput: "dist",
-    buildCommand: "npm run build",
+    buildOutput: "out",
+    buildCommand: "npm run build:next",
     environment: {
       VITE_AWS_REGION: app.region ?? "",
     },
-    customDomain: domainName,
-    certificate,
+    // customDomain: domainName,
+    // certificate,
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
@@ -180,7 +180,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                 },
                 contentSecurityPolicy: {
                   override: true,
-                  contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${apiDomainName} self; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
+                  contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
                 },
               },
             }

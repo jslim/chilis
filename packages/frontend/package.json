@@ -1,12 +1,46 @@
 {
-  "name": "@app/frontend",
+  "name": "experience-monks-dev",
+  "version": "9.0.0",
+  "license": "MIT",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "sst bind vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  }
+    "dev": "npm run clean && npm run scripts && run-p dev:*",
+    "dev:next": "node scripts/dev-server",
+    "dev:imports": "node scripts/imports-watch.js",
+    "dev:storybook": "storybook dev --no-open -p 9001",
+    "build:next": "npm run scripts && next build",
+    "build:postcss": "postcss ./out/**/*.css --use css-declaration-sorter --replace --no-map",
+    "build:sitemap": "next-sitemap",
+    "build:storybook": "npm run scripts && storybook build -c .storybook -o ./out-storybook",
+    "postbuild:next": "run-p build:postcss build:sitemap",
+    "release": "standard-version",
+    "clean": "run-s clean:*",
+    "clean:next": "rimraf .next",
+    "clean:generated": "rimraf .generated",
+    "scripts": "run-p scripts:*",
+    "scripts:imports": "node -e 'require(\"./scripts/imports-generate.js\").default()'",
+    "scripts:public-image-sizes": "node scripts/public-image-sizes.js",
+    "lint-ci": "npm run scripts && npm run adviser:ci && run-p lint:* tsc",
+    "lint-dev": "npm run scripts && npm run adviser:dev && run-p lint:* tsc",
+    "lint-staged": "npm run scripts && lint-staged",
+    "lint:ls": "npx @ls-lint/ls-lint",
+    "lint:next": "next lint",
+    "lint:sass": "stylelint \"./src/**/*.scss\"",
+    "generate": "cross-env NODE_NO_WARNINGS=1 sg wizard",
+    "tsc": "tsc"
+  },
+  "engines": {
+    "node": ">=16.15.1",
+    "npm": ">=8.11.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Experience-Monks/nextjs-boilerplate/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Experience-Monks/nextjs-boilerplate.git"
+  },
+  "browserslist": [
+    ">0.2%"
+  ]
 }
