@@ -9,9 +9,9 @@ import { S3_ORIGIN_BUCKET_NAME, S3_REFERER_KEY } from "@/libs/config";
 export function S3Origin({ stack, app }: StackContext) {
   const { isDeploy } = detectStage(app.stage);
 
-  // if (!isDeploy) {
-  //   return { originBucket: undefined };
-  // }
+  if (!isDeploy) {
+    return { originBucket: undefined };
+  }
 
   const originBucket = new Bucket(
     stack,
