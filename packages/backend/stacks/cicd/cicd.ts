@@ -206,29 +206,29 @@ export function CICD({ stack, app }: StackContext) {
   });
 
   // Notify on fail
-  const notifyOnFailTopic = new sns.Topic(stack, `${app.stage}-NotifyOnFail`, {
-    topicName: `${app.stage}-NotifyOnFail`,
-  });
+  // const notifyOnFailTopic = new sns.Topic(stack, `${app.stage}-NotifyOnFail`, {
+  //   topicName: `${app.stage}-NotifyOnFail`,
+  // });
 
-  adminEmails.forEach((email) => {
-    notifyOnFailTopic.addSubscription(
-      new subscriptions.EmailSubscription(email)
-    );
-  });
+  // adminEmails.forEach((email) => {
+  //   notifyOnFailTopic.addSubscription(
+  //     new subscriptions.EmailSubscription(email)
+  //   );
+  // });
 
-  notifyOnFailTopic.grantPublish(
-    new ServicePrincipal("codepipeline.amazonaws.com")
-  );
+  // notifyOnFailTopic.grantPublish(
+  //   new ServicePrincipal("codepipeline.amazonaws.com")
+  // );
 
-  new NotificationRule(stack, `${app.stage}-PipelineFailureNotificationRule`, {
-    detailType: DetailType.BASIC,
-    events: [
-      "codepipeline-pipeline-pipeline-execution-failed",
-      "codepipeline-pipeline-pipeline-execution-canceled",
-    ],
-    source: pipeline,
-    targets: [notifyOnFailTopic],
-  });
+  // new NotificationRule(stack, `${app.stage}-PipelineFailureNotificationRule`, {
+  //   detailType: DetailType.BASIC,
+  //   events: [
+  //     "codepipeline-pipeline-pipeline-execution-failed",
+  //     "codepipeline-pipeline-pipeline-execution-canceled",
+  //   ],
+  //   source: pipeline,
+  //   targets: [notifyOnFailTopic],
+  // });
 
   return { pipeline };
 }
