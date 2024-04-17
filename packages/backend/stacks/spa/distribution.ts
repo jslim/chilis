@@ -3,24 +3,31 @@ import { Duration, SecretValue } from "aws-cdk-lib/core";
 import * as distribution from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as s3 from "aws-cdk-lib/aws-s3";
-// import * as acm from "aws-cdk-lib/aws-certificatemanager";
-// import * as route53 from "aws-cdk-lib/aws-route53";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as route53 from "aws-cdk-lib/aws-route53";
 
 import {
   FRONTEND_NAME,
   S3_REFERER_KEY,
   S3_ORIGIN_BUCKET_NAME,
 } from "@/libs/config";
-// import { getWebDomain } from "@/libs/get-domain";
+import { getWebDomain } from "@/libs/get-domain";
 
 import { WebACL, S3Origin } from "@/stacks";
+import { detectStage } from "@/libs/detect-stage";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
+  const { isDeploy } = detectStage(app.stage);
+
+  if (!isDeploy) {
+    return;
+  }
+
   const { webACL } = use(WebACL);
   const { originBucket } = use(S3Origin);
 
-  // const domainName = getWebDomain(app.stage);
-  // const apiDomainName = `api.${domainName}`;
+  const domainName = getWebDomain(app.stage);
+  const apiDomainName = `api.${domainName}`;
 
   const secretReferer = SecretValue.secretsManager(
     `${app.stage}-${S3_REFERER_KEY}`
@@ -47,23 +54,23 @@ export function FrontendDistribution({ stack, app }: StackContext) {
   );
 
   // Assume you have a hosted zone for your domain in Route 53
-  // const hostedZone = route53.HostedZone.fromLookup(
-  //   stack,
-  //   `${app.stage}-frontend-hostedzone`,
-  //   {
-  //     domainName: domainName, // Replace with your domain
-  //   }
-  // );
+  const hostedZone = route53.HostedZone.fromLookup(
+    stack,
+    `${app.stage}-frontend-hostedzone`,
+    {
+      domainName: domainName,
+    }
+  );
 
-  // const certificate = new acm.DnsValidatedCertificate(
-  //   stack,
-  //   `${app.stage}-frontend-domain-certificate`,
-  //   {
-  //     domainName: domainName, // Replace with your domain
-  //     hostedZone,
-  //     validation: acm.CertificateValidation.fromDns(hostedZone),
-  //   }
-  // );
+  const certificate = new acm.DnsValidatedCertificate(
+    stack,
+    `${app.stage}-frontend-domain-certificate`,
+    {
+      domainName: domainName,
+      hostedZone,
+      validation: acm.CertificateValidation.fromDns(hostedZone),
+    }
+  );
 
   const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     dev: {
@@ -75,8 +82,8 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     environment: {
       VITE_AWS_REGION: app.region ?? "",
     },
-    // customDomain: domainName,
-    // certificate,
+    customDomain: domainName,
+    certificate,
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
@@ -173,8 +180,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                 },
                 contentSecurityPolicy: {
                   override: true,
-                  // contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${apiDomainName} self; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
-                  contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
+                  contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${apiDomainName} self; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
                 },
               },
             }

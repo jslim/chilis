@@ -17,7 +17,7 @@ import * as sns from "aws-cdk-lib/aws-sns";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { RemovalPolicy, SecretValue } from "aws-cdk-lib/core";
 
-import { REPO_NAME } from "@/libs/config";
+import { FRONTEND_NAME, REPO_NAME } from "@/libs/config";
 import { detectStage } from "@/libs/detect-stage";
 import { ENVS_TARGET } from "@/libs/stack-data";
 
@@ -40,7 +40,7 @@ export function CICD({ stack, app }: StackContext) {
   }
 
   const artifactBucket = new Bucket(stack, `${app.stage}-ArtifactBucket`, {
-    name: `${app.stage}-artifact-bucket-origin`,
+    name: `${app.stage}-${FRONTEND_NAME}-artifact-origin`,
     cdk: {
       bucket: {
         removalPolicy: RemovalPolicy.DESTROY,
@@ -49,7 +49,7 @@ export function CICD({ stack, app }: StackContext) {
   });
 
   const cacheBucket = new Bucket(stack, `${app.stage}-CacheBucket`, {
-    name: `${app.stage}-codebuile-cache-bucket-origin`,
+    name: `${app.stage}-${FRONTEND_NAME}-codebuild-cache-origin`,
     cdk: {
       bucket: {
         removalPolicy: RemovalPolicy.DESTROY,
