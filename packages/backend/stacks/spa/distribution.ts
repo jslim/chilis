@@ -54,23 +54,23 @@ export function FrontendDistribution({ stack, app }: StackContext) {
   );
 
   // Assume you have a hosted zone for your domain in Route 53
-  // const hostedZone = route53.HostedZone.fromLookup(
-  //   stack,
-  //   `${app.stage}-frontend-hostedzone`,
-  //   {
-  //     domainName: domainName,
-  //   }
-  // );
+  const hostedZone = route53.HostedZone.fromLookup(
+    stack,
+    `${app.stage}-frontend-hostedzone`,
+    {
+      domainName: domainName,
+    }
+  );
 
-  // const certificate = new acm.DnsValidatedCertificate(
-  //   stack,
-  //   `${app.stage}-frontend-domain-certificate`,
-  //   {
-  //     domainName: domainName,
-  //     hostedZone,
-  //     validation: acm.CertificateValidation.fromDns(hostedZone),
-  //   }
-  // );
+  const certificate = new acm.DnsValidatedCertificate(
+    stack,
+    `${app.stage}-frontend-domain-certificate`,
+    {
+      domainName: domainName,
+      hostedZone,
+      validation: acm.CertificateValidation.fromDns(hostedZone),
+    }
+  );
 
   const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     dev: {
@@ -82,8 +82,8 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     environment: {
       VITE_AWS_REGION: app.region ?? "",
     },
-    // customDomain: domainName,
-    // certificate,
+    customDomain: domainName,
+    certificate,
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
