@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "AWS_PROFILE=$AWS_PROFILE sst dev --stage $SST_STAGE",
+    "dev:be": "AWS_PROFILE=$AWS_PROFILE sst dev --stage $SST_STAGE",
+    "dev:fe": "npm run dev -w @app/frontend",
     "build": "AWS_PROFILE=$AWS_PROFILE sst build --stage $SST_STAGE",
     "deploy": "AWS_PROFILE=$AWS_PROFILE sst deploy --stage $SST_STAGE",
     "remove": "AWS_PROFILE=$AWS_PROFILE sst remove --stage $SST_STAGE",
@@ -88,7 +89,7 @@
     "classnames": "^2.3.2",
     "constructs": "10.3.0",
     "focus-visible": "^5.2.0",
-    "gsap": "file:./gsap-bonus-3.11.3.tgz",
+    "gsap": "file:./gsap-bonus-3.12.2.tgz",
     "image-size": "^1.1.1",
     "immer": "^10.0.3",
     "js-cookie": "^3.0.5",
