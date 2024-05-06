@@ -5,5 +5,10 @@
     "**/node_modules": true,
     "**/package-lock.json": true
   },
-  "eslint.workingDirectories": ["./packages/backend", "./packages/frontend", "./packages/cms-frontend"]
+  "eslint.workingDirectories": [
+    "./packages/backend",
+    "./packages/frontend",
+    "./packages/cms-frontend"
+  ],
+  "circleci.persistedProjectSelection": []
 }

@@ -48,6 +48,7 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
       <section className={css.hero}>
         <h1 className={css.title} {...copy.html(content.body.title)} ref={refs.title} />
         <h2 className={css.description} {...copy.html(content.body.description)} ref={refs.description} />
+        <h3>Chilis Burger Time</h3>
         <ul className={css.row} ref={refs.list}>
           {content.body.cards.map(({ title, description, href }) => (
             <li key={title}>
