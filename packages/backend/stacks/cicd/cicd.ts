@@ -109,17 +109,11 @@ export function CICD({ stack, app }: StackContext) {
       // @ts-ignore
       cache: codebuild.Cache.bucket(cacheBucket.cdk.bucket),
       environmentVariables: {
-        EMAIL_DOMAIN_ALLOWLIST: {
-          value: "jam3.com,mediamonks.com",
-        },
         NODE_ENV: {
           value: "production",
         },
         SST_STAGE: {
           value: app.stage,
-        },
-        COUNTRY_ALLOWLIST: {
-          value: "US,CA,UY",
         },
       },
       buildSpec: codebuild.BuildSpec.fromObject({

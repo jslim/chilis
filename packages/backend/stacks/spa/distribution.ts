@@ -1,4 +1,4 @@
-import { StackContext, StaticSite, use } from "sst/constructs";
+import { StackContext, StaticSite, use, NextjsSite } from "sst/constructs";
 import { Duration, SecretValue } from "aws-cdk-lib/core";
 import * as distribution from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
@@ -19,15 +19,36 @@ import { detectStage } from "@/libs/detect-stage";
 export function FrontendDistribution({ stack, app }: StackContext) {
   const { isDeploy } = detectStage(app.stage);
 
-  if (!isDeploy) {
-    return;
+  let domainName;
+  let apiDomainName;
+  let certificate;
+
+  if (isDeploy) {
+    domainName = getWebDomain(app.stage);
+    apiDomainName = `api.${domainName}`;
+
+    // Assume you have a hosted zone for your domain in Route 53
+    const hostedZone = route53.HostedZone.fromLookup(
+      stack,
+      `${app.stage}-frontend-hostedzone`,
+      {
+        domainName: domainName,
+      }
+    );
+
+    certificate = new acm.DnsValidatedCertificate(
+      stack,
+      `${app.stage}-frontend-domain-certificate`,
+      {
+        domainName: domainName,
+        hostedZone,
+        validation: acm.CertificateValidation.fromDns(hostedZone),
+      }
+    );
   }
 
   const { webACL } = use(WebACL);
   const { originBucket } = use(S3Origin);
-
-  const domainName = getWebDomain(app.stage);
-  const apiDomainName = `api.${domainName}`;
 
   const secretReferer = SecretValue.secretsManager(
     `${app.stage}-${S3_REFERER_KEY}`
@@ -53,37 +74,15 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     }
   );
 
-  // Assume you have a hosted zone for your domain in Route 53
-  const hostedZone = route53.HostedZone.fromLookup(
-    stack,
-    `${app.stage}-frontend-hostedzone`,
-    {
-      domainName: domainName,
-    }
-  );
-
-  const certificate = new acm.DnsValidatedCertificate(
-    stack,
-    `${app.stage}-frontend-domain-certificate`,
-    {
-      domainName: domainName,
-      hostedZone,
-      validation: acm.CertificateValidation.fromDns(hostedZone),
-    }
-  );
-
-  const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
-    dev: {
-      deploy: true,
-    },
+  const web = new NextjsSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     path: "packages/frontend",
     buildOutput: "out",
     buildCommand: "npm run build:next",
     environment: {
-      VITE_AWS_REGION: app.region ?? "",
+      NEXT_PUBLIC_FE_REGION: app.region ?? "",
+      NEXT_PUBLIC_API_HOST: 'api.test.com',
     },
-    customDomain: domainName,
-    certificate,
+    ...(isDeploy ? { customDomain: domainName, certificate } : {}),
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
