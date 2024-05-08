@@ -1,7 +1,7 @@
-const { createServer } = require('https')
-const { parse } = require('url')
-const fs = require('fs')
-const path = require('path')
+const { createServer } = require('node:https')
+const { parse } = require('node:url')
+const fs = require('node:fs')
+const path = require('node:path')
 const next = require('next')
 
 const port = parseInt(process.env.PORT || '3000', 10)
