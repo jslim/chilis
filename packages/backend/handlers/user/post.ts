@@ -10,7 +10,7 @@ logger.appendKeys({
 
 export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
   defaultHttpHandler(event, context, async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info("Handler to login user", { event, ...context });
+    logger.info("Handler to POST request user", { event, ...context });
 
     return httpResponse.Success("successful!");
   });
