@@ -11,7 +11,7 @@ export function ApiStack({ stack, app }: StackContext) {
   setDefaultFunctionProps({ stack, app });
 
   let customDomain = undefined;
-  const domainStage = ENVS_TARGET[app.stage as string];
+  const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
   if (domainStage !== undefined) {
     customDomain = (domainStage === "" ? `api` : `api.${domainStage}`) + `.${process.env.BASE_DOMAIN}`;
   }
