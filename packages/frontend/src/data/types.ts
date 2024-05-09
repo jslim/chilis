@@ -11,3 +11,8 @@ export type PageHandle = {
   animateIn: () => gsap.core.Timeline
   animateOut: () => gsap.core.Timeline
 }
+
+export type FormFields = {
+  username: string
+  password: string
+}
