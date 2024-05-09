@@ -1,0 +1,10 @@
+@import 'shared';
+
+.root {
+  display: block;
+}
+
+.form {
+  @include flex-center;
+  flex-direction: column;
+}
