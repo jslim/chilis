@@ -74,7 +74,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     }
   );
 
-  const web = new NextjsSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
+  const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     path: "packages/frontend",
     buildOutput: "out",
     buildCommand: "npm run build:next",
