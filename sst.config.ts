@@ -1,12 +1,6 @@
 import { SSTConfig } from "sst";
 
-import {
-  CICD,
-  FirehoseStack,
-  FrontendDistribution,
-  S3Origin,
-  WebACL,
-} from "@app/backend/stacks";
+import { CICD, FirehoseStack, FrontendDistribution, S3Origin, WebACL, ApiStack, userApiStack } from "@app/backend/stacks";
 
 import { SST_APP_NAME } from "@app/backend/libs/config";
 
@@ -28,6 +22,9 @@ export default {
       .stack(WebACL)
       .stack(S3Origin)
       .stack(FrontendDistribution)
-      .stack(FirehoseStack);
+      .stack(FirehoseStack)
+      /* Backend */
+      .stack(ApiStack)
+      .stack(userApiStack);
   },
 } satisfies SSTConfig;
