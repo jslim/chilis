@@ -16,6 +16,8 @@ import {
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { RemovalPolicy, SecretValue } from "aws-cdk-lib/core";
+import { BuildEnvironmentVariableType } from "aws-cdk-lib/aws-codebuild";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 import { FRONTEND_NAME, REPO_NAME } from "@/libs/config";
 import { detectStage } from "@/libs/detect-stage";
@@ -56,6 +58,12 @@ export function CICD({ stack, app }: StackContext) {
       },
     },
   });
+
+  const ssmParam = StringParameter.fromStringParameterName(
+    stack,
+    `${app.stage}-parameter-store-base-domain`,
+    "/prj-240137971-chilis-burger-time/base-domain"
+  );
 
   // Add a custom role (with broader permissions) that can be assumed through STS inside Authorizer Lambda (further narrowing permissions)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -109,6 +117,10 @@ export function CICD({ stack, app }: StackContext) {
       // @ts-ignore
       cache: codebuild.Cache.bucket(cacheBucket.cdk.bucket),
       environmentVariables: {
+        BASE_DOMAIN: {
+          type: BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: ssmParam.parameterName,
+        },
         NODE_ENV: {
           value: "production",
         },
