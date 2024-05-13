@@ -1,4 +1,4 @@
-import { StackContext, StaticSite, use, NextjsSite } from "sst/constructs";
+import { StackContext, StaticSite, use } from "sst/constructs";
 import { Duration, SecretValue } from "aws-cdk-lib/core";
 import * as distribution from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
@@ -13,7 +13,7 @@ import {
 } from "@/libs/config";
 import { getWebDomain } from "@/libs/get-domain";
 
-import { WebACL, S3Origin } from "@/stacks";
+import { WebACL, S3Origin, ApiStack } from "@/stacks";
 import { detectStage } from "@/libs/detect-stage";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
@@ -74,13 +74,15 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     }
   );
 
+  const { api } = use(ApiStack);
+
   const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     path: "packages/frontend",
     buildOutput: "out",
     buildCommand: "npm run build:next",
     environment: {
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
-      NEXT_PUBLIC_API_HOST: 'api.test.com',
+      NEXT_PUBLIC_API_HOST: api.customDomainUrl ?? api.url,
     },
     ...(isDeploy ? { customDomain: domainName, certificate } : {}),
     cdk: {
