@@ -4,7 +4,7 @@
   @include z-index(nav);
   @include flex-center-vert;
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   padding: 0 px(20);
@@ -51,14 +51,8 @@
         }
       }
 
-      &.links {
-        justify-content: flex-end;
-
-        a {
-          img {
-            @include box(px(25));
-          }
-        }
+      &.ctas {
+        justify-content: flex-start;
       }
 
       > li {

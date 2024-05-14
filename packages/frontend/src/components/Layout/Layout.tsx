@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import type { NavHandle } from '@/components/Nav'
 import type { PageHandle, PageProps } from '@/data/types'
 
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
@@ -20,14 +20,14 @@ import { fontVariables } from '@/utils/fonts'
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useRefs } from '@/hooks/use-refs'
 
-import { Footer } from '@/components/Footer'
+// import { Footer } from '@/components/Footer'
 import { Head } from '@/components/Head'
 import { Nav } from '@/components/Nav'
-import { ScreenIntro } from '@/components/ScreenIntro'
+// import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
-const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
+// const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
 const AppAdmin = dynamic(() => import('@/components/AppAdmin').then((m) => m.AppAdmin), { ssr: false })
 
 export type LayoutRefs = {
@@ -49,11 +49,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const { flags } = useFeatureFlags()
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
-  const [introComplete, setIntroComplete] = useState(false)
+  //  const [introComplete, setIntroComplete] = useState(false)
 
-  const handleIntroComplete = useCallback(() => {
-    setIntroComplete(true)
-  }, [])
+  // const handleIntroComplete = useCallback(() => {
+  //   setIntroComplete(true)
+  // }, [])
 
   //
   // Update pathname ref
@@ -122,7 +122,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   // Page transitions
   //
   useEffect(() => {
-    if (!introComplete) return
+    // if (!introComplete) return
 
     const transitionTimeline = gsap.timeline()
 
@@ -178,7 +178,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     return () => {
       transitionTimeline.kill()
     }
-  }, [refs, Component, pageProps, flags.pageTransitions, introComplete])
+  }, [refs, Component, pageProps, flags.pageTransitions])
 
   return (
     <div className={classNames('Layout', css.root, fontVariables)}>
@@ -186,13 +186,12 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
       <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
       <div className={css.content}>{currentPage}</div>
-      <Footer content={pageProps.content.common.footer} />
 
-      {!introComplete ? <ScreenIntro onComplete={handleIntroComplete} /> : null}
+      {/* {!introComplete ? <ScreenIntro onComplete={handleIntroComplete} /> : null} */}
       <ScreenRotate content={pageProps.content.common.screenRotate} />
       <ScreenNoScript content={pageProps.content.common.screenNoScript} />
 
-      <CookieBanner content={pageProps.content.common.cookieBanner} />
+      {/* <CookieBanner content={pageProps.content.common.cookieBanner} /> */}
 
       <AppAdmin />
     </div>

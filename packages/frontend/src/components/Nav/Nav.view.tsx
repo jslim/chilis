@@ -10,9 +10,6 @@ import css from './Nav.module.scss'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
-import { BaseImage } from '@/components/BaseImage'
-
-import SvgExperienceLogo from '@/svgs/ExperienceLogo.svg'
 
 export type ViewHandle = {
   animateIn: () => gsap.core.Timeline
@@ -35,6 +32,13 @@ export const View: FC<ViewProps> = ({ className, content, handleRef }) => {
   return (
     <nav className={classNames('Nav', css.root, className)} ref={refs.root}>
       <div className={css.wrapper}>
+        <ul className={css.ctas}>
+          {content.links.map(({ label }) => (
+            <li key={label}>
+              <BaseButton>{label}</BaseButton>
+            </li>
+          ))}
+        </ul>
         <ul className={css.routes}>
           <a tabIndex={0} aria-label="Skip to content" className={css.skipToContent} href="#start-of-content">
             Skip to content
@@ -42,17 +46,8 @@ export const View: FC<ViewProps> = ({ className, content, handleRef }) => {
           {content.routes.map(({ path, title }) => (
             <li key={title}>
               <BaseButton href={path} aria-label="Home">
-                {path === '/' ? <SvgExperienceLogo className={css.mainLogo} /> : title}
+                {title}
               </BaseButton>
-            </li>
-          ))}
-        </ul>
-        <ul className={css.links}>
-          {content.links.map(({ href, label, image }) => (
-            <li key={label}>
-              <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
-                <BaseImage src={image} alt={label} />
-              </a>
             </li>
           ))}
         </ul>
