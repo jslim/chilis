@@ -1,19 +1,11 @@
 import { LambdaIntegration, PassthroughBehavior, AuthorizationType } from "aws-cdk-lib/aws-apigateway";
-import type { LambdaIntegrationOptions, MethodOptions } from "aws-cdk-lib/aws-apigateway";
 import { HttpMethod } from "aws-cdk-lib/aws-events";
 import { type Authorizer } from "aws-cdk-lib/aws-apigateway/lib/authorizer";
 import { type RequestValidator } from "aws-cdk-lib/aws-apigateway/lib/requestvalidator";
 import { type Resource } from "aws-cdk-lib/aws-apigateway/lib/resource";
 import { type Model } from "aws-cdk-lib/aws-apigateway/lib/model";
-import { statusCodes } from "@/libs/http-response";
-import { LambdaIntegrationType } from "@/types/api/index";
 
-export const defaultResponseHeaders = {
-  "Content-Type": "application/json",
-  "Strict-Transport-Security": "max-age=63072000; includeSubdomains; preload",
-  "X-Content-Type-Options": "nosniff",
-  "Access-Control-Allow-Origin": process.env.CORS_ALLOW_ORIGIN || "*",
-};
+import { defaultResponseHeaders } from "@/utils/response-headers";
 
 const nonProxyMethods = [HttpMethod.POST, HttpMethod.PATCH, HttpMethod.PUT];
 
@@ -39,8 +31,6 @@ export default function ({
   proxy = !nonProxyMethods.includes(method),
   model,
   validator,
-  overrideIntegrationOptions = {},
-  overrideMethodOptions = {},
 }: {
   authorizer?: Authorizer;
   resource: Resource | any;
@@ -49,19 +39,17 @@ export default function ({
   proxy?: boolean;
   model?: Model | any;
   validator?: RequestValidator | any;
-  overrideIntegrationOptions?: LambdaIntegrationOptions | any;
-  overrideMethodOptions?: MethodOptions | any;
 }) {
   const methodOptions = {
     requestParameters: {
       "method.request.header.Content-Type": true,
     },
-    methodResponses: Object.values(statusCodes).map((statusCode) => {
-      return {
-        statusCode: String(statusCode),
+    methodResponses: [
+      {
+        statusCode: "200",
         responseParameters: Object.fromEntries(new Map(Object.keys(defaultResponseHeaders).map((key) => [`method.response.header.${key}`, true]))),
-      };
-    }),
+      },
+    ],
   };
 
   const integrationOptions = {
@@ -79,38 +67,20 @@ export default function ({
           new Map(Object.entries(defaultResponseHeaders).map(([key, value]) => [`method.response.header.${key}`, `'${value}'`]))
         ),
       },
-      ...Object.values(statusCodes)
-        .filter((statusCode) => statusCode !== statusCodes.Success)
-        .map((statusCode) => {
-          return {
-            statusCode: String(statusCode),
-            selectionPattern: `[\\s\\S]*statusCode.*${statusCode}.[\\s\\S]*`,
-            responseTemplates: {
-              "application/json": `#set ($errorMessage = $util.parseJson($input.path('$.errorMessage')))$errorMessage.body`,
-            },
-            responseParameters: Object.fromEntries(
-              new Map(Object.entries(defaultResponseHeaders).map(([key, value]) => [`method.response.header.${key}`, `'${value}'`]))
-            ),
-          };
-        }),
     ],
   };
-
-  handlerFn.addEnvironment("INTEGRATION_METHOD", proxy ? LambdaIntegrationType.Proxy : LambdaIntegrationType.Lambda);
 
   return resource.addMethod(
     method,
     new LambdaIntegration(handlerFn, {
       proxy,
       ...(!proxy && integrationOptions),
-      ...overrideIntegrationOptions,
     }),
     {
       ...(model ? { requestModels: { "application/json": model } } : null),
       ...(validator ? { requestValidator: validator } : null),
       ...(proxy ? null : methodOptions),
       ...(authorizer ? { authorizer, authorizationType: AuthorizationType.CUSTOM } : null),
-      ...overrideMethodOptions,
     }
   );
 }

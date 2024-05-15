@@ -1,8 +1,8 @@
 import type { StackContext } from "sst/constructs";
-import { type ModelOptions } from "aws-cdk-lib/aws-apigateway";
 import { Function, use } from "sst/constructs";
 import { ApiStack } from "@/stacks/api/api";
 import { HttpMethod } from "aws-cdk-lib/aws-events";
+import { type ModelOptions } from "aws-cdk-lib/aws-apigateway";
 import { detectStage } from "@/libs/detect-stage";
 import generateApiMethod from "@/utils/generate-api-method";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
@@ -23,10 +23,19 @@ export function userApiStack({ stack, app }: StackContext) {
     }),
   });
 
-  const getUser = new Function(stack, "get-user", {
-    functionName: `${app.stage}-get-user`,
-    description: "Get user information",
-    handler: "packages/backend/handlers/user/get.handler",
+  const patchUser = new Function(stack, "patch-user", {
+    functionName: `${app.stage}-patch-user`,
+    description: "Endpoint to create user nickname",
+    handler: "packages/backend/handlers/user/patch.handler",
+    ...(isProd && {
+      reservedConcurrentExecutions: 50,
+    }),
+  });
+
+  const putUser = new Function(stack, "put-user", {
+    functionName: `${app.stage}-put-user`,
+    description: "Endpoint to save user history score",
+    handler: "packages/backend/handlers/user/put.handler",
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
@@ -47,8 +56,16 @@ export function userApiStack({ stack, app }: StackContext) {
 
   generateApiMethod({
     resource: userPath,
-    method: HttpMethod.GET,
-    handlerFn: getUser,
+    method: HttpMethod.PATCH,
+    handlerFn: patchUser,
+    //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
+    validator,
+  });
+
+  generateApiMethod({
+    resource: userPath,
+    method: HttpMethod.PUT,
+    handlerFn: putUser,
     //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
     validator,
   });
