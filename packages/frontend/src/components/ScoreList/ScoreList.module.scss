@@ -1,0 +1,11 @@
+@import 'shared';
+
+.root {
+  display: block;
+}
+
+.list {
+  .item {
+    padding: px(5) 0;
+  }
+}
