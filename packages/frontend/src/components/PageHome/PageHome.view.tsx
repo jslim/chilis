@@ -12,6 +12,8 @@ import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
 
+import HomeLogo from '@/svgs/HomeLogo.svg'
+
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -46,8 +48,10 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
     <main className={classNames('PageHome', css.root)} ref={refs.root}>
       <section className={css.hero}>
         <h1 className={css.title} {...copy.html(content.body.title)} ref={refs.title} />
-        <h2 className={css.description} {...copy.html(content.body.description)} ref={refs.description} />
-        <h3>Chilis Burger Time</h3>
+
+        <div className={css.logoContainer}>
+          <HomeLogo />
+        </div>
       </section>
     </main>
   )

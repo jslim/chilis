@@ -7,10 +7,6 @@ import css from './BaseModal.module.scss'
 
 import { useRefs } from '@/hooks/use-refs'
 
-import { BaseButton } from '@/components/BaseButton'
-
-import CloseSvg from '@/svgs/Close.svg'
-
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -18,7 +14,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, title, onClose }) => {
+export const View: FC<ViewProps> = ({ className, children, onClose }) => {
   const refs = useRefs<ViewRefs>()
 
   useEffect(() => {
@@ -37,12 +33,7 @@ export const View: FC<ViewProps> = ({ className, title, onClose }) => {
 
   return (
     <div className={classNames('BaseModal', css.root, className)} ref={refs.root}>
-      <div className={css.box}>
-        <BaseButton className={css.close} onClick={onClose}>
-          <CloseSvg />
-        </BaseButton>
-        <div className={css.title}> {title}</div>
-      </div>
+      {children}
     </div>
   )
 }
