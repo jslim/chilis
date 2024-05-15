@@ -2,15 +2,13 @@ import type { StackContext } from "sst/constructs";
 import { Function, use } from "sst/constructs";
 import { ApiStack } from "@/stacks/api/api";
 import { HttpMethod } from "aws-cdk-lib/aws-events";
-import { type ModelOptions } from "aws-cdk-lib/aws-apigateway";
 import { detectStage } from "@/libs/detect-stage";
 import generateApiMethod from "@/utils/generate-api-method";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
-import postUserModel from "@/stacks/user/models/post-user";
 
 export function leaderboardApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
-  const { api, validator } = use(ApiStack);
+  const { api } = use(ApiStack);
 
   setDefaultFunctionProps({ stack, app });
 

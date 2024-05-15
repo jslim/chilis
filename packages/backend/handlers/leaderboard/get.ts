@@ -17,7 +17,7 @@ logger.appendKeys({
  */
 export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
   defaultHttpHandler(event, context, async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info("Handler to login user", { event, ...context });
+    logger.info("Handler to retrieve the leaderboard", { event, ...context });
 
     return httpResponse.Success([
       { score: 26000, level: 2, timestamp: "511567169", nickname: "austinP" },
