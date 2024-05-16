@@ -20,8 +20,6 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
     logger.info("Handler to POST request user", { event, ...context });
 
     return httpResponse.Success({
-      firstName: "Mike",
-      lastName: "Myers",
       nickname: "austinP",
       token:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
