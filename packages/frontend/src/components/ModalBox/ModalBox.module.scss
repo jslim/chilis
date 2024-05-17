@@ -1,0 +1,10 @@
+@import 'shared';
+
+.root {
+  @include box(px(649), px(368));
+  position: relative;
+  display: block;
+  padding: px(30);
+  background-color: $white;
+  border-radius: px(34);
+}
