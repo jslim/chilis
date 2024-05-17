@@ -12,3 +12,4 @@ export { ApiStack } from "@/stacks/api/api";
 export { userApiStack } from "@/stacks/api/user";
 export { leaderboardApiStack } from "@/stacks/api/leaderboard";
 export { Database } from "@/stacks/database";
+export { SecretsStack } from "@/stacks/secrets";
