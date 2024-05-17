@@ -63,7 +63,7 @@ export function SecretsStack({ stack, app }: StackContext) {
    */
   const invokeRotation = new Function(stack, "invoke-brinker-token-rotation", {
     functionName: `${app.stage}-invoke-brinker-token-rotation`,
-    description: "This function that will be executed by a cron job to rotate the access token to brinker at a specific time",
+    description: "Function that will be executed by a cron job to rotate the access token to brinker at a specific time",
     handler: "packages/backend/handlers/secrets/invoke-brinker-token-rotation.handler",
     permissions: [
       // eslint-disable-next-line
