@@ -8,8 +8,6 @@
   left: 0;
   width: 100%;
   padding: 0 px(20);
-  box-shadow: $element-shadow;
-  background-color: $white;
   height: $navbar-height-mobile;
 
   @include media-tablet {
@@ -57,6 +55,11 @@
 
       > li {
         padding: 0 px(10);
+
+        .link {
+          @include font-family(Skillscreen, 700);
+          color: $sunrise;
+        }
       }
     }
   }

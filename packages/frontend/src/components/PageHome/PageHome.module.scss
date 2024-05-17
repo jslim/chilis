@@ -1,13 +1,17 @@
 @import 'shared';
 
 .root {
+  @include flex-center-vert;
   position: relative;
   width: 100%;
 }
 
-.logoContainer {
-  margin: 0 auto;
+.hero {
+  @include box(100%);
+  @include z-index(pages);
+}
 
+.logoContainer {
   svg {
     max-height: px(378);
     margin: 0 auto;

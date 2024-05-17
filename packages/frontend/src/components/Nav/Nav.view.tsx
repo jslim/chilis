@@ -33,9 +33,11 @@ export const View: FC<ViewProps> = ({ className, content, handleRef }) => {
     <nav className={classNames('Nav', css.root, className)} ref={refs.root}>
       <div className={css.wrapper}>
         <ul className={css.ctas}>
-          {content.links.map(({ label }) => (
-            <li key={label}>
-              <BaseButton>{label}</BaseButton>
+          {content.links.map(({ path, title }) => (
+            <li key={title}>
+              <BaseButton className={css.link} href={path}>
+                {title}
+              </BaseButton>
             </li>
           ))}
         </ul>
@@ -45,12 +47,16 @@ export const View: FC<ViewProps> = ({ className, content, handleRef }) => {
           </a>
           {content.routes.map(({ path, title }) => (
             <li key={title}>
-              <BaseButton href={path} aria-label="Home">
+              <BaseButton className={css.link} href={path} aria-label="Home">
                 {title}
               </BaseButton>
             </li>
           ))}
         </ul>
+
+        <div className={css.sound}>
+          {content.sound.options.on} / {content.sound.options.off}
+        </div>
       </div>
 
       <section aria-hidden="true" id="start-of-content"></section>

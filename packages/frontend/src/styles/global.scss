@@ -9,6 +9,7 @@
 // Globals
 // Global styling, normalize overwritten
 
+@import 'fonts';
 @import 'shared';
 
 html {
@@ -49,6 +50,8 @@ body {
   padding: 0;
   font-size: px(16);
   word-break: keep-all;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 *,
@@ -64,11 +67,6 @@ body {
 
 main {
   min-height: 100vh;
-  padding-top: $navbar-height-mobile;
-
-  @include media-tablet {
-    padding-top: $navbar-height-desktop;
-  }
 }
 
 a {
@@ -97,15 +95,6 @@ p,
 blockquote {
   margin: 0;
   padding: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @include font-heading;
 }
 
 button {
