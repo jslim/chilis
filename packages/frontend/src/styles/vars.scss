@@ -25,20 +25,22 @@ $design-width-desktop: 1440;
 // ====================================================================
 $white: #fff;
 $black: #000;
+$gray: #9e9e9e;
+$sunrise: #ffc60b;
 
 // ====================================================================
 // General
 // Global color variables, used usually in sections
 // Global variables used across the web app
 // ====================================================================
-$page-bg-color: $white;
+$page-bg-color: $black;
 $element-shadow: 0 16px 16px 0 rgb(0 0 0 / 4%);
 
 // ====================================================================
 // Nav bar
 // ====================================================================
-$navbar-height-mobile: px(60);
-$navbar-height-desktop: px(80);
+$navbar-height-mobile: px(20);
+$navbar-height-desktop: px(40);
 
 // ====================================================================
 // Standard Eases

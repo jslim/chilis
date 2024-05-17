@@ -1,0 +1,13 @@
+@import 'shared';
+
+.root {
+  @include box(100%);
+  @include z-index(background);
+  position: absolute;
+  display: block;
+}
+
+.video {
+  @include box(100%);
+  object-fit: cover;
+}

@@ -34,17 +34,7 @@ $generic-fonts: system-ui, 'helvetica', 'arial', sans-serif;
 ///     @include font-body;
 ///   }
 @mixin font-body {
-  @include font-family($font-work-sans, 400);
-}
-
-/// Set Header Font as font family. This mixin's name is generic to abstract the font weight of header typography
-/// @group Fonts
-/// @example scss Input
-///   .landing-section {
-///     @include font-heading;
-///   }
-@mixin font-heading {
-  @include font-family($font-work-sans, 600);
+  @include font-family(b, 400);
 }
 
 // Use two pixel values to convert line-height into a unitless number

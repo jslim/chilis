@@ -12,6 +12,8 @@ import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
 
+import { BackgroundVideo } from '@/components/BackgroundVideo'
+
 import HomeLogo from '@/svgs/HomeLogo.svg'
 
 export interface ViewProps extends ControllerProps {}
@@ -22,6 +24,10 @@ export type ViewRefs = {
   list: HTMLUListElement
   title: HTMLHeadingElement
   description: HTMLHeadingElement
+  video: {
+    src: string
+    poster: string
+  }
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
@@ -46,9 +52,9 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
 
   return (
     <main className={classNames('PageHome', css.root)} ref={refs.root}>
+      <BackgroundVideo videoSrc={content.body.backgroundVideo.src} posterSrc={content.body.backgroundVideo.poster} />
       <section className={css.hero}>
         <h1 className={css.title} {...copy.html(content.body.title)} ref={refs.title} />
-
         <div className={css.logoContainer}>
           <HomeLogo />
         </div>

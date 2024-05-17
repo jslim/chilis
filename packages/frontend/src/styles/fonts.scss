@@ -1,0 +1,73 @@
+// Fonts
+
+// Location of all the font-families and font-related css
+
+// Best practices:
+// 1. Avoid loading as many fonts as possible, e.x font styles, font families
+// 2. Optimize the font, remove the characters set that the site won't use: languages
+// 3. Include the unicode range in case you couldn't remove the characters. Included just Latin by default
+// 4. Change fonts by just changing the font-weight
+
+/* Fonts Map:
+- 100 - Thin
+- 200 - Extra-light
+- 300 - Light
+- 400 - Normal
+- 500 - Medium
+- 600 - Semi-bold
+- 700 - Bold
+- 800 - Extra-bold
+- 900 - Black
+
+// NOTE: All fonts have italic variants too
+*/
+
+@import 'vars';
+
+@font-face {
+  font-family: b;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('~@/assets/fonts/b/b.woff') format('woff');
+}
+
+@font-face {
+  font-family: Skillscreen;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('~@/assets/fonts/Skillscreen/slkscr.woff') format('woff');
+}
+
+@font-face {
+  font-family: Skillscreen;
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('~@/assets/fonts/Skillscreen/slkscrb.woff') format('woff');
+}
+
+@font-face {
+  font-family: Pixelmix;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('~@/assets/fonts/Pixelmix/pixelmix.woff') format('woff');
+}
+
+@font-face {
+  font-family: Pixelmix;
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('~@/assets/fonts/Pixelmix/pixelmix_bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: Gamer;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('~@/assets/fonts/Gamer/gamer.woff') format('woff');
+}

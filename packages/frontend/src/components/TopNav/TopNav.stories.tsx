@@ -1,18 +1,19 @@
 import type { StoryFn } from '@storybook/react'
-import type { ViewProps } from './BaseModal.view'
+import type { ViewProps } from './TopNav.view'
 
 import { action } from '@storybook/addon-actions'
 
-import { View } from './BaseModal.view'
+import { View } from './TopNav.view'
 
-export default { title: 'components/BaseModal' }
+export default { title: 'components/TopNav' }
 
 export const Default: StoryFn<ViewProps> = (args) => {
   return <View {...args} />
 }
 
 Default.args = {
-  onClose: action('onClose')
+  text: 'LOG IN',
+  onClick: action('onClick')
 }
 
 Default.argTypes = {}

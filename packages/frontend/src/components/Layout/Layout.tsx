@@ -25,6 +25,7 @@ import { Head } from '@/components/Head'
 import { Nav } from '@/components/Nav'
 // import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
+import { TopNav } from '@/components/TopNav'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -183,6 +184,8 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   return (
     <div className={classNames('Layout', css.root, fontVariables)}>
       <Head {...pageProps.content.head} />
+
+      <TopNav text={pageProps.content.common.topNav.logIn} />
 
       <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
       <div className={css.content}>{currentPage}</div>
