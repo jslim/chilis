@@ -10,3 +10,4 @@ export { WebACL } from "@/stacks/spa/web-acl";
 // Backend
 export { ApiStack } from "@/stacks/api/api";
 export { userApiStack } from "@/stacks/api/user";
+export { leaderboardApiStack } from "@/stacks/api/leaderboard";

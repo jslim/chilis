@@ -14,6 +14,7 @@ export default {
       },
       password: {
         type: JsonSchemaType.STRING,
+        minLength: 6,
       },
     },
     required: ["phone", "password"],

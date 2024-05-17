@@ -1,66 +1,86 @@
 import { type APIGatewayProxyResult } from "aws-lambda";
-import { defaultResponseHeaders } from "@/utils/generate-api-method";
-import { LambdaIntegrationType } from "@/types/api";
+import { defaultResponseHeaders } from "@/utils/response-headers";
 
-export const statusCodes = {
-  Success: 200,
-  BadRequest: 400,
-  Unauthorized: 401,
-  Forbidden: 403,
-  NotFound: 404,
-  DefaultError: 500,
-};
-
-function Success(body: string | { [key: string]: any } = { message: "Success" }, headers = {}): APIGatewayProxyResult {
+/**
+ * Return 200 HTTP response
+ *
+ * @param {(string | { [key: string]: any })} [body='Success']
+ * @param headers
+ * @returns {APIGatewayProxyResult}
+ */
+export function Success(body: string | { [key: string]: any } = { message: "Success" }, headers = {}): APIGatewayProxyResult {
   const responseBody = typeof body === "string" ? body : JSON.stringify(body);
   return {
-    statusCode: statusCodes.Success,
+    statusCode: 200,
     body: responseBody,
     headers: { ...defaultResponseHeaders, ...headers },
   };
 }
 
-function BadRequest(body: string | { [key: string]: any } = { message: "Bad request" }): APIGatewayProxyResult {
-  return DefaultError(statusCodes.BadRequest, body);
+/**
+ * Return 400 HTTP response
+ *
+ * @param {(string | { [key: string]: any })} [body]
+ * @returns {APIGatewayProxyResult}
+ */
+export function BadRequest(body: string | { [key: string]: any } = { message: "Bad Request" }): APIGatewayProxyResult {
+  return DefaultError(body, 400);
 }
 
-function Unauthorized(body: string | { [key: string]: any } = { message: "Unauthorized" }): APIGatewayProxyResult {
-  return DefaultError(statusCodes.Unauthorized, body);
+/**
+ * Return 401 HTTP response
+ *
+ * @param {(string | { [key: string]: any })} [body]
+ * @returns {APIGatewayProxyResult}
+ */
+export function Unauthorized(body: string | { [key: string]: any } = { message: "Unauthorized" }): APIGatewayProxyResult {
+  return DefaultError(body, 401);
 }
 
-function Forbidden(body: string | { [key: string]: any } = { message: "Access denied" }): APIGatewayProxyResult {
-  return DefaultError(statusCodes.Forbidden, body);
+/**
+ * Return 403 HTTP response
+ *
+ * @param {(string | { [key: string]: any })} [body]
+ * @returns {APIGatewayProxyResult}
+ */
+export function Forbidden(body: string | { [key: string]: any } = { message: "Forbidden" }): APIGatewayProxyResult {
+  return DefaultError(body, 403);
 }
 
-function NotFound(body: string | { [key: string]: any } = { message: "Resource not found" }): APIGatewayProxyResult {
-  return DefaultError(statusCodes.NotFound, body);
+/**
+ * Return 404 HTTP response
+ *
+ * @param {(string | { [key: string]: any })} [body]
+ * @returns {APIGatewayProxyResult}
+ */
+export function NotFound(body: string | { [key: string]: any } = { message: "Not Found" }): APIGatewayProxyResult {
+  return DefaultError(body, 404);
 }
 
-function DefaultError(
-  statusCode = statusCodes.DefaultError,
-  body: string | { [key: string]: any } = { message: "Internal server error" }
-): APIGatewayProxyResult {
+/**
+ * Return 502 HTTP response
+ *
+ * @param {(string | { [key: string]: any })} [body]
+ * @returns {APIGatewayProxyResult}
+ */
+export function ThirdPartyException(body: string | { [key: string]: any } = { message: "Upstream Dependency Failed" }): APIGatewayProxyResult {
+  return DefaultError(body, 502);
+}
+
+/**
+ * Return Generic HTTP error
+ *
+ * @param {(string | { [key: string]: any })} [body]
+ * @param {number} [statusCode=500]
+ * @returns {APIGatewayProxyResult}
+ */
+export function DefaultError(body: string | { [key: string]: any } = { message: "Internal Server Error" }, statusCode = 500): APIGatewayProxyResult {
   const message = typeof body === "string" ? { message: body } : body;
-  const response = {
+  return {
     statusCode,
     body: JSON.stringify(message),
     headers: defaultResponseHeaders,
   };
-
-  // Note: INTEGRATION_METHOD will be set for the function automatically by 'generate-api-method' util
-  if (process.env.INTEGRATION_METHOD === LambdaIntegrationType.Proxy) {
-    return response;
-  } else {
-    // For Lambda functions, API Gateway matches the regex to the "errorMessage" to return a status code
-    throw Error(JSON.stringify(response));
-  }
 }
 
-export default {
-  Success,
-  BadRequest,
-  Unauthorized,
-  Forbidden,
-  NotFound,
-  DefaultError,
-};
+export default { Success, BadRequest, Unauthorized, Forbidden, NotFound, ThirdPartyException, DefaultError };
