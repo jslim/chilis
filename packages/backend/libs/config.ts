@@ -13,4 +13,3 @@ export const S3_REFERER_KEY = "s3-header-referer-secret";
 // Backend
 // Brinker API
 export const BRINKER_ACCESS = "/brinker/api/access";
-export const BRINKER_TOKEN = "/brinker/api/token";

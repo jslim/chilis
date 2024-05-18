@@ -4,15 +4,21 @@ import type { StackContext } from "sst/constructs";
 import { Function, Cron } from "sst/constructs";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 import { detectStage } from "@/libs/detect-stage";
-import { BRINKER_ACCESS, BRINKER_TOKEN } from "@/libs/config";
+import { BRINKER_ACCESS } from "@/libs/config";
 import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 
 export function SecretsStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
-  const brinkerTokenSecretName = `${app.stage}${BRINKER_TOKEN}`;
   const brinkerAccessSecretName = `${app.stage}${BRINKER_ACCESS}`;
 
-  setDefaultFunctionProps({ stack, app });
+  setDefaultFunctionProps(
+    { stack, app },
+    {
+      environment: {
+        BRINKER_ACCESS: brinkerAccessSecretName,
+      },
+    }
+  );
 
   // Access secret
   const brinkerAccess = new Secret(stack, "brinker-access", {
@@ -22,14 +28,8 @@ export function SecretsStack({ stack, app }: StackContext) {
       apiUrl: SecretValue.unsafePlainText("UPDATE_ME"),
       clientId: SecretValue.unsafePlainText("UPDATE_ME"),
       clientSecret: SecretValue.unsafePlainText("UPDATE_ME"),
+      token: SecretValue.unsafePlainText("ROTATE_ME"),
     },
-  });
-
-  // Token secret
-  const brinkerToken = new Secret(stack, "brinker-token", {
-    secretName: brinkerTokenSecretName,
-    description: "Secret where the token necessary to access the API is stored",
-    secretStringValue: SecretValue.unsafePlainText("UPDATE_ME"),
   });
 
   /**
@@ -49,10 +49,6 @@ export function SecretsStack({ stack, app }: StackContext) {
         resources: [brinkerAccess.secretArn],
       }),
     ],
-    environment: {
-      BRINKER_TOKEN: brinkerTokenSecretName,
-      BRINKER_ACCESS: brinkerAccessSecretName,
-    },
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
@@ -71,12 +67,9 @@ export function SecretsStack({ stack, app }: StackContext) {
       new PolicyStatement({
         actions: ["secretsmanager:RotateSecret"],
         effect: Effect.ALLOW,
-        resources: [brinkerToken.secretArn],
+        resources: [brinkerAccess.secretArn],
       }),
     ],
-    environment: {
-      BRINKER_TOKEN: brinkerTokenSecretName,
-    },
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
@@ -87,7 +80,7 @@ export function SecretsStack({ stack, app }: StackContext) {
    *
    * @default Duration.days(30)
    */
-  brinkerToken.addRotationSchedule("rotate-token", {
+  brinkerAccess.addRotationSchedule("rotate-token", {
     // eslint-disable-next-line
     // @ts-ignore
     rotationLambda: rotationLambdaFn,
@@ -103,9 +96,5 @@ export function SecretsStack({ stack, app }: StackContext) {
     job: invokeRotation,
   });
 
-  // eslint-disable-next-line
-  // @ts-ignore
-  brinkerToken.grantWrite(rotationLambdaFn);
-
-  return { brinkerAccess, brinkerToken };
+  return { brinkerAccess };
 }

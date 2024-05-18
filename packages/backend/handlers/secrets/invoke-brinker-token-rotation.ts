@@ -13,7 +13,7 @@ export const handler = async (event: EventBridgeEvent<string, {}>, context: Cont
   logger.info("Handler to trigger rotate the token", { event, ...context });
 
   try {
-    const response = await client.send(new RotateSecretCommand({ SecretId: process.env.BRINKER_TOKEN }));
+    const response = await client.send(new RotateSecretCommand({ SecretId: process.env.BRINKER_ACCESS }));
     logger.info("Rotation initiated successfully:", { response });
   } catch (error: any) {
     logger.error(`Error initiating rotation: ${error.message}`);

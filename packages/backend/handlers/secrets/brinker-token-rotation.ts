@@ -60,7 +60,7 @@ export const handler = async (event: SecretsManagerRotationEvent, context: Conte
 };
 
 async function createSecret(SecretId: string, VersionId: string) {
-  const { SecretString } = await clientSM.send(new GetSecretValueCommand({ SecretId: process.env.BRINKER_ACCESS!, VersionStage: "AWSCURRENT" }));
+  const { SecretString } = await clientSM.send(new GetSecretValueCommand({ SecretId, VersionStage: "AWSCURRENT" }));
   if (!SecretString) {
     logger.error(`${process.env.BRINKER_ACCESS} not found`);
     throw new Error();
@@ -70,15 +70,15 @@ async function createSecret(SecretId: string, VersionId: string) {
     await clientSM.send(new GetSecretValueCommand({ SecretId, VersionId, VersionStage: "AWSPENDING" }));
     logger.info(`createSecret: Successfully retrieved ${SecretId}`);
   } catch (err) {
-    const accessData = JSON.parse(SecretString);
-    const response = await fetch(`${accessData.apiUrl}/enterprise/oauth/generateToken/v1`, {
+    const data = JSON.parse(SecretString);
+    const response = await fetch(`${data.apiUrl}/enterprise/oauth/generateToken/v1`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: accessData.clientId,
-        client_secret: accessData.clientSecret,
+        client_id: data.clientId,
+        client_secret: data.clientSecret,
         grant_type: "client_credentials",
       }),
     });
@@ -92,12 +92,14 @@ async function createSecret(SecretId: string, VersionId: string) {
     response.json().then(async ({ access_token }) => {
       logger.info("Fetch a brinker successfully");
 
+      data.token = access_token;
+
       await clientSM.send(
         new PutSecretValueCommand({
           SecretId,
           ClientRequestToken: VersionId,
           VersionStages: ["AWSPENDING"],
-          SecretString: JSON.stringify(access_token),
+          SecretString: JSON.stringify(data),
         })
       );
 
