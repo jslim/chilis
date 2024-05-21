@@ -26,6 +26,7 @@
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.1.0",
     "@aws-lambda-powertools/tracer": "^2.1.0",
+    "@aws-sdk/client-secrets-manager": "^3.578.0",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
     "@ls-lint/ls-lint": "^1.11.2",

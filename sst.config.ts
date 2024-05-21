@@ -1,6 +1,17 @@
 import { SSTConfig } from "sst";
 
-import { CICD, FirehoseStack, FrontendDistribution, S3Origin, WebACL, ApiStack, userApiStack, leaderboardApiStack } from "@app/backend/stacks";
+import {
+  CICD,
+  FirehoseStack,
+  FrontendDistribution,
+  S3Origin,
+  WebACL,
+  ApiStack,
+  userApiStack,
+  leaderboardApiStack,
+  Database,
+  SecretsStack,
+} from "@app/backend/stacks";
 
 import { SST_APP_NAME } from "@app/backend/libs/config";
 
@@ -19,6 +30,8 @@ export default {
 
     app
       /* Backend */
+      .stack(Database)
+      .stack(SecretsStack)
       .stack(ApiStack)
       .stack(userApiStack)
       .stack(leaderboardApiStack)
