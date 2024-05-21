@@ -89,6 +89,16 @@
         ]
       }
     },
+    "about": {
+      "head": {
+        "title": "Chilis Burger Time",
+        "description": "Some landing page description"
+      },
+      "body": {
+        "title": "Chilis Burger Time",
+        "description": "Some landing page description"
+      }
+    },
     "leaderboard": {
       "head": {
         "title": "Leaderboard",
