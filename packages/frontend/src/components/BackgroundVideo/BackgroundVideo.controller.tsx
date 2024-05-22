@@ -6,8 +6,10 @@ import { View } from './BackgroundVideo.view'
 
 export interface ControllerProps {
   className?: string
-  videoSrc: string
-  posterSrc: string
+  videoData: {
+    src: string
+    poster: string
+  }
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

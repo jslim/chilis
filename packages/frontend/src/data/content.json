@@ -71,7 +71,7 @@
       "body": {
         "backgroundVideo": {
           "src": "",
-          "poster": "/common/assets/images/test.jpg"
+          "poster": "test.png"
         },
         "title": "PLAY THE GAME",
         "description": "To get started, edit <code>pages/index.js</code> and save to reload.",

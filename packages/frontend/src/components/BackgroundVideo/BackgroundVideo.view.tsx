@@ -14,8 +14,10 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, videoSrc, posterSrc }) => {
+export const View: FC<ViewProps> = ({ className, videoData }) => {
   const refs = useRefs<ViewRefs>()
+  const videoSrc = videoData.src
+  const posterSrc = videoData.poster
 
   return (
     <div className={classNames('BackgroundVideo', css.root, className)} ref={refs.root}>
