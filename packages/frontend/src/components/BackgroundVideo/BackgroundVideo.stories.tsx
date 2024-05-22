@@ -10,8 +10,10 @@ export const Default: StoryFn<ViewProps> = (args) => {
 }
 
 Default.args = {
-  posterSrc: 'https://via.placeholder.com/1920x1080',
-  videoSrc: 'https://www.w3schools.com/html/mov_bbb.mp4'
+  videoData: {
+    poster: 'https://via.placeholder.com/1920x1080',
+    src: 'https://www.w3schools.com/html/mov_bbb.mp4'
+  }
 }
 
 Default.argTypes = {}
