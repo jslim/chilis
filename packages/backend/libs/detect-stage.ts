@@ -7,6 +7,7 @@ export const detectStage = (
   isDeploy: boolean;
   isDevelop: boolean;
   isStage: boolean;
+  isUat: boolean;
   isSDLC: boolean;
   isProd: boolean;
   isDevelopment: boolean;
@@ -15,6 +16,7 @@ export const detectStage = (
     isDeploy: [...Object.keys(ENVS_TARGET)].includes(stage) || forceDeploy,
     isDevelop: stage === ENV_KEYS.dev,
     isStage: stage === ENV_KEYS.stg,
+    isUat: stage === ENV_KEYS.uat,
     isSDLC: stage === ENV_KEYS.sdlc,
     isProd: stage === ENV_KEYS.prd,
     isDevelopment:

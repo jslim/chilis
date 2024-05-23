@@ -16,6 +16,12 @@ import { getWebDomain } from "@/libs/get-domain";
 import { WebACL, S3Origin, ApiStack } from "@/stacks";
 import { detectStage } from "@/libs/detect-stage";
 
+function isValidDomain(domain: string) {
+  const domainRegex =
+    /^(?!:\/\/)([a-zA-Z0-9-_]{1,63}\.)*[a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+  return domainRegex.test(domain);
+}
+
 export function FrontendDistribution({ stack, app }: StackContext) {
   const { isDeploy } = detectStage(app.stage);
 
@@ -23,7 +29,12 @@ export function FrontendDistribution({ stack, app }: StackContext) {
   let apiDomainName;
   let certificate;
 
-  if (isDeploy) {
+  const enableCustomDomain =
+    isDeploy &&
+    isValidDomain(String(process.env.BASE_DOMAIN)) &&
+    process.env.BASE_DOMAIN !== " ";
+
+  if (enableCustomDomain) {
     domainName = getWebDomain(app.stage);
     apiDomainName = `api.${domainName}`;
 
@@ -84,7 +95,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
       NEXT_PUBLIC_API_HOST: api.customDomainUrl ?? api.url,
     },
-    ...(isDeploy ? { customDomain: domainName, certificate } : {}),
+    ...(enableCustomDomain ? { customDomain: domainName, certificate } : {}),
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
