@@ -3,6 +3,7 @@ import { ApiGatewayV1Api } from "sst/constructs";
 import { detectStage } from "@/libs/detect-stage";
 import { ENVS_TARGET } from "@/libs/stack-data";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
+import { isValidDomain } from "@/utils/domain-validator";
 
 export function ApiStack({ stack, app }: StackContext) {
   let usagePlan;
@@ -12,8 +13,14 @@ export function ApiStack({ stack, app }: StackContext) {
 
   let customDomain = undefined;
   const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
-  if (domainStage !== undefined) {
-    customDomain = (domainStage === "" ? `api` : `api.${domainStage}`) + `.${process.env.BASE_DOMAIN}`;
+  
+  if (
+    domainStage !== undefined &&
+    isValidDomain(String(process.env.BASE_DOMAIN))
+  ) {
+    customDomain =
+      (domainStage === "" ? `api` : `api.${domainStage}`) +
+      `.${process.env.BASE_DOMAIN}`;
   }
 
   const api = new ApiGatewayV1Api(stack, "api", { customDomain });
