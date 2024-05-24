@@ -121,6 +121,9 @@ export function CICD({ stack, app }: StackContext) {
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
           value: ssmParam.parameterName,
         },
+        GITHUB_TOKEN: {
+          value: SecretValue.secretsManager(`GitHubToken`),
+        },
         NODE_ENV: {
           value: "production",
         },
@@ -131,6 +134,13 @@ export function CICD({ stack, app }: StackContext) {
       buildSpec: codebuild.BuildSpec.fromObject({
         version: "0.2",
         phases: {
+          pre_install: {
+            commands: [
+              'echo "Cloning repository"',
+              "git clone https://$GITHUB_TOKEN@github.com/Experience-Monks/prj-240137971-chilis-burger-time.git",
+              "cd prj-240137971-chilis-burger-time",
+            ],
+          },
           install: {
             commands: [
               'echo "Using Node.js version $(node -v)"',
