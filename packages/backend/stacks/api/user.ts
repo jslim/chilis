@@ -1,16 +1,21 @@
 import type { StackContext } from "sst/constructs";
 import { Function, use } from "sst/constructs";
-import { ApiStack } from "@/stacks/api/api";
 import { HttpMethod } from "aws-cdk-lib/aws-events";
+import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 import { type ModelOptions } from "aws-cdk-lib/aws-apigateway";
 import { detectStage } from "@/libs/detect-stage";
 import generateApiMethod from "@/utils/generate-api-method";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 import postUserModel from "@/stacks/user/models/post-user";
+import { BRINKER_ACCESS } from "@/libs/config";
+import { ApiStack } from "@/stacks/api/api";
+import { SecretsStack } from "@/stacks/secrets";
 
 export function userApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
   const { api, validator } = use(ApiStack);
+  const { brinkerAccess } = use(SecretsStack);
+  const brinkerAccessSecretName = `${app.stage}${BRINKER_ACCESS}`;
 
   setDefaultFunctionProps({ stack, app });
 
@@ -18,6 +23,18 @@ export function userApiStack({ stack, app }: StackContext) {
     functionName: `${app.stage}-post-user-login`,
     description: "login access for user",
     handler: "packages/backend/handlers/user/post.handler",
+    environment: {
+      BRINKER_ACCESS: brinkerAccessSecretName,
+    },
+    permissions: [
+      // eslint-disable-next-line
+      // @ts-ignore
+      new PolicyStatement({
+        actions: ["secretsmanager:GetSecretValue"],
+        effect: Effect.ALLOW,
+        resources: [brinkerAccess.secretArn],
+      }),
+    ],
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
@@ -50,6 +67,7 @@ export function userApiStack({ stack, app }: StackContext) {
     resource: userPath,
     method: HttpMethod.POST,
     handlerFn: postUserLogin,
+    //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
     model: api.cdk.restApi.addModel(postUserModel.modelName, postUserModel as ModelOptions),
     validator,
   });
