@@ -1,23 +1,18 @@
-import { Component, Entity } from "../../core/Entity.ts";
-import { Rectangle, Sprite, Texture } from "pixi.js";
-import { LevelComponent } from "./LevelComponent.ts";
-import { Value } from "../../core/Value.ts";
-import LevelScene from "../../scenes/LevelScene.ts";
-import { HitBox } from "../HitBox.ts";
-import { Mover } from "../Mover.ts";
-import { Cpu } from "../cpu/Cpu.ts";
-import {
-  DRAW_STATE_DEBUG,
-  FLOOR_OFFSET,
-  SCORE_PER_BURGER_BOUNCE,
-  SCORE_PER_CPUS_HIT,
-} from "../../game.config.ts";
-import { StateDebugText } from "../StateDebugText.ts";
-import { Signal } from "../../core/Signal.ts";
-import { BurgerGroup } from "./BurgerGroup.ts";
-import { TileId } from "../../tiled/TileId.ts";
+import { Component, Entity } from '../../core/Entity'
+import { Rectangle, Sprite, Texture } from 'pixi.js'
+import { LevelComponent } from './LevelComponent'
+import { Value } from '../../core/Value'
+import LevelScene from '../../scenes/LevelScene'
+import { HitBox } from '../HitBox'
+import { Mover } from '../Mover'
+import { Cpu } from '../cpu/Cpu'
+import { DRAW_STATE_DEBUG, FLOOR_OFFSET, SCORE_PER_BURGER_BOUNCE, SCORE_PER_CPUS_HIT } from '../../game.config'
+import { StateDebugText } from '../StateDebugText'
+import { Signal } from '../../core/Signal'
+import { BurgerGroup } from './BurgerGroup'
+import { TileId } from '../../tiled/TileId'
 
-export const burgerOverlap = 1;
+export const burgerOverlap = 1
 export const burgerHeightByTileId = {
   [TileId.Burger1]: 6,
   [TileId.Burger2]: 4,
@@ -30,260 +25,236 @@ export const burgerHeightByTileId = {
   [TileId.Burger9]: 8,
   [TileId.Burger10]: 7,
   [TileId.Burger10]: 4,
-  [TileId.Burger12]: 6,
-};
+  [TileId.Burger12]: 6
+}
 
-export const BurgerTileSize = { tilewidth: 30, tileheight: 16 };
+export const BurgerTileSize = { tilewidth: 30, tileheight: 16 }
 
 export class Burger extends Component {
-  public readonly state = new Value<"idle" | "bounce" | "fall" | "complete">(
-    "idle",
-  );
+  public readonly state = new Value<'idle' | 'bounce' | 'fall' | 'complete'>('idle')
 
-  public readonly onHitBurger = new Signal<Entity>();
-  public readonly onHitPlate = new Signal<Entity>();
-  public readonly onHitCpu = new Signal<Entity>();
-  public readonly onComplete = new Signal<void>();
-  public readonly onSlice = new Signal<void>();
-  public readonly onSliceCompleted = new Signal<void>();
-  public readonly onHitFloor = new Signal<void>();
+  public readonly onHitBurger = new Signal<Entity>()
+  public readonly onHitPlate = new Signal<Entity>()
+  public readonly onHitCpu = new Signal<Entity>()
+  public readonly onComplete = new Signal<void>()
+  public readonly onSlice = new Signal<void>()
+  public readonly onSliceCompleted = new Signal<void>()
+  public readonly onHitFloor = new Signal<void>()
 
-  public group: BurgerGroup | undefined = undefined;
+  public group: BurgerGroup | undefined = undefined
 
-  private splicedSprites: Sprite[] = [];
-  private totalSlicesTouched: number = 0;
-  private targetY: number = 0;
-  private fallFrameId = 0;
-  private level!: LevelScene;
-  private fallSpeed: number = 3;
+  private splicedSprites: Sprite[] = []
+  private totalSlicesTouched: number = 0
+  private targetY: number = 0
+  private fallFrameId = 0
+  private level!: LevelScene
+  private fallSpeed: number = 3
 
-  private targetPlateRect: Rectangle | undefined = undefined;
+  private targetPlateRect: Rectangle | undefined = undefined
 
   private fallStats = {
     totalCpusHit: 0,
     // this value is passed from one to another burger, to get sum of chain of burgers hit
-    totalBurgersHit: 0,
-  };
+    totalBurgersHit: 0
+  }
 
   constructor(
     private spriteSheet: Texture,
-    private tileId: number,
+    private tileId: number
   ) {
-    super();
+    super()
   }
 
   override onStart() {
-    super.onStart();
+    super.onStart()
 
-    this.level = this.entity.getComponent(LevelComponent).level;
+    this.level = this.entity.getComponent(LevelComponent).level
     //const sprite = get(this.spriteSheetLarge, this.tileId);
 
     if (DRAW_STATE_DEBUG) {
-      this.entity.addComponent(
-        new StateDebugText(this.state, [10, 7], this.entity.color),
-      );
+      this.entity.addComponent(new StateDebugText(this.state, [10, 7], this.entity.color))
     }
 
-    const { tilewidth, tileheight } = BurgerTileSize;
+    const { tilewidth, tileheight } = BurgerTileSize
 
-    this.entity.pivot.set(Math.floor(tilewidth / 2), tileheight);
-    this.entity.x += this.entity.pivot.x;
-    this.entity.y += this.entity.pivot.y;
-    this.entity.pivot.y += FLOOR_OFFSET;
+    this.entity.pivot.set(Math.floor(tilewidth / 2), tileheight)
+    this.entity.x += this.entity.pivot.x
+    this.entity.y += this.entity.pivot.y
+    this.entity.pivot.y += FLOOR_OFFSET
 
     // break texture up horizontally per pixel
-    const baseTextureFrame = getBurgerTextureFrame(
-      this.spriteSheet,
-      this.tileId,
-    );
-    const textureWidth = baseTextureFrame.width;
-    const textureHeight = baseTextureFrame.height;
-    const pixelWidth = 5;
+    const baseTextureFrame = getBurgerTextureFrame(this.spriteSheet, this.tileId)
+    const textureWidth = baseTextureFrame.width
+    const textureHeight = baseTextureFrame.height
+    const pixelWidth = 5
     for (let x = 0; x < textureWidth; x += pixelWidth) {
-      const frame = new Rectangle(
-        baseTextureFrame.x + x,
-        baseTextureFrame.y,
-        pixelWidth,
-        textureHeight,
-      );
+      const frame = new Rectangle(baseTextureFrame.x + x, baseTextureFrame.y, pixelWidth, textureHeight)
       const texture = new Texture({
         source: this.spriteSheet.source,
-        frame: frame,
-      });
-      const sliceSprite = new Sprite(texture);
-      this.entity.addChild(sliceSprite);
-      this.splicedSprites.push(sliceSprite);
-      sliceSprite.pivot.y -= 6;
-      sliceSprite.x = x;
+        frame: frame
+      })
+      const sliceSprite = new Sprite(texture)
+      this.entity.addChild(sliceSprite)
+      this.splicedSprites.push(sliceSprite)
+      sliceSprite.pivot.y -= 6
+      sliceSprite.x = x
     }
 
-    this.findTargetPlate();
+    this.findTargetPlate()
 
     // remove original sprite
     // sprite.destroy();
 
     this.subscribe(this.state.onChanged, (newState) => {
       switch (newState) {
-        case "idle":
-          this.fallFrameId = 0;
-          this.totalSlicesTouched = 0;
-          this.fallStats.totalBurgersHit = 0;
-          break;
+        case 'idle':
+          this.fallFrameId = 0
+          this.totalSlicesTouched = 0
+          this.fallStats.totalBurgersHit = 0
+          break
 
-        case "bounce":
-          this.state.value = "fall";
-          break;
+        case 'bounce':
+          this.state.value = 'fall'
+          break
 
-        case "fall":
-          this.entity.y += 1;
-          this.targetY = this.findTargetY();
-          break;
-        case "complete":
-          this.onComplete.emit();
-          break;
+        case 'fall':
+          this.entity.y += 1
+          this.targetY = this.findTargetY()
+          break
+        case 'complete':
+          this.onComplete.emit()
+          break
       }
-    });
+    })
 
     this.subscribe(this.onSliceCompleted, () => {
-      this.state.value = "fall";
-    });
+      this.state.value = 'fall'
+    })
     this.subscribe(this.onHitCpu, (cpu) => {
-      this.fallStats.totalCpusHit++;
-      cpu.getComponent(Cpu).state.value = "die";
-    });
+      this.fallStats.totalCpusHit++
+      cpu.getComponent(Cpu).state.value = 'die'
+    })
     this.subscribe(this.onHitBurger, (otherBurger) => {
-      this.fallStats.totalBurgersHit++;
-      let otherBurgerComp = otherBurger.getComponent(Burger);
-      otherBurgerComp.fallStats.totalBurgersHit =
-        this.fallStats.totalBurgersHit;
+      this.fallStats.totalBurgersHit++
+      let otherBurgerComp = otherBurger.getComponent(Burger)
+      otherBurgerComp.fallStats.totalBurgersHit = this.fallStats.totalBurgersHit
 
-      otherBurgerComp.state.value = "bounce";
-    });
+      otherBurgerComp.state.value = 'bounce'
+    })
     this.subscribe(this.onHitPlate, (_plate) => {
-      this.addScore();
-      this.entity.getComponent(HitBox).hasIntersection = false;
-      this.state.value = "complete";
-    });
+      this.addScore()
+      this.entity.getComponent(HitBox).hasIntersection = false
+      this.state.value = 'complete'
+    })
     this.subscribe(this.onHitFloor, (_plate) => {
-      this.addScore();
-      this.state.value = "idle";
-    });
+      this.addScore()
+      this.state.value = 'idle'
+    })
   }
 
   override onUpdate(dt: number) {
-    super.onUpdate(dt);
+    super.onUpdate(dt)
 
     switch (this.state.value) {
-      case "idle":
-        this.updateIdle();
-        break;
+      case 'idle':
+        this.updateIdle()
+        break
 
-      case "fall":
-        this.updateFall();
-        break;
+      case 'fall':
+        this.updateFall()
+        break
 
-      case "complete":
-        this.updateComplete();
-        break;
+      case 'complete':
+        this.updateComplete()
+        break
     }
   }
 
   // wait for player touches
   private updateIdle() {
-    const player = this.level.player;
-    const playerMover = player.getComponent(Mover);
+    const player = this.level.player
+    const playerMover = player.getComponent(Mover)
     if (playerMover.hasMoved && Math.abs(player.y - this.entity.y) <= 1) {
-      this.totalSlicesTouched = 0;
-      const MIN_X_DISTANCE = 9;
-      const MAX_Y_DOWN = 4;
+      this.totalSlicesTouched = 0
+      const MIN_X_DISTANCE = 9
+      const MAX_Y_DOWN = 4
       for (const sliceSprite of this.splicedSprites) {
         if (
-          Math.abs(
-            this.entity.x +
-              sliceSprite.x +
-              sliceSprite.width / 2 -
-              this.entity.pivot.x -
-              player.x,
-          ) < MIN_X_DISTANCE
+          Math.abs(this.entity.x + sliceSprite.x + sliceSprite.width / 2 - this.entity.pivot.x - player.x) <
+          MIN_X_DISTANCE
         ) {
-          const prevSliceSpriteY = sliceSprite.y;
-          sliceSprite.y += 1;
-          sliceSprite.y = Math.min(sliceSprite.y, MAX_Y_DOWN);
-          if (
-            prevSliceSpriteY !== sliceSprite.y &&
-            sliceSprite.y === MAX_Y_DOWN
-          ) {
-            this.onSlice.emit();
+          const prevSliceSpriteY = sliceSprite.y
+          sliceSprite.y += 1
+          sliceSprite.y = Math.min(sliceSprite.y, MAX_Y_DOWN)
+          if (prevSliceSpriteY !== sliceSprite.y && sliceSprite.y === MAX_Y_DOWN) {
+            this.onSlice.emit()
           }
         }
-        if (sliceSprite.y == MAX_Y_DOWN) this.totalSlicesTouched++;
+        if (sliceSprite.y == MAX_Y_DOWN) this.totalSlicesTouched++
       }
     }
 
     // if all slices are touched, drop burger down
     if (this.totalSlicesTouched === this.splicedSprites.length) {
-      this.onSliceCompleted.emit();
+      this.onSliceCompleted.emit()
     }
   }
 
   private findTargetY() {
     // find y position in grid where burger will fall
-    const { grid, size } = this.level.walkGrid;
-    const x = Math.floor(this.entity.x + this.entity.pivot.x);
-    let y = Math.floor(this.entity.y);
+    const { grid, size } = this.level.walkGrid
+    const x = Math.floor(this.entity.x + this.entity.pivot.x)
+    let y = Math.floor(this.entity.y)
     while (grid[x + y * size] === 0) {
       if (this.targetPlateRect && y >= this.targetPlateRect.y) {
-        return this.targetPlateRect.y + 1;
+        return this.targetPlateRect.y + 1
       }
-      y++;
+      y++
     }
-    return y;
+    return y
   }
 
   private updateFall() {
     if (this.entity.y < this.targetY) {
       // move burger down in pixel steps
-      const frameTargetY = Math.min(
-        this.entity.y + this.fallSpeed,
-        this.targetY,
-      );
-      let chainCollisionEnded = true;
-      const { cpus, burgers, plates } = this.level;
+      const frameTargetY = Math.min(this.entity.y + this.fallSpeed, this.targetY)
+      let chainCollisionEnded = true
+      const { cpus, burgers, plates } = this.level
       loop: while (this.entity.y < frameTargetY) {
-        this.entity.y++;
+        this.entity.y++
 
         // test if intersects with cpu
         for (const cpuEntity of cpus) {
           if (this.intersectsWith(cpuEntity)) {
-            this.onHitCpu.emit(cpuEntity);
-            break loop;
+            this.onHitCpu.emit(cpuEntity)
+            break loop
           }
         }
 
         for (const plate of plates) {
           if (this.intersectsWith(plate)) {
-            this.onHitPlate.emit(plate);
-            break loop;
+            this.onHitPlate.emit(plate)
+            break loop
           }
         }
 
-        if (this.isCurrentState("fall")) {
+        if (this.isCurrentState('fall')) {
           for (let otherBurger of burgers) {
-            if (otherBurger === this.entity) continue;
-            let otherBurgerComponent = otherBurger.getComponent(Burger);
+            if (otherBurger === this.entity) continue
+            let otherBurgerComponent = otherBurger.getComponent(Burger)
             if (this.intersectsWith(otherBurger)) {
               if (otherBurgerComponent.isIdle) {
-                console.log("intersected with burger");
-                chainCollisionEnded = false;
+                console.log('intersected with burger')
+                chainCollisionEnded = false
 
-                this.onHitBurger.emit(otherBurger);
+                this.onHitBurger.emit(otherBurger)
               } else if (otherBurgerComponent.isCompleted) {
                 // if land on burger on the plate
-                this.onHitPlate.emit(otherBurger);
+                this.onHitPlate.emit(otherBurger)
                 // this.state.value = "complete";
-                break loop;
+                break loop
               }
-              break;
+              break
             }
           }
         }
@@ -292,91 +263,88 @@ export class Burger extends Component {
         // todo; figure out
       }
 
-      this.stepUpdateSlicedParts();
+      this.stepUpdateSlicedParts()
     } else {
-      this.onHitFloor.emit();
-      return;
+      this.onHitFloor.emit()
+      return
     }
   }
 
-  public isCurrentState(state: (typeof this.state)["value"]) {
-    return this.state.value === state;
+  public isCurrentState(state: (typeof this.state)['value']) {
+    return this.state.value === state
   }
 
   get isIdle() {
-    return this.state.value === "idle";
+    return this.state.value === 'idle'
   }
 
   public get isCompleted() {
-    return this.state.value === "complete";
+    return this.state.value === 'complete'
   }
 
   public intersectsWith(other: Entity) {
-    return this.entity
-      .getComponent(HitBox)
-      .intersects(other.getComponent(HitBox));
+    return this.entity.getComponent(HitBox).intersects(other.getComponent(HitBox))
   }
 
   private updateComplete() {}
 
   private stepUpdateSlicedParts() {
     // slowly move sliced parts up
-    this.fallFrameId++;
+    this.fallFrameId++
     for (let i = 0; i < Math.floor(this.fallFrameId / 2); i++) {
-      const slicedSprite1 = this.splicedSprites[i];
+      const slicedSprite1 = this.splicedSprites[i]
       if (slicedSprite1) {
-        slicedSprite1.y--;
-        slicedSprite1.y = Math.max(slicedSprite1.y, 0);
+        slicedSprite1.y--
+        slicedSprite1.y = Math.max(slicedSprite1.y, 0)
       }
-      const slicedSprite2 =
-        this.splicedSprites[this.splicedSprites.length - 1 - i];
+      const slicedSprite2 = this.splicedSprites[this.splicedSprites.length - 1 - i]
       if (slicedSprite2) {
-        slicedSprite2.y--;
-        slicedSprite2.y = Math.max(slicedSprite2.y, 0);
+        slicedSprite2.y--
+        slicedSprite2.y = Math.max(slicedSprite2.y, 0)
       }
     }
   }
 
   private findTargetPlate() {
-    let thisRect = this.entity.getComponent(HitBox).getRect();
-    let tempRect1 = new Rectangle();
-    let tempRect2 = new Rectangle();
+    let thisRect = this.entity.getComponent(HitBox).getRect()
+    let tempRect1 = new Rectangle()
+    let tempRect2 = new Rectangle()
 
     let platesOnSameRow = this.level.plates.filter((plate) => {
-      let plateHitBox = plate.getComponent(HitBox);
-      let plateRect = plateHitBox.getRect(tempRect1);
-      return plateHitBox.contains(thisRect.x, plateRect.y);
-    });
+      let plateHitBox = plate.getComponent(HitBox)
+      let plateRect = plateHitBox.getRect(tempRect1)
+      return plateHitBox.contains(thisRect.x, plateRect.y)
+    })
     // sort by closest y position to burger
     platesOnSameRow.sort((a, b) => {
-      let aRect = a.getComponent(HitBox).getRect(tempRect1);
-      let bRect = b.getComponent(HitBox).getRect(tempRect2);
-      return aRect.y - bRect.y;
-    });
-    return platesOnSameRow[0];
+      let aRect = a.getComponent(HitBox).getRect(tempRect1)
+      let bRect = b.getComponent(HitBox).getRect(tempRect2)
+      return aRect.y - bRect.y
+    })
+    return platesOnSameRow[0]
   }
 
   private addScore() {
-    let score = 0;
+    let score = 0
 
-    score += SCORE_PER_BURGER_BOUNCE[this.fallStats.totalBurgersHit];
-    this.fallStats.totalBurgersHit = 0;
+    score += SCORE_PER_BURGER_BOUNCE[this.fallStats.totalBurgersHit]
+    this.fallStats.totalBurgersHit = 0
 
-    score += SCORE_PER_CPUS_HIT[this.fallStats.totalCpusHit];
-    this.fallStats.totalCpusHit = 0;
+    score += SCORE_PER_CPUS_HIT[this.fallStats.totalCpusHit]
+    this.fallStats.totalCpusHit = 0
 
-    this.level.addScore(this.entity.position, score);
+    this.level.addScore(this.entity.position, score)
   }
 }
 
 function getBurgerTextureFrame(spriteSheet: Texture, id: number): Rectangle {
-  const { tilewidth, tileheight } = BurgerTileSize;
+  const { tilewidth, tileheight } = BurgerTileSize
 
   // tile ids are 1 based
-  id -= 1;
+  id -= 1
 
-  const totalTilesPerRow = spriteSheet.width / tilewidth;
-  const tx = id % totalTilesPerRow;
-  const ty = (id / totalTilesPerRow) | 0;
-  return new Rectangle(tx * tilewidth, ty * tileheight, tilewidth, tileheight);
+  const totalTilesPerRow = spriteSheet.width / tilewidth
+  const tx = id % totalTilesPerRow
+  const ty = (id / totalTilesPerRow) | 0
+  return new Rectangle(tx * tilewidth, ty * tileheight, tilewidth, tileheight)
 }

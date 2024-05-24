@@ -5,8 +5,6 @@ import classNames from 'classnames'
 
 import css from './Container.module.scss'
 
-import { localState } from '@/store'
-
 import { useRefs } from '@/hooks/use-refs'
 
 import { initGame } from '@/game/src/main'

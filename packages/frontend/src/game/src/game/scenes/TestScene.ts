@@ -1,7 +1,7 @@
-import { Scene } from "./Scene.ts";
+import { Scene } from './Scene'
 
 export class TestScene extends Scene {
   override onStart() {
-    super.onStart();
+    super.onStart()
   }
 }
