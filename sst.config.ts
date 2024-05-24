@@ -28,17 +28,17 @@ export default {
       app.stack(CICD);
     }
 
-    app
-      /* Backend */
-      .stack(Database)
-      .stack(SecretsStack)
-      .stack(ApiStack)
-      .stack(userApiStack)
-      .stack(leaderboardApiStack)
-      /* Frontend */
-      .stack(WebACL)
-      .stack(S3Origin)
-      .stack(FrontendDistribution)
-      .stack(FirehoseStack);
+    // app
+    //   /* Backend */
+    //   .stack(Database)
+    //   .stack(SecretsStack)
+    //   .stack(ApiStack)
+    //   .stack(userApiStack)
+    //   .stack(leaderboardApiStack)
+    //   /* Frontend */
+    //   .stack(WebACL)
+    //   .stack(S3Origin)
+    //   .stack(FrontendDistribution)
+    //   .stack(FirehoseStack);
   },
 } satisfies SSTConfig;
