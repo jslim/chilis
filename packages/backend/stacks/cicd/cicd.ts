@@ -35,7 +35,7 @@ const REPO_OWNER = "Experience-Monks";
 const BRANCH = "main";
 
 export function CICD({ stack, app }: StackContext) {
-  const { isStage, isProd, isDevelopment } = detectStage(app.stage);
+  const { isStage, isProd, isUat, isDevelopment } = detectStage(app.stage);
 
   if (isDevelopment || !ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET]) {
     return;
@@ -212,7 +212,7 @@ export function CICD({ stack, app }: StackContext) {
     // @ts-ignore
     artifactBucket: artifactBucket.cdk.bucket,
     stages:
-      isStage || isProd
+      isStage || isUat || isProd
         ? [sourceStage, approvalStage, buildStage]
         : [sourceStage, buildStage],
   });
