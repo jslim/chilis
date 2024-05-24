@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev:be": "AWS_PROFILE=$AWS_PROFILE sst dev --stage $SST_STAGE",
-    "dev:fe": "npm run dev -w @app/frontend",
-    "build": "AWS_PROFILE=$AWS_PROFILE sst build --stage $SST_STAGE",
+    "dev:fe": "npm run dev -w @app/frontend && npm run vite",
+    "build": "AWS_PROFILE=$AWS_PROFILE sst build --stage $SST_STAGE tsc && npm run vite build",
     "deploy": "AWS_PROFILE=$AWS_PROFILE sst deploy --stage $SST_STAGE",
     "remove": "AWS_PROFILE=$AWS_PROFILE sst remove --stage $SST_STAGE",
     "console": "sst console",
@@ -90,6 +90,7 @@
     "normalize.css": "^8.0.1",
     "npm-run-all": "^4.1.5",
     "opener": "^1.5.2",
+    "pixi.js": "^8.0.4",
     "postcss-cli": "^10.1.0",
     "prettier": "^3.1.0",
     "react": "18.2.0",
@@ -108,6 +109,7 @@
     "stylelint-prettier": "^4.0.2",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.3.3",
+    "vite": "^5.2.0",
     "xss": "^1.0.14",
     "zustand": "^4.4.6"
   },
