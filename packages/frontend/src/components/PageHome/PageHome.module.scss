@@ -8,7 +8,6 @@
 
 .hero {
   @include box(100%);
-  @include z-index(pages);
 }
 
 .logoContainer {

@@ -4,7 +4,8 @@
   @include position-0(absolute);
   @include box(100%);
   @include flex-center;
-  background-color: rgba($black, 0.3);
+  @include z-index(modal);
+  background-color: rgba($black, 0.5);
 }
 
 .close {

@@ -10,4 +10,12 @@
     width: 100%;
     flex: 1 1 auto;
   }
+
+  .playButton {
+    @include z-index(pages);
+    position: absolute;
+    left: 50%;
+    bottom: px(210);
+    transform: translateX(-50%);
+  }
 }

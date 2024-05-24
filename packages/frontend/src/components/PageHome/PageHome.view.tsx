@@ -8,11 +8,7 @@ import { gsap } from 'gsap'
 
 import css from './PageHome.module.scss'
 
-import { copy } from '@/utils/copy'
-
 import { useRefs } from '@/hooks/use-refs'
-
-import { BackgroundVideo } from '@/components/BackgroundVideo'
 
 import HomeLogo from '@/svgs/HomeLogo.svg'
 
@@ -31,7 +27,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ content, onReady }) => {
+export const View: FC<ViewProps> = ({ onReady }) => {
   const refs = useRefs<ViewRefs>()
 
   useEffect(() => {
@@ -52,9 +48,7 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
 
   return (
     <main className={classNames('PageHome', css.root)} ref={refs.root}>
-      <BackgroundVideo videoData={content.body.backgroundVideo} />
       <section className={css.hero}>
-        <h1 className={css.title} {...copy.html(content.body.title)} ref={refs.title} />
         <div className={css.logoContainer}>
           <HomeLogo />
         </div>

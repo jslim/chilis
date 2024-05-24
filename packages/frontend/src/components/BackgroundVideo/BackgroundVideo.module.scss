@@ -2,9 +2,9 @@
 
 .root {
   @include box(100%);
-  @include z-index(background);
   position: absolute;
   display: block;
+  background-color: $black;
 }
 
 .video {
