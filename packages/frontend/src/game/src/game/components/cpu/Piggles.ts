@@ -1,23 +1,21 @@
-import { Component } from "../../core/Entity.ts";
-import { Value } from "../../core/Value.ts";
+import { Component } from '../../core/Entity'
+import { Value } from '../../core/Value'
 
 export class Piggles extends Component {
-  public readonly state = new Value<"walking" | "prepare_attack" | "attack">(
-    "walking",
-  );
+  public readonly state = new Value<'walking' | 'prepare_attack' | 'attack'>('walking')
   constructor() {
-    super();
+    super()
   }
 
   override onStart() {
-    super.onStart();
+    super.onStart()
   }
 
   override onUpdate(dt: number) {
-    super.onUpdate(dt);
+    super.onUpdate(dt)
   }
 
   override destroy() {
-    super.destroy();
+    super.destroy()
   }
 }

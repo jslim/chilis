@@ -20,6 +20,7 @@ import { fontVariables } from '@/utils/fonts'
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useRefs } from '@/hooks/use-refs'
 
+import { BaseModal } from '@/components/BaseModal'
 // import { Footer } from '@/components/Footer'
 import { Container } from '@/components/Container'
 import { Head } from '@/components/Head'
@@ -28,7 +29,6 @@ import { PlayNow } from '@/components/PlayNow'
 // import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { TopNav } from '@/components/TopNav'
-import { BaseModal } from '@/components/BaseModal'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })

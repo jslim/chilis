@@ -1,4 +1,4 @@
-import { GameController } from './game/GameController.ts'
+import { GameController } from './game/GameController'
 
 export const initGame = async () => {
   const game = new GameController()

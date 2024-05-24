@@ -1,77 +1,77 @@
-import { Input } from "../input/Input.ts";
-import { Player } from "./Player.ts";
-import { Direction, MoveDirection, Mover } from "../Mover.ts";
-import { CoolDown } from "../../utils/CoolDown.ts";
+import { Input } from '../input/Input'
+import { Player } from './Player'
+import { Direction, MoveDirection, Mover } from '../Mover'
+import { CoolDown } from '../../utils/CoolDown'
 
 export class PlayerPacManMover extends Mover {
-  private queuedDirection: MoveDirection = "";
-  private queuedDirectionCooldown = new CoolDown(0.5);
+  private queuedDirection: MoveDirection = ''
+  private queuedDirectionCooldown = new CoolDown(0.5)
 
   override onStart() {
-    super.onStart();
+    super.onStart()
     this.subscribe(this.entity.getComponent(Player).onReset, () => {
-      this.queuedDirection = "";
-      this.currentDirection.value = "";
-    });
+      this.queuedDirection = ''
+      this.currentDirection.value = ''
+    })
   }
 
   override onUpdate(dt: number) {
-    super.onUpdate(dt);
+    super.onUpdate(dt)
 
-    this.queuedDirectionCooldown.update(dt);
+    this.queuedDirectionCooldown.update(dt)
     if (this.queuedDirectionCooldown.isExpired()) {
-      this.queuedDirection = "";
+      this.queuedDirection = ''
     }
 
-    const player = this.entity.getComponent(Player);
-    const input = this.entity.getComponent(Input);
+    const player = this.entity.getComponent(Player)
+    const input = this.entity.getComponent(Input)
 
     if (input && player.canWalk) {
-      if (player.canShoot && this.canMoveSideways && input.isDown("action")) {
-        player.state.value = "shoot";
-        input.onUp.emit("action");
+      if (player.canShoot && this.canMoveSideways && input.isDown('action')) {
+        player.state.value = 'shoot'
+        input.onUp.emit('action')
       } else {
-        const currentDirection = this.currentDirection.value;
-        let hasMoved = false;
-        let queuedDirection: MoveDirection = "";
+        const currentDirection = this.currentDirection.value
+        let hasMoved = false
+        let queuedDirection: MoveDirection = ''
 
         const move = (direction: Direction) => {
           if (!hasMoved && this[direction]()) {
-            return (hasMoved = true);
+            return (hasMoved = true)
           }
-          return false;
-        };
-
-        if (input.isDown("left")) {
-          if (!move("left")) queuedDirection = "left";
-        } else if (input.isDown("right")) {
-          if (!move("right")) queuedDirection = "right";
+          return false
         }
 
-        if (input.isDown("up")) {
-          if (!move("up")) queuedDirection = "up";
-        } else if (input.isDown("down")) {
-          if (!move("down")) queuedDirection = "down";
+        if (input.isDown('left')) {
+          if (!move('left')) queuedDirection = 'left'
+        } else if (input.isDown('right')) {
+          if (!move('right')) queuedDirection = 'right'
+        }
+
+        if (input.isDown('up')) {
+          if (!move('up')) queuedDirection = 'up'
+        } else if (input.isDown('down')) {
+          if (!move('down')) queuedDirection = 'down'
         }
 
         if (queuedDirection) {
-          this.queuedDirection = queuedDirection;
-          this.queuedDirectionCooldown.reset();
+          this.queuedDirection = queuedDirection
+          this.queuedDirectionCooldown.reset()
         }
 
         if (!hasMoved && this.queuedDirection) {
           if (move(this.queuedDirection)) {
-            this.queuedDirection = "";
+            this.queuedDirection = ''
           }
         }
 
         if (!hasMoved && currentDirection) {
-          move(currentDirection);
+          move(currentDirection)
         }
 
         if (hasMoved) {
-          player.state.value = "walk";
-          player.idleCoolDown.reset();
+          player.state.value = 'walk'
+          player.idleCoolDown.reset()
         }
       }
     }
