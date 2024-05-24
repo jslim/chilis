@@ -12,7 +12,7 @@ import { nanoid } from 'nanoid'
 
 import css from './Layout.module.scss'
 
-import { localState } from '@/store'
+import { localState, localStore } from '@/store'
 
 import { getScrollTop } from '@/utils/basic-functions'
 import { fontVariables } from '@/utils/fonts'
@@ -21,11 +21,14 @@ import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useRefs } from '@/hooks/use-refs'
 
 // import { Footer } from '@/components/Footer'
+import { Container } from '@/components/Container'
 import { Head } from '@/components/Head'
 import { Nav } from '@/components/Nav'
+import { PlayNow } from '@/components/PlayNow'
 // import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { TopNav } from '@/components/TopNav'
+import { BaseModal } from '@/components/BaseModal'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -50,6 +53,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const { flags } = useFeatureFlags()
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
+  const isGameOpen = localStore((state) => state.game.isGameOpen)
   //  const [introComplete, setIntroComplete] = useState(false)
 
   // const handleIntroComplete = useCallback(() => {
@@ -181,13 +185,31 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [refs, Component, pageProps, flags.pageTransitions])
 
+  const handlePlayClick = () => {
+    localState().game.setIsGameOpen(true)
+    console.log(localState().game.isGameOpen)
+  }
+
   return (
     <div className={classNames('Layout', css.root, fontVariables)}>
       <Head {...pageProps.content.head} />
 
       <TopNav text={pageProps.content.common.topNav.logIn} />
 
+      <PlayNow text={pageProps.content.common.playNow} className={css.playButton} onClick={handlePlayClick} />
+
       <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+
+      {isGameOpen && (
+        <BaseModal
+          onClose={function (): void {
+            throw new Error('Function not implemented.')
+          }}
+        >
+          <Container />
+        </BaseModal>
+      )}
+
       <div className={css.content}>{currentPage}</div>
 
       {/* {!introComplete ? <ScreenIntro onComplete={handleIntroComplete} /> : null} */}

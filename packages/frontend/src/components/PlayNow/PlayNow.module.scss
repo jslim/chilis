@@ -1,0 +1,8 @@
+@import 'shared';
+
+.root {
+  @include font-size(48, 10);
+  @include font-family(Gamer, 500);
+  display: block;
+  color: $sunrise;
+}

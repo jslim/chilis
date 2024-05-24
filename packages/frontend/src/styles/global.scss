@@ -137,3 +137,7 @@ svg {
   overflow: visible;
   fill: currentcolor;
 }
+
+canvas {
+  @include box(100%);
+}
