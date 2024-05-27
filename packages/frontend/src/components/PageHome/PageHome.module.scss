@@ -11,8 +11,5 @@
 }
 
 .logoContainer {
-  svg {
-    max-height: px(378);
-    margin: 0 auto;
-  }
+  @include flex-center;
 }

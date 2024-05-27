@@ -70,6 +70,10 @@
         "description": "Some landing page description"
       },
       "body": {
+        "hero": {
+          "src": "hero.png",
+          "alt": "Chilis Logo"
+        },
         "backgroundVideo": {
           "src": "",
           "poster": "test.png"
