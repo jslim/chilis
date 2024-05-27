@@ -18,4 +18,11 @@
     bottom: px(210);
     transform: translateX(-50%);
   }
+
+  .soundSwitch {
+    @include z-index(pages);
+    position: absolute;
+    right: px(20);
+    bottom: px(20);
+  }
 }

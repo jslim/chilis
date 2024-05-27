@@ -9,6 +9,8 @@ import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
 
+import SvgPlay from '@/svgs/Playnow.svg'
+
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -20,8 +22,8 @@ export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', onClick }) =
   const refs = useRefs<ViewRefs>()
 
   return (
-    <BaseButton className={classNames('PlayNow', css.root, className)} ref={refs.root} onClick={onClick}>
-      {text}
+    <BaseButton className={classNames('PlayNow', css.root, className)} ref={refs.root} onClick={onClick} title={text}>
+      <SvgPlay />
     </BaseButton>
   )
 }

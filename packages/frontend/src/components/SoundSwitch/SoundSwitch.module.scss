@@ -1,0 +1,19 @@
+@import 'shared';
+
+.root {
+  @include flex-center-vert;
+  position: relative;
+  flex-direction: column;
+  gap: px(15);
+}
+
+.cd {
+  @include box(px(68));
+  position: relative;
+}
+
+.note {
+  position: absolute;
+  top: px(-50);
+  width: px(28);
+}

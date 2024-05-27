@@ -53,10 +53,6 @@ export const View: FC<ViewProps> = ({ className, content, handleRef }) => {
             </li>
           ))}
         </ul>
-
-        <div className={css.sound}>
-          {content.sound.options.on} / {content.sound.options.off}
-        </div>
       </div>
 
       <section aria-hidden="true" id="start-of-content"></section>

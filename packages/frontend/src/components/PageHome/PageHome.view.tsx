@@ -8,9 +8,12 @@ import { gsap } from 'gsap'
 
 import css from './PageHome.module.scss'
 
+import { getImageUrl } from '@/utils/basic-functions'
+
 import { useRefs } from '@/hooks/use-refs'
 
-import HomeLogo from '@/svgs/HomeLogo.svg'
+import { BackgroundVideo } from '@/components/BackgroundVideo'
+import { BaseImage } from '@/components/BaseImage'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -24,11 +27,16 @@ export type ViewRefs = {
     src: string
     poster: string
   }
+  hero: {
+    src: string
+    alt: string
+  }
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ onReady }) => {
+export const View: FC<ViewProps> = ({ onReady, content }) => {
   const refs = useRefs<ViewRefs>()
+  // const imageSrc = content.body.hero.src
 
   useEffect(() => {
     gsap.set(refs.root.current, { opacity: 0 })
@@ -37,20 +45,17 @@ export const View: FC<ViewProps> = ({ onReady }) => {
 
   useImperativeHandle(refs.pageHandle, () => ({
     animateIn: () => {
-      return gsap
-        .timeline()
-        .to(refs.root.current, { opacity: 1 }, 0)
-        .fadeIn(refs.title.current, {}, 0)
-        .fadeIn(refs.description.current, {}, 0.2)
+      return gsap.timeline().to(refs.root.current, { opacity: 1 }, 0)
     },
     animateOut: () => gsap.timeline().to(refs.root.current, { opacity: 0 })
   }))
 
   return (
     <main className={classNames('PageHome', css.root)} ref={refs.root}>
+      <BackgroundVideo className={css.media} videoData={content.body.backgroundVideo} />
       <section className={css.hero}>
         <div className={css.logoContainer}>
-          <HomeLogo />
+          <BaseImage className={css.logo} data={getImageUrl(content.body.hero.src)} alt={content.body.hero.alt} />
         </div>
       </section>
     </main>
