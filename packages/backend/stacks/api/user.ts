@@ -50,15 +50,6 @@ export function userApiStack({ stack, app }: StackContext) {
     }),
   });
 
-  const getUser = new Function(stack, "get-user", {
-    functionName: `${app.stage}-get-user`,
-    description: "Endpoint to login user nickname",
-    handler: "packages/backend/handlers/user/get.handler",
-    ...(isProd && {
-      reservedConcurrentExecutions: 50,
-    }),
-  });
-
   const patchUser = new Function(stack, "patch-user", {
     functionName: `${app.stage}-patch-user`,
     description: "Endpoint to create user nickname",
@@ -88,14 +79,6 @@ export function userApiStack({ stack, app }: StackContext) {
     handlerFn: postUserLogin,
     //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
     model: api.cdk.restApi.addModel(postUserModel.modelName, postUserModel as ModelOptions),
-    validator,
-  });
-
-  generateApiMethod({
-    resource: userPath,
-    method: HttpMethod.GET,
-    handlerFn: getUser,
-    //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
     validator,
   });
 
