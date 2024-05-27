@@ -76,7 +76,7 @@ export function AuthStack({ stack, app }: StackContext) {
   });
 
   const userPool = new Cognito(stack, "PooledUsers", {
-    login: ["phone"],
+    login: ["username"],
     triggers: {
       preSignUp: preSignUpFn,
       defineAuthChallenge: defineAuthChallengeFn,
