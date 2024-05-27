@@ -7,7 +7,8 @@
   background-color: $black;
 }
 
-.video {
+.video,
+.image {
   @include box(100%);
   object-fit: cover;
 }

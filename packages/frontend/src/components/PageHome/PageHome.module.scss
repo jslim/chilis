@@ -1,15 +1,22 @@
 @import 'shared';
 
 .root {
-  @include flex-center-vert;
+  display: flex;
   position: relative;
   width: 100%;
 }
 
 .hero {
   @include box(100%);
+  margin-top: px(80);
 }
 
 .logoContainer {
   @include flex-center;
+  height: px(300);
+
+  .logo {
+    @include box(100%);
+    object-fit: contain;
+  }
 }

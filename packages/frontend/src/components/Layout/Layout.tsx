@@ -29,6 +29,7 @@ import { PlayNow } from '@/components/PlayNow'
 // import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { TopNav } from '@/components/TopNav'
+import { SoundSwitch } from '@/components/SoundSwitch'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -199,6 +200,8 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <PlayNow text={pageProps.content.common.playNow} className={css.playButton} onClick={handlePlayClick} />
 
       <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+
+      <SoundSwitch className={css.soundSwitch} audioSrc={pageProps.content.common.testAudio} />
 
       {isGameOpen && (
         <BaseModal
