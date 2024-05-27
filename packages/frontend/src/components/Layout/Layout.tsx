@@ -187,7 +187,6 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
   const handlePlayClick = () => {
     localState().game.setIsGameOpen(true)
-    console.log(localState().game.isGameOpen)
   }
 
   return (
