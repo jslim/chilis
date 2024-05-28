@@ -1,11 +1,12 @@
 /* GENERAL */
 
-export const FRAME_RATE = 22;
+export const FRAME_RATE = 18;
 
 /* DEBUG */
 
-export const DRAW_DEBUG_GRID = false;
 export const DEBUG_KEYS = true;
+
+export const DRAW_DEBUG_GRID = false;
 export const DRAW_CPU_DEBUG = false;
 export const DRAW_HIT_BOX_DEBUG = false;
 export const DRAW_STATE_DEBUG = false;

@@ -28,9 +28,7 @@ export function quadInOut01(t: number) {
 }
 
 export function quadOutIn01(t: number) {
-  return t < 0.5
-    ? -0.5 * (t = t * 2.0) * (t - 2.0)
-    : 0.5 * (t = t * 2.0 - 1.0) * t + 0.5;
+  return t < 0.5 ? -0.5 * (t = t * 2.0) * (t - 2.0) : 0.5 * (t = t * 2.0 - 1.0) * t + 0.5;
 }
 
 export function powIn01(t: number) {
@@ -78,9 +76,7 @@ export function quartOut01(t: number) {
 }
 
 export function quartInOut01(t: number) {
-  return t <= 0.5
-    ? t * t * t * t * 8.0
-    : (1.0 - (t = t * 2.0 - 2.0) * t * t * t) * 0.5 + 0.5;
+  return t <= 0.5 ? t * t * t * t * 8.0 : (1.0 - (t = t * 2.0 - 2.0) * t * t * t) * 0.5 + 0.5;
 }
 
 export function quartOutIn01(t: number) {
@@ -98,9 +94,7 @@ export function quintOut01(t: number) {
 }
 
 export function quintInOut01(t: number) {
-  return (t *= 2.0) < 1.0
-    ? (t * t * t * t * t) / 2.0
-    : ((t -= 2.0) * t * t * t * t + 2.0) / 2.0;
+  return (t *= 2.0) < 1.0 ? (t * t * t * t * t) / 2.0 : ((t -= 2.0) * t * t * t * t + 2.0) / 2.0;
 }
 
 export function quintOutIn01(t: number) {

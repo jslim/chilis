@@ -1,90 +1,72 @@
-import { Player } from './Player'
-import { Animator, configToLibrary } from '../Animator'
-import { Mover } from '../Mover'
+import { Player } from './Player';
+import { Mover } from '../Mover';
 
-export class PlayerAnimator extends Animator {
-  constructor() {
-    super(
-      configToLibrary({
-        'player/idle': 19,
-        'player/walk': 19,
-        'player/climb': 19,
-        'player/victory': 19,
-        'player/shoot': 40,
-        'player/die': 24
-      })
-    )
-  }
+import { FlumpAnimator } from '../../flump/FlumpAnimator';
+
+export class PlayerAnimator extends FlumpAnimator {
   override onStart() {
-    super.onStart()
+    super.onStart();
 
-    const player = this.entity.getComponent(Player)
-    this.root.pivot.x = -2
-    this.root.pivot.y = 3
-    const mover = this.entity.getComponent(Mover)
-
-    const shootAnimationSprite = this.animationSprites
-      .get('player/shoot')!
-      .noLoop()
-      .setPivot(40 - 19, 0)
-    this.subscribe(shootAnimationSprite.onEnd, () => player.idle())
-
-    const dieAnimationSprite = this.animationSprites
-      .get('player/die')!
-      .noLoop()
-      .setPivot(0, 28 - 19)
-    this.subscribe(dieAnimationSprite.onEnd, () => player.onDied.emit())
+    const player = this.entity.getComponent(Player);
+    this.root.pivot.x = 1; // visual correction of animation
+    const mover = this.entity.getComponent(Mover);
 
     this.subscribe(mover.currentDirection.onChanged, (direction) => {
       switch (direction) {
         case 'up':
         case 'down':
-          this.flipNeutral()
-          this.setMovie('player/climb').play()
-          break
+          this.flipNeutral();
+          this.setMovie('player_climb').play();
+          break;
         case 'left':
-          this.setMovie('player/walk').play()
-          this.flipToLeft()
-          break
+          this.setMovie('player_walk').play();
+          this.flipToLeft();
+          break;
         case 'right':
-          this.setMovie('player/walk').play()
-          this.flipToRight()
-          break
+          this.setMovie('player_walk').play();
+          this.flipToRight();
+          break;
       }
-    })
+    });
 
     this.subscribe(player.state.onChanged, (newState) => {
       switch (newState) {
         case 'idle':
-          this.setMovie('player/idle').play()
-          break
+          this.setMovie('player_idle').play();
+          break;
 
         case 'walk':
-          mover.currentDirection.emit()
-          // this.setMovie("player/walk").play();
-          break
+          mover.currentDirection.emit();
+          // this.setMovie("player_walk").play();
+          break;
 
         case 'hit':
-          this.stop()
-          break
+          this.stop();
+          break;
 
         case 'victory':
-          this.setMovie('player/victory').gotoAndPlay(0)
-          break
+          this.setMovie('player_victory').gotoAndPlay(0);
+          break;
 
         case 'reset':
-          this.stop()
-          break
+          this.stop();
+          break;
 
         case 'die':
-          this.setMovie('player/die').gotoAndPlay(0)
-          break
+          this.setMovie('player_die').gotoAndPlay(0).once();
+          this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
+            player.onDied.emit();
+          });
+          break;
 
         case 'shoot':
-          this.setMovie('player/shoot').gotoAndPlay(0)
-          break
+          this.setMovie('player_shoot').gotoAndPlay(0).once();
+          this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
+            player.idle();
+          });
+          break;
       }
-    })
-    this.setMovie('player/walk').gotoAndPlay(0)
+    });
+    this.setMovie('player_walk').gotoAndPlay(0);
   }
 }

@@ -23,7 +23,7 @@ export interface TiledLayer {
   id: number;
   name: string;
   opacity: number;
-  type: "objectgroup" | "tilelayer";
+  type: 'objectgroup' | 'tilelayer';
   visible: boolean;
   width: number;
   x: number;
