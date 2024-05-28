@@ -8,6 +8,7 @@ export { S3Origin } from "@/stacks/spa/s3-origin";
 export { WebACL } from "@/stacks/spa/web-acl";
 
 // Backend
+export { AuthStack } from "@/stacks/auth";
 export { ApiStack } from "@/stacks/api/api";
 export { userApiStack } from "@/stacks/api/user";
 export { leaderboardApiStack } from "@/stacks/api/leaderboard";
