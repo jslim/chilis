@@ -22,6 +22,7 @@ export const detectStage = (
     isDevelopment:
       stage !== ENV_KEYS.dev &&
       stage !== ENV_KEYS.stg &&
+      stage !== ENV_KEYS.uat &&
       stage !== ENV_KEYS.sdlc &&
       stage !== ENV_KEYS.prd,
   };
