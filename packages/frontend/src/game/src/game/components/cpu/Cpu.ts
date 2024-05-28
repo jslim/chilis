@@ -1,19 +1,20 @@
-import { Component, Entity } from '../../core/Entity'
-import { CpuMover } from './CpuMover'
-import { Value } from '../../core/Value'
+import type LevelScene from '../../scenes/LevelScene'
+import type { Bullet } from '../level/Bullet'
+
 import { CoolDown } from '../../core/CoolDown'
-import { LevelComponent } from '../level/LevelComponent'
-import { HitBox } from '../HitBox'
-import { DRAW_STATE_DEBUG } from '../../game.config'
-import { StateDebugText } from '../StateDebugText'
-import { Player } from '../player/Player'
+import { Component, Entity } from '../../core/Entity'
 import { Signal } from '../../core/Signal'
-import { Mover } from '../Mover'
+import { Value } from '../../core/Value'
+import { DRAW_STATE_DEBUG } from '../../game.config'
 import { sortByDistanceTo } from '../../utils/array.utils'
-import { Bullet } from '../level/Bullet'
-import { AutoDisposer } from '../AutoDisposer'
 import { lerp } from '../../utils/math.utils'
-import LevelScene from '../../scenes/LevelScene'
+import { AutoDisposer } from '../AutoDisposer'
+import { HitBox } from '../HitBox'
+import { LevelComponent } from '../level/LevelComponent'
+import { Mover } from '../Mover'
+import { Player } from '../player/Player'
+import { StateDebugText } from '../StateDebugText'
+import { CpuMover } from './CpuMover'
 
 export class Cpu extends Component {
   public readonly state = new Value<
@@ -26,8 +27,8 @@ export class Cpu extends Component {
   protected level: LevelScene | undefined = undefined
 
   protected attackCoolDown = new CoolDown(1.5)
-  protected paralyzedCoolDown = new CoolDown(2.0)
-  protected dieCoolDown = new CoolDown(2.0)
+  protected paralyzedCoolDown = new CoolDown(2)
+  protected dieCoolDown = new CoolDown(2)
 
   constructor(public name = 'trainee01') {
     super()
@@ -50,35 +51,43 @@ export class Cpu extends Component {
       hitBox.isActive.value = newState === 'walk' || newState === 'prepare_attack' || newState === 'attack'
 
       switch (newState) {
-        case 'spawn':
-          this.entity.alpha = 0.0
+        case 'spawn': {
+          this.entity.alpha = 0
           break
+        }
 
-        case 'walk':
+        case 'walk': {
           break
+        }
 
-        case 'paralyzed':
+        case 'paralyzed': {
           this.attackCoolDown.reset()
           break
+        }
 
-        case 'die':
+        case 'die': {
           break
+        }
 
-        case 'defeat':
+        case 'defeat': {
           break
+        }
 
-        case 'prepare_attack':
+        case 'prepare_attack': {
           this.attackCoolDown.reset()
           break
+        }
 
-        case 'attack':
+        case 'attack': {
           this.attackCoolDown.reset()
           break
+        }
 
-        case 'attack_complete':
+        case 'attack_complete': {
           this.attackCoolDown.reset()
           this.state.value = 'walk'
           break
+        }
       }
     })
 
@@ -99,41 +108,45 @@ export class Cpu extends Component {
 
     switch (this.state.value) {
       case 'prepare_attack':
-      case 'walk':
+      case 'walk': {
         mover.walk(dt)
         this.checkCollision()
         this.entity.scale.x = mover.directionX > 0 ? 1 : -1
         break
+      }
 
-      case 'paralyzed':
+      case 'paralyzed': {
         this.entity.alpha = lerp(0.5, 1, this.paralyzedCoolDown.progress)
         if (this.paralyzedCoolDown.update(dt)) {
           this.paralyzedCoolDown.reset()
           this.state.value = 'walk'
         }
         break
+      }
 
-      case 'die':
+      case 'die': {
         if (this.dieCoolDown.update(dt)) {
           this.state.value = 'spawn'
           this.respawn()
         }
         break
+      }
 
-      case 'spawn':
+      case 'spawn': {
         if (this.entity.alpha < 1) {
           this.entity.alpha += 0.03
         } else {
           this.state.value = 'walk'
         }
         break
+      }
     }
   }
 
   respawn() {
-    let { player, cpus } = this.level!
+    const { player, cpus } = this.level!
     // find position the furthest from player
-    let spawnPosition = cpus
+    const spawnPosition = cpus
       .map((cpu: Entity) => cpu.getComponent(Mover).startPosition)
       .sort(sortByDistanceTo(player))
       .pop()

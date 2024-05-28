@@ -1,7 +1,8 @@
-import { Component } from '../core/Entity'
-import SceneManager from './SceneManager'
-import { getOgFont, SimpleText } from '../display/SimpleText'
+import type SceneManager from './SceneManager'
+
 import { GameState } from '../components/GameState'
+import { Component } from '../core/Entity'
+import { getOgFont, SimpleText } from '../display/SimpleText'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
@@ -19,7 +20,7 @@ export class Scene extends Component {
     textField.on('pointerdown', onclick)
     // hover
     textField.on('pointerover', () => (textField.alpha = 0.75))
-    textField.on('pointerout', () => (textField.alpha = 1.0))
+    textField.on('pointerout', () => (textField.alpha = 1))
     this.entity.addChild(textField)
 
     /*

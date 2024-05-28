@@ -12,7 +12,7 @@ export function lerp(a: number, b: number, i: number): number {
 
 //exponential interpolation. Use for camera zooms etc
 export function eerp(a: number, b: number, i: number): number {
-  return a * Math.pow(b / a, i)
+  return a * (b / a)**i
 }
 
 export function map(a: number, b: number, i: number): number {
@@ -31,10 +31,10 @@ export function clamp01(x: number): number {
 // https://www.shadertoy.com/view/ldBfR1
 export function gain01(x: number, P: number) {
   if (x > 0.5) {
-    return 1.0 - 0.5 * Math.pow(2.0 - 2.0 * x, P)
-  } else {
-    return 0.5 * Math.pow(2.0 * x, P)
-  }
+    return 1 - 0.5 * (2 - 2 * x)**P
+  } 
+    return 0.5 * (2 * x)**P
+  
 }
 
 export function smootherStep01(x: number): number {
@@ -48,16 +48,16 @@ export function smoothStep01(x: number): number {
 
 export function invSmoothStep01(x: number): number {
   x = clamp01(x)
-  return 0.5 - Math.sin(Math.asin(1.0 - 2.0 * x) / 3.0)
+  return 0.5 - Math.sin(Math.asin(1 - 2 * x) / 3)
 }
 
 export function smoothStep(e0: number, e1: number, x: number): number {
-  x = clamp((x - e0) / (e1 - e0), 0.0, 1.0)
+  x = clamp((x - e0) / (e1 - e0), 0, 1)
   return x * x * (3 - 2 * x)
 }
 
 export function smootherStep(e0: number, e1: number, x: number): number {
-  x = clamp((x - e0) / (e1 - e0), 0.0, 1.0)
+  x = clamp((x - e0) / (e1 - e0), 0, 1)
   return smootherStep01(x)
 }
 
@@ -66,11 +66,11 @@ export function lineairStep(e0: number, e1: number, x: number): number {
 }
 
 export function nearestPowerOfTwo(x: number): number {
-  return Math.pow(2, Math.round(Math.log2(x)))
+  return 2**Math.round(Math.log2(x))
 }
 
 export function nextPowerOfTwo(x: number): number {
-  return Math.pow(2, Math.ceil(Math.log2(x)))
+  return 2**Math.ceil(Math.log2(x))
 }
 
 export function isPowerOfTwo(x: number): boolean {
@@ -86,7 +86,7 @@ export function isVector3(n: any): boolean {
 }
 
 export function smallerPowerOfTwo(x: number): number {
-  return Math.pow(2, Math.floor(Math.log2(x)))
+  return 2**Math.floor(Math.log2(x))
 }
 
 export function clamp(val: number, min: number, max: number) {
@@ -101,8 +101,8 @@ export function radToDeg(r: number): number {
   return r * (180 / Math.PI)
 }
 
-export function approximately(a: number, b: number): Boolean {
-  return Math.abs(a - b) < 0.000001
+export function approximately(a: number, b: number): boolean {
+  return Math.abs(a - b) < 0.000_001
 }
 
 export function haltonSequence(index: number, base: number): number {
@@ -110,8 +110,8 @@ export function haltonSequence(index: number, base: number): number {
   let f = 1
   let i = index
   while (i > 0) {
-    f = f / base
-    result = result + f * (i % base)
+    f /= base
+    result += f * (i % base)
     i = Math.floor(i / base)
   }
   return result

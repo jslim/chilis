@@ -1,21 +1,22 @@
-import { Cpu } from './Cpu'
-import { CpuMover } from './CpuMover'
+import { Point } from 'pixi.js'
+
+import { createDelay } from '../../core/Delay'
 import { Entity } from '../../core/Entity'
 import { AutoDisposer } from '../AutoDisposer'
-import { Bullet } from '../level/Bullet'
 import { HitBox } from '../HitBox'
+import { Bullet } from '../level/Bullet'
 import { LevelComponent } from '../level/LevelComponent'
-import { Point } from 'pixi.js'
 import { getOppositeDirection, Mover } from '../Mover'
-import { createDelay } from '../../core/Delay'
+import { Cpu } from './Cpu'
+import { CpuMover } from './CpuMover'
 
 export class MrBaggie extends Cpu {
   override onStart() {
     super.onStart()
 
-    this.paralyzedCoolDown.interval = 3.0
+    this.paralyzedCoolDown.interval = 3
 
-    let mover = this.entity.getComponent(CpuMover)
+    const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['random']
 
@@ -23,10 +24,11 @@ export class MrBaggie extends Cpu {
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
-        case 'prepare_attack':
+        case 'prepare_attack': {
           break
+        }
 
-        case 'attack':
+        case 'attack': {
           if (this.level) {
             this.level!.screenShake(4, 0.3)
             const playerHitBoxRect = this.entity
@@ -54,6 +56,7 @@ export class MrBaggie extends Cpu {
             mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
           }
           break
+        }
       }
     })
   }
@@ -63,11 +66,12 @@ export class MrBaggie extends Cpu {
 
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
-      case 'walk':
+      case 'walk': {
         if (!mover.isClimbing() && this.attackCoolDown.update(dt)) {
           this.state.value = 'prepare_attack'
           this.attackCoolDown.reset()
         }
+      }
     }
   }
 }

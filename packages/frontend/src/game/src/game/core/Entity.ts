@@ -1,13 +1,15 @@
+import type { Signal } from './Signal'
+
 import { Container } from 'pixi.js'
-import { getRandom } from '../utils/random.utils'
-import { Signal } from './Signal'
+
 import { removeItem } from '../utils/array.utils'
+import { getRandom } from '../utils/random.utils'
 
 type ComponentClass = Function
 
 const random = getRandom(777)
 const getRandomColor = () =>
-  65536 * ((random(0, 4) | 0) * 64) + 256 * ((random(0, 4) | 0) * 64) + (random(0, 4.4) | 0) * 64
+  65_536 * ((random(0, 4) | 0) * 64) + 256 * ((random(0, 4) | 0) * 64) + (random(0, 4.4) | 0) * 64
 
 export class Entity extends Container {
   components = new Map<ComponentClass, Component>()
@@ -17,7 +19,7 @@ export class Entity extends Container {
   // eg. if you have component C extends B extends A extends Component, you can get C by getComponent(A)
   componentTypeCache = new Map<ComponentClass, Component>()
 
-  timescale: number = 1.0
+  timescale: number = 1
   color = getRandomColor()
 
   constructor(sprite?: Container) {
@@ -73,7 +75,7 @@ export class Entity extends Container {
   public removeComponent(component: Component): this {
     const componentClass = component.constructor as ComponentClass
     if (this.components.has(componentClass)) {
-      // @ts-ignore
+      // @ts-expect-error
       component.entity = undefined
       this.mapInheritance(component, false)
     }

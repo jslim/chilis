@@ -1,7 +1,6 @@
-import { Player } from './Player'
-import { Mover } from '../Mover'
-
 import { FlumpAnimator } from '../../flump/FlumpAnimator'
+import { Mover } from '../Mover'
+import { Player } from './Player'
 
 export class PlayerAnimator extends FlumpAnimator {
   override onStart() {
@@ -14,57 +13,67 @@ export class PlayerAnimator extends FlumpAnimator {
     this.subscribe(mover.currentDirection.onChanged, (direction) => {
       switch (direction) {
         case 'up':
-        case 'down':
+        case 'down': {
           this.flipNeutral()
           this.setMovie('player_climb').play()
           break
-        case 'left':
+        }
+        case 'left': {
           this.setMovie('player_walk').play()
           this.flipToLeft()
           break
-        case 'right':
+        }
+        case 'right': {
           this.setMovie('player_walk').play()
           this.flipToRight()
           break
+        }
       }
     })
 
     this.subscribe(player.state.onChanged, (newState) => {
       switch (newState) {
-        case 'idle':
+        case 'idle': {
           this.setMovie('player_idle').play()
           break
+        }
 
-        case 'walk':
+        case 'walk': {
           mover.currentDirection.emit()
           // this.setMovie("player_walk").play();
           break
+        }
 
-        case 'hit':
+        case 'hit': {
           this.stop()
           break
+        }
 
-        case 'victory':
+        case 'victory': {
           this.setMovie('player_victory').gotoAndPlay(0)
           break
+        }
 
-        case 'reset':
+        case 'reset': {
           this.stop()
           break
+        }
 
-        case 'die':
+        case 'die': {
           this.setMovie('player_die').gotoAndPlay(0).once()
           this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
             player.onDied.emit()
           })
           break
+        }
 
-        case 'shoot':
+        case 'shoot': {
           this.setMovie('player_shoot').gotoAndPlay(0).once()
           this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
             player.idle()
           })
           break
+        }
       }
     })
     this.setMovie('player_walk').gotoAndPlay(0)

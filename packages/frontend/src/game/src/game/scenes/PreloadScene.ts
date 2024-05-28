@@ -1,9 +1,10 @@
-import { Scene } from './Scene'
 import { Assets, Graphics } from 'pixi.js'
+
 import { assetsManifest } from '../assets.manifest'
+import { Scene } from './Scene'
 
 export class PreloadScene extends Scene {
-  private graphics = new Graphics()
+  private readonly graphics = new Graphics()
 
   override onStart() {
     super.onStart()
@@ -13,7 +14,7 @@ export class PreloadScene extends Scene {
   async preload() {
     // init assets manager
 
-    // @ts-ignore (there are two ways to init, seems there are no typings for that)
+    // @ts-expect-error (there are two ways to init, seems there are no typings for that)
     await Assets.init({ manifest: assetsManifest })
 
     // setup level bundles

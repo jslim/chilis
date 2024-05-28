@@ -1,4 +1,5 @@
 import { Rectangle, Sprite, Texture } from 'pixi.js'
+
 import { Signal } from '../core/Signal'
 
 export class AnimationSprite extends Sprite {
@@ -6,7 +7,7 @@ export class AnimationSprite extends Sprite {
   public readonly onLoop = new Signal()
 
   public totalFrames: number
-  private frameTextures: Texture[] = []
+  private readonly frameTextures: Texture[] = []
   public isLooping: boolean = true
   private isPlaying: boolean = true
   private currentFrame = 0

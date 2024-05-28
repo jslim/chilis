@@ -1,7 +1,7 @@
 import { clamp01 } from '../utils/math.utils'
 
 export class CoolDown {
-  public time: number = 0.0
+  public time: number = 0
 
   constructor(public interval: number) {}
 
@@ -10,7 +10,7 @@ export class CoolDown {
     return this.isExpired()
   }
 
-  public reset(time = 0.0) {
+  public reset(time = 0) {
     this.time = time
   }
 

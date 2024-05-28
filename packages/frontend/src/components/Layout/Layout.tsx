@@ -28,8 +28,8 @@ import { Nav } from '@/components/Nav'
 import { PlayNow } from '@/components/PlayNow'
 // import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
-import { TopNav } from '@/components/TopNav'
 import { SoundSwitch } from '@/components/SoundSwitch'
+import { TopNav } from '@/components/TopNav'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })

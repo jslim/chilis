@@ -1,14 +1,15 @@
-import { Sprite } from 'pixi.js'
-import { getRandom } from '../../utils/random.utils'
+import type { FlumpLibrary } from '../../flump/FlumpLibrary'
+import type { Sprite } from 'pixi.js'
+
 import { Component } from '../../core/Entity'
 import { lerp } from '../../utils/math.utils'
-import { FlumpLibrary } from '../../flump/FlumpLibrary'
+import { getRandom } from '../../utils/random.utils'
 
 export class Light extends Component {
   private readonly lampSprite: Sprite
   private readonly lightSprite: Sprite
 
-  private readonly random = getRandom(Math.random() * 12345)
+  private readonly random = getRandom(Math.random() * 12_345)
   private readonly flickerTime: number
   private readonly doFlicker: boolean
 
@@ -24,7 +25,7 @@ export class Light extends Component {
     this.lampSprite = flumpLibrary.createSprite(lightAssetName)
     this.lampSprite.anchor.set(0.5, 0)
 
-    this.lightSprite = flumpLibrary.createSprite(lightAssetName + '_screen')
+    this.lightSprite = flumpLibrary.createSprite(`${lightAssetName  }_screen`)
     this.lightSprite.anchor.copyFrom(this.lampSprite.anchor)
     this.lightSprite.y += 7
     this.lightSprite.blendMode = 'screen'

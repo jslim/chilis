@@ -1,20 +1,23 @@
-import { getMoveDirections } from '../../utils/grid.utils'
-import { Mover } from '../Mover'
+import type { Entity } from '../../core/Entity'
+import type { RandomFunction } from '../../utils/random.utils'
+import { getRandom, pick } from '../../utils/random.utils'
+
 import { Graphics } from 'pixi.js'
-import { Value } from '../../core/Value'
-import { getRandom, pick, RandomFunction } from '../../utils/random.utils'
-import { Entity } from '../../core/Entity'
+
 import { CoolDown } from '../../core/CoolDown'
-import { Burger } from '../level/Burger'
+import { Value } from '../../core/Value'
 import { DRAW_CPU_DEBUG } from '../../game.config'
 import { sortByDistanceTo } from '../../utils/array.utils'
+import { getMoveDirections } from '../../utils/grid.utils'
 import { HitBox } from '../HitBox'
+import { Burger } from '../level/Burger'
+import { Mover } from '../Mover'
 
 const modes = ['random', 'hunt-player', 'hunt-player-slow', 'hunt-burger', 'hunt-cpu', 'stairs'] as const
 
 export class CpuMover extends Mover {
   private modeId = 0
-  private debugGraphics = new Graphics()
+  private readonly debugGraphics = new Graphics()
   public readonly mode = new Value<(typeof modes)[number]>('random')
 
   public targetX = 0
@@ -58,7 +61,7 @@ export class CpuMover extends Mover {
       this.targetEntity = undefined
       this.nextModeCooldown = undefined
       switch (newMode) {
-        case 'hunt-burger':
+        case 'hunt-burger': {
           // find closest to player burger (in idle state)
           const burgerToHunt = this.level.burgers
             .filter((burger) => burger.getComponent(Burger).isIdle)
@@ -71,31 +74,37 @@ export class CpuMover extends Mover {
             this.nextMode()
           }
           break
-        case 'hunt-player-slow':
+        }
+        case 'hunt-player-slow': {
           this.targetX = this.level.player.x + this.random(-20, 20)
           this.targetY = this.level.player.y + this.random(-20, 20)
           this.nextModeCooldown = new CoolDown(20)
           break
+        }
 
-        case 'hunt-cpu':
+        case 'hunt-cpu': {
           this.targetEntity = pick(
             this.level.cpus.filter((cpu) => cpu.getComponent(HitBox).isActive),
             this.random
           )
           this.nextModeCooldown = new CoolDown(4.5)
           break
+        }
 
-        case 'hunt-player':
+        case 'hunt-player': {
           this.targetEntity = this.level.player
           this.nextModeCooldown = new CoolDown(7.5)
           break
+        }
 
-        case 'random':
+        case 'random': {
           this.nextModeCooldown = new CoolDown(5)
           break
+        }
 
-        case 'stairs':
+        case 'stairs': {
           break
+        }
       }
     })
     this.nextMode()
@@ -105,7 +114,7 @@ export class CpuMover extends Mover {
     const cpuX = Math.floor(this.position.x)
     const cpuY = Math.floor(this.position.y)
 
-    let directions = getMoveDirections(this.entity.position, this.level, this.currentDirection.value)
+    const directions = getMoveDirections(this.entity.position, this.level, this.currentDirection.value)
 
     if (directions.length > 0) {
       let newDirection
@@ -123,13 +132,14 @@ export class CpuMover extends Mover {
       // let playerMover = player.getComponent(Mover)!;
 
       switch (this.mode.value) {
-        case 'random':
+        case 'random': {
           newDirection = pick(directions, this.random)
           targetX = newDirection === 'left' ? cpuX - 10 : newDirection === 'right' ? cpuX + 10 : cpuX
           targetY = newDirection === 'up' ? cpuY - 10 : newDirection === 'down' ? cpuY + 10 : cpuY
           break
+        }
 
-        case 'stairs':
+        case 'stairs': {
           // prefer up/down
           if (directions.includes('up')) {
             newDirection = 'up'
@@ -141,18 +151,19 @@ export class CpuMover extends Mover {
           targetX = newDirection === 'left' ? cpuX - 10 : newDirection === 'right' ? cpuX + 10 : cpuX
           targetY = newDirection === 'up' ? cpuY - 10 : newDirection === 'down' ? cpuY + 10 : cpuY
           break
+        }
 
         case 'hunt-player':
-        // @ts-ignore
-        case 'hunt-cpu':
+        case 'hunt-cpu': {
           targetX = this.targetEntity!.x
           targetY = this.targetEntity!.y
+        }
 
         // fall through
         case 'hunt-player-slow':
-        case 'hunt-burger':
+        case 'hunt-burger': {
           // find direction that is closest to target
-          let directionsSorted = this.findClosestToTarget(directions, cpuX, cpuY, targetX, targetY)
+          const directionsSorted = this.findClosestToTarget(directions, cpuX, cpuY, targetX, targetY)
 
           newDirection =
             directionsSorted[Math.round(this.random(0, this.directionAccuracy)) % directionsSorted.length]!.dir
@@ -162,6 +173,7 @@ export class CpuMover extends Mover {
             this.nextMode()
           }
           break
+        }
       }
       /*
       if (this.cpuId === 1) {
@@ -183,33 +195,59 @@ export class CpuMover extends Mover {
 
       // move in new direction
       const mover = this.entity.getComponent(Mover)!
-      if (newDirection === 'left') {
-        mover.left()
-      } else if (newDirection === 'right') {
-        mover.right()
-      } else if (newDirection === 'up') {
-        mover.up()
-      } else if (newDirection === 'down') {
-        mover.down()
+      switch (newDirection) {
+        case 'left': {
+          mover.left()
+
+          break
+        }
+        case 'right': {
+          mover.right()
+
+          break
+        }
+        case 'up': {
+          mover.up()
+
+          break
+        }
+        case 'down': {
+          mover.down()
+
+          break
+        }
+        // No default
       }
     } else {
       // move in opposite direction if no other way to go
       const currentDirection = this.currentDirection.value
-      if (currentDirection === 'left') {
-        this.right()
-      } else if (currentDirection === 'right') {
-        this.left()
-      } else if (currentDirection === 'up') {
-        this.down()
-      } else if (currentDirection === 'down') {
-        this.up()
+      switch (currentDirection) {
+        case 'left': {
+          this.right()
+
+          break
+        }
+        case 'right': {
+          this.left()
+
+          break
+        }
+        case 'up': {
+          this.down()
+
+          break
+        }
+        case 'down': {
+          this.up()
+
+          break
+        }
+        // No default
       }
     }
 
-    if (this.nextModeCooldown) {
-      if (this.nextModeCooldown.update(dt)) {
-        this.nextMode()
-      }
+    if (this.nextModeCooldown && this.nextModeCooldown.update(dt)) {
+      this.nextMode()
     }
   }
 
@@ -218,7 +256,7 @@ export class CpuMover extends Mover {
   }
 
   private nextMode() {
-    let oldMode = this.mode.value
+    const oldMode = this.mode.value
     this.mode.value = this.modeCycle[this.modeId++ % this.modeCycle.length]
     if (oldMode === this.mode.value) {
       this.mode.emit()
@@ -229,26 +267,30 @@ export class CpuMover extends Mover {
     return directions
       .map((dir) => {
         switch (dir) {
-          case 'left':
+          case 'left': {
             return {
               distance: Math.hypot(cpuX - targetX - 24, cpuY - targetY),
               dir
             }
-          case 'right':
+          }
+          case 'right': {
             return {
               distance: Math.hypot(cpuX - targetX + 24, cpuY - targetY),
               dir
             }
-          case 'up':
+          }
+          case 'up': {
             return {
               distance: Math.hypot(cpuX - targetX, cpuY - targetY - 16),
               dir
             }
-          case 'down':
+          }
+          case 'down': {
             return {
               distance: Math.hypot(cpuX - targetX, cpuY - targetY + 16),
               dir
             }
+          }
         }
       })
       .sort((a, b) => a!.distance - b!.distance)

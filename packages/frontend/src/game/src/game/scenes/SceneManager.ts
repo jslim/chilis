@@ -1,14 +1,15 @@
-import { Application } from 'pixi.js'
-import LevelScene from './LevelScene'
-import { Scene } from './Scene'
-import { Entity } from '../core/Entity'
+import type { Scene } from './Scene'
+import type { Application } from 'pixi.js'
+
 import { CoolDown } from '../core/CoolDown'
-import { IntroScene } from './IntroScene'
+import { Entity } from '../core/Entity'
+import { clamp01 } from '../utils/math.utils'
 import { EndScene } from './EndScene'
+import { IntroScene } from './IntroScene'
 import { LevelCompleteScene } from './LevelCompleteScene'
+import LevelScene from './LevelScene'
 import { PreloadScene } from './PreloadScene'
 import { SplashScene } from './SplashScene'
-import { clamp01 } from '../utils/math.utils'
 
 export default class SceneManager {
   public root: Entity = new Entity()
@@ -24,7 +25,7 @@ export default class SceneManager {
   }
 
   async showLevel(levelNo: number) {
-    let level = new LevelScene(this)
+    const level = new LevelScene(this)
     this.goto(level)
     await level.init(levelNo)
   }

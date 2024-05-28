@@ -1,11 +1,11 @@
-import { Component } from './Entity'
 import { CoolDown } from './CoolDown'
+import { Component } from './Entity'
 
 export class ScreenShake extends Component {
   shakeCoolDown: CoolDown
 
   constructor(
-    private amount: number,
+    private readonly amount: number,
     duration: number
   ) {
     super()

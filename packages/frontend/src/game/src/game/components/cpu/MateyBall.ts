@@ -1,15 +1,15 @@
 import { Component } from '../../core/Entity'
 import Tween from '../../core/Tween'
-import { LevelComponent } from '../level/LevelComponent'
-import { quintIn01 } from '../../utils/Ease01'
 import { FRAME_RATE } from '../../game.config'
+import { quintIn01 } from '../../utils/Ease01'
+import { LevelComponent } from '../level/LevelComponent'
 
 export class MateyBall extends Component {
   //public floorPositions = [60, 80, 100, 120, 150, 180, 260];
-  private tween = new Tween(0)
+  private readonly tween = new Tween(0)
 
   constructor(
-    private floorPositions: number[]
+    private readonly floorPositions: number[]
     // private speed: number,
   ) {
     super()

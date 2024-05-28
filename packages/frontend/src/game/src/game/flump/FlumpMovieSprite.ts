@@ -1,8 +1,9 @@
-import { Container, Sprite } from 'pixi.js'
-import { Signal } from '../core/Signal'
+import type { FlumpKeyFrame, FlumpLayer, FlumpMovieData } from './Flump.types'
+import type { FlumpLibrary } from './FlumpLibrary'
 
-import { FlumpLibrary } from './FlumpLibrary'
-import { FlumpKeyFrame, FlumpLayer, FlumpMovieData } from './Flump.types'
+import { Container, Sprite } from 'pixi.js'
+
+import { Signal } from '../core/Signal'
 
 export class FlumpMovieSprite extends Container {
   public readonly onEnd = new Signal()
@@ -17,7 +18,7 @@ export class FlumpMovieSprite extends Container {
   public isLooping = true
 
   constructor(
-    private library: FlumpLibrary,
+    private readonly library: FlumpLibrary,
     public readonly movieName: string
   ) {
     super()
@@ -44,13 +45,13 @@ export class FlumpMovieSprite extends Container {
 
   getFrame(frameNo: number, layer: FlumpLayer): FlumpKeyFrame {
     let frame = layer.keyframes[0]
-    for (let keyframe of layer.keyframes) {
+    for (const keyframe of layer.keyframes) {
       if (keyframe.index === frameNo) return keyframe
-      else if (keyframe.index > frameNo) {
+      if (keyframe.index > frameNo) {
         return frame
-      } else {
+      } 
         frame = keyframe
-      }
+      
     }
     return frame
   }

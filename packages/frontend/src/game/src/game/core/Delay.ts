@@ -2,7 +2,7 @@ import { CoolDown } from './CoolDown'
 import { Component, Entity } from './Entity'
 
 export function createDelay(entity: Entity, time: number, callback: () => void) {
-  let delay = new Entity().addComponent(new Delay(time, callback))
+  const delay = new Entity().addComponent(new Delay(time, callback))
   entity.addEntity(delay)
   return delay
 }
@@ -12,7 +12,7 @@ export class Delay extends Component {
 
   constructor(
     time: number,
-    private callback: () => void
+    private readonly callback: () => void
   ) {
     super()
     this.coolDown = new CoolDown(time)

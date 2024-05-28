@@ -1,10 +1,11 @@
+import type { FlumpLibraryData, FlumpTexture } from './Flump.types'
+
 import { Assets, Rectangle, Sprite, Texture } from 'pixi.js'
-import { FlumpLibraryData, FlumpTexture } from './Flump.types'
 
 export class FlumpLibrary {
   public data: FlumpLibraryData
   public atlasTexture: Texture
-  private textures: Map<string, FlumpTexture> = new Map()
+  private readonly textures: Map<string, FlumpTexture> = new Map()
 
   constructor(flumpPath: string) {
     this.data = Assets.get(`${flumpPath}/json`)

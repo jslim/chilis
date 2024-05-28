@@ -1,13 +1,14 @@
-import { Cpu } from './Cpu'
-import { CpuMover } from './CpuMover'
+import { Point } from 'pixi.js'
+
+import { createDelay } from '../../core/Delay'
 import { Entity } from '../../core/Entity'
 import { AutoDisposer } from '../AutoDisposer'
-import { Bullet } from '../level/Bullet'
 import { HitBox } from '../HitBox'
+import { Bullet } from '../level/Bullet'
 import { LevelComponent } from '../level/LevelComponent'
-import { Point } from 'pixi.js'
 import { getOppositeDirection, Mover } from '../Mover'
-import { createDelay } from '../../core/Delay'
+import { Cpu } from './Cpu'
+import { CpuMover } from './CpuMover'
 
 const ATTACK_RANGE = 30
 
@@ -15,9 +16,9 @@ export class Piggles extends Cpu {
   override onStart() {
     super.onStart()
 
-    this.paralyzedCoolDown.interval = 3.0
+    this.paralyzedCoolDown.interval = 3
 
-    let mover = this.entity.getComponent(CpuMover)
+    const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['hunt-player-slow']
 
@@ -25,10 +26,11 @@ export class Piggles extends Cpu {
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
-        case 'prepare_attack':
+        case 'prepare_attack': {
           break
+        }
 
-        case 'attack':
+        case 'attack': {
           this.level!.screenShake(4, 0.3)
           const playerHitBoxRect = this.entity
 
@@ -54,6 +56,7 @@ export class Piggles extends Cpu {
 
           mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
           break
+        }
       }
     })
   }
@@ -63,7 +66,7 @@ export class Piggles extends Cpu {
 
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
-      case 'walk':
+      case 'walk': {
         if (
           this.attackCoolDown.update(dt) &&
           !mover.isClimbing &&
@@ -73,6 +76,7 @@ export class Piggles extends Cpu {
           this.attackCoolDown.reset()
           this.state.value = 'prepare_attack'
         }
+      }
     }
   }
 }

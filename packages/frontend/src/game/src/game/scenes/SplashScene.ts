@@ -1,10 +1,11 @@
-import { Scene } from './Scene'
 import { Assets, Sprite, TilingSprite } from 'pixi.js'
+
 import { CoolDown } from '../core/CoolDown'
 import { Entity } from '../core/Entity'
+import { Scene } from './Scene'
 
 export class SplashScene extends Scene {
-  private blinkCoolDown = new CoolDown(0.2)
+  private readonly blinkCoolDown = new CoolDown(0.2)
   private startButton!: Entity
   private background!: TilingSprite
 
@@ -22,7 +23,7 @@ export class SplashScene extends Scene {
     )
     this.entity.addChild(new Sprite(Assets.get('splash/logo')))
 
-    let startButtonSprite = new Sprite(Assets.get('splash/start'))
+    const startButtonSprite = new Sprite(Assets.get('splash/start'))
     this.startButton = new Entity(startButtonSprite)
     startButtonSprite.pivot.set((startButtonSprite.width / 2) | 0, (startButtonSprite.height / 2) | 0)
     this.entity.addEntity(this.startButton)
@@ -31,7 +32,7 @@ export class SplashScene extends Scene {
 
     this.background.cursor = 'pointer'
     this.background.interactive = true
-    this.background.onpointerdown = () => this.sceneManager.intro()
+    this.background.addEventListener('pointerdown', () => this.sceneManager.intro())
   }
 
   override onUpdate(dt: number) {

@@ -1,7 +1,9 @@
+import type { Texture } from 'pixi.js'
+import { Assets, Container } from 'pixi.js'
+
 import { Component } from '../core/Entity'
-import { Assets, Container, Texture } from 'pixi.js'
-import { AnimationSprite } from '../display/AnimationSprite'
 import { Value } from '../core/Value'
+import { AnimationSprite } from '../display/AnimationSprite'
 
 export type AnimatorLibrary = Map<string, { texture: Texture; frameWidth: number }>
 
@@ -12,7 +14,7 @@ export class Animator extends Component {
 
   constructor(library: AnimatorLibrary) {
     super()
-    for (let [movieName, { texture, frameWidth }] of library) {
+    for (const [movieName, { texture, frameWidth }] of library) {
       this.animationSprites.set(movieName, new AnimationSprite(texture, frameWidth))
     }
   }
@@ -26,7 +28,7 @@ export class Animator extends Component {
     if (prevSprite) this.root.addChild(prevSprite)
 
     this.subscribe(this.currentMovie.onChanged, (sprite) => {
-      if (prevSprite) this.root.removeChild(prevSprite)
+      if (prevSprite) prevSprite.destroy()
       if (sprite) this.root.addChild(sprite)
       prevSprite = sprite
     })
@@ -78,7 +80,7 @@ export class Animator extends Component {
 
 export function configToLibrary(libraryConfig: { [key: string]: number }): AnimatorLibrary {
   const library: AnimatorLibrary = new Map<string, { texture: Texture; frameWidth: number }>()
-  for (let [name, frameWidth] of Object.entries(libraryConfig)) {
+  for (const [name, frameWidth] of Object.entries(libraryConfig)) {
     library.set(name, {
       texture: Assets.get(name),
       frameWidth

@@ -1,18 +1,21 @@
-import { Component, Entity } from '../../core/Entity'
-import { Input, InputKey } from './Input'
+import type { Entity } from '../../core/Entity';
+import type { InputKey } from './Input';
+
+import { Component } from '../../core/Entity'
+import { Input } from './Input'
 
 export class MobileInput extends Component {
-  constructor(private target: Entity) {
+  constructor(private readonly target: Entity) {
     super()
   }
 
   override onStart() {
     super.onStart()
 
-    let gameContainer = document.body
-    let buttonContainer = document.createElement('div')
+    const gameContainer = document.body
+    const buttonContainer = document.createElement('div')
     gameContainer.style.userSelect = 'none'
-    gameContainer.appendChild(buttonContainer)
+    gameContainer.append(buttonContainer)
     buttonContainer.style.position = 'absolute'
     buttonContainer.style.bottom = '150px'
     buttonContainer.style.left = '30px'
@@ -49,13 +52,13 @@ export class MobileInput extends Component {
 
   createButton(containerDiv: HTMLDivElement, key: InputKey, angle: number, content = '⬆️') {
     const input = this.target.getComponent(Input)
-    let div = document.createElement('div')
+    const div = document.createElement('div')
     containerDiv.append(div)
 
     div.innerText = content
     div.style.position = 'absolute'
     div.style.userSelect = 'none'
-    // @ts-ignore
+    // @ts-expect-error
     div.style.webkitTapHighlightColor = 'transparent'
     div.style.left = '0'
     div.style.top = '0'
@@ -66,14 +69,14 @@ export class MobileInput extends Component {
     div.style.border = '1px solid #fff'
     // rotate from center
     div.style.transformOrigin = '50% 50%'
-    div.onpointerdown = () => {
+    div.addEventListener('pointerdown', () => {
       input.onDown.emit(key)
       div.style.opacity = '0.8'
-    }
-    div.onpointerup = div.onpointerout = () => {
+    })
+    div.addEventListener('pointerup', div.onpointerout = () => {
       input.onUp.emit(key)
       div.style.opacity = '1'
-    }
+    })
 
     /*
     let buttonTexture = Assets.get("mobile_button");
@@ -96,10 +99,10 @@ export class MobileInput extends Component {
       div,
 
       set x(value: number) {
-        div.style.left = value + 'px'
+        div.style.left = `${value  }px`
       },
       set y(value: number) {
-        div.style.top = value + 'px'
+        div.style.top = `${value  }px`
       },
       get size() {
         return 75

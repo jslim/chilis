@@ -1,7 +1,8 @@
-import { Point } from 'pixi.js'
-import LevelScene from '../scenes/LevelScene'
+import type LevelScene from '../scenes/LevelScene'
+import type { TiledWalkGrid } from './tiles.utils'
+import type { Point } from 'pixi.js'
+
 import { getOppositeDirection } from '../components/Mover'
-import { TiledWalkGrid } from './tiles.utils'
 
 export function getMoveDirections(position: Point, level: LevelScene, currentDirection: string = ''): string[] {
   const { size, grid } = level.walkGrid
@@ -23,15 +24,15 @@ export function getMoveDirections(position: Point, level: LevelScene, currentDir
 
 export function canMoveTo(x: number, y: number, level: LevelScene) {
   const { size, grid } = level.walkGrid
-  let gridX = Math.floor(x)
-  let gridY = Math.floor(y)
+  const gridX = Math.floor(x)
+  const gridY = Math.floor(y)
   return grid[gridX + gridY * size] > 0
 }
 
 export function canMove(x: number, y: number, dx: number, dy: number, level: LevelScene) {
   const { size, grid } = level.walkGrid
-  let gridX = Math.floor(x) + Math.sign(dx)
-  let gridY = Math.floor(y) + Math.sign(dy)
+  const gridX = Math.floor(x) + Math.sign(dx)
+  const gridY = Math.floor(y) + Math.sign(dy)
   return grid[gridX + gridY * size] > 0
 }
 

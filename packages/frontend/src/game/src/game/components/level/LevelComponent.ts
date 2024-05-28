@@ -1,5 +1,6 @@
+import type LevelScene from '../../scenes/LevelScene'
+
 import { Component } from '../../core/Entity'
-import LevelScene from '../../scenes/LevelScene'
 
 // just reference to LevelScene
 export class LevelComponent extends Component {

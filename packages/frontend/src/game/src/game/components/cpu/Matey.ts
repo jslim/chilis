@@ -1,20 +1,20 @@
+import { CoolDown } from '../../core/CoolDown'
+import { Entity } from '../../core/Entity'
+import { FLOOR_OFFSET } from '../../game.config'
+import { getFloorPositionsAtX } from '../../utils/grid.utils'
+import { HitBox } from '../HitBox'
+import { Bullet } from '../level/Bullet'
+import { LevelComponent } from '../level/LevelComponent'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
-import { Entity } from '../../core/Entity'
-import { Bullet } from '../level/Bullet'
-import { HitBox } from '../HitBox'
-import { LevelComponent } from '../level/LevelComponent'
 import { MateyBall } from './MateyBall'
-import { CoolDown } from '../../core/CoolDown'
-import { getFloorPositionsAtX } from '../../utils/grid.utils'
-import { FLOOR_OFFSET } from '../../game.config'
 
 export class Matey extends Cpu {
   override onStart() {
     super.onStart()
 
     this.attackCoolDown = new CoolDown(8)
-    this.paralyzedCoolDown.interval = 3.0
+    this.paralyzedCoolDown.interval = 3
 
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
@@ -24,14 +24,16 @@ export class Matey extends Cpu {
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
-        case 'prepare_attack':
+        case 'prepare_attack': {
           break
+        }
 
-        case 'attack':
+        case 'attack': {
           this.level!.screenShake(4, 0.3)
           this.shootBall()
           this.state.value = 'walk'
           break
+        }
       }
     })
   }
@@ -41,11 +43,12 @@ export class Matey extends Cpu {
 
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
-      case 'walk':
+      case 'walk': {
         if (!mover.isClimbing() && this.attackCoolDown.update(dt)) {
           this.state.value = 'prepare_attack'
           this.attackCoolDown.reset()
         }
+      }
     }
   }
 

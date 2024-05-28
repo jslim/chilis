@@ -1,4 +1,6 @@
-import { Assets, Container, DestroyOptions, Rectangle, Sprite, TextStyleAlign, Texture } from 'pixi.js'
+import type { DestroyOptions, TextStyleAlign } from 'pixi.js'
+import { Assets, Container, Rectangle, Sprite, Texture } from 'pixi.js'
+
 import { Value } from '../core/Value'
 
 export function get8pxNumberFont(): SimpleTextConfig {
@@ -57,10 +59,10 @@ export class SimpleText extends Container {
     const characterMap = new Map<string, Texture>()
     const charHeight = texture.height
     let x = 0
-    for (let i = 0; i < characters.length; i++) {
+    for (const [i, character] of [...characters].entries()) {
       const cw = Array.isArray(charWidth) ? charWidth[i] : charWidth
-      let frame = new Rectangle(x, 0, cw, charHeight)
-      characterMap.set(characters[i], new Texture({ source: texture.source, frame }))
+      const frame = new Rectangle(x, 0, cw, charHeight)
+      characterMap.set(character, new Texture({ source: texture.source, frame }))
       x += cw
     }
 
@@ -74,14 +76,13 @@ export class SimpleText extends Container {
         .map((c) => (characters.includes(c) ? c : ' '))
         .join('')
 
-      sprites = sprites.filter((sprite, i) => {
+      sprites = sprites.filter((sprite: Sprite, i) => {
         if (i < newLabel.length) {
           sprite.texture = characterMap.get(newLabel[i])!
           return true
-        } else {
-          this.removeChild(sprite)
-          return false
         }
+        sprite.parent?.removeChild(sprite)
+        return false
       })
 
       let x = this.width + letterSpacing

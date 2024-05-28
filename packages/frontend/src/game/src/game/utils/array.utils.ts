@@ -6,7 +6,8 @@ export const removeItem = <T>(array: T[], item: T) => {
   if (!array) return
   let index
   while ((index = array.indexOf(item)) !== -1) {
-    array[index] = array[array.length - 1]
+    // @ts-ignore
+    array[index] = array.at(-1)
     array.pop()
   }
 }

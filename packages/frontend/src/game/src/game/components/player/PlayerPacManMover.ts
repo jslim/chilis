@@ -1,11 +1,13 @@
-import { Input } from '../input/Input'
-import { Player } from './Player'
-import { Direction, MoveDirection, Mover } from '../Mover'
+import type { Direction, MoveDirection} from '../Mover';
+
 import { CoolDown } from '../../core/CoolDown'
+import { Input } from '../input/Input'
+import { Mover } from '../Mover'
+import { Player } from './Player'
 
 export class PlayerPacManMover extends Mover {
   private queuedDirection: MoveDirection = ''
-  private queuedDirectionCooldown = new CoolDown(0.5)
+  private readonly queuedDirectionCooldown = new CoolDown(0.5)
 
   override onStart() {
     super.onStart()
@@ -44,26 +46,20 @@ export class PlayerPacManMover extends Mover {
 
         if (input.isDown('left')) {
           if (!move('left')) queuedDirection = 'left'
-        } else if (input.isDown('right')) {
-          if (!move('right')) queuedDirection = 'right'
-        }
+        } else if (input.isDown('right') && !move('right')) queuedDirection = 'right'
 
         if (input.isDown('up')) {
           if (!move('up')) queuedDirection = 'up'
-        } else if (input.isDown('down')) {
-          if (!move('down')) queuedDirection = 'down'
-        }
+        } else if (input.isDown('down') && !move('down')) queuedDirection = 'down'
 
         if (queuedDirection) {
           this.queuedDirection = queuedDirection
           this.queuedDirectionCooldown.reset()
         }
 
-        if (!hasMoved && this.queuedDirection) {
-          if (move(this.queuedDirection)) {
+        if (!hasMoved && this.queuedDirection && move(this.queuedDirection)) {
             this.queuedDirection = ''
           }
-        }
 
         if (!hasMoved && currentDirection) {
           move(currentDirection)

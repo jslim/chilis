@@ -1,12 +1,12 @@
-import { Component } from '../core/Entity'
 import { CoolDown } from '../core/CoolDown'
+import { Component } from '../core/Entity'
 
 export class AutoDisposer extends Component {
-  private coolDown: CoolDown
+  private readonly coolDown: CoolDown
 
   constructor(
     time: number = 0,
-    private onBeforeDestroy?: () => void
+    private readonly onBeforeDestroy?: () => void
   ) {
     super()
     this.coolDown = new CoolDown(time)

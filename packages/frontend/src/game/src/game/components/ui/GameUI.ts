@@ -1,12 +1,13 @@
+import type { Value } from '../../core/Value'
+import type { FlumpLibrary } from '../../flump/FlumpLibrary'
+import type LevelScene from '../../scenes/LevelScene'
+
 import { Component, Entity } from '../../core/Entity'
-import { SimpleTextDisplay } from './SimpleTextDisplay'
 import { getGamerNumberFont } from '../../display/SimpleText'
-import LevelScene from '../../scenes/LevelScene'
-import { Value } from '../../core/Value'
-import { FlumpLibrary } from '../../flump/FlumpLibrary'
+import { SimpleTextDisplay } from './SimpleTextDisplay'
 
 export class GameUI extends Component {
-  constructor(private levelScene: LevelScene) {
+  constructor(private readonly levelScene: LevelScene) {
     super()
   }
 

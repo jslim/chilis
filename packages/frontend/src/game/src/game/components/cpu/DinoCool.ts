@@ -7,9 +7,9 @@ export class DinoCool extends Cpu {
   override onStart() {
     super.onStart()
 
-    this.paralyzedCoolDown.interval = 3.0
+    this.paralyzedCoolDown.interval = 3
 
-    let mover = this.entity.getComponent(CpuMover)
+    const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1)
     mover.speed.y = 2
 
@@ -18,11 +18,13 @@ export class DinoCool extends Cpu {
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
-        case 'prepare_attack':
+        case 'prepare_attack': {
           break
+        }
 
-        case 'attack':
+        case 'attack': {
           break
+        }
       }
     })
   }
@@ -32,7 +34,7 @@ export class DinoCool extends Cpu {
 
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
-      case 'walk':
+      case 'walk': {
         if (
           this.attackCoolDown.update(dt) &&
           !mover.isClimbing &&
@@ -42,6 +44,7 @@ export class DinoCool extends Cpu {
           this.attackCoolDown.reset()
           //this.state.value = 'prepare_attack';
         }
+      }
     }
   }
 }

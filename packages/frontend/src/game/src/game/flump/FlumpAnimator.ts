@@ -1,8 +1,10 @@
-import { Component } from '../core/Entity'
+import type { FlumpLibrary } from './FlumpLibrary'
+
 import { Container } from 'pixi.js'
+
+import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
 import { FlumpMovieSprite } from './FlumpMovieSprite'
-import { FlumpLibrary } from './FlumpLibrary'
 
 export class FlumpAnimator extends Component {
   protected root = new Container()
@@ -10,7 +12,7 @@ export class FlumpAnimator extends Component {
   protected cache = new Map<string, FlumpMovieSprite>()
   protected currentMovie = new Value<FlumpMovieSprite | undefined>(undefined)
 
-  constructor(private library: FlumpLibrary) {
+  constructor(private readonly library: FlumpLibrary) {
     super()
     this.subscribe(this.currentMovie.onChanged, (sprite) => {
       this.root.removeChildren()
@@ -69,7 +71,7 @@ export class FlumpAnimator extends Component {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    let currentMovie = this.currentMovie.value
+    const currentMovie = this.currentMovie.value
     if (currentMovie) {
       currentMovie.update()
     }

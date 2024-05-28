@@ -25,7 +25,7 @@
     "lint-dev": "npm run scripts && npm run adviser:dev && run-p lint:* tsc",
     "lint-staged": "npm run scripts && lint-staged",
     "lint:ls": "npx @ls-lint/ls-lint",
-    "lint:next": "next lint",
+    "lint:next": "next lint --fix",
     "lint:sass": "stylelint \"./src/**/*.scss\"",
     "generate": "cross-env NODE_NO_WARNINGS=1 sg wizard",
     "tsc": "tsc"

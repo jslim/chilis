@@ -15,7 +15,7 @@ export class IntroScene extends Scene {
 
     try {
       //this.sceneManager.app.renderer.canvas.parentElement?.requestFullscreen();
-    } catch (e) {
+    } catch {
       console.log("Please don't buy an iphone")
     }
   }

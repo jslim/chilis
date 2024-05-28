@@ -1,5 +1,7 @@
+import type { InputKey } from './Input';
+
 import { Component } from '../../core/Entity'
-import { Input, InputKey } from './Input'
+import { Input } from './Input'
 
 const keyMapping = new Map<string, InputKey>([
   ['ArrowLeft', 'left'],
@@ -23,7 +25,7 @@ export class KeyboardInput extends Component {
 
   onKeyUpHandler({ key }: KeyboardEvent) {
     const input = this.entity?.getComponent(Input)
-    let inputKey = keyMapping.get(key)
+    const inputKey = keyMapping.get(key)
     if (input && inputKey) {
       input.onUp.emit(inputKey)
     }
