@@ -1,4 +1,5 @@
 import type { FC } from 'react'
+import type { Player } from '@/data/types'
 
 import { memo } from 'react'
 
@@ -7,12 +8,11 @@ import { View } from './ScoreList.view'
 export interface ControllerProps {
   className?: string
   maxPlayers: number | null
-  players: {
-    id: string
-    name: string
-    score: number
-  }[]
-  title: string
+  players: Player[]
+  title?: string
+  currentRankText: string
+  fullLeaderboardText: string
+  currentPlayer?: Player
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
