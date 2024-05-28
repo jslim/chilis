@@ -1,0 +1,23 @@
+{
+  "exports": [
+    {
+      "maxAtlasSize": 2048,
+      "textureBorder": 1,
+      "combine": false,
+      "prettyPrint": false,
+      "format": "JSON",
+      "scale": 1,
+      "name": "game",
+      "quality": "best",
+      "scaleFactors": [
+        1
+      ],
+      "optimize": "Speed",
+      "scaleFactorsString": "1",
+      "description": "'game' (JSON, 100%, @1x)"
+    }
+  ],
+  "exportDir": "../../../public",
+  "importDir": "",
+  "fileVersion": 2
+}

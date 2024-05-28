@@ -1,19 +1,20 @@
 import { Application } from 'pixi.js'
-import SceneManager from './scenes/SceneManager'
-import { DEBUG_KEYS, FRAME_RATE } from './game.config'
+
 import { GameState } from './components/GameState'
-import { TestScene } from './scenes/TestScene'
-import LevelScene from './scenes/LevelScene'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
+import { DEBUG_KEYS, FRAME_RATE } from './game.config'
+import LevelScene from './scenes/LevelScene'
+import SceneManager from './scenes/SceneManager'
+import { TestScene } from './scenes/TestScene'
 
 export class GameController {
-  onLevelComplete: Signal = new Signal()
-  onPlayerDied: Signal = new Signal()
+  public onLevelComplete: Signal = new Signal()
+  public onPlayerDied: Signal = new Signal()
 
-  app: Application = new Application()
-  sceneManager!: SceneManager
+  private readonly app: Application = new Application()
+  private sceneManager!: SceneManager
 
   constructor() {}
 
@@ -28,7 +29,7 @@ export class GameController {
       height: 240
     })
     //
-    document.getElementById('app')!.appendChild(this.app.canvas)
+    document.querySelector('#app')!.append(this.app.canvas)
     this.app.canvas.style.imageRendering = 'pixelated'
 
     // setup scene manager
@@ -56,7 +57,7 @@ export class GameController {
         break
       }
       default: {
-        sceneManager.splash()
+        sceneManager.intro()
         break
       }
     }
@@ -74,7 +75,7 @@ export class GameController {
           }
         } else if (key.toLowerCase() === 'o') {
           sceneManager.currentScene?.getComponent(LevelScene).burgers.forEach((burger) => {
-            let b = burger.getComponent(Burger)
+            const b = burger.getComponent(Burger)
             if (!b.isCompleted) b.state.value = 'fall'
           })
         }
@@ -82,7 +83,7 @@ export class GameController {
         if (key.toLowerCase() === 'p') {
           sceneManager.root.timescale = sceneManager.root.timescale <= 0 ? 1 : 0
         } else if (key == '[') {
-          sceneManager.root.timescale = Math.max(0.0, sceneManager.root.timescale * 0.75)
+          sceneManager.root.timescale = Math.max(0, sceneManager.root.timescale * 0.75)
         } else if (key == ']') {
           sceneManager.root.timescale *= 1.5
         } else if (key == '1') {

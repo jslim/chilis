@@ -22,7 +22,7 @@ export class GameState extends Component {
     this.subscribe(this.highScore.onChanged, (highScore) => {
       try {
         localStorage.setItem('highScore', highScore.toString())
-      } catch (_) {}
+      } catch {}
     })
   }
 

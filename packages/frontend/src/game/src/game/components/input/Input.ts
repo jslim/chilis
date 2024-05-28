@@ -4,12 +4,12 @@ import { Signal } from '../../core/Signal'
 export class Input extends Component {
   public map = new Map<InputKey, boolean>()
 
+  public readonly onDown = new Signal<InputKey>()
+  public readonly onUp = new Signal<InputKey>()
+
   public isDown(key: InputKey) {
     return this.map.get(key) ?? false
   }
-
-  public readonly onDown = new Signal<InputKey>()
-  public readonly onUp = new Signal<InputKey>()
 
   override onStart() {
     super.onStart()

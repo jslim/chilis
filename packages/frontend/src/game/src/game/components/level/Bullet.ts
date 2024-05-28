@@ -1,16 +1,18 @@
-import { Component, Entity } from '../../core/Entity'
-import { HitBox } from '../HitBox'
-import { LevelComponent } from './LevelComponent'
-import LevelScene from '../../scenes/LevelScene'
+import type { Entity } from '../../core/Entity';
+import type LevelScene from '../../scenes/LevelScene'
+
+import { Component } from '../../core/Entity'
 import { Signal } from '../../core/Signal'
 import { Cpu } from '../cpu/Cpu'
+import { HitBox } from '../HitBox'
 import { Player } from '../player/Player'
+import { LevelComponent } from './LevelComponent'
 
 export class Bullet extends Component {
-  private onHit = new Signal<Entity>()
+  private readonly onHit = new Signal<Entity>()
   private level!: LevelScene
 
-  constructor(private objective: 'player' | 'cpu') {
+  constructor(private readonly objective: 'player' | 'cpu') {
     super()
   }
 
@@ -32,13 +34,15 @@ export class Bullet extends Component {
 
       if (isCollided) {
         switch (this.objective) {
-          case 'cpu':
+          case 'cpu': {
             target.getComponent(Cpu).onHitByBullet.emit(this)
             break
+          }
 
-          case 'player':
+          case 'player': {
             target.getComponent(Player).onHitByBullet.emit(this)
             break
+          }
         }
 
         this.onHit.emit(target)

@@ -6,6 +6,7 @@ import {
   FrontendDistribution,
   S3Origin,
   WebACL,
+  AuthStack,
   ApiStack,
   userApiStack,
   leaderboardApiStack,
@@ -32,6 +33,7 @@ export default {
       /* Backend */
       .stack(Database)
       .stack(SecretsStack)
+      .stack(AuthStack)
       .stack(ApiStack)
       .stack(userApiStack)
       .stack(leaderboardApiStack)

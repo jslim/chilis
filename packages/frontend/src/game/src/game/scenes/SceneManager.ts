@@ -1,11 +1,13 @@
-import { Application } from 'pixi.js'
-import LevelScene from './LevelScene'
-import { Scene } from './Scene'
+import type { Scene } from './Scene'
+import type { Application } from 'pixi.js'
+
+import { CoolDown } from '../core/CoolDown'
 import { Entity } from '../core/Entity'
-import { CoolDown } from '../utils/CoolDown'
-import { IntroScene } from './IntroScene'
+import { clamp01 } from '../utils/math.utils'
 import { EndScene } from './EndScene'
+import { IntroScene } from './IntroScene'
 import { LevelCompleteScene } from './LevelCompleteScene'
+import LevelScene from './LevelScene'
 import { PreloadScene } from './PreloadScene'
 import { SplashScene } from './SplashScene'
 
@@ -23,7 +25,7 @@ export default class SceneManager {
   }
 
   async showLevel(levelNo: number) {
-    let level = new LevelScene(this)
+    const level = new LevelScene(this)
     this.goto(level)
     await level.init(levelNo)
   }
@@ -60,7 +62,7 @@ export default class SceneManager {
     const updateCooldown: CoolDown = new CoolDown(1 / this.frameRate)
     this.app.ticker.add((ticker) => {
       if (this.isPlaying) {
-        const dt = (ticker.deltaMS / 1000) * this.root.timescale
+        const dt = clamp01((ticker.deltaMS / 1000) * this.root.timescale)
         if (updateCooldown.update(dt)) {
           this.root.onUpdate(1 / this.frameRate)
           const remaining = updateCooldown.time - updateCooldown.interval

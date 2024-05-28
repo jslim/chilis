@@ -100,3 +100,8 @@ export function download(blob: Blob, filename: string) {
   link.click()
   link.remove()
 }
+
+export const getImageUrl = (filePath: string) => {
+  // eslint-disable-next-line import/no-dynamic-require
+  return require(`../assets/images/${filePath}`).default
+}

@@ -17,14 +17,10 @@ export class PlayerMover extends Mover {
         let hasMoved = false
         if (input.isDown('left')) {
           if (this.left()) hasMoved = true
-        } else if (input.isDown('right')) {
-          if (this.right()) hasMoved = true
-        }
+        } else if (input.isDown('right') && this.right()) hasMoved = true
         if (input.isDown('up')) {
           if (this.up()) hasMoved = true
-        } else if (input.isDown('down')) {
-          if (this.down()) hasMoved = true
-        }
+        } else if (input.isDown('down') && this.down()) hasMoved = true
         if (hasMoved) {
           player.state.value = 'walk'
           player.idleCoolDown.reset()

@@ -1,26 +1,33 @@
-import { Component } from '../core/Entity'
-import LevelScene from '../scenes/LevelScene'
-import { canMove, canMoveTo } from '../utils/grid.utils'
+import type LevelScene from '../scenes/LevelScene'
+
 import { Point } from 'pixi.js'
+
+import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
-import { LevelComponent } from './level/LevelComponent'
 import { FLOOR_OFFSET } from '../game.config'
+import { canMove, canMoveTo } from '../utils/grid.utils'
+import { LevelComponent } from './level/LevelComponent'
 
 export type Direction = 'up' | 'down' | 'left' | 'right'
 export type MoveDirection = Direction | ''
 
 export function getOppositeDirection(direction: MoveDirection): MoveDirection {
   switch (direction) {
-    case 'up':
+    case 'up': {
       return 'down'
-    case 'down':
+    }
+    case 'down': {
       return 'up'
-    case 'left':
+    }
+    case 'left': {
       return 'right'
-    case 'right':
+    }
+    case 'right': {
       return 'left'
-    default:
+    }
+    default: {
       return ''
+    }
   }
 }
 
@@ -38,7 +45,10 @@ export class Mover extends Component {
 
   constructor(speed: number = 1) {
     super()
+    this.setSpeed(speed)
+  }
 
+  public setSpeed(speed: number) {
     this.speed.x = speed
     this.speed.y = this.speed.x / 1.72
   }
@@ -61,10 +71,10 @@ export class Mover extends Component {
     this.position.copyFrom(this.entity.position)
     this.prevPosition.copyFrom(this.entity.position)
 
-    let { tilewidth, tileheight } = this.level.map
-    this.entity.pivot.set(Math.floor(tilewidth / 2), tileheight)
-    this.position.x += this.entity.pivot.x
-    this.position.y += this.entity.pivot.y
+    const { tilewidth, tileheight } = this.level.map
+    //this.entity.pivot.set(Math.floor(tilewidth / 2), tileheight);
+    this.position.x += Math.floor(tilewidth / 2)
+    this.position.y += tileheight
     this.entity.pivot.y += FLOOR_OFFSET //  to stand on floor
 
     // snap owner position to closest on walk grid

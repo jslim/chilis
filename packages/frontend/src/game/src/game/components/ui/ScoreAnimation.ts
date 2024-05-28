@@ -3,7 +3,7 @@ import { Component } from '../../core/Entity'
 export class ScoreAnimation extends Component {
   private frame = 0
 
-  constructor(private moveAfterFrame = 3) {
+  constructor(private readonly moveAfterFrame = 3) {
     super()
   }
 

@@ -1,6 +1,7 @@
+import type { TextStyleAlign } from 'pixi.js'
+
 import { Component } from '../../core/Entity'
 import { getSimpleFont, SimpleText } from '../../display/SimpleText'
-import { TextStyleAlign } from 'pixi.js'
 
 export class SimpleTextDisplay extends Component {
   public label: SimpleText

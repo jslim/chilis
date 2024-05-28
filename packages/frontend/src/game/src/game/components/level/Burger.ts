@@ -1,16 +1,19 @@
-import { Component, Entity } from '../../core/Entity'
+import type { Entity } from '../../core/Entity';
+import type LevelScene from '../../scenes/LevelScene'
+import type { BurgerGroup } from './BurgerGroup'
+
 import { Rectangle, Sprite, Texture } from 'pixi.js'
-import { LevelComponent } from './LevelComponent'
+
+import { Component } from '../../core/Entity'
+import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
-import LevelScene from '../../scenes/LevelScene'
+import { DRAW_STATE_DEBUG, FLOOR_OFFSET, SCORE_PER_BURGER_BOUNCE, SCORE_PER_CPUS_HIT } from '../../game.config'
+import { TileId } from '../../tiled/TileId'
+import { Cpu } from '../cpu/Cpu'
 import { HitBox } from '../HitBox'
 import { Mover } from '../Mover'
-import { Cpu } from '../cpu/Cpu'
-import { DRAW_STATE_DEBUG, FLOOR_OFFSET, SCORE_PER_BURGER_BOUNCE, SCORE_PER_CPUS_HIT } from '../../game.config'
 import { StateDebugText } from '../StateDebugText'
-import { Signal } from '../../core/Signal'
-import { BurgerGroup } from './BurgerGroup'
-import { TileId } from '../../tiled/TileId'
+import { LevelComponent } from './LevelComponent'
 
 export const burgerOverlap = 1
 export const burgerHeightByTileId = {
@@ -18,14 +21,14 @@ export const burgerHeightByTileId = {
   [TileId.Burger2]: 4,
   [TileId.Burger3]: 5,
   [TileId.Burger4]: 6,
-  [TileId.Burger5]: 4,
-  [TileId.Burger6]: 3,
-  [TileId.Burger7]: 3,
-  [TileId.Burger8]: 8,
-  [TileId.Burger9]: 8,
+  [TileId.Burger5]: 3,
+  [TileId.Burger6]: 2,
+  [TileId.Burger7]: 2,
+  [TileId.Burger8]: 7,
+  [TileId.Burger9]: 7,
   [TileId.Burger10]: 7,
-  [TileId.Burger10]: 4,
-  [TileId.Burger12]: 6
+  [TileId.Burger11]: 6,
+  [TileId.Burger12]: 7
 }
 
 export const BurgerTileSize = { tilewidth: 30, tileheight: 16 }
@@ -43,24 +46,24 @@ export class Burger extends Component {
 
   public group: BurgerGroup | undefined = undefined
 
-  private splicedSprites: Sprite[] = []
+  private readonly splicedSprites: Sprite[] = []
   private totalSlicesTouched: number = 0
   private targetY: number = 0
   private fallFrameId = 0
   private level!: LevelScene
-  private fallSpeed: number = 3
+  private readonly fallSpeed: number = 3
 
-  private targetPlateRect: Rectangle | undefined = undefined
+  private readonly targetPlateRect: Rectangle | undefined = undefined
 
-  private fallStats = {
+  private readonly fallStats = {
     totalCpusHit: 0,
     // this value is passed from one to another burger, to get sum of chain of burgers hit
     totalBurgersHit: 0
   }
 
   constructor(
-    private spriteSheet: Texture,
-    private tileId: number
+    private readonly spriteSheet: Texture,
+    private readonly tileId: number
   ) {
     super()
   }
@@ -86,17 +89,17 @@ export class Burger extends Component {
     const baseTextureFrame = getBurgerTextureFrame(this.spriteSheet, this.tileId)
     const textureWidth = baseTextureFrame.width
     const textureHeight = baseTextureFrame.height
-    const pixelWidth = 5
+    const pixelWidth = 3
     for (let x = 0; x < textureWidth; x += pixelWidth) {
       const frame = new Rectangle(baseTextureFrame.x + x, baseTextureFrame.y, pixelWidth, textureHeight)
       const texture = new Texture({
         source: this.spriteSheet.source,
-        frame: frame
+        frame
       })
       const sliceSprite = new Sprite(texture)
       this.entity.addChild(sliceSprite)
       this.splicedSprites.push(sliceSprite)
-      sliceSprite.pivot.y -= 6
+      sliceSprite.pivot.y -= 4
       sliceSprite.x = x
     }
 
@@ -107,23 +110,27 @@ export class Burger extends Component {
 
     this.subscribe(this.state.onChanged, (newState) => {
       switch (newState) {
-        case 'idle':
+        case 'idle': {
           this.fallFrameId = 0
           this.totalSlicesTouched = 0
           this.fallStats.totalBurgersHit = 0
           break
+        }
 
-        case 'bounce':
+        case 'bounce': {
           this.state.value = 'fall'
           break
+        }
 
-        case 'fall':
+        case 'fall': {
           this.entity.y += 1
           this.targetY = this.findTargetY()
           break
-        case 'complete':
+        }
+        case 'complete': {
           this.onComplete.emit()
           break
+        }
       }
     })
 
@@ -136,7 +143,7 @@ export class Burger extends Component {
     })
     this.subscribe(this.onHitBurger, (otherBurger) => {
       this.fallStats.totalBurgersHit++
-      let otherBurgerComp = otherBurger.getComponent(Burger)
+      const otherBurgerComp = otherBurger.getComponent(Burger)
       otherBurgerComp.fallStats.totalBurgersHit = this.fallStats.totalBurgersHit
 
       otherBurgerComp.state.value = 'bounce'
@@ -147,6 +154,9 @@ export class Burger extends Component {
       this.state.value = 'complete'
     })
     this.subscribe(this.onHitFloor, (_plate) => {
+      for (let i = 0; i < 10; i++) {
+        this.stepUpdateSlicedParts()
+      }
       this.addScore()
       this.state.value = 'idle'
     })
@@ -156,17 +166,20 @@ export class Burger extends Component {
     super.onUpdate(dt)
 
     switch (this.state.value) {
-      case 'idle':
+      case 'idle': {
         this.updateIdle()
         break
+      }
 
-      case 'fall':
+      case 'fall': {
         this.updateFall()
         break
+      }
 
-      case 'complete':
+      case 'complete': {
         this.updateComplete()
         break
+      }
     }
   }
 
@@ -177,7 +190,7 @@ export class Burger extends Component {
     if (playerMover.hasMoved && Math.abs(player.y - this.entity.y) <= 1) {
       this.totalSlicesTouched = 0
       const MIN_X_DISTANCE = 9
-      const MAX_Y_DOWN = 4
+      const MAX_Y_DOWN = 3
       for (const sliceSprite of this.splicedSprites) {
         if (
           Math.abs(this.entity.x + sliceSprite.x + sliceSprite.width / 2 - this.entity.pivot.x - player.x) <
@@ -195,7 +208,8 @@ export class Burger extends Component {
     }
 
     // if all slices are touched, drop burger down
-    if (this.totalSlicesTouched === this.splicedSprites.length) {
+    const sliceForgiveness = 1
+    if (this.totalSlicesTouched === this.splicedSprites.length - sliceForgiveness) {
       this.onSliceCompleted.emit()
     }
   }
@@ -239,9 +253,9 @@ export class Burger extends Component {
         }
 
         if (this.isCurrentState('fall')) {
-          for (let otherBurger of burgers) {
+          for (const otherBurger of burgers) {
             if (otherBurger === this.entity) continue
-            let otherBurgerComponent = otherBurger.getComponent(Burger)
+            const otherBurgerComponent = otherBurger.getComponent(Burger)
             if (this.intersectsWith(otherBurger)) {
               if (otherBurgerComponent.isIdle) {
                 console.log('intersected with burger')
@@ -306,19 +320,19 @@ export class Burger extends Component {
   }
 
   private findTargetPlate() {
-    let thisRect = this.entity.getComponent(HitBox).getRect()
-    let tempRect1 = new Rectangle()
-    let tempRect2 = new Rectangle()
+    const thisRect = this.entity.getComponent(HitBox).getRect()
+    const tempRect1 = new Rectangle()
+    const tempRect2 = new Rectangle()
 
-    let platesOnSameRow = this.level.plates.filter((plate) => {
-      let plateHitBox = plate.getComponent(HitBox)
-      let plateRect = plateHitBox.getRect(tempRect1)
+    const platesOnSameRow = this.level.plates.filter((plate) => {
+      const plateHitBox = plate.getComponent(HitBox)
+      const plateRect = plateHitBox.getRect(tempRect1)
       return plateHitBox.contains(thisRect.x, plateRect.y)
     })
     // sort by closest y position to burger
     platesOnSameRow.sort((a, b) => {
-      let aRect = a.getComponent(HitBox).getRect(tempRect1)
-      let bRect = b.getComponent(HitBox).getRect(tempRect2)
+      const aRect = a.getComponent(HitBox).getRect(tempRect1)
+      const bRect = b.getComponent(HitBox).getRect(tempRect2)
       return aRect.y - bRect.y
     })
     return platesOnSameRow[0]

@@ -1,5 +1,6 @@
-import { Component } from '../../core/Entity'
 import { Assets } from 'pixi.js'
+
+import { Component } from '../../core/Entity'
 import { SimpleNumberText } from '../../display/SimpleNumberText'
 
 export class SimpleNumberDisplay extends Component {

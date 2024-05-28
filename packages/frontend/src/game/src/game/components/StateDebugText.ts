@@ -1,5 +1,6 @@
+import type { Value } from '../core/Value'
+
 import { SimpleTextDisplay } from './ui/SimpleTextDisplay'
-import { Value } from '../core/Value'
 
 export class StateDebugText extends SimpleTextDisplay {
   constructor(state: Value, position = [0, 0], tint = 0xffffff) {

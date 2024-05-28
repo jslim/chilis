@@ -27,7 +27,7 @@ export default class Tween<T extends TweenValue = number> {
   private onProgress: ((v: T) => void) | undefined = undefined
   private onComplete: (() => void) | undefined = undefined
 
-  private isNumber: boolean = false
+  private isNumber: boolean = true
 
   constructor(_from?: T) {
     this.from = _from!

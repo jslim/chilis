@@ -1,9 +1,10 @@
-import { Scene } from './Scene'
 import { Assets, Graphics } from 'pixi.js'
+
 import { assetsManifest } from '../assets.manifest'
+import { Scene } from './Scene'
 
 export class PreloadScene extends Scene {
-  private graphics = new Graphics()
+  private readonly graphics = new Graphics()
 
   override onStart() {
     super.onStart()
@@ -13,7 +14,7 @@ export class PreloadScene extends Scene {
   async preload() {
     // init assets manager
 
-    // @ts-ignore (there are two ways to init, seems there are no typings for that)
+    // @ts-expect-error (there are two ways to init, seems there are no typings for that)
     await Assets.init({ manifest: assetsManifest })
 
     // setup level bundles
@@ -26,7 +27,7 @@ export class PreloadScene extends Scene {
     }
 
     // preload
-    await Assets.loadBundle(['basic', 'player', 'splash'], (p) => this.drawProgress(p))
+    await Assets.loadBundle(['game', 'splash'], (p) => this.drawProgress(p))
 
     // wait a bit
     await new Promise((resolve) => setTimeout(resolve, 130))
@@ -39,7 +40,7 @@ export class PreloadScene extends Scene {
       .moveTo(0, sceneWidth / 2)
       .lineTo(Math.floor(sceneWidth * progress), sceneWidth / 2)
       .stroke({
-        color: 0xffffff,
+        color: 0xffc507,
         width: 1
       })
   }

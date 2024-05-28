@@ -1,19 +1,20 @@
-import { Component } from '../core/Entity'
 import { Graphics, Rectangle } from 'pixi.js'
-import { Mover } from './Mover'
-import { DRAW_HIT_BOX_DEBUG, FLOOR_OFFSET } from '../game.config'
+
+import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
+import { DRAW_HIT_BOX_DEBUG, FLOOR_OFFSET } from '../game.config'
+import { Mover } from './Mover'
 
 export class HitBox extends Component {
   public isActive = new Value<boolean>(true)
 
   // a and b are used to avoid creating new objects, they are only used for comparison
-  private a: Rectangle = new Rectangle()
-  private b: Rectangle = new Rectangle()
+  private readonly a: Rectangle = new Rectangle()
+  private readonly b: Rectangle = new Rectangle()
 
   public readonly current: Rectangle
 
-  private graphics = new Graphics()
+  private readonly graphics = new Graphics()
   public hasIntersection: boolean = false
 
   constructor(x: number, y: number, width: number, height: number) {
@@ -46,14 +47,14 @@ export class HitBox extends Component {
 
   public intersects(other: HitBox): boolean {
     if (!this.isActive.value || !other.isActive.value) return false
-    let a = this.getRect(this.a)
-    let b = other.getRect(this.b)
+    const a = this.getRect(this.a)
+    const b = other.getRect(this.b)
     return (this.hasIntersection = a.intersects(b))
   }
 
   public getRect(temp = new Rectangle()): Rectangle {
     temp.copyFrom(this.current)
-    let position = this.entity.getComponent(Mover)?.position ?? this.entity.position
+    const position = this.entity.getComponent(Mover)?.position ?? this.entity.position
     temp.x += position.x
     temp.y += position.y
     return temp

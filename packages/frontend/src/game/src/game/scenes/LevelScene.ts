@@ -1,38 +1,50 @@
-import { TiledMap } from '../tiled/TiledMap'
-import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
-import { Entity } from '../core/Entity'
-import { Player } from '../components/player/Player'
+import type { TiledMap } from '../tiled/TiledMap'
+import type {
+  TiledWalkGrid
+} from '../utils/tiles.utils';
+import type { Point} from 'pixi.js';
+
+import { Assets, Rectangle, Sprite, Texture } from 'pixi.js'
+
+import { AutoDisposer } from '../components/AutoDisposer'
 import { Cpu } from '../components/cpu/Cpu'
-import { Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize } from '../components/level/Burger'
-import { Input } from '../components/input/Input'
+import { CpuAnimator } from '../components/cpu/CpuAnimator'
 import { CpuMover } from '../components/cpu/CpuMover'
+import { DinoCool } from '../components/cpu/DinoCool'
+import { Matey } from '../components/cpu/Matey'
+import { MrBaggie } from '../components/cpu/MrBaggie'
+import { Piggles } from '../components/cpu/Piggles'
+import { HitBox } from '../components/HitBox'
+import { GamepadInput } from '../components/input/GamepadInput'
+import { Input } from '../components/input/Input'
 import { KeyboardInput } from '../components/input/KeyboardInput'
+import { MobileInput } from '../components/input/MobileInput'
+import { Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize } from '../components/level/Burger'
+import { BurgerGroup } from '../components/level/BurgerGroup'
+import { LevelComponent } from '../components/level/LevelComponent'
+import { Light } from '../components/level/Light'
+import { Plate } from '../components/level/Plate'
+import { Player } from '../components/player/Player'
+import { PlayerAnimator } from '../components/player/PlayerAnimator'
+import { PlayerPacManMover } from '../components/player/PlayerPacManMover'
+import { GameUI } from '../components/ui/GameUI'
+import { ScoreAnimation } from '../components/ui/ScoreAnimation'
+import { SimpleTextDisplay } from '../components/ui/SimpleTextDisplay'
+import { createDelay } from '../core/Delay'
+import { Entity } from '../core/Entity'
+import { ScreenShake } from '../core/ScreenShake'
+import { Signal } from '../core/Signal'
+import { get8pxNumberFont } from '../display/SimpleText'
+import { FlumpLibrary } from '../flump/FlumpLibrary'
+import { DRAW_DEBUG_GRID, FLOOR_OFFSET, SCORE_PER_GROUP_COMPLETE } from '../game.config'
 import { TileId } from '../tiled/TileId'
 import {
   connectionsToGrid,
   drawGrid,
   drawPointsAndConnections,
-  getTileConnections,
-  TiledWalkGrid
+  getTileConnections
 } from '../utils/tiles.utils'
 import { Scene } from './Scene'
-import { GamepadInput } from '../components/input/GamepadInput'
-import { LevelComponent } from '../components/level/LevelComponent'
-import { HitBox } from '../components/HitBox'
-import { Plate } from '../components/level/Plate'
-import { AutoDisposer } from '../components/AutoDisposer'
-import { MobileInput } from '../components/input/MobileInput'
-import { PlayerAnimator } from '../components/player/PlayerAnimator'
-import { Signal } from '../core/Signal'
-import { createDelay } from '../core/Delay'
-import { DRAW_DEBUG_GRID, FLOOR_OFFSET, SCORE_PER_GROUP_COMPLETE } from '../game.config'
-import { SimpleTextDisplay } from '../components/ui/SimpleTextDisplay'
-import { BurgerGroup } from '../components/level/BurgerGroup'
-import { GameUI } from '../components/ui/GameUI'
-import { get8pxNumberFont } from '../display/SimpleText'
-import { ScoreAnimation } from '../components/ui/ScoreAnimation'
-import { PlayerPacManMover } from '../components/player/PlayerPacManMover'
-import { Light } from '../components/level/Light'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -47,8 +59,10 @@ export default class LevelScene extends Scene {
   public plates: Entity[] = []
   public burgerGroups: BurgerGroup[] = []
   public spawnPoints: Point[] = []
+  public flumpLibrary!: FlumpLibrary
+
   private isPlaying: boolean = true
-  private mainContainer = new Entity()
+  private readonly mainContainer = new Entity()
   public containers = {
     back: new Entity(),
     ui: new Entity(),
@@ -70,7 +84,7 @@ export default class LevelScene extends Scene {
     this.mainContainer.x += VIEW_OFFSET.x
     this.mainContainer.y += VIEW_OFFSET.y
 
-    let floorOffsetToFixLights = 6
+    const floorOffsetToFixLights = 6
     this.mainContainer.y += floorOffsetToFixLights
     this.containers.back.y -= floorOffsetToFixLights
     this.containers.ui.x -= VIEW_OFFSET.x
@@ -80,7 +94,7 @@ export default class LevelScene extends Scene {
     this.subscribe(this.onAllBurgersCompleted, () => {
       this.isPlaying = false
       this.player.getComponent(Player).state.value = 'victory'
-      for (let cpu of this.cpus) {
+      for (const cpu of this.cpus) {
         cpu.getComponent(Cpu).state.value = 'defeat'
       }
       createDelay(this.entity, 2, () => this.sceneManager.levelComplete())
@@ -107,11 +121,13 @@ export default class LevelScene extends Scene {
     this.gameState.setLevel(levelNo)
 
     this.map = map
-    let path = getTileConnections(map, map.layers.find((l) => l.name === 'floor')!)
+    const path = getTileConnections(map, map.layers.find((l) => l.name === 'floor')!)
+
+    this.flumpLibrary = new FlumpLibrary('flump')
 
     this.walkGrid = connectionsToGrid(map, path)
     let cpuId = 0
-    for (let layer of map.layers) {
+    for (const layer of map.layers) {
       // only process tile layers
       if (layer.type !== 'tilelayer') continue
 
@@ -132,13 +148,11 @@ export default class LevelScene extends Scene {
           // remap tile ids for nicely designed level
           const hasStairsBelow = TileId.hasStairs(layerData[i + layer.width])
           if (TileId.isFloor(id)) {
-            if (hasStairsBelow) id = TileId.FloorStairsNoUp
-            else id = TileId.Floor
+            id = hasStairsBelow ? TileId.FloorStairsNoUp : TileId.Floor;
 
             container = this.containers.floorFront
           } else if (TileId.isStairsAndFloor(id)) {
-            if (!hasStairsBelow) id = TileId.FloorStairsNoDown
-            else id = TileId.StairsAndFloor
+            id = !hasStairsBelow ? TileId.FloorStairsNoDown : TileId.StairsAndFloor;
 
             container = this.containers.floorFront
           } else if (TileId.isStairs(id)) {
@@ -149,20 +163,16 @@ export default class LevelScene extends Scene {
           entity.position.set(x * map.tilewidth, y * map.tileheight)
 
           // add specific components
-          if (id === TileId.Cpu) {
-            entity.addChild(getSprite(map, spriteSheet, id))
-            entity.addComponent(new HitBox(-4, -14, 8, 14), new CpuMover(1, cpuId++), new Input(), new Cpu())
-            this.cpus.push(entity)
-          } else if (id === TileId.Player) {
+          if (id === TileId.Player) {
             this.player = entity.addComponent(
-              new HitBox(-4, -14, 8, 14),
+              new HitBox(-3, -10, 6, 8),
               // new PlayerMover(1.5),
               new PlayerPacManMover(1.5),
               new Input(),
               new KeyboardInput(),
               new GamepadInput(),
               new Player(this.gameState.lives, this.gameState.bullets),
-              new PlayerAnimator()
+              new PlayerAnimator(this.flumpLibrary)
             )
 
             this.subscribe(this.player.getComponent(Player).onDied, () => this.sceneManager.end())
@@ -172,6 +182,69 @@ export default class LevelScene extends Scene {
             this.subscribe(this.player.getComponent(Player).onReset, () =>
               this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset())
             )
+          } /*else if (id === TileId.Cpu) {
+            //entity.addChild(getSprite(map, spriteSheet, id));
+            entity.addComponent(
+              new HitBox(-4, -14, 8, 14),
+              new CpuMover(1, cpuId++),
+              new CpuAnimator(flumpLibrary, "trainee01"),
+              new Input(),
+              new Cpu(),
+            );
+            this.cpus.push(entity);
+          }*/ else if (id === TileId.Cpu || id === TileId.BossCpu) {
+            //  entity.addChild(getSprite(map, spriteSheet, id));
+            let cpu: Cpu | undefined
+            let offsetX = 0 // visual offset animation
+            if (id === TileId.Cpu) {
+              cpu = new Cpu('trainee01')
+            } else if (id === TileId.BossCpu) {
+              offsetX = 4
+              switch (levelNo) {
+              case 1: {
+                cpu = new Piggles('piggles')
+              
+              break;
+              }
+              case 2: {
+                cpu = new DinoCool('dino')
+              
+              break;
+              }
+              case 3: {
+                cpu = new MrBaggie('baggie')
+              
+              break;
+              }
+              case 4: {
+                cpu = new Matey('matey')
+              
+              break;
+              }
+              case 5: {
+                cpu = new Piggles('zapp')
+              
+              break;
+              }
+              case 6: {
+                cpu = new Piggles('piggles')
+              
+              break;
+              }
+              // No default
+              }
+            }
+
+            if (cpu) {
+              entity.addComponent(
+                new HitBox(-3, -9, 6, 8),
+                new CpuMover(1, cpuId++),
+                new CpuAnimator(this.flumpLibrary, cpu.name, offsetX),
+                new Input(),
+                cpu
+              )
+              this.cpus.push(entity)
+            }
           } else if (TileId.isBurger(id)) {
             const burgerHeight = burgerHeightByTileId[id] - burgerOverlap
             entity.addComponent(
@@ -182,23 +255,17 @@ export default class LevelScene extends Scene {
             entity.position.x = Math.round(entity.position.x)
             container = this.containers.burgerParts
             this.burgers.push(entity)
-          } else if (id === TileId.Plate || id === TileId.Burger11WithPlate) {
-            let hasBurger = id === TileId.Burger11WithPlate
-            const plateSprite = new Sprite(Assets.get(hasBurger ? 'plate_with_burger' : 'plate'))
+          } else if (id === TileId.Plate) {
+            const isFloating = y < 12
+            const plateSprite = this.flumpLibrary.createSprite(!isFloating ? 'plate' : 'plate_floating')
             entity.addChild(plateSprite)
             entity.position.x -= (plateSprite.width - map.tilewidth) / 2
             entity.position.x = Math.round(entity.position.x)
-
-            let plateHeight = 1
-            if (hasBurger) {
-              // burger 11 is a plate combined with burger 12
-              plateHeight += burgerHeightByTileId[TileId.Burger12] - burgerOverlap
-            }
+            const plateHeight = 3
             entity.addComponent(
               new HitBox(-plateSprite.width / 2, -plateHeight, plateSprite.width, plateHeight),
               new Plate()
             )
-            container = this.containers.burgerParts
             this.plates.push(entity)
           } else {
             entity.addChild(getSprite(map, spriteSheet, id))
@@ -215,13 +282,13 @@ export default class LevelScene extends Scene {
       return b.y - a.y
     })
 
-    for (let layer of map.layers) {
+    for (const layer of map.layers) {
       // only process object layers
       if (layer.type !== 'objectgroup') continue
 
       if (layer.name === 'lights') {
         for (const tiledObject of layer.objects) {
-          const light = new Entity().addComponent(new Light(tiledObject.name))
+          const light = new Entity().addComponent(new Light(this.flumpLibrary, tiledObject.name))
           // the layer name is the reference to the image
           light.position.set(tiledObject.x, tiledObject.y)
           // round position to tiles
@@ -259,11 +326,9 @@ export default class LevelScene extends Scene {
 
   override onUpdate(dt: number): void {
     super.onUpdate(dt)
-    if (this.isPlaying) {
-      if (this.checkIfAllBurgersCompleted()) {
+    if (this.isPlaying && this.checkIfAllBurgersCompleted()) {
         this.onAllBurgersCompleted.emit()
       }
-    }
   }
 
   checkIfAllBurgersCompleted() {
@@ -276,9 +341,9 @@ export default class LevelScene extends Scene {
     this.gameState.score.value += points
 
     const pointsEntity = new Entity().addComponent(
-      new SimpleTextDisplay(points + '', 'center', get8pxNumberFont()).setTint(0xffc507),
+      new SimpleTextDisplay(`${points  }`, 'center', get8pxNumberFont()).setTint(0xffc507),
       new ScoreAnimation(),
-      new AutoDisposer(1.0)
+      new AutoDisposer(1)
     )
     pointsEntity.position.copyFrom(position)
     pointsEntity.position.y -= FLOOR_OFFSET + 9
@@ -320,6 +385,10 @@ export default class LevelScene extends Scene {
         totalGroupsInRow++
       })
     })
+  }
+
+  public screenShake(amount: number, duration: number) {
+    this.entity.addComponent(new ScreenShake(amount, duration))
   }
 }
 

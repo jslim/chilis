@@ -1,7 +1,9 @@
+import type { TiledLayer, TiledMap } from '../tiled/TiledMap'
+
 import { Graphics, Point } from 'pixi.js'
-import { TiledLayer, TiledMap } from '../tiled/TiledMap'
-import { TileId } from '../tiled/TileId'
+
 import { FLOOR_OFFSET } from '../game.config'
+import { TileId } from '../tiled/TileId'
 
 // Define a type for the connections, which is a tuple of two points
 export type TileConnection = [from: Point, to: Point]
@@ -9,7 +11,7 @@ export type TiledLayerPath = { points: Point[]; connections: TileConnection[] }
 export type TiledWalkGrid = { grid: number[]; size: number }
 
 export function getTileConnections(tiledMap: TiledMap, tiledLayer: TiledLayer): TiledLayerPath {
-  let points: Point[] = []
+  const points: Point[] = []
   const connections: TileConnection[] = []
 
   // Tile dimensions
@@ -44,10 +46,10 @@ export function getTileConnections(tiledMap: TiledMap, tiledLayer: TiledLayer): 
       connect(x, y, [0.5, 0], [0.5, 1])
     } else if (TileId.isStairsAndFloor(tileId)) {
       connect(x, y, [0.5, 0], [0.5, 1])
-      if (TileId.hasFloor(leftTileId)) connect(x, y, [0.0, 1], [0.5, 1])
+      if (TileId.hasFloor(leftTileId)) connect(x, y, [0, 1], [0.5, 1])
       if (TileId.hasFloor(rightTileId)) connect(x, y, [0.5, 1], [1, 1])
     } else if (TileId.isFloor(tileId)) {
-      if (TileId.hasFloor(leftTileId)) connect(x, y, [0.0, 1], [0.5, 1])
+      if (TileId.hasFloor(leftTileId)) connect(x, y, [0, 1], [0.5, 1])
       if (TileId.hasFloor(rightTileId)) connect(x, y, [0.5, 1], [1, 1])
     }
   }
@@ -56,7 +58,7 @@ export function getTileConnections(tiledMap: TiledMap, tiledLayer: TiledLayer): 
   points.forEach((point, index, self) => {
     // replace points in connections to first occurrence of the point
     connections.forEach((connection) => {
-      let [from, to] = connection
+      const [from, to] = connection
       if (point !== from && from.x === point.x && from.y === point.y) {
         connection[0] = point
       }
@@ -78,10 +80,10 @@ export function getTileConnections(tiledMap: TiledMap, tiledLayer: TiledLayer): 
 }
 
 export function drawPointsAndConnections({ points, connections }: TiledLayerPath): Graphics {
-  let graphics = new Graphics()
+  const graphics = new Graphics()
   graphics.y -= FLOOR_OFFSET
   connections.forEach((connection) => {
-    let [from, to] = connection
+    const [from, to] = connection
     graphics.moveTo(from.x, from.y).lineTo(to.x, to.y).stroke({ width: 2, color: 0xff0000 })
   })
   points.forEach((point) => {
@@ -104,8 +106,8 @@ export function connectionsToGrid(
     },
     () => 0
   )
-  for (let connection of connections) {
-    let [from, to] = connection
+  for (const connection of connections) {
+    const [from, to] = connection
     for (let x = Math.min(from.x, to.x); x <= Math.max(from.x, to.x); x += scale) {
       for (let y = Math.min(from.y, to.y); y <= Math.max(from.y, to.y); y += scale) {
         grid[x / scale + (y / scale) * gridWidth] = 1
@@ -114,13 +116,14 @@ export function connectionsToGrid(
   }
   return { grid, size: gridWidth }
 }
+
 export function drawGrid({ grid, size }: TiledWalkGrid) {
-  let graphics = new Graphics()
+  const graphics = new Graphics()
   graphics.y -= FLOOR_OFFSET
-  for (let i = 0; i < grid.length; i++) {
-    if (grid[i]) {
-      let x = i % size
-      let y = (i / size) | 0
+  for (const [i, element] of grid.entries()) {
+    if (element) {
+      const x = i % size
+      const y = (i / size) | 0
       graphics.rect(x, y, 1, 1).fill(0xffffff)
     }
   }

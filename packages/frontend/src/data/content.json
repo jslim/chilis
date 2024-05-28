@@ -32,6 +32,7 @@
     },
     "topNav": { "logIn": "LOG IN", "LogOut": "LOG OUT" },
     "playNow": "PLAY NOW",
+    "testAudio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     "footer": {
       "routes": [
         { "path": "/", "title": "Home" },
@@ -70,9 +71,13 @@
         "description": "Some landing page description"
       },
       "body": {
+        "hero": {
+          "src": "hero.png",
+          "alt": "Chilis Logo"
+        },
         "backgroundVideo": {
           "src": "",
-          "poster": "test.png"
+          "poster": "home-background.png"
         },
         "title": "PLAY THE GAME",
         "description": "To get started, edit <code>pages/index.js</code> and save to reload.",

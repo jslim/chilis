@@ -1,14 +1,16 @@
-import { Point } from 'pixi.js'
-import LevelScene from '../scenes/LevelScene'
+import type LevelScene from '../scenes/LevelScene'
+import type { TiledWalkGrid } from './tiles.utils'
+import type { Point } from 'pixi.js'
+
 import { getOppositeDirection } from '../components/Mover'
 
 export function getMoveDirections(position: Point, level: LevelScene, currentDirection: string = ''): string[] {
-  let { size, grid } = level.walkGrid
+  const { size, grid } = level.walkGrid
 
-  let gridX = Math.floor(position.x)
-  let gridY = Math.floor(position.y)
+  const gridX = Math.floor(position.x)
+  const gridY = Math.floor(position.y)
 
-  let directions = []
+  const directions = []
   if (grid[gridX - 1 + gridY * size] > 0 && currentDirection !== getOppositeDirection('left')) directions.push('left')
 
   if (grid[gridX + 1 + gridY * size] > 0 && currentDirection !== getOppositeDirection('right')) directions.push('right')
@@ -21,15 +23,27 @@ export function getMoveDirections(position: Point, level: LevelScene, currentDir
 }
 
 export function canMoveTo(x: number, y: number, level: LevelScene) {
-  let { size, grid } = level.walkGrid
-  let gridX = Math.floor(x)
-  let gridY = Math.floor(y)
+  const { size, grid } = level.walkGrid
+  const gridX = Math.floor(x)
+  const gridY = Math.floor(y)
   return grid[gridX + gridY * size] > 0
 }
 
 export function canMove(x: number, y: number, dx: number, dy: number, level: LevelScene) {
-  let { size, grid } = level.walkGrid
-  let gridX = Math.floor(x) + Math.sign(dx)
-  let gridY = Math.floor(y) + Math.sign(dy)
+  const { size, grid } = level.walkGrid
+  const gridX = Math.floor(x) + Math.sign(dx)
+  const gridY = Math.floor(y) + Math.sign(dy)
   return grid[gridX + gridY * size] > 0
+}
+
+export function getFloorPositionsAtX(grid: TiledWalkGrid, x: number): number[] {
+  const floorPositions = []
+  for (let idx = 0; idx < grid.grid.length; idx++) {
+    const gx = idx % grid.size
+    const gy = Math.floor(idx / grid.size)
+    if (gx === x && grid.grid[idx] > 0) {
+      floorPositions.push(gy)
+    }
+  }
+  return floorPositions
 }
