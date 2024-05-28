@@ -11,16 +11,16 @@ export const assetsManifest = {
         background: 'game/background.png',
         player_pepper: 'game/player-pepper.png',
         'flump/atlas': 'game/game/atlas0.png',
-        'flump/json': 'game/game/library.json',
-      },
+        'flump/json': 'game/game/library.json'
+      }
     },
     {
       name: 'splash',
       assets: {
         'splash/background': 'game/splash/background.png',
         'splash/start': 'game/splash/start.png',
-        'splash/logo': 'game/splash/logo.png',
-      },
-    },
-  ],
-};
+        'splash/logo': 'game/splash/logo.png'
+      }
+    }
+  ]
+}

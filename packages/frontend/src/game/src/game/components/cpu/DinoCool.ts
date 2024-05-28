@@ -1,36 +1,36 @@
-import { Cpu } from './Cpu';
-import { CpuMover } from './CpuMover';
+import { Cpu } from './Cpu'
+import { CpuMover } from './CpuMover'
 
-const ATTACK_RANGE = 30;
+const ATTACK_RANGE = 30
 
 export class DinoCool extends Cpu {
   override onStart() {
-    super.onStart();
+    super.onStart()
 
-    this.paralyzedCoolDown.interval = 3.0;
+    this.paralyzedCoolDown.interval = 3.0
 
-    let mover = this.entity.getComponent(CpuMover);
-    mover.setSpeed(1);
-    mover.speed.y = 2;
+    let mover = this.entity.getComponent(CpuMover)
+    mover.setSpeed(1)
+    mover.speed.y = 2
 
-    mover.modeCycle = ['hunt-player-slow'];
-    mover.directionAccuracy = 0.25;
+    mover.modeCycle = ['hunt-player-slow']
+    mover.directionAccuracy = 0.25
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
         case 'prepare_attack':
-          break;
+          break
 
         case 'attack':
-          break;
+          break
       }
-    });
+    })
   }
 
   override onUpdate(dt: number) {
-    super.onUpdate(dt);
+    super.onUpdate(dt)
 
-    const mover = this.entity.getComponent(CpuMover);
+    const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk':
         if (
@@ -39,7 +39,7 @@ export class DinoCool extends Cpu {
           this.entity.y === this.level!.player.y &&
           Math.abs(this.entity.x - this.level!.player.x) < ATTACK_RANGE
         ) {
-          this.attackCoolDown.reset();
+          this.attackCoolDown.reset()
           //this.state.value = 'prepare_attack';
         }
     }

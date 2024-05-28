@@ -1,5 +1,5 @@
-import { Component } from '../../core/Entity';
-import { Input, InputKey } from './Input';
+import { Component } from '../../core/Entity'
+import { Input, InputKey } from './Input'
 
 const keyMapping = new Map<string, InputKey>([
   ['ArrowLeft', 'left'],
@@ -11,36 +11,36 @@ const keyMapping = new Map<string, InputKey>([
   ['w', 'up'],
   ['s', 'down'],
   [' ', 'action'],
-  ['x', 'action'],
-]);
+  ['x', 'action']
+])
 
 export class KeyboardInput extends Component {
   override onStart() {
-    super.onStart();
-    window.addEventListener('keydown', this.onKeyDownHandler.bind(this));
-    window.addEventListener('keyup', this.onKeyUpHandler.bind(this));
+    super.onStart()
+    window.addEventListener('keydown', this.onKeyDownHandler.bind(this))
+    window.addEventListener('keyup', this.onKeyUpHandler.bind(this))
   }
 
   onKeyUpHandler({ key }: KeyboardEvent) {
-    const input = this.entity?.getComponent(Input);
-    let inputKey = keyMapping.get(key);
+    const input = this.entity?.getComponent(Input)
+    let inputKey = keyMapping.get(key)
     if (input && inputKey) {
-      input.onUp.emit(inputKey);
+      input.onUp.emit(inputKey)
     }
   }
 
   onKeyDownHandler({ key }: KeyboardEvent) {
-    const input = this.entity?.getComponent(Input);
-    console.log(key);
-    const inputKey = keyMapping.get(key);
+    const input = this.entity?.getComponent(Input)
+    console.log(key)
+    const inputKey = keyMapping.get(key)
     if (input && inputKey) {
-      input.onDown.emit(inputKey);
+      input.onDown.emit(inputKey)
     }
   }
 
   override destroy() {
-    super.destroy();
-    window.removeEventListener('keydown', this.onKeyDownHandler);
-    window.removeEventListener('keyup', this.onKeyUpHandler);
+    super.destroy()
+    window.removeEventListener('keydown', this.onKeyDownHandler)
+    window.removeEventListener('keyup', this.onKeyUpHandler)
   }
 }

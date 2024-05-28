@@ -31,22 +31,22 @@ export const TileId = {
   Burger12: 32,
 
   isStairs(id: number): boolean {
-    return id === TileId.PlaceHolderStairs;
+    return id === TileId.PlaceHolderStairs
   },
   isStairsAndFloor(id: number): boolean {
-    return id === TileId.PlaceHolderStairsAndFloor;
+    return id === TileId.PlaceHolderStairsAndFloor
   },
   isFloor(id: number): boolean {
-    return id === TileId.PlaceHolderFloor;
+    return id === TileId.PlaceHolderFloor
   },
 
   hasFloor(id: number): boolean {
-    return TileId.isFloor(id) || TileId.isStairsAndFloor(id);
+    return TileId.isFloor(id) || TileId.isStairsAndFloor(id)
   },
   hasStairs(id: number): boolean {
-    return TileId.isStairs(id) || TileId.isStairsAndFloor(id);
+    return TileId.isStairs(id) || TileId.isStairsAndFloor(id)
   },
   isBurger(id: number): boolean {
-    return id >= TileId.Burger1 && id <= TileId.Burger12;
-  },
-};
+    return id >= TileId.Burger1 && id <= TileId.Burger12
+  }
+}

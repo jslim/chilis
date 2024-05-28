@@ -1,161 +1,158 @@
-import { Component } from '../core/Entity';
-import LevelScene from '../scenes/LevelScene';
-import { canMove, canMoveTo } from '../utils/grid.utils';
-import { Point } from 'pixi.js';
-import { Value } from '../core/Value';
-import { LevelComponent } from './level/LevelComponent';
-import { FLOOR_OFFSET } from '../game.config';
+import { Component } from '../core/Entity'
+import LevelScene from '../scenes/LevelScene'
+import { canMove, canMoveTo } from '../utils/grid.utils'
+import { Point } from 'pixi.js'
+import { Value } from '../core/Value'
+import { LevelComponent } from './level/LevelComponent'
+import { FLOOR_OFFSET } from '../game.config'
 
-export type Direction = 'up' | 'down' | 'left' | 'right';
-export type MoveDirection = Direction | '';
+export type Direction = 'up' | 'down' | 'left' | 'right'
+export type MoveDirection = Direction | ''
 
 export function getOppositeDirection(direction: MoveDirection): MoveDirection {
   switch (direction) {
     case 'up':
-      return 'down';
+      return 'down'
     case 'down':
-      return 'up';
+      return 'up'
     case 'left':
-      return 'right';
+      return 'right'
     case 'right':
-      return 'left';
+      return 'left'
     default:
-      return '';
+      return ''
   }
 }
 
 export class Mover extends Component {
-  public readonly currentDirection = new Value<MoveDirection>('');
+  public readonly currentDirection = new Value<MoveDirection>('')
   // float position, actual owner position is rounded in onUpdate
-  public startPosition = new Point(0, 0);
-  public prevPosition = new Point(0, 0);
-  public position = new Point(0, 0);
-  public speed = new Point(0, 0);
-  public directionX = 0;
-  public directionY = 0;
+  public startPosition = new Point(0, 0)
+  public prevPosition = new Point(0, 0)
+  public position = new Point(0, 0)
+  public speed = new Point(0, 0)
+  public directionX = 0
+  public directionY = 0
 
-  protected level!: LevelScene;
+  protected level!: LevelScene
 
   constructor(speed: number = 1) {
-    super();
-    this.setSpeed(speed);
+    super()
+    this.setSpeed(speed)
   }
 
   public setSpeed(speed: number) {
-    this.speed.x = speed;
-    this.speed.y = this.speed.x / 1.72;
+    this.speed.x = speed
+    this.speed.y = this.speed.x / 1.72
   }
 
   public get hasMoved(): boolean {
-    return (
-      !this.isEqual(this.prevPosition.x, this.position.x) ||
-      !this.isEqual(this.prevPosition.y, this.position.y)
-    );
+    return !this.isEqual(this.prevPosition.x, this.position.x) || !this.isEqual(this.prevPosition.y, this.position.y)
   }
 
   get canMoveSideways(): boolean {
-    const canMoveLeft = canMove(this.position.x, this.position.y, -1, 0, this.level);
-    const canMoveRight = canMove(this.position.x, this.position.y, 1, 0, this.level);
-    return canMoveLeft || canMoveRight;
+    const canMoveLeft = canMove(this.position.x, this.position.y, -1, 0, this.level)
+    const canMoveRight = canMove(this.position.x, this.position.y, 1, 0, this.level)
+    return canMoveLeft || canMoveRight
   }
 
   override onStart() {
-    super.onStart();
+    super.onStart()
 
-    this.level = this.entity.getComponent(LevelComponent).level;
+    this.level = this.entity.getComponent(LevelComponent).level
 
-    this.position.copyFrom(this.entity.position);
-    this.prevPosition.copyFrom(this.entity.position);
+    this.position.copyFrom(this.entity.position)
+    this.prevPosition.copyFrom(this.entity.position)
 
-    let { tilewidth, tileheight } = this.level.map;
+    let { tilewidth, tileheight } = this.level.map
     //this.entity.pivot.set(Math.floor(tilewidth / 2), tileheight);
-    this.position.x += Math.floor(tilewidth / 2);
-    this.position.y += tileheight;
-    this.entity.pivot.y += FLOOR_OFFSET; //  to stand on floor
+    this.position.x += Math.floor(tilewidth / 2)
+    this.position.y += tileheight
+    this.entity.pivot.y += FLOOR_OFFSET //  to stand on floor
 
     // snap owner position to closest on walk grid
-    this.position.x = Math.floor(this.position.x);
-    this.position.y = Math.floor(this.position.y);
+    this.position.x = Math.floor(this.position.x)
+    this.position.y = Math.floor(this.position.y)
 
-    this.startPosition.copyFrom(this.position);
+    this.startPosition.copyFrom(this.position)
 
     this.subscribe(this.currentDirection.onChanged, (direction) => {
-      if (direction === 'up') this.directionY = -1;
-      else if (direction === 'down') this.directionY = 1;
-      else this.directionY = 0;
+      if (direction === 'up') this.directionY = -1
+      else if (direction === 'down') this.directionY = 1
+      else this.directionY = 0
 
-      if (direction === 'left') this.directionX = -1;
-      else if (direction === 'right') this.directionX = 1;
+      if (direction === 'left') this.directionX = -1
+      else if (direction === 'right') this.directionX = 1
       // else this.directionX = 0; // dont use this
-    });
+    })
   }
 
   public respawn(spawnPosition: Point | null = null) {
-    this.position.copyFrom(spawnPosition ?? this.startPosition);
+    this.position.copyFrom(spawnPosition ?? this.startPosition)
   }
 
   public isEqual(posA: number, posB: number) {
-    return Math.floor(posA * 10) === Math.floor(posB * 10);
+    return Math.floor(posA * 10) === Math.floor(posB * 10)
   }
 
   public left() {
-    const oldX = this.position.x;
+    const oldX = this.position.x
     if (canMoveTo(this.position.x - this.speed.x, this.position.y, this.level)) {
-      this.position.x -= this.speed.x;
+      this.position.x -= this.speed.x
     }
-    const hasMoved = !this.isEqual(oldX, this.position.x);
+    const hasMoved = !this.isEqual(oldX, this.position.x)
     if (hasMoved) {
-      this.currentDirection.value = 'left';
+      this.currentDirection.value = 'left'
     }
-    return hasMoved;
+    return hasMoved
   }
 
   public right() {
-    const oldX = this.position.x;
+    const oldX = this.position.x
     if (canMoveTo(this.position.x + this.speed.x, this.position.y, this.level)) {
-      this.position.x += this.speed.x;
+      this.position.x += this.speed.x
     }
-    const hasMoved = !this.isEqual(oldX, this.position.x);
+    const hasMoved = !this.isEqual(oldX, this.position.x)
     if (hasMoved) {
-      this.currentDirection.value = 'right';
+      this.currentDirection.value = 'right'
     }
-    return hasMoved;
+    return hasMoved
   }
 
   public up() {
-    const oldY = this.position.y;
+    const oldY = this.position.y
     if (canMove(this.position.x, this.position.y, 0, -this.speed.y, this.level)) {
-      this.position.y -= this.speed.y;
+      this.position.y -= this.speed.y
     }
 
-    const hasMoved = !this.isEqual(oldY, this.position.y);
+    const hasMoved = !this.isEqual(oldY, this.position.y)
     if (hasMoved) {
-      this.currentDirection.value = 'up';
+      this.currentDirection.value = 'up'
     }
 
-    return hasMoved;
+    return hasMoved
   }
 
   public down() {
-    const oldY = this.position.y;
+    const oldY = this.position.y
     if (canMove(this.position.x, this.position.y, 0, this.speed.y, this.level)) {
-      this.position.y += this.speed.y;
+      this.position.y += this.speed.y
     }
 
-    const hasMoved = !this.isEqual(oldY, this.position.y);
+    const hasMoved = !this.isEqual(oldY, this.position.y)
     if (hasMoved) {
-      this.currentDirection.value = 'down';
+      this.currentDirection.value = 'down'
     }
-    return hasMoved;
+    return hasMoved
   }
 
   override onUpdate(dt: number) {
-    super.onUpdate(dt);
+    super.onUpdate(dt)
 
-    this.prevPosition.copyFrom(this.entity.position);
-    this.prevPosition.copyFrom(this.entity.position);
+    this.prevPosition.copyFrom(this.entity.position)
+    this.prevPosition.copyFrom(this.entity.position)
 
-    this.entity.x = Math.floor(this.position.x);
-    this.entity.y = Math.floor(this.position.y);
+    this.entity.x = Math.floor(this.position.x)
+    this.entity.y = Math.floor(this.position.y)
   }
 }

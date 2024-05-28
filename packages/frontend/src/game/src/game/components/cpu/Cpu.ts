@@ -1,167 +1,159 @@
-import { Component, Entity } from '../../core/Entity';
-import { CpuMover } from './CpuMover';
-import { Value } from '../../core/Value';
-import { CoolDown } from '../../core/CoolDown';
-import { LevelComponent } from '../level/LevelComponent';
-import { HitBox } from '../HitBox';
-import { DRAW_STATE_DEBUG } from '../../game.config';
-import { StateDebugText } from '../StateDebugText';
-import { Player } from '../player/Player';
-import { Signal } from '../../core/Signal';
-import { Mover } from '../Mover';
-import { sortByDistanceTo } from '../../utils/array.utils';
-import { Bullet } from '../level/Bullet';
-import { AutoDisposer } from '../AutoDisposer';
-import { lerp } from '../../utils/math.utils';
-import LevelScene from '../../scenes/LevelScene';
+import { Component, Entity } from '../../core/Entity'
+import { CpuMover } from './CpuMover'
+import { Value } from '../../core/Value'
+import { CoolDown } from '../../core/CoolDown'
+import { LevelComponent } from '../level/LevelComponent'
+import { HitBox } from '../HitBox'
+import { DRAW_STATE_DEBUG } from '../../game.config'
+import { StateDebugText } from '../StateDebugText'
+import { Player } from '../player/Player'
+import { Signal } from '../../core/Signal'
+import { Mover } from '../Mover'
+import { sortByDistanceTo } from '../../utils/array.utils'
+import { Bullet } from '../level/Bullet'
+import { AutoDisposer } from '../AutoDisposer'
+import { lerp } from '../../utils/math.utils'
+import LevelScene from '../../scenes/LevelScene'
 
 export class Cpu extends Component {
   public readonly state = new Value<
-    | 'walk'
-    | 'paralyzed'
-    | 'die'
-    | 'spawn'
-    | 'defeat'
-    | 'prepare_attack'
-    | 'attack'
-    | 'attack_complete'
-  >('walk');
+    'walk' | 'paralyzed' | 'die' | 'spawn' | 'defeat' | 'prepare_attack' | 'attack' | 'attack_complete'
+  >('walk')
 
-  public readonly onHitPlayer = new Signal<Entity>();
-  public readonly onHitByBullet = new Signal<Bullet>();
+  public readonly onHitPlayer = new Signal<Entity>()
+  public readonly onHitByBullet = new Signal<Bullet>()
 
-  protected level: LevelScene | undefined = undefined;
+  protected level: LevelScene | undefined = undefined
 
-  protected attackCoolDown = new CoolDown(1.5);
-  protected paralyzedCoolDown = new CoolDown(2.0);
-  protected dieCoolDown = new CoolDown(2.0);
+  protected attackCoolDown = new CoolDown(1.5)
+  protected paralyzedCoolDown = new CoolDown(2.0)
+  protected dieCoolDown = new CoolDown(2.0)
 
   constructor(public name = 'trainee01') {
-    super();
+    super()
   }
 
   override onStart() {
-    super.onStart();
+    super.onStart()
 
-    this.level = this.entity.getComponent(LevelComponent).level;
+    this.level = this.entity.getComponent(LevelComponent).level
 
-    const mover = this.entity.getComponent(CpuMover);
-    const hitBox = this.entity.getComponent(HitBox);
+    const mover = this.entity.getComponent(CpuMover)
+    const hitBox = this.entity.getComponent(HitBox)
 
     if (DRAW_STATE_DEBUG) {
-      this.entity.addComponent(new StateDebugText(mover.mode, [0, 0], this.entity.color));
-      this.entity.addEntity(new Entity().addComponent(new StateDebugText(this.state, [-8, 6])));
+      this.entity.addComponent(new StateDebugText(mover.mode, [0, 0], this.entity.color))
+      this.entity.addEntity(new Entity().addComponent(new StateDebugText(this.state, [-8, 6])))
     }
 
     this.subscribe(this.state.onChanged, (newState) => {
-      hitBox.isActive.value =
-        newState === 'walk' || newState === 'prepare_attack' || newState === 'attack';
+      hitBox.isActive.value = newState === 'walk' || newState === 'prepare_attack' || newState === 'attack'
 
       switch (newState) {
         case 'spawn':
-          this.entity.alpha = 0.0;
-          break;
+          this.entity.alpha = 0.0
+          break
 
         case 'walk':
-          break;
+          break
 
         case 'paralyzed':
-          this.attackCoolDown.reset();
-          break;
+          this.attackCoolDown.reset()
+          break
 
         case 'die':
-          break;
+          break
 
         case 'defeat':
-          break;
+          break
 
         case 'prepare_attack':
-          this.attackCoolDown.reset();
-          break;
+          this.attackCoolDown.reset()
+          break
 
         case 'attack':
-          this.attackCoolDown.reset();
-          break;
+          this.attackCoolDown.reset()
+          break
 
         case 'attack_complete':
-          this.attackCoolDown.reset();
-          this.state.value = 'walk';
-          break;
+          this.attackCoolDown.reset()
+          this.state.value = 'walk'
+          break
       }
-    });
+    })
 
     this.subscribe(this.onHitPlayer, (player) => {
-      player.getComponent(Player).onHitCpu.emit(this.entity);
-    });
+      player.getComponent(Player).onHitCpu.emit(this.entity)
+    })
     this.subscribe(this.onHitByBullet, (bullet) => {
-      this.state.value = 'paralyzed';
-      bullet.entity.addComponent(new AutoDisposer());
-    });
-    this.state.value = 'spawn';
+      this.state.value = 'paralyzed'
+      bullet.entity.addComponent(new AutoDisposer())
+    })
+    this.state.value = 'spawn'
   }
 
   override onUpdate(dt: number) {
-    super.onUpdate(dt);
+    super.onUpdate(dt)
 
-    const mover = this.entity.getComponent(CpuMover);
+    const mover = this.entity.getComponent(CpuMover)
 
     switch (this.state.value) {
       case 'prepare_attack':
       case 'walk':
-        mover.walk(dt);
-        this.checkCollision();
-        this.entity.scale.x = mover.directionX > 0 ? 1 : -1;
-        break;
+        mover.walk(dt)
+        this.checkCollision()
+        this.entity.scale.x = mover.directionX > 0 ? 1 : -1
+        break
 
       case 'paralyzed':
-        this.entity.alpha = lerp(0.5, 1, this.paralyzedCoolDown.progress);
+        this.entity.alpha = lerp(0.5, 1, this.paralyzedCoolDown.progress)
         if (this.paralyzedCoolDown.update(dt)) {
-          this.paralyzedCoolDown.reset();
-          this.state.value = 'walk';
+          this.paralyzedCoolDown.reset()
+          this.state.value = 'walk'
         }
-        break;
+        break
 
       case 'die':
         if (this.dieCoolDown.update(dt)) {
-          this.state.value = 'spawn';
-          this.respawn();
+          this.state.value = 'spawn'
+          this.respawn()
         }
-        break;
+        break
 
       case 'spawn':
         if (this.entity.alpha < 1) {
-          this.entity.alpha += 0.03;
+          this.entity.alpha += 0.03
         } else {
-          this.state.value = 'walk';
+          this.state.value = 'walk'
         }
-        break;
+        break
     }
   }
 
   respawn() {
-    let { player, cpus } = this.level!;
+    let { player, cpus } = this.level!
     // find position the furthest from player
     let spawnPosition = cpus
       .map((cpu: Entity) => cpu.getComponent(Mover).startPosition)
       .sort(sortByDistanceTo(player))
-      .pop();
-    this.entity.getComponent(Mover).respawn(spawnPosition);
+      .pop()
+    this.entity.getComponent(Mover).respawn(spawnPosition)
   }
 
   private checkCollision() {
-    const { player } = this.level!;
-    const hitBox = this.entity.getComponent(HitBox);
+    const { player } = this.level!
+    const hitBox = this.entity.getComponent(HitBox)
     // check if hits player
     if (hitBox.intersects(player.getComponent(HitBox))) {
-      this.onHitPlayer.emit(player);
+      this.onHitPlayer.emit(player)
     }
   }
 
   public reset() {
-    const mover = this.entity.getComponent(CpuMover);
-    mover.reset();
+    const mover = this.entity.getComponent(CpuMover)
+    mover.reset()
 
-    this.state.value = 'spawn';
-    mover.respawn(mover.startPosition);
+    this.state.value = 'spawn'
+    mover.respawn(mover.startPosition)
   }
 }
