@@ -15,18 +15,18 @@
       },
       "routes": [
         { "path": "/", "title": "PLAY THE GAME" },
-        { "path": "/leaderboard/", "title": "LEADERBOARD" },
-        { "path": "/contest/", "title": "CONTEST" },
+        { "path": "/contest/", "title": "WIN BURGUERS!" },
+        { "path": "/leaderboard/", "title": "HI-SCORES" },
         { "path": "/how-to-play/", "title": "HOW TO PLAY" }
       ],
       "links": [
         {
-          "path": "/terms/",
+          "path": "https://brinker.com/terms-and-conditions",
           "title": "TERMS"
         },
         {
-          "path": "/faq/",
-          "title": "FAQ"
+          "path": "https://brinker.com/privacy",
+          "title": "PRIVACY"
         }
       ]
     },
@@ -127,9 +127,14 @@
       "body": {
         "backgroundVideo": {
           "src": "",
-          "poster": ""
+          "poster": "burger-loop.png"
         },
-        "title": "Contest Page"
+        "title": "A WEEK OF BATTLES.",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "hero": {
+          "src": "a-lifetime.png",
+          "alt": "A lifetime of burgers"
+        }
       }
     },
     "howToPlay": {
