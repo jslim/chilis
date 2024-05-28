@@ -1,7 +1,6 @@
-import type { Entity } from '../../core/Entity';
-import type { InputKey } from './Input';
-
+import type { Entity } from '../../core/Entity'
 import { Component } from '../../core/Entity'
+import type { InputKey } from './Input'
 import { Input } from './Input'
 
 export class MobileInput extends Component {
@@ -15,6 +14,8 @@ export class MobileInput extends Component {
     const gameContainer = document.body
     const buttonContainer = document.createElement('div')
     gameContainer.style.userSelect = 'none'
+    buttonContainer.style.position = 'absolute'
+    buttonContainer.style.zIndex = '10'
     gameContainer.append(buttonContainer)
     buttonContainer.style.position = 'absolute'
     buttonContainer.style.bottom = '150px'
@@ -73,10 +74,13 @@ export class MobileInput extends Component {
       input.onDown.emit(key)
       div.style.opacity = '0.8'
     })
-    div.addEventListener('pointerup', div.onpointerout = () => {
-      input.onUp.emit(key)
-      div.style.opacity = '1'
-    })
+    div.addEventListener(
+      'pointerup',
+      (div.onpointerout = () => {
+        input.onUp.emit(key)
+        div.style.opacity = '1'
+      })
+    )
 
     /*
     let buttonTexture = Assets.get("mobile_button");
@@ -99,10 +103,10 @@ export class MobileInput extends Component {
       div,
 
       set x(value: number) {
-        div.style.left = `${value  }px`
+        div.style.left = `${value}px`
       },
       set y(value: number) {
-        div.style.top = `${value  }px`
+        div.style.top = `${value}px`
       },
       get size() {
         return 75
