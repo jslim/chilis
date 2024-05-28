@@ -85,7 +85,7 @@ paths:
       operationId: getActivesGames
       responses:
         "200":
-          description: Score was save successfully.
+          description: A new game session was created successfully.
           schema:
             properties:
               gameId:
