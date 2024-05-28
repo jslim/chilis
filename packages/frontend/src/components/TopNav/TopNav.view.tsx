@@ -10,6 +10,7 @@ import { useRefs } from '@/hooks/use-refs'
 import { BaseButton } from '@/components/BaseButton'
 
 import ChilisSvg from '@/svgs/Chilis.svg'
+import SvgLoginLogout from '@/svgs/LoginLogout.svg'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -29,6 +30,9 @@ export const View: FC<ViewProps> = ({ className, text, onClick }) => {
         </div>
         <BaseButton className={css.button} onClick={onClick}>
           {text}
+          <div className={css.iconContainer}>
+            <SvgLoginLogout />
+          </div>
         </BaseButton>
       </div>
     </nav>

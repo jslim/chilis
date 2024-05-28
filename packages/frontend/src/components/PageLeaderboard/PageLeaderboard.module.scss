@@ -4,9 +4,28 @@
   position: relative;
   opacity: 0;
   width: 100%;
+}
+
+.container {
+  @include flex-center;
+  position: relative;
+  flex-direction: column;
+  gap: px(50);
+  padding-top: px(130);
 
   .title {
     @include typography-h1;
-    padding-top: px(80);
+    position: absolute;
+
+    visibility: hidden;
+  }
+
+  .imageContainer {
+    width: px(280);
+
+    .image {
+      @include box(100%);
+      object-fit: cover;
+    }
   }
 }
