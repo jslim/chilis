@@ -27,7 +27,7 @@ export const TileId = {
   Burger8: 28,
   Burger9: 29,
   Burger10: 30,
-  Burger11WithPlate: 31,
+  Burger11: 31,
   Burger12: 32,
 
   isStairs(id: number): boolean {
@@ -47,10 +47,6 @@ export const TileId = {
     return TileId.isStairs(id) || TileId.isStairsAndFloor(id);
   },
   isBurger(id: number): boolean {
-    return (
-      id >= TileId.Burger1 &&
-      id <= TileId.Burger12 &&
-      id != TileId.Burger11WithPlate
-    );
+    return id >= TileId.Burger1 && id <= TileId.Burger12;
   },
 };
