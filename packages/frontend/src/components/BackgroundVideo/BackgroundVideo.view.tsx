@@ -5,7 +5,11 @@ import classNames from 'classnames'
 
 import css from './BackgroundVideo.module.scss'
 
+import { getImageUrl } from '@/utils/basic-functions'
+
 import { useRefs } from '@/hooks/use-refs'
+
+import { BaseImage } from '@/components/BaseImage'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -21,7 +25,11 @@ export const View: FC<ViewProps> = ({ className, videoData }) => {
 
   return (
     <div className={classNames('BackgroundVideo', css.root, className)} ref={refs.root}>
-      <video className={css.video} poster={posterSrc} src={videoSrc} autoPlay loop muted />
+      {videoData.src !== '' ? (
+        <video className={css.video} poster={posterSrc} src={videoSrc} autoPlay loop muted />
+      ) : (
+        <BaseImage className={css.image} data={getImageUrl(videoData.poster)} />
+      )}
     </div>
   )
 }
