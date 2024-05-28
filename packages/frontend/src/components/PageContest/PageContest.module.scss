@@ -4,9 +4,33 @@
   position: relative;
   opacity: 0;
   width: 100%;
+}
+
+.container {
+  @include flex-center-vert;
+  position: relative;
+  flex-direction: column;
+  gap: px(30);
+  padding-top: px(80);
 
   .title {
     @include typography-h1;
-    padding-top: px(80);
+    @include font-family(PixeloidSans, 700);
+    color: $sunrise;
+  }
+
+  .imageContainer {
+    width: px(764);
+
+    .image {
+      @include box(100%);
+      object-fit: cover;
+    }
+  }
+
+  .description {
+    @include font-size(32, 40);
+    max-width: px(1104);
+    color: $white;
   }
 }
