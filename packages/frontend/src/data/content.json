@@ -95,10 +95,10 @@
         ]
       }
     },
-    "about": {
+    "game": {
       "head": {
         "title": "Chilis Burger Time",
-        "description": "Some landing page description"
+        "description": "Just for testing"
       },
       "body": {
         "title": "Chilis Burger Time",

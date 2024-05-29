@@ -19,5 +19,5 @@ export const initGame = async () => {
   await game.start()
 
   // Show level 1
-  await game.showLevel(1)
+  //await game.showLevel(1)
 }

@@ -12,6 +12,8 @@ import { nanoid } from 'nanoid'
 
 import css from './Layout.module.scss'
 
+import { routes } from '@/data/routes'
+
 import { localState, localStore } from '@/store'
 
 import { getScrollTop } from '@/utils/basic-functions'
@@ -20,9 +22,6 @@ import { fontVariables } from '@/utils/fonts'
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useRefs } from '@/hooks/use-refs'
 
-import { BaseModal } from '@/components/BaseModal'
-// import { Footer } from '@/components/Footer'
-import { Container } from '@/components/Container'
 import { Head } from '@/components/Head'
 import { Nav } from '@/components/Nav'
 import { PlayNow } from '@/components/PlayNow'
@@ -186,32 +185,20 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [refs, Component, pageProps, flags.pageTransitions])
 
-  const handlePlayClick = () => {
-    localState().game.setIsGameOpen(true)
-    console.log(localState().game.isGameOpen)
-  }
-
   return (
     <div className={classNames('Layout', css.root, fontVariables)}>
       <Head {...pageProps.content.head} />
 
       <TopNav text={pageProps.content.common.topNav.logIn} />
 
-      <PlayNow text={pageProps.content.common.playNow} className={css.playButton} onClick={handlePlayClick} />
-
-      <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+      {refs.pathname.current !== '/game/' && (
+        <>
+          <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
+          <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+        </>
+      )}
 
       <SoundSwitch className={css.soundSwitch} audioSrc={pageProps.content.common.testAudio} />
-
-      {isGameOpen && (
-        <BaseModal
-          onClose={function (): void {
-            throw new Error('Function not implemented.')
-          }}
-        >
-          <Container />
-        </BaseModal>
-      )}
 
       <div className={css.content}>{currentPage}</div>
 

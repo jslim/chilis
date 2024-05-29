@@ -2,5 +2,8 @@
 
 .root {
   display: block;
-  width: px(600);
+
+  :global(#app) {
+    height: 100vh;
+  }
 }
