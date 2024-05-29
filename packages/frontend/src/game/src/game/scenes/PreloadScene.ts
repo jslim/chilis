@@ -15,7 +15,6 @@ export class PreloadScene extends Scene {
   async preload() {
     // init assets manager
 
-    // @ts-expect-error (there are two ways to init, seems there are no typings for that)
     await Assets.init({ manifest: assetsManifest })
 
     // setup level bundles

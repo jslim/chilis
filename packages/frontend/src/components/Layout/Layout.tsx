@@ -14,7 +14,7 @@ import css from './Layout.module.scss'
 
 import { routes } from '@/data/routes'
 
-import { localState, localStore } from '@/store'
+import { localState } from '@/store'
 
 import { getScrollTop } from '@/utils/basic-functions'
 import { fontVariables } from '@/utils/fonts'
@@ -53,7 +53,6 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const { flags } = useFeatureFlags()
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
-  const isGameOpen = localStore((state) => state.game.isGameOpen)
   //  const [introComplete, setIntroComplete] = useState(false)
 
   // const handleIntroComplete = useCallback(() => {
