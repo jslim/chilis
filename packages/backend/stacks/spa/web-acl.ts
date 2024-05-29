@@ -5,7 +5,7 @@ import { CfnIPSet, CfnWebACL } from "aws-cdk-lib/aws-wafv2";
 import { detectStage } from "@/libs/detect-stage";
 import { getWAFManagedRule } from "@/utils/waf-utils";
 
-const COUNTRIES_ALLOW_LIST = ["CA", "US", "UY"];
+const COUNTRIES_ALLOW_LIST = ["CA", "US", "UY", "NL", "BR"];
 
 export function WebACL({ stack, app }: StackContext) {
   const { isDevelopment, isProd } = detectStage(app.stage);
