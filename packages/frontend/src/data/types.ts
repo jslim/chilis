@@ -20,5 +20,5 @@ export type FormFields = {
 export type Player = {
   rank: string
   name: string
-  score: number
+  score: string
 }

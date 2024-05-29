@@ -25,20 +25,20 @@ export type ViewRefs = {
 }
 
 const arrayOfPlayers = [
-  { rank: '1', name: 'Player1', score: 100 },
-  { rank: '2', name: 'Player2', score: 200 },
-  { rank: '3', name: 'Player3', score: 50000 },
-  { rank: '4', name: 'Player4', score: 400 },
-  { rank: '5', name: 'Player5', score: 500 },
-  { rank: '6', name: 'Player6', score: 600 },
-  { rank: '7', name: 'Player7', score: 70000 },
-  { rank: '8', name: 'Player8', score: 800 },
-  { rank: '9', name: 'Player9', score: 900 },
-  { rank: '10', name: 'Player10', score: 1000 },
-  { rank: '11', name: 'Player111111111', score: 25000 }
+  { rank: '1', name: 'Player1', score: '100' },
+  { rank: '2', name: 'Player2', score: '200' },
+  { rank: '3', name: 'Player3', score: '50000' },
+  { rank: '4', name: 'Player4', score: '400' },
+  { rank: '5', name: 'Player5', score: '500' },
+  { rank: '6', name: 'Player6', score: '600' },
+  { rank: '7', name: 'Player7', score: '70000' },
+  { rank: '8', name: 'Player8', score: '800' },
+  { rank: '9', name: 'Player9', score: '900' },
+  { rank: '10', name: 'Player10', score: '1000' },
+  { rank: '11', name: 'Player111111111', score: '25000' }
 ]
 
-const currentPlayer = { rank: '500', name: 'Player', score: 542 }
+const currentPlayer = { rank: '500', name: 'Player', score: '542' }
 
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ content, onReady }) => {
