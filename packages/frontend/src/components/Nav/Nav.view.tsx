@@ -2,17 +2,15 @@ import type { FC } from 'react'
 import type { ControllerProps } from './Nav.controller'
 
 import { useImperativeHandle } from 'react'
+import { useRouter } from 'next/router'
 import classNames from 'classnames'
 import { gsap } from 'gsap'
 
 import css from './Nav.module.scss'
 
-import { localStore } from '@/store'
-
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
-import { useRouter } from 'next/router'
 
 export type ViewHandle = {
   animateIn: () => gsap.core.Timeline

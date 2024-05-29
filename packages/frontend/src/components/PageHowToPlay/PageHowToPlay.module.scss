@@ -7,6 +7,23 @@
 
   .title {
     @include typography-h1;
-    padding-top: px(80);
+    visibility: hidden;
+    position: absolute;
+  }
+}
+
+.container {
+  @include flex-center;
+  flex-direction: column;
+  gap: px(65);
+  position: relative;
+  padding-top: px(220);
+
+  .imageContainer {
+    width: px(440);
+
+    .image {
+      @include box(100%);
+    }
   }
 }

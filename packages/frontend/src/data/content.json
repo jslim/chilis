@@ -150,9 +150,43 @@
       "body": {
         "backgroundVideo": {
           "src": "",
-          "poster": ""
+          "poster": "burger-loop-3.png"
         },
-        "title": "How to Play Page"
+        "title": "HOW TO PLAY",
+        "hero": {
+          "src": "how-to.png",
+          "alt": "How to play"
+        },
+        "slides": [
+          {
+            "image": {
+              "src": "slide-1.png",
+              "alt": "Slide 1"
+            },
+            "text": "Walk over burger ingredients</br>to drop them into baskets."
+          },
+          {
+            "image": {
+              "src": "slide-2.png",
+              "alt": "Slide 2"
+            },
+            "text": "Time your burger drops</br>to smash your enemies."
+          },
+          {
+            "image": {
+              "src": "slide-3.png",
+              "alt": "Slide 3"
+            },
+            "text": "Collect 3 for me items</br>to obtain extra pepper. "
+          },
+          {
+            "image": {
+              "src": "slide-4.png",
+              "alt": "Slide 4"
+            },
+            "text": "Throw pepper at your</br>enemies to stun them."
+          }
+        ]
       }
     },
     "fullLeaderboard": {
