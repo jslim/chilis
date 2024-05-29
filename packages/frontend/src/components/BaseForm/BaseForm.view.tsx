@@ -33,7 +33,7 @@ export const View: FC<ViewProps> = ({
     <div className={classNames('BaseForm', css.root, className)}>
       <form className={css.form} ref={refs.root}>
         {children}
-        <BaseButton type="submit" onClick={() => onSubmit} disabled={isSubmitting}>
+        <BaseButton className={css.button} type="submit" onClick={() => onSubmit} disabled={isSubmitting}>
           {submitMessage}
         </BaseButton>
         {hasReset && <BaseButton type="reset">{resetMessage}</BaseButton>}

@@ -31,6 +31,18 @@
       ]
     },
     "topNav": { "logIn": "LOG IN", "LogOut": "LOG OUT" },
+    "logModal": {
+      "title": "BURGERS FOR LIFE",
+      "description": "Login for a chance to win burgers for life lorem. Template copy m ipsum dolor sit amet, consectetur adipiscing elit, sed dadsao eiusmod tempor incididunt ut labore et dolore magna.",
+      "cta": "LOG IN",
+      "forgotPassword": "Forgot or Create your Password?",
+      "skipLabel": "Don't want to log in right now?",
+      "skip": "SKIP",
+      "phone": "PHONE",
+      "password": "PASSWORD",
+      "errorMessage": "Invalid phone or password",
+      "decoration": "chillie.png"
+    },
     "playNow": "PLAY NOW",
     "testAudio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     "cookieBanner": {

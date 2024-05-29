@@ -29,6 +29,8 @@ import { PlayNow } from '@/components/PlayNow'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
+import { BaseModal } from '@/components/BaseModal'
+import { LogModal } from '@/components/LogModal'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -53,6 +55,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const { flags } = useFeatureFlags()
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   //  const [introComplete, setIntroComplete] = useState(false)
 
   // const handleIntroComplete = useCallback(() => {
@@ -188,7 +191,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     <div className={classNames('Layout', css.root, fontVariables)}>
       <Head {...pageProps.content.head} />
 
-      <TopNav text={pageProps.content.common.topNav.logIn} />
+      <TopNav text={pageProps.content.common.topNav.logIn} onClick={() => setIsModalOpen(true)} />
 
       {refs.pathname.current !== '/game/' && (
         <>
@@ -201,6 +204,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
       <div className={css.content}>{currentPage}</div>
 
+      {isModalOpen && (
+        <BaseModal onClose={() => setIsModalOpen(false)}>
+          <LogModal {...pageProps.content.common.logModal} onClose={() => setIsModalOpen(false)} />
+        </BaseModal>
+      )}
       {/* {!introComplete ? <ScreenIntro onComplete={handleIntroComplete} /> : null} */}
       <ScreenRotate content={pageProps.content.common.screenRotate} />
       <ScreenNoScript content={pageProps.content.common.screenNoScript} />
