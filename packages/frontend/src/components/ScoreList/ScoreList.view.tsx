@@ -30,7 +30,7 @@ export const View: FC<ViewProps> = ({
   const refs = useRefs<ViewRefs>()
 
   const displayedPlayers = useMemo(() => {
-    const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
+    const sortedPlayers = [...players].sort((a, b) => Number(b.score) - Number(a.score))
     return maxPlayers !== null ? sortedPlayers.slice(0, maxPlayers) : sortedPlayers
   }, [players, maxPlayers])
 

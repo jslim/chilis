@@ -33,12 +33,6 @@
     "topNav": { "logIn": "LOG IN", "LogOut": "LOG OUT" },
     "playNow": "PLAY NOW",
     "testAudio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "footer": {
-      "routes": [
-        { "path": "/", "title": "Home" },
-        { "path": "/about/", "title": "About" }
-      ]
-    },
     "cookieBanner": {
       "description": "We use cookies on this website to improve your experience.",
       "settings": "Ullamco deserunt dolore officia cillum ea culpa eu. Voluptate ex in commodo in dolor magna velit pariatur in nostrud enim tempor aliquip nisi.",
