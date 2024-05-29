@@ -1,8 +1,8 @@
 @import 'shared';
 
 .root {
+  @include flex-center;
   position: relative;
-  opacity: 0;
   width: 100%;
 
   .title {

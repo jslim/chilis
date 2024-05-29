@@ -6,8 +6,7 @@ import { CmsService } from '@/services/cms'
 export const getStaticProps: GetStaticProps<PageGameProps> = async () => {
   return {
     props: {
-      content: CmsService.getPageContent('game'),
-      noLayout: true
+      content: CmsService.getPageContent('game')
     }
   }
 }
