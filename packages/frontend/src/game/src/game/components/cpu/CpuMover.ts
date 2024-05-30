@@ -154,14 +154,13 @@ export class CpuMover extends Mover {
         }
 
         case 'hunt-player':
-        case 'hunt-cpu': {
+        case 'hunt-cpu':
           targetX = this.targetEntity!.x
           targetY = this.targetEntity!.y
-        }
 
         // fall through
         case 'hunt-player-slow':
-        case 'hunt-burger': {
+        case 'hunt-burger':
           // find direction that is closest to target
           const directionsSorted = this.findClosestToTarget(directions, cpuX, cpuY, targetX, targetY)
 
@@ -173,7 +172,6 @@ export class CpuMover extends Mover {
             this.nextMode()
           }
           break
-        }
       }
       /*
       if (this.cpuId === 1) {

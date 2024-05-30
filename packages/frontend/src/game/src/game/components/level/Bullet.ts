@@ -1,7 +1,6 @@
-import type { Entity } from '../../core/Entity';
-import type LevelScene from '../../scenes/LevelScene'
-
+import type { Entity } from '../../core/Entity'
 import { Component } from '../../core/Entity'
+import type LevelScene from '../../scenes/LevelScene'
 import { Signal } from '../../core/Signal'
 import { Cpu } from '../cpu/Cpu'
 import { HitBox } from '../HitBox'
@@ -35,7 +34,7 @@ export class Bullet extends Component {
       if (isCollided) {
         switch (this.objective) {
           case 'cpu': {
-            target.getComponent(Cpu).onHitByBullet.emit(this)
+            target.getComponent(Cpu).onHitByPepper.emit(this)
             break
           }
 

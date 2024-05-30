@@ -8,11 +8,15 @@ import { LevelComponent } from '../level/LevelComponent'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 import { MateyBall } from './MateyBall'
+import { getRandom, pick } from '@/game/src/game/utils/random.utils'
+import { removeItem } from '@/game/src/game/utils/array.utils'
+import { createDelay } from '@/game/src/game/core/Delay'
 
 export class Matey extends Cpu {
   override onStart() {
     super.onStart()
 
+    this.walksWhenPrepareAttack = false
     this.attackCoolDown = new CoolDown(8)
     this.paralyzedCoolDown.interval = 3
 
@@ -30,7 +34,16 @@ export class Matey extends Cpu {
 
         case 'attack': {
           this.level!.screenShake(4, 0.3)
-          this.shootBall()
+
+          const shootPositions = [2, 3, 4, 5, 6, 7, 8]
+          const random = getRandom((Math.random() * 777) | 0)
+          const totalBalls = random(4, 7) | 0
+          for (let i = 0; i < totalBalls; i++) {
+            const shootPos = pick(shootPositions, random)
+            removeItem(shootPositions, shootPos)
+            createDelay(this.entity, i, () => this.shootBall(shootPos))
+          }
+
           this.state.value = 'walk'
           break
         }
@@ -52,12 +65,11 @@ export class Matey extends Cpu {
     }
   }
 
-  private shootBall() {
+  private shootBall(tileX: number) {
     if (this.level) {
       const mover = this.entity.getComponent(CpuMover)
-      const tileX = [4, 5, 6, 7, 8][Math.floor(mover.random() * 3)]
       const x = tileX * this.level.map.tilewidth
-      const ballSize = { width: 14, height: 14 }
+      const ballSize = { width: 16, height: 16 }
 
       let floorPositions = getFloorPositionsAtX(this.level.walkGrid, x)
       floorPositions.push(240 + ballSize.height)
@@ -67,7 +79,7 @@ export class Matey extends Cpu {
         new LevelComponent(this.level),
         new Bullet('player'),
         new MateyBall(floorPositions),
-        new HitBox(-ballSize.width / 2, 0, ballSize.width, ballSize.height)
+        new HitBox(0, ballSize.height - 3, ballSize.width, ballSize.height)
       )
 
       ball.position.x = x

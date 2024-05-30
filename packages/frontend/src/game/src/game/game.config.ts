@@ -1,6 +1,6 @@
 /* GENERAL */
 
-export const FRAME_RATE = 18
+export const FRAME_RATE = 22
 
 export const GAME_ASSETS_BASE_URL = '/game/'
 

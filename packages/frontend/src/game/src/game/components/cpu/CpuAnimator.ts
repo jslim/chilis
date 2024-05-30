@@ -26,16 +26,22 @@ export class CpuAnimator extends FlumpAnimator {
         case 'up':
         case 'down': {
           this.flipNeutral()
-          this.setMovie(`${this.animationName}_climb`).gotoAndPlay(0)
+          if (cpu.state.value == 'walk') {
+            this.setMovie(`${this.animationName}_climb`).gotoAndPlay(0)
+          }
           break
         }
         case 'left': {
-          this.setMovie(`${this.animationName}_walk`).play()
+          if (cpu.state.value == 'walk') {
+            this.setMovie(`${this.animationName}_walk`).play()
+          }
           this.flipToLeft()
           break
         }
         case 'right': {
-          this.setMovie(`${this.animationName}_walk`).play()
+          if (cpu.state.value == 'walk') {
+            this.setMovie(`${this.animationName}_walk`).play()
+          }
           this.flipToRight()
           break
         }
@@ -67,7 +73,7 @@ export class CpuAnimator extends FlumpAnimator {
         }
 
         case 'prepare_attack': {
-          this.setMovie(`${this.animationName}_prepare_attack`).gotoAndPlay(0).once()
+          this.setMovie(`${this.animationName}_prepare_attack`).gotoAndPlay(1).once()
           currentMoviePlayback = this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
             cpu.state.value = 'attack'
           })
@@ -88,7 +94,9 @@ export class CpuAnimator extends FlumpAnimator {
         }
 
         case 'spawn': {
+          this.setMovie(`${this.animationName}_walk`).gotoAndStop(0)
           this.setMovie(`${this.animationName}_spawn`).gotoAndStop(0)
+          break
         }
       }
     })

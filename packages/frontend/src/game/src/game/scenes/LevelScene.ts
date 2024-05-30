@@ -1,9 +1,7 @@
 import type { TiledMap } from '../tiled/TiledMap'
-import type {
-  TiledWalkGrid
-} from '../utils/tiles.utils';
-import type { Point} from 'pixi.js';
-
+import type { TiledWalkGrid } from '../utils/tiles.utils'
+import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '../utils/tiles.utils'
+import type { Point } from 'pixi.js'
 import { Assets, Rectangle, Sprite, Texture } from 'pixi.js'
 
 import { AutoDisposer } from '../components/AutoDisposer'
@@ -38,12 +36,6 @@ import { get8pxNumberFont } from '../display/SimpleText'
 import { FlumpLibrary } from '../flump/FlumpLibrary'
 import { DRAW_DEBUG_GRID, FLOOR_OFFSET, SCORE_PER_GROUP_COMPLETE } from '../game.config'
 import { TileId } from '../tiled/TileId'
-import {
-  connectionsToGrid,
-  drawGrid,
-  drawPointsAndConnections,
-  getTileConnections
-} from '../utils/tiles.utils'
 import { Scene } from './Scene'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
@@ -148,11 +140,11 @@ export default class LevelScene extends Scene {
           // remap tile ids for nicely designed level
           const hasStairsBelow = TileId.hasStairs(layerData[i + layer.width])
           if (TileId.isFloor(id)) {
-            id = hasStairsBelow ? TileId.FloorStairsNoUp : TileId.Floor;
+            id = hasStairsBelow ? TileId.FloorStairsNoUp : TileId.Floor
 
             container = this.containers.floorFront
           } else if (TileId.isStairsAndFloor(id)) {
-            id = !hasStairsBelow ? TileId.FloorStairsNoDown : TileId.StairsAndFloor;
+            id = !hasStairsBelow ? TileId.FloorStairsNoDown : TileId.StairsAndFloor
 
             container = this.containers.floorFront
           } else if (TileId.isStairs(id)) {
@@ -201,37 +193,35 @@ export default class LevelScene extends Scene {
             } else if (id === TileId.BossCpu) {
               offsetX = 4
               switch (levelNo) {
-              case 1: {
-                cpu = new Piggles('piggles')
-              
-              break;
-              }
-              case 2: {
-                cpu = new DinoCool('dino')
-              
-              break;
-              }
-              case 3: {
-                cpu = new MrBaggie('baggie')
-              
-              break;
-              }
-              case 4: {
-                cpu = new Matey('matey')
-              
-              break;
-              }
-              case 5: {
-                cpu = new Piggles('zapp')
-              
-              break;
-              }
-              case 6: {
-                cpu = new Piggles('piggles')
-              
-              break;
-              }
-              // No default
+                case 1: {
+                  cpu = new Piggles('piggles')
+                  break
+                }
+                case 2: {
+                  cpu = new DinoCool('dino')
+
+                  break
+                }
+                case 3: {
+                  cpu = new MrBaggie('baggie')
+
+                  break
+                }
+                case 4: {
+                  cpu = new Matey('matey')
+
+                  break
+                }
+                case 5: {
+                  cpu = new Piggles('zapp')
+
+                  break
+                }
+                case 6: {
+                  cpu = new Piggles('piggles')
+                  break
+                }
+                // No default
               }
             }
 
@@ -248,7 +238,7 @@ export default class LevelScene extends Scene {
           } else if (TileId.isBurger(id)) {
             const burgerHeight = burgerHeightByTileId[id] - burgerOverlap
             entity.addComponent(
-              new HitBox(-BurgerTileSize.tilewidth / 2, -burgerHeight, BurgerTileSize.tilewidth, burgerHeight),
+              new HitBox(-BurgerTileSize.tilewidth / 2, -1, BurgerTileSize.tilewidth, burgerHeight),
               new Burger(spriteSheetLarge, id)
             )
             entity.position.x -= (BurgerTileSize.tilewidth - map.tilewidth) / 2
@@ -262,10 +252,7 @@ export default class LevelScene extends Scene {
             entity.position.x -= (plateSprite.width - map.tilewidth) / 2
             entity.position.x = Math.round(entity.position.x)
             const plateHeight = 3
-            entity.addComponent(
-              new HitBox(-plateSprite.width / 2, -plateHeight, plateSprite.width, plateHeight),
-              new Plate()
-            )
+            entity.addComponent(new HitBox(-plateSprite.width / 2 + 4, -2, plateSprite.width, plateHeight), new Plate())
             this.plates.push(entity)
           } else {
             entity.addChild(getSprite(map, spriteSheet, id))
@@ -327,8 +314,8 @@ export default class LevelScene extends Scene {
   override onUpdate(dt: number): void {
     super.onUpdate(dt)
     if (this.isPlaying && this.checkIfAllBurgersCompleted()) {
-        this.onAllBurgersCompleted.emit()
-      }
+      this.onAllBurgersCompleted.emit()
+    }
   }
 
   checkIfAllBurgersCompleted() {
@@ -341,7 +328,7 @@ export default class LevelScene extends Scene {
     this.gameState.score.value += points
 
     const pointsEntity = new Entity().addComponent(
-      new SimpleTextDisplay(`${points  }`, 'center', get8pxNumberFont()).setTint(0xffc507),
+      new SimpleTextDisplay(`${points}`, 'center', get8pxNumberFont()).setTint(0xffc507),
       new ScoreAnimation(),
       new AutoDisposer(1)
     )

@@ -12,7 +12,7 @@ export class FlumpAnimator extends Component {
   protected cache = new Map<string, FlumpMovieSprite>()
   protected currentMovie = new Value<FlumpMovieSprite | undefined>(undefined)
 
-  constructor(private readonly library: FlumpLibrary) {
+  constructor(protected readonly library: FlumpLibrary) {
     super()
     this.subscribe(this.currentMovie.onChanged, (sprite) => {
       this.root.removeChildren()

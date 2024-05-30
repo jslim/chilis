@@ -26,18 +26,16 @@ export class HitBox extends Component {
     super.onStart()
     if (DRAW_HIT_BOX_DEBUG) {
       this.entity.parent.addChild(this.graphics)
-      this.graphics.alpha = 0.85
       this.graphics.y -= FLOOR_OFFSET
     }
   }
 
   override onUpdate(dt: number) {
     super.onUpdate(dt)
-
     if (DRAW_HIT_BOX_DEBUG) {
       const position = this.entity.getComponent(Mover)?.position ?? this.entity.position
-
       this.graphics.alpha = this.hasIntersection ? 1 : 0.85
+      if (!this.isActive) this.graphics.alpha = 0.1
       this.graphics
         .clear()
         .rect(position.x + this.current.x, position.y + this.current.y, this.current.width, this.current.height)

@@ -10,12 +10,13 @@ import { getOppositeDirection, Mover } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 
-const ATTACK_RANGE = 30
+const ATTACK_RANGE = 50
 
 export class Piggles extends Cpu {
   override onStart() {
     super.onStart()
 
+    this.attackCoolDown.interval = 3
     this.paralyzedCoolDown.interval = 3
 
     const mover = this.entity.getComponent(CpuMover)
@@ -26,10 +27,6 @@ export class Piggles extends Cpu {
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
-        case 'prepare_attack': {
-          break
-        }
-
         case 'attack': {
           this.level!.screenShake(4, 0.3)
           const playerHitBoxRect = this.entity
@@ -52,9 +49,9 @@ export class Piggles extends Cpu {
 
           createDelay(this.entity, 0.3, () => {
             this.level?.containers.mid.addEntity(bullet)
+            mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
           })
 
-          mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
           break
         }
       }
@@ -69,14 +66,19 @@ export class Piggles extends Cpu {
       case 'walk': {
         if (
           this.attackCoolDown.update(dt) &&
-          !mover.isClimbing &&
-          this.entity.y === this.level!.player.y &&
+          !mover.isClimbing() &&
+          Math.abs(this.entity.y - this.level!.player.y) < 2 &&
           Math.abs(this.entity.x - this.level!.player.x) < ATTACK_RANGE
         ) {
           this.attackCoolDown.reset()
           this.state.value = 'prepare_attack'
         }
+        break
       }
+      case 'prepare_attack':
+        if (Math.abs(this.entity.x - this.level!.player.x) > ATTACK_RANGE * 1.25) {
+          this.state.value = 'walk'
+        }
     }
   }
 }
