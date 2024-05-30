@@ -37,6 +37,7 @@ import { FlumpLibrary } from '../flump/FlumpLibrary'
 import { DRAW_DEBUG_GRID, FLOOR_OFFSET, SCORE_PER_GROUP_COMPLETE } from '../game.config'
 import { TileId } from '../tiled/TileId'
 import { Scene } from './Scene'
+import { Zapp } from '@/game/src/game/components/cpu/Zapp'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -213,7 +214,7 @@ export default class LevelScene extends Scene {
                   break
                 }
                 case 5: {
-                  cpu = new Piggles('zapp')
+                  cpu = new Zapp('zapp')
 
                   break
                 }

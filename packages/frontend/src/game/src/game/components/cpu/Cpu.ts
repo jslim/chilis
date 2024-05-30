@@ -16,6 +16,7 @@ import { Player } from '../player/Player'
 import { StateDebugText } from '../StateDebugText'
 import { CpuMover } from './CpuMover'
 import { Burger } from '@/game/src/game/components/level/Burger'
+import { createDelay } from '@/game/src/game/core/Delay'
 
 export class Cpu extends Component {
   public readonly state = new Value<
@@ -88,7 +89,7 @@ export class Cpu extends Component {
 
         case 'attack_complete': {
           this.attackCoolDown.reset()
-          this.state.value = 'walk'
+          createDelay(this.entity, 0.1, () => (this.state.value = 'walk'))
           break
         }
       }

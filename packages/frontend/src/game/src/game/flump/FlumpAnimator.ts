@@ -10,7 +10,7 @@ export class FlumpAnimator extends Component {
   protected root = new Container()
 
   protected cache = new Map<string, FlumpMovieSprite>()
-  protected currentMovie = new Value<FlumpMovieSprite | undefined>(undefined)
+  public currentMovie = new Value<FlumpMovieSprite | undefined>(undefined)
 
   constructor(protected readonly library: FlumpLibrary) {
     super()
