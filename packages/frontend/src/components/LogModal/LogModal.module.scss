@@ -23,6 +23,20 @@
   flex: 1;
   padding-top: px(40);
 
+  .squares {
+    position: absolute;
+
+    &.leftSquare {
+      top: px(110);
+      left: px(20);
+    }
+
+    &.rightSquare {
+      top: px(265);
+      right: px(20);
+    }
+  }
+
   .logoContainer {
     @include box(px(80), px(50));
     margin-bottom: px(70);
@@ -51,9 +65,13 @@
     flex-direction: column;
     gap: px(10);
 
+    input,
     input::placeholder {
       @include font-size(10, 12);
       @include font-family(Montserrat, 500);
+    }
+
+    input::placeholder {
       color: $gray;
     }
   }

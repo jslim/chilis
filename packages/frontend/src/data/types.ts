@@ -22,3 +22,9 @@ export type Player = {
   name: string
   score: string
 }
+
+export type ApiResponse = {
+  message: string
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  [key: string]: unknown
+}
