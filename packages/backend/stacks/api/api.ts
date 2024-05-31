@@ -7,14 +7,17 @@ import { isValidDomain } from "@/utils/domain-validator";
 
 export function ApiStack({ stack, app }: StackContext) {
   let usagePlan;
-  const { isProd } = detectStage(app.stage);
+  const { isDevelop, isStage, isProd } = detectStage(app.stage);
 
   setDefaultFunctionProps({ stack, app });
 
   let customDomain = undefined;
   const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
-  
+
   if (
+    // TODO: temp, skip for uat and prd 
+    isDevelop &&
+    isStage &&
     domainStage !== undefined &&
     isValidDomain(String(process.env.BASE_DOMAIN))
   ) {
