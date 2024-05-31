@@ -12,6 +12,9 @@ export const initGame = async () => {
   game.onLevelComplete.subscribe((data) => console.log('Level complete!', data))
   game.onGameOver.subscribe((data) => console.log('Game over!', data))
 
+  // needs to be set from backend
+  // game.setHighScore(123)
+
   // Start preloader, also need to be run once
   await game.preload()
 

@@ -110,6 +110,10 @@ export class GameController {
       })
   }
 
+  public setHighScore(value: number) {
+    this.sceneManager.root.getComponent(GameState).highScore.value = value
+  }
+
   public async showLevel(levelNo: number) {
     return this.sceneManager.showLevel(levelNo)
   }
