@@ -16,3 +16,9 @@ export type FormFields = {
   username: string
   password: string
 }
+
+export type Player = {
+  rank: string
+  name: string
+  score: string
+}

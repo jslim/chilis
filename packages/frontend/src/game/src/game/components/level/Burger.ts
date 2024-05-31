@@ -1,10 +1,9 @@
-import type { Entity } from '../../core/Entity';
+import type { Entity } from '../../core/Entity'
+import { Component } from '../../core/Entity'
 import type LevelScene from '../../scenes/LevelScene'
 import type { BurgerGroup } from './BurgerGroup'
 
 import { Rectangle, Sprite, Texture } from 'pixi.js'
-
-import { Component } from '../../core/Entity'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
 import { DRAW_STATE_DEBUG, FLOOR_OFFSET, SCORE_PER_BURGER_BOUNCE, SCORE_PER_CPUS_HIT } from '../../game.config'
@@ -139,7 +138,7 @@ export class Burger extends Component {
     })
     this.subscribe(this.onHitCpu, (cpu) => {
       this.fallStats.totalCpusHit++
-      cpu.getComponent(Cpu).state.value = 'die'
+      cpu.getComponent(Cpu).onHitByBurger.emit(this)
     })
     this.subscribe(this.onHitBurger, (otherBurger) => {
       this.fallStats.totalBurgersHit++

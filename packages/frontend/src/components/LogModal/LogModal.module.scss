@@ -1,0 +1,106 @@
+@import 'shared';
+
+.root {
+  @include box(px(600), px(680));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: $sour-cream;
+  border-radius: px(40);
+  overflow: hidden;
+}
+
+.close {
+  @include box(px(21));
+  position: absolute;
+  top: px(40);
+  right: px(40);
+}
+
+.top {
+  @include flex-center-vert;
+  flex-direction: column;
+  flex: 1;
+  padding-top: px(40);
+
+  .logoContainer {
+    @include box(px(80), px(50));
+    margin-bottom: px(70);
+  }
+
+  .title,
+  .description {
+    color: $red;
+  }
+
+  .title {
+    @include font-size(42, 50);
+    @include font-family(Dirk, 800);
+    margin-bottom: px(40);
+  }
+
+  .description {
+    @include font-size(14, 17);
+    @include font-family(Montserrat, 500);
+    max-width: px(304);
+    margin-bottom: px(40);
+  }
+
+  .fieldsContainer {
+    @include flex-center;
+    flex-direction: column;
+    gap: px(10);
+
+    input::placeholder {
+      @include font-size(10, 12);
+      @include font-family(Montserrat, 500);
+      color: $gray;
+    }
+  }
+
+  .forgotPassword {
+    @include font-size(12, 14);
+    @include font-family(Montserrat, 500);
+    margin-top: px(20);
+    color: $gray;
+    text-decoration: underline;
+  }
+}
+
+.bottom {
+  position: relative;
+  height: px(87);
+  width: 100%;
+  padding: px(50);
+  background-color: $dark-blue;
+
+  .chillieContainer {
+    @include box(px(136), px(157));
+    position: absolute;
+    top: px(-145);
+    left: 0;
+  }
+
+  .chillie {
+    @include box(100%);
+    object-fit: cover;
+  }
+
+  .skipContainer {
+    @include flex-center-vert;
+    justify-content: space-between;
+
+    .label,
+    .skipButton {
+      @include font-size(12, 14);
+      @include font-family(Montserrat, 500);
+      color: $white;
+    }
+
+    .skipButton {
+      padding: px(8) px(24);
+      border: 1px solid $white;
+      border-radius: px(26);
+    }
+  }
+}

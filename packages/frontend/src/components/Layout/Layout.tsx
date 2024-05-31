@@ -12,7 +12,9 @@ import { nanoid } from 'nanoid'
 
 import css from './Layout.module.scss'
 
-import { localState, localStore } from '@/store'
+import { routes } from '@/data/routes'
+
+import { localState } from '@/store'
 
 import { getScrollTop } from '@/utils/basic-functions'
 import { fontVariables } from '@/utils/fonts'
@@ -20,9 +22,6 @@ import { fontVariables } from '@/utils/fonts'
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useRefs } from '@/hooks/use-refs'
 
-import { BaseModal } from '@/components/BaseModal'
-// import { Footer } from '@/components/Footer'
-import { Container } from '@/components/Container'
 import { Head } from '@/components/Head'
 import { Nav } from '@/components/Nav'
 import { PlayNow } from '@/components/PlayNow'
@@ -30,6 +29,8 @@ import { PlayNow } from '@/components/PlayNow'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
+import { BaseModal } from '@/components/BaseModal'
+import { LogModal } from '@/components/LogModal'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -54,7 +55,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const { flags } = useFeatureFlags()
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
-  const isGameOpen = localStore((state) => state.game.isGameOpen)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   //  const [introComplete, setIntroComplete] = useState(false)
 
   // const handleIntroComplete = useCallback(() => {
@@ -186,35 +187,28 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [refs, Component, pageProps, flags.pageTransitions])
 
-  const handlePlayClick = () => {
-    localState().game.setIsGameOpen(true)
-    console.log(localState().game.isGameOpen)
-  }
-
   return (
     <div className={classNames('Layout', css.root, fontVariables)}>
       <Head {...pageProps.content.head} />
 
-      <TopNav text={pageProps.content.common.topNav.logIn} />
+      <TopNav text={pageProps.content.common.topNav.logIn} onClick={() => setIsModalOpen(true)} />
 
-      <PlayNow text={pageProps.content.common.playNow} className={css.playButton} onClick={handlePlayClick} />
-
-      <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+      {refs.pathname.current !== '/game/' && (
+        <>
+          <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
+          <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+        </>
+      )}
 
       <SoundSwitch className={css.soundSwitch} audioSrc={pageProps.content.common.testAudio} />
 
-      {isGameOpen && (
-        <BaseModal
-          onClose={function (): void {
-            throw new Error('Function not implemented.')
-          }}
-        >
-          <Container />
-        </BaseModal>
-      )}
-
       <div className={css.content}>{currentPage}</div>
 
+      {isModalOpen && (
+        <BaseModal onClose={() => setIsModalOpen(false)}>
+          <LogModal {...pageProps.content.common.logModal} onClose={() => setIsModalOpen(false)} />
+        </BaseModal>
+      )}
       {/* {!introComplete ? <ScreenIntro onComplete={handleIntroComplete} /> : null} */}
       <ScreenRotate content={pageProps.content.common.screenRotate} />
       <ScreenNoScript content={pageProps.content.common.screenNoScript} />

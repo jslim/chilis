@@ -15,6 +15,8 @@ import { Mover } from '../Mover'
 import { Player } from '../player/Player'
 import { StateDebugText } from '../StateDebugText'
 import { CpuMover } from './CpuMover'
+import { Burger } from '@/game/src/game/components/level/Burger'
+import { createDelay } from '@/game/src/game/core/Delay'
 
 export class Cpu extends Component {
   public readonly state = new Value<
@@ -22,13 +24,15 @@ export class Cpu extends Component {
   >('walk')
 
   public readonly onHitPlayer = new Signal<Entity>()
-  public readonly onHitByBullet = new Signal<Bullet>()
+  public readonly onHitByPepper = new Signal<Bullet>()
+  public readonly onHitByBurger = new Signal<Burger>()
 
   protected level: LevelScene | undefined = undefined
+  protected walksWhenPrepareAttack = true
 
   protected attackCoolDown = new CoolDown(1.5)
   protected paralyzedCoolDown = new CoolDown(2)
-  protected dieCoolDown = new CoolDown(2)
+  protected dieCoolDown = new CoolDown(6)
 
   constructor(public name = 'trainee01') {
     super()
@@ -85,7 +89,7 @@ export class Cpu extends Component {
 
         case 'attack_complete': {
           this.attackCoolDown.reset()
-          this.state.value = 'walk'
+          createDelay(this.entity, 0.1, () => (this.state.value = 'walk'))
           break
         }
       }
@@ -94,7 +98,10 @@ export class Cpu extends Component {
     this.subscribe(this.onHitPlayer, (player) => {
       player.getComponent(Player).onHitCpu.emit(this.entity)
     })
-    this.subscribe(this.onHitByBullet, (bullet) => {
+    this.subscribe(this.onHitByBurger, (burger) => {
+      this.state.value = 'die'
+    })
+    this.subscribe(this.onHitByPepper, (bullet) => {
       this.state.value = 'paralyzed'
       bullet.entity.addComponent(new AutoDisposer())
     })
@@ -107,7 +114,14 @@ export class Cpu extends Component {
     const mover = this.entity.getComponent(CpuMover)
 
     switch (this.state.value) {
-      case 'prepare_attack':
+      case 'prepare_attack': {
+        if (this.walksWhenPrepareAttack) {
+          mover.walk(dt)
+          this.checkCollision()
+          this.entity.scale.x = mover.directionX > 0 ? 1 : -1
+        }
+        break
+      }
       case 'walk': {
         mover.walk(dt)
         this.checkCollision()

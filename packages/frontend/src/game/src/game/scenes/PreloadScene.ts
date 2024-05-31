@@ -2,6 +2,7 @@ import { Assets, Graphics } from 'pixi.js'
 
 import { assetsManifest } from '../assets.manifest'
 import { Scene } from './Scene'
+import { GAME_ASSETS_BASE_URL } from '@/game/src/game/game.config'
 
 export class PreloadScene extends Scene {
   private readonly graphics = new Graphics()
@@ -14,20 +15,19 @@ export class PreloadScene extends Scene {
   async preload() {
     // init assets manager
 
-    // @ts-expect-error (there are two ways to init, seems there are no typings for that)
     await Assets.init({ manifest: assetsManifest })
 
     // setup level bundles
     for (let level = 1; level <= 6; level++) {
       Assets.addBundle(`level${level}`, {
-        [`level${level}/jsonMap`]: `game/level${level}.json`,
-        [`level${level}/tileset`]: `game/tileset.png`,
-        [`level${level}/tileset_large`]: `game/tileset-large.png`
+        [`level${level}/jsonMap`]: `${GAME_ASSETS_BASE_URL}level${level}.json`,
+        [`level${level}/tileset`]: `${GAME_ASSETS_BASE_URL}tileset.png`,
+        [`level${level}/tileset_large`]: `${GAME_ASSETS_BASE_URL}tileset-large.png`
       })
     }
 
     // preload
-    await Assets.loadBundle(['game', 'splash'], (p) => this.drawProgress(p))
+    await Assets.loadBundle(['game'], (p) => this.drawProgress(p))
 
     // wait a bit
     await new Promise((resolve) => setTimeout(resolve, 130))

@@ -1,11 +1,58 @@
 @import 'shared';
 
 .root {
-  display: block;
+  @include flex-center-vert;
+  flex-direction: column;
+  gap: px(40);
 }
 
 .list {
-  .item {
-    padding: px(5) 0;
+  display: flex;
+  flex-flow: column wrap;
+  max-height: px(200);
+}
+
+.item {
+  @include flex-center-vert;
+  justify-content: space-between;
+  gap: px(15);
+  margin-right: px(25);
+
+  &.current {
+    justify-content: center;
+    margin-right: 0;
   }
+
+  .player {
+    @include font-size(32, 40);
+    overflow: hidden;
+    color: $white;
+  }
+
+  .score {
+    @include font-size(64, 40);
+    @include font-family(Gamer, 500);
+    color: $sunrise;
+  }
+}
+
+.currentPlayer {
+  @include flex-center;
+  flex-direction: column;
+
+  .rankTitle {
+    @include font-size(32, 39);
+    @include font-family(PixeloidSans, 700);
+    margin-bottom: px(22);
+    color: $sunrise;
+  }
+}
+
+.leaderboardLink {
+  @include font-size(32);
+  @include font-family(b, 400);
+  width: fit-content;
+  color: $cilantro;
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }

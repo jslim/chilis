@@ -4,8 +4,9 @@ import { CfnIPSet, CfnWebACL } from "aws-cdk-lib/aws-wafv2";
 
 import { detectStage } from "@/libs/detect-stage";
 import { getWAFManagedRule } from "@/utils/waf-utils";
+import { isValidDomain } from "@/utils/domain-validator";
 
-const COUNTRIES_ALLOW_LIST = ["CA", "US", "UY"];
+const COUNTRIES_ALLOW_LIST = ["CA", "US", "UY", "NL", "BR"];
 
 export function WebACL({ stack, app }: StackContext) {
   const { isDevelopment, isProd } = detectStage(app.stage);
@@ -13,6 +14,8 @@ export function WebACL({ stack, app }: StackContext) {
   if (isDevelopment) {
     return { waf: undefined };
   }
+
+  const enableCustomDomain = isValidDomain(String(process.env.BASE_DOMAIN));
 
   const allowedIpSet = new CfnIPSet(
     stack,
@@ -76,28 +79,32 @@ export function WebACL({ stack, app }: StackContext) {
           sampledRequestsEnabled: true,
         },
       },
-      {
-        name: "block-distribution-url-access",
-        priority: 1,
-        action: { block: {} },
-        statement: {
-          byteMatchStatement: {
-            fieldToMatch: {
-              singleHeader: {
-                name: 'host'
-              }
+      ...(enableCustomDomain
+        ? [
+            {
+              name: "block-distribution-url-access",
+              priority: 1,
+              action: { block: {} },
+              statement: {
+                byteMatchStatement: {
+                  fieldToMatch: {
+                    singleHeader: {
+                      name: "host",
+                    },
+                  },
+                  positionalConstraint: "CONTAINS",
+                  searchString: "cloudfront.net",
+                  textTransformations: [{ type: "NONE", priority: 0 }],
+                },
+              },
+              visibilityConfig: {
+                cloudWatchMetricsEnabled: true,
+                metricName: "block-distribution-url-access-rule",
+                sampledRequestsEnabled: true,
+              },
             },
-            positionalConstraint: 'CONTAINS',
-            searchString: 'cloudfront.net',
-            textTransformations: [{type: 'NONE', priority: 0}]
-          }
-        },
-        visibilityConfig: {
-          cloudWatchMetricsEnabled: true,
-          metricName: "block-distribution-url-access-rule",
-          sampledRequestsEnabled: true,
-        },
-      },
+          ]
+        : []),
       {
         name: "rate-limit-rule",
         priority: 2,

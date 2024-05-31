@@ -1,0 +1,227 @@
+swagger: "2.0"
+info:
+  title: Swagger Chili`s Burger Time
+  description: |-
+    Building a Game and Website for Chili`s Restaraunts.
+    Some useful links:
+    - [Repository](https://github.com/Experience-Monks/prj-240137971-chilis-burger-time)
+  contact:
+    email: developers@mediamonks.com
+  version: 1.0.0
+host: 3in7ishrah.execute-api.us-east-1.amazonaws.com
+basePath: /prod
+externalDocs:
+  description: Technical Design Document
+  url: https://docs.google.com/document/d/18kMzZEOHL8t6nO9QUq0CnjfJu3E74xHpk3Gw5oyC_kg/
+tags:
+  - name: User
+    description: Endpoint related to user actions
+  - name: Game
+    description: Endpoint used to manage the game activit
+  - name: Leaderboard
+    description: Endpoint used to return list of leaders on the board
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /user:
+    post:
+      tags:
+        - User
+      summary: login access for user
+      operationId: loginUser
+      parameters:
+        - name: LoginRequest
+          in: body
+          description: Login Request
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      responses:
+        "200":
+          description: Session started successfully.
+          schema:
+            properties:
+              nickname:
+                type: string
+              token:
+                type: string
+        "400":
+          description: Bad request - invalid request parameters
+        "403":
+          description: Forbidden - authorization failure
+        "500":
+          description: Internal server error
+    patch:
+      tags:
+        - User
+      summary: Endpoint to create user nickname.
+      operationId: saveNickNameUser
+      parameters:
+        - name: nickname
+          in: header
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Nickname created successfully.
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: Bad request - invalid request parameters
+        "403":
+          description: Forbidden - authorization failure
+        "404":
+          description: Not found - User does not exist
+        "500":
+          description: Internal server error
+  /game:
+    get:
+      tags:
+        - Game
+      summary: Endpoint to check for actives games.
+      operationId: getActivesGames
+      responses:
+        "200":
+          description: A new game session was created successfully.
+          schema:
+            properties:
+              gameId:
+                type: string
+        "400":
+          description: Bad request - invalid request parameters
+        "403":
+          description: Forbidden - authorization failure
+        "404":
+          description: Not found - the session ID does not exist
+        "500":
+          description: Internal server error
+    put:
+      tags:
+        - Game
+      summary: Endpoint to save user history score.
+      operationId: saveHistoryScore
+      parameters:
+        - name: score
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/ScoreRequest"
+      responses:
+        "200":
+          description: Score was save successfully.
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: Bad request - invalid request parameters
+        "403":
+          description: Forbidden - authorization failure
+        "404":
+          description: Not found - the session ID does not exist
+        "500":
+          description: Internal server error
+  /leaderboard:
+    get:
+      tags:
+        - Leaderboard
+      summary: Retrieve the leaderboard.
+      operationId: getLeaderboard
+      parameters:
+        - name: number
+          in: query
+          required: false
+          type: integer
+      responses:
+        "200":
+          description: Top items in the leaderboard.
+          schema:
+            $ref: "#/definitions/Leaderboard"
+        "400":
+          description: Bad request - invalid request parameters
+        "401":
+          description: Unauthorized - authentication failure
+        "403":
+          description: Forbidden - authorization failure
+        "404":
+          description: Not found - the session ID does not exist
+        "500":
+          description: Internal server error
+definitions:
+  LoginRequest:
+    required:
+      - phone
+      - password
+    properties:
+      phone:
+        type: string
+        example: 2526386323
+        description: Phone number composed of 10 numbers
+      password:
+        type: string
+        example: 16ZxH6zjnbUJc
+        description: String of at least 6 characters and a maximum of 15 characters must include at least one number
+  ScoreRequest:
+    required:
+      - gameId
+      - score
+      - level
+    properties:
+      gameId:
+        type: string
+        example: 36b8f84d-df4e-4d49-b662-bcde71a8764f
+      score:
+        type: number
+        example: 210448
+      level:
+        type: number
+        example: 2
+  Score:
+    type: object
+    properties:
+      rank:
+        type: number
+        example: 1
+        description: The position on the board
+      score:
+        type: string
+        example: 210448
+        description: Highest score obtained by the user.
+      level:
+        type: string
+        example: 18
+        description: Level inthe game the player reached to achieve the score.
+      lastUpdateTimestamp:
+        type: string
+        example: 2011-10-05T14:48:00.000Z
+        description: When this score was created.
+      nickname:
+        type: string
+        example: jam3
+        description: User name to display on the dashboard
+  Scores:
+    type: array
+    items:
+      $ref: "#/definitions/Score"
+  Leaderboard:
+    type: object
+    properties:
+      leaderboard:
+        $ref: "#/definitions/Scores"
+      user:
+        $ref: "#/definitions/Score"
+  ApiResponse:
+    type: object
+    properties:
+      message:
+        type: string
+    xml:
+      name: "##default"
+securityDefinitions:
+  bearerAuth:
+    name: "userToken"
+    type: apiKey
+    in: header
+security:
+  - bearerAuth: []

@@ -9,8 +9,8 @@ export const initGame = async () => {
   // React now can use `game.canvas` to render
 
   // Subscribe to game events. This may change in the future
-  game.onLevelComplete.subscribe(() => console.log('Level complete!'))
-  game.onPlayerDied.subscribe(() => console.log('Player died!'))
+  game.onLevelComplete.subscribe((data) => console.log('Level complete!', data))
+  game.onGameOver.subscribe((data) => console.log('Game over!', data))
 
   // Start preloader, also need to be run once
   await game.preload()
@@ -19,5 +19,5 @@ export const initGame = async () => {
   await game.start()
 
   // Show level 1
-  await game.showLevel(1)
+  //await game.showLevel(1)
 }

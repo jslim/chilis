@@ -1,12 +1,36 @@
 import type SceneManager from './SceneManager'
 
 import { GameState } from '../components/GameState'
-import { Component } from '../core/Entity'
+import { Component, Entity } from '../core/Entity'
 import { getOgFont, SimpleText } from '../display/SimpleText'
+import { Assets, Sprite, VideoSource } from 'pixi.js'
+import { GAME_HEIGHT, GAME_WIDTH } from '@/game/src/game/game.config'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
     super()
+  }
+
+  protected async playVideo(videoId: string, onEnd: () => void) {
+    let videoUrl = `/videos/${videoId}.mp4`
+    await Assets.load(videoUrl)
+    let videoSprite = Sprite.from(videoUrl)
+    videoSprite.width = GAME_WIDTH
+    videoSprite.height = GAME_HEIGHT
+    let videoSource = videoSprite.texture.source as VideoSource
+    videoSource.resource.loop = false
+    videoSource.resource.playsInline = true
+
+    videoSource.resource.onended = () => onEnd()
+    await videoSource.resource.play()
+
+    this.disposables.push(() =>
+      videoSprite.destroy({
+        texture: true,
+        textureSource: true
+      })
+    )
+    this.entity.addEntity(new Entity(videoSprite))
   }
 
   protected addButton(label: string, position: [x: number, y: number], onclick: () => void) {

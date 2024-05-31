@@ -15,6 +15,7 @@ export class MrBaggie extends Cpu {
     super.onStart()
 
     this.paralyzedCoolDown.interval = 3
+    this.walksWhenPrepareAttack = false
 
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
@@ -30,30 +31,30 @@ export class MrBaggie extends Cpu {
 
         case 'attack': {
           if (this.level) {
-            this.level!.screenShake(4, 0.3)
             const playerHitBoxRect = this.entity
 
             const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
             const mover = this.entity.getComponent(Mover)
-            const bulletSize = { width: 20, height: 10 }
-            const bulletOffset = 0
+            const bulletSize = { width: 28, height: 11 }
+            const bulletOffset = -bulletSize.width / 3
             if (mover.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
             else if (mover.currentDirection.value === 'right') bulletPos.x += bulletOffset
 
-            const bullet = new Entity(this.level.flumpLibrary!.createSprite('matey_ball')).addComponent(
+            const bullet = new Entity(this.level.flumpLibrary!.createSprite('mrbaggie_ball')).addComponent(
               new LevelComponent(this.level!),
-              new AutoDisposer(0.4),
+              new AutoDisposer(10),
               new Bullet('player'),
               new HitBox(0, bulletSize.height, bulletSize.width, bulletSize.height)
             )
 
-            bullet.position.set(bulletPos.x, bulletPos.y - bulletSize.height - 13)
+            bullet.position.set(bulletPos.x, bulletPos.y - bulletSize.height - 4)
 
             createDelay(this.entity, 0.3, () => {
-              this.level?.containers.mid.addEntity(bullet)
+              this.level?.containers.floorFront.addEntity(bullet)
+              mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
             })
 
-            mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
+            this.state.value = 'attack_complete'
           }
           break
         }

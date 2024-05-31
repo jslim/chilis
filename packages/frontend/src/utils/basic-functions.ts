@@ -105,3 +105,8 @@ export const getImageUrl = (filePath: string) => {
   // eslint-disable-next-line import/no-dynamic-require
   return require(`../assets/images/${filePath}`).default
 }
+
+export const truncateText = (text: string, maxLength: number) => {
+  const truncatedText = text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
+  return truncatedText
+}

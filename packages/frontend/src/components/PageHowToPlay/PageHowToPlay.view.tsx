@@ -8,9 +8,13 @@ import { gsap } from 'gsap'
 
 import css from './PageHowToPlay.module.scss'
 
-import { copy } from '@/utils/copy'
+import { getImageUrl } from '@/utils/basic-functions'
 
 import { useRefs } from '@/hooks/use-refs'
+
+import { BackgroundVideo } from '@/components/BackgroundVideo'
+import { BaseImage } from '@/components/BaseImage'
+import { Carousel } from '@/components/Carousel'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -35,7 +39,20 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
 
   return (
     <main className={classNames('PageHowToPlay', css.root)} ref={refs.root}>
-      <h1 className={css.title} {...copy.html(content.body.title)} />
+      <BackgroundVideo
+        className={css.backgroundVideo}
+        videoData={{
+          src: content.body.backgroundVideo.src,
+          poster: content.body.backgroundVideo.poster
+        }}
+      />
+      <div className={css.container}>
+        <div className={css.imageContainer}>
+          <BaseImage className={css.image} data={getImageUrl(content.body.hero.src)} alt={content.body.hero.alt} />
+        </div>
+
+        <Carousel className={css.carousel} slides={content.body.slides} />
+      </div>
     </main>
   )
 }

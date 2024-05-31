@@ -1,7 +1,7 @@
-import type { InputKey } from './Input';
+import type { InputKey } from './Input'
+import { Input } from './Input'
 
 import { Component } from '../../core/Entity'
-import { Input } from './Input'
 
 const keyMapping = new Map<string, InputKey>([
   ['ArrowLeft', 'left'],
@@ -33,7 +33,6 @@ export class KeyboardInput extends Component {
 
   onKeyDownHandler({ key }: KeyboardEvent) {
     const input = this.entity?.getComponent(Input)
-    console.log(key)
     const inputKey = keyMapping.get(key)
     if (input && inputKey) {
       input.onDown.emit(inputKey)

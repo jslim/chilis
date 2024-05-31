@@ -33,4 +33,16 @@ export class GameState extends Component {
     this.bullets.value = 3
     this.score.value = 0
   }
+
+  public getValues() {
+    return {
+      lives: this.lives.value,
+      bullets: this.bullets.value,
+      level: this.level.value,
+      score: this.score.value,
+      highscore: this.highScore.value
+    }
+  }
 }
+
+export type GameStateValues = ReturnType<GameState['getValues']>

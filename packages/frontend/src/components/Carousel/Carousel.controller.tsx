@@ -1,15 +1,20 @@
 import type { FC } from 'react'
-import type { PageProps } from '@/data/types'
 
 import { memo } from 'react'
 
-import { View } from './PageAbout.view'
+import { View } from './Carousel.view'
 
-export interface ControllerProps extends PageProps<'about'> {}
+export interface ControllerProps {
+  className?: string
+  slides: {
+    image: { src: string; alt: string }
+    text: string
+  }[]
+}
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
 export const Controller: FC<ControllerProps> = memo((props) => {
   return <View {...props} />
 })
 
-Controller.displayName = 'PageAbout_Controller'
+Controller.displayName = 'Carousel_Controller'
