@@ -10,7 +10,7 @@ export const initGame = async () => {
 
   // Subscribe to game events. This may change in the future
   game.onLevelComplete.subscribe(() => console.log('Level complete!'))
-  game.onPlayerDied.subscribe(() => console.log('Player died!'))
+  game.onGameOver.subscribe(() => console.log('Player died!'))
 
   // Start preloader, also need to be run once
   await game.preload()

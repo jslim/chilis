@@ -38,6 +38,9 @@ import { DRAW_DEBUG_GRID, FLOOR_OFFSET, SCORE_PER_GROUP_COMPLETE } from '../game
 import { TileId } from '../tiled/TileId'
 import { Scene } from './Scene'
 import { Zapp } from '@/game/src/game/components/cpu/Zapp'
+import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
+import { PointerComponent } from '@/game/src/game/button/PointerComponent'
+import { OnStart } from '@/game/src/game/components/OnStart'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -90,7 +93,7 @@ export default class LevelScene extends Scene {
       for (const cpu of this.cpus) {
         cpu.getComponent(Cpu).state.value = 'defeat'
       }
-      createDelay(this.entity, 2, () => this.sceneManager.levelComplete())
+      createDelay(this.entity, 2, () => this.showWinScreen())
     })
   }
 
@@ -168,7 +171,7 @@ export default class LevelScene extends Scene {
               new PlayerAnimator(this.flumpLibrary)
             )
 
-            this.subscribe(this.player.getComponent(Player).onDied, () => this.sceneManager.end())
+            this.subscribe(this.player.getComponent(Player).onDied, () => this.showDefeatScreen())
             this.subscribe(this.player.getComponent(Player).onHitCpu, () =>
               this.cpus.forEach((cpu) => (cpu.getComponent(Cpu).state.value = 'defeat'))
             )
@@ -317,6 +320,60 @@ export default class LevelScene extends Scene {
     if (this.isPlaying && this.checkIfAllBurgersCompleted()) {
       this.onAllBurgersCompleted.emit()
     }
+  }
+
+  showWinScreen() {
+    const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_win').once())
+    screenEntity.position.set(120, 120)
+
+    const levelNo = this.gameState.level.value
+    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${levelNo}`))
+    labelEntity.position.set(0, -16)
+
+    let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
+      new PointerComponent('pointerdown', () => {
+        this.sceneManager.levelComplete(this.gameState.getValues())
+      })
+    )
+    buttonEntity.position.set(0, 0)
+
+    screenEntity.addComponent(
+      new OnStart(() => {
+        screenEntity.addEntity(labelEntity)
+      })
+    )
+    createDelay(this.mainContainer, 1, () => {
+      screenEntity.addEntity(buttonEntity)
+    })
+
+    this.entity.addEntity(screenEntity)
+  }
+
+  showDefeatScreen() {
+    const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat').once())
+    screenEntity.position.set(120, 120)
+
+    // const levelNo = this.gameState.level.value
+    // let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${levelNo}`))
+    // labelEntity.position.set(0, -16)
+
+    let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
+      new PointerComponent('pointerdown', () => {
+        this.sceneManager.end(this.gameState.getValues())
+      })
+    )
+    buttonEntity.position.set(0, 0)
+
+    /*screenEntity.addComponent(
+      new OnStart(() => {
+        screenEntity.addEntity(labelEntity)
+      })
+    )*/
+    createDelay(this.mainContainer, 1, () => {
+      screenEntity.addEntity(buttonEntity)
+    })
+
+    this.entity.addEntity(screenEntity)
   }
 
   checkIfAllBurgersCompleted() {

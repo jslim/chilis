@@ -1,6 +1,6 @@
 import { Application } from 'pixi.js'
 
-import { GameState } from './components/GameState'
+import { GameState, GameStateValues } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
@@ -10,10 +10,10 @@ import SceneManager from './scenes/SceneManager'
 import { TestScene } from './scenes/TestScene'
 
 export class GameController {
-  public onLevelComplete: Signal = new Signal()
-  public onPlayerDied: Signal = new Signal()
+  public onLevelComplete = new Signal<GameStateValues>()
+  public onGameOver = new Signal<GameStateValues>()
 
-  private readonly app: Application = new Application()
+  public readonly app: Application = new Application()
   private sceneManager!: SceneManager
 
   constructor() {}
@@ -33,7 +33,7 @@ export class GameController {
     this.app.canvas.style.imageRendering = 'pixelated'
 
     // setup scene manager
-    this.sceneManager = new SceneManager(this.app, FRAME_RATE)
+    this.sceneManager = new SceneManager(this, FRAME_RATE)
     this.sceneManager.root.addComponent(new GameState())
   }
 
@@ -71,7 +71,7 @@ export class GameController {
           }
         } else if (key.toLowerCase() === 'e') {
           if (confirm('Next level?')) {
-            sceneManager.levelComplete()
+            sceneManager.levelComplete(sceneManager.root.getComponent(GameState).getValues())
           }
         } else if (key.toLowerCase() === 'o') {
           sceneManager.currentScene?.getComponent(LevelScene).burgers.forEach((burger) => {

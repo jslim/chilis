@@ -10,16 +10,20 @@ import { LevelCompleteScene } from './LevelCompleteScene'
 import LevelScene from './LevelScene'
 import { PreloadScene } from './PreloadScene'
 import { SplashScene } from './SplashScene'
+import { GameController } from '@/game/src/game/GameController'
+import { GameStateValues } from '@/game/src/game/components/GameState'
 
 export default class SceneManager {
+  public app: Application
   public root: Entity = new Entity()
   public currentScene: Entity | null = null
   public isPlaying: boolean = true
 
   constructor(
-    public app: Application,
+    public gameController: GameController,
     public frameRate: number = 60
   ) {
+    this.app = this.gameController.app
     this.app.stage.addChild(this.root)
     this.run()
   }
@@ -40,11 +44,13 @@ export default class SceneManager {
     this.goto(new IntroScene(this))
   }
 
-  levelComplete() {
+  levelComplete(result: GameStateValues) {
+    this.gameController.onLevelComplete.emit(result)
     this.goto(new LevelCompleteScene(this))
   }
 
-  end() {
+  end(result: GameStateValues) {
+    this.gameController.onGameOver.emit(result)
     this.goto(new EndScene(this))
   }
 
