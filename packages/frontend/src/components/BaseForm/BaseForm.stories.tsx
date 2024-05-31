@@ -18,8 +18,6 @@ Default.args = {
     action('onSubmit')
   },
   submitMessage: 'Submit',
-  hasReset: true,
-  resetMessage: 'Reset',
   hasError: false,
   errorMessage: 'Error'
 }
