@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import type { ControllerProps } from './Nav.controller'
 
-import { useImperativeHandle } from 'react'
+import { Fragment, useImperativeHandle } from 'react'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 import { gsap } from 'gsap'
@@ -36,14 +36,14 @@ export const View: FC<ViewProps> = ({ className, content, handleRef }) => {
       <div className={css.wrapper}>
         <ul className={css.ctas}>
           {content.links.map(({ path, title }, index) => (
-            <>
-              <li key={title}>
+            <Fragment key={title}>
+              <li>
                 <BaseButton className={css.link} href={path}>
                   {title}
                 </BaseButton>
               </li>
               {index === 0 && '/'}
-            </>
+            </Fragment>
           ))}
         </ul>
 

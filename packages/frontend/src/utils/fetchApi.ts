@@ -1,11 +1,12 @@
 export enum Endpoints {
-  DEFAULT = '/default'
+  USER = '/user/',
+  LEADERBOARD = '/leaderboard/'
 }
 
-export const fetchApi = async <T>(url: Endpoints, params?: string, options: RequestInit = {}): Promise<T> => {
+export const fetchApi = async <T>(url: string, params?: string, options: RequestInit = {}): Promise<T> => {
   let completeUrl: string = url
   if (params) {
-    completeUrl += `/${params}`
+    completeUrl += `?${params}`
   }
   const response = await fetch(completeUrl, options)
 
@@ -14,5 +15,6 @@ export const fetchApi = async <T>(url: Endpoints, params?: string, options: Requ
   }
 
   const data: T = await response.json()
+
   return data
 }
