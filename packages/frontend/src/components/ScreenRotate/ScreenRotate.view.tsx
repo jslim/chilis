@@ -22,11 +22,11 @@ export type ViewRefs = {
 export const View: FC<ViewProps> = ({ className, content }) => {
   const refs = useRefs<ViewRefs>()
 
-  const [enable, setEnable] = useState(process.env.STORYBOOK || (!device.desktop && device.phone && device.landscape))
+  const [enable, setEnable] = useState(process.env.STORYBOOK || (!device.desktop && device.phone && device.portrait))
 
   useEffect(() => {
     const handleResize = () => {
-      setEnable(device.phone && device.landscape)
+      setEnable(device.phone && device.portrait)
     }
 
     ResizeService.listen(handleResize)

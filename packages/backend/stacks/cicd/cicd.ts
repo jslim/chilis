@@ -156,6 +156,9 @@ export function CICD({ stack, app }: StackContext) {
             commands: [
               'echo "Using Node.js version $(node -v)"',
               "echo Build started",
+              'NEXT_PUBLIC_VERSION_NUMBER=$(echo "$CODEBUILD_BUILD_NUMBER")',
+              "NEXT_PUBLIC_COMMIT_ID=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-6)",
+              'NEXT_PUBLIC_COMMIT_DATE=$(git log --date=format:"%Y-%m-%d %H:%M" --pretty="%cd" --no-merges -1)',
               "npm run deploy",
               // Add your build commands here
               "echo Build completed",
