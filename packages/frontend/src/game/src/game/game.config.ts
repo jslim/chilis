@@ -9,6 +9,7 @@ export const GAME_ASSETS_BASE_URL = '/game/'
 /* DEBUG */
 
 export const DEBUG_KEYS = true
+export const DEBUG_SCENES_FROM_URL = true
 
 export const DRAW_DEBUG_GRID = false
 export const DRAW_CPU_DEBUG = false

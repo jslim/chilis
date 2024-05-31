@@ -4,7 +4,7 @@ import { GameState, GameStateValues } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
-import { DEBUG_KEYS, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
+import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
 import { TestScene } from './scenes/TestScene'
@@ -43,28 +43,36 @@ export class GameController {
 
   public async start() {
     const { sceneManager } = this
-    const urlParams = new URLSearchParams(window.location.search)
+    if (DEBUG_SCENES_FROM_URL) {
+      const urlParams = new URLSearchParams(window.location.search)
 
-    const sceneFromUrl = urlParams.get('scene')
-    switch (sceneFromUrl) {
-      case 'test': {
-        sceneManager.goto(new TestScene(sceneManager))
-        break
+      const sceneFromUrl = urlParams.get('scene')
+      switch (sceneFromUrl) {
+        case 'test': {
+          sceneManager.goto(new TestScene(sceneManager))
+          break
+        }
+        case 'game': {
+          const levelNo = urlParams.get('level')
+          await sceneManager.showLevel(levelNo ? parseInt(levelNo, 10) : 1)
+          break
+        }
+        case 'intro': {
+          const levelNo = urlParams.get('level')
+          sceneManager.showLevelIntro(levelNo ? parseInt(levelNo, 10) : 1)
+          break
+        }
+        default: {
+          sceneManager.intro()
+          break
+        }
       }
-      case 'game': {
-        const levelNo = urlParams.get('level')
-        await sceneManager.showLevel(levelNo ? parseInt(levelNo, 10) : 1)
-        break
-      }
-      default: {
-        sceneManager.intro()
-        break
-      }
+    } else {
+      sceneManager.showLevelIntro(1)
     }
-
     // debug key to go back to intro scene
-    window.addEventListener('keydown', ({ key }) => {
-      if (DEBUG_KEYS) {
+    if (DEBUG_KEYS)
+      window.addEventListener('keydown', ({ key }) => {
         if (key === 'Escape') {
           if (confirm('Exit game?')) {
             sceneManager.intro()
@@ -99,8 +107,7 @@ export class GameController {
             window.open(url, '_blank')
           })
         }
-      }
-    })
+      })
   }
 
   public async showLevel(levelNo: number) {
