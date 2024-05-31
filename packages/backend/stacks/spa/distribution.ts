@@ -86,7 +86,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     buildCommand: "npm run build:next",
     environment: {
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
-      NEXT_PUBLIC_API_HOST: api.customDomainUrl ?? api.url,
+      NEXT_PUBLIC_API_URL: api.customDomainUrl ?? api.url,
     },
     ...(enableCustomDomain ? { customDomain: domainName, certificate } : {}),
     cdk: {
