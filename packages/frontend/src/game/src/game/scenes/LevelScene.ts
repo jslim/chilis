@@ -111,7 +111,7 @@ export default class LevelScene extends Scene {
 
   async init(levelNo: number) {
     this.levelNo = levelNo
-    const { map, spriteSheet, spriteSheetLarge } = await this.preload(levelNo)
+    const { map, spriteSheet, spriteSheetLarge } = await this.preload(((levelNo - 1) % 6) + 1)
 
     // store level number
     this.gameState.setLevel(levelNo)
@@ -327,7 +327,7 @@ export default class LevelScene extends Scene {
     screenEntity.position.set(120, 120)
 
     const levelNo = this.gameState.level.value
-    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${levelNo}`))
+    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${((levelNo - 1) % 6) + 1}`))
     labelEntity.position.set(0, -16)
 
     let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
@@ -354,7 +354,7 @@ export default class LevelScene extends Scene {
     screenEntity.position.set(120, 120)
 
     // const levelNo = this.gameState.level.value
-    // let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${levelNo}`))
+    // let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_defeat`))
     // labelEntity.position.set(0, -16)
 
     let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(

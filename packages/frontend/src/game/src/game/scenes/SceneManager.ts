@@ -6,12 +6,12 @@ import { Entity } from '../core/Entity'
 import { clamp01 } from '../utils/math.utils'
 import { EndScene } from './EndScene'
 import { IntroScene } from './IntroScene'
-import { LevelCompleteScene } from './LevelCompleteScene'
 import LevelScene from './LevelScene'
 import { PreloadScene } from './PreloadScene'
-import { SplashScene } from './SplashScene'
 import { GameController } from '@/game/src/game/GameController'
 import { GameStateValues } from '@/game/src/game/components/GameState'
+import { LevelIntroScene } from '@/game/src/game/scenes/LevelIntroScene'
+import { LevelVsScene } from '@/game/src/game/scenes/LevelVsScene'
 
 export default class SceneManager {
   public app: Application
@@ -40,22 +40,31 @@ export default class SceneManager {
     await preloader.preload()
   }
 
+  showLevelIntro(levelNo: number) {
+    if (levelNo <= 6) {
+      this.goto(new LevelIntroScene(this, levelNo))
+    } else {
+      this.showLevelVsScene(levelNo)
+    }
+  }
+
+  showLevelVsScene(levelNo: number) {
+    this.goto(new LevelVsScene(this, levelNo))
+  }
+
   intro() {
     this.goto(new IntroScene(this))
   }
 
   levelComplete(result: GameStateValues) {
     this.gameController.onLevelComplete.emit(result)
-    this.goto(new LevelCompleteScene(this))
+    const nextLevelNo = result.level + 1
+    this.showLevelIntro(nextLevelNo)
   }
 
   end(result: GameStateValues) {
     this.gameController.onGameOver.emit(result)
     this.goto(new EndScene(this))
-  }
-
-  splash() {
-    this.goto(new SplashScene(this))
   }
 
   goto<T extends Scene>(scene: T) {

@@ -4,7 +4,7 @@ import { GameState, GameStateValues } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
-import { DEBUG_KEYS, FRAME_RATE } from './game.config'
+import { DEBUG_KEYS, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
 import { TestScene } from './scenes/TestScene'
@@ -25,8 +25,8 @@ export class GameController {
 
   public async init() {
     await this.app.init({
-      width: 240,
-      height: 240
+      width: GAME_WIDTH,
+      height: GAME_HEIGHT
     })
     //
     document.querySelector('#app')!.append(this.app.canvas)

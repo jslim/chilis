@@ -10,7 +10,6 @@ export class PlayerMover extends Mover {
     const input = this.entity.getComponent(Input)
     if (input && player.canWalk) {
       if (player.canShoot && this.canMoveSideways && input.isDown('action')) {
-        console.log('shoot!')
         player.state.value = 'shoot'
         input.onUp.emit('action')
       } else {

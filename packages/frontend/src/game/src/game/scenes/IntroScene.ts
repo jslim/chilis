@@ -11,7 +11,7 @@ export class IntroScene extends Scene {
   }
 
   private async gotoLevel(level: number) {
-    await this.sceneManager.showLevel(level)
+    this.sceneManager.showLevelIntro(level)
 
     try {
       //this.sceneManager.app.renderer.canvas.parentElement?.requestFullscreen();
