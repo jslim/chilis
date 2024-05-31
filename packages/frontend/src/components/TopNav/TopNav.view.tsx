@@ -26,7 +26,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, text, onClick }) => {
+export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) => {
   const refs = useRefs<ViewRefs>()
   const actualRoute = localStore((state) => state.navigation.pathname)
   const navigateBack = localStore((state) => state.navigation.navigateBack)
@@ -75,7 +75,7 @@ export const View: FC<ViewProps> = ({ className, text, onClick }) => {
           </BaseButton>
         )}
 
-        <BaseButton className={css.button} onClick={onClick}>
+        <BaseButton className={css.button} onClick={onClick} disabled={isDisabled}>
           {text}
           <div className={css.iconContainer}>
             <SvgLoginLogout />

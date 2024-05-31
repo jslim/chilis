@@ -76,6 +76,7 @@ export default class SceneManager {
   public run() {
     const updateCooldown: CoolDown = new CoolDown(1 / this.frameRate)
     this.app.ticker.add((ticker) => {
+      updateCooldown.interval = 1 / this.frameRate
       if (this.isPlaying) {
         const dt = clamp01((ticker.deltaMS / 1000) * this.root.timescale)
         if (updateCooldown.update(dt)) {

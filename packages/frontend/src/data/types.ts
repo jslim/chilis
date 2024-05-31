@@ -5,6 +5,7 @@ export type PageProps<T extends PageIdentifier = 'home'> = {
   content: PageContent<T>
   noLayout?: boolean
   onReady?: (handle: RefObject<PageHandle>) => void
+  arrayOfPlayers?: Player[]
 }
 
 export type PageHandle = {
@@ -19,6 +20,14 @@ export type FormFields = {
 
 export type Player = {
   rank: string
-  name: string
+  nickname: string
   score: string
+}
+
+export type ApiResponse = {
+  message: string
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  [key: string]: unknown
+  // array of players
+  data: Player[]
 }

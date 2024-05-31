@@ -12,7 +12,7 @@ import { BaseButton } from '@/components/BaseButton'
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
-  root: HTMLFormElement
+  root: HTMLDivElement
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
@@ -20,24 +20,26 @@ export const View: FC<ViewProps> = ({
   className,
   children,
   onSubmit,
-  isSubmitting,
   submitMessage = 'Submit',
-  hasReset,
-  resetMessage = 'Reset',
   hasError,
-  errorMessage
+  errorMessage,
+  disabled
 }) => {
   const refs = useRefs<ViewRefs>()
 
   return (
     <div className={classNames('BaseForm', css.root, className)}>
-      <form className={css.form} ref={refs.root}>
+      <div className={css.form} ref={refs.root}>
         {children}
-        <BaseButton className={css.button} type="submit" onClick={() => onSubmit} disabled={isSubmitting}>
+        <BaseButton
+          className={classNames(css.button, { [css.isDisabled]: disabled })}
+          type="submit"
+          onClick={onSubmit}
+          disabled={disabled}
+        >
           {submitMessage}
         </BaseButton>
-        {hasReset && <BaseButton type="reset">{resetMessage}</BaseButton>}
-      </form>
+      </div>
       {hasError && <div className={css.error}>{errorMessage}</div>}
     </div>
   )

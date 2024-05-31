@@ -9,5 +9,9 @@ export const getWebDomain = (stage: string) => {
     throw new Error("Please set BASE_DOMAIN environment variable");
   }
 
+  if (stage === ENVS_TARGET.prd) {
+    return `${process.env.BASE_DOMAIN}`;
+  }
+
   return `${stage}.${process.env.BASE_DOMAIN}`;
 };

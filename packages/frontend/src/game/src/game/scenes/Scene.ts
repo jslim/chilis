@@ -4,11 +4,14 @@ import { GameState } from '../components/GameState'
 import { Component, Entity } from '../core/Entity'
 import { getOgFont, SimpleText } from '../display/SimpleText'
 import { Assets, Sprite, VideoSource } from 'pixi.js'
-import { GAME_HEIGHT, GAME_WIDTH } from '@/game/src/game/game.config'
+import { FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from '@/game/src/game/game.config'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
     super()
+
+    // set the frame rate for each scene to default. LevelScene will override this (in onStart)
+    this.sceneManager.frameRate = FRAME_RATE
   }
 
   protected async playVideo(videoId: string, onEnd: () => void) {

@@ -11,6 +11,9 @@ export class GameState extends Component {
   constructor() {
     super()
 
+    /*
+    // disabled this, highscore is provided by backend
+
     this.highScore.value = parseInt(localStorage.getItem('highScore') || '0')
 
     this.subscribe(this.score.onChanged, (newScore) => {
@@ -24,6 +27,7 @@ export class GameState extends Component {
         localStorage.setItem('highScore', highScore.toString())
       } catch {}
     })
+    */
   }
 
   setLevel(levelNo: number) {
@@ -38,9 +42,9 @@ export class GameState extends Component {
     return {
       lives: this.lives.value,
       bullets: this.bullets.value,
-      level: this.level.value,
+      level: this.level.value, // level number (1 based)
       score: this.score.value,
-      highscore: this.highScore.value
+      highScore: this.highScore.value
     }
   }
 }

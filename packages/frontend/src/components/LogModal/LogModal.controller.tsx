@@ -11,7 +11,12 @@ export interface ControllerProps {
   cta: string
   phone: string
   password: string
+  nicknameTitle: string
+  nicknameDescription: string
+  nickname: string
+  nicknameCta: string
   errorMessage: string
+  errorMessageNickname: string
   decoration: string
   forgotPassword: string
   skipLabel: string

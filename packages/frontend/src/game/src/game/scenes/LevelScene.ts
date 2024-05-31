@@ -34,7 +34,14 @@ import { ScreenShake } from '../core/ScreenShake'
 import { Signal } from '../core/Signal'
 import { get8pxNumberFont } from '../display/SimpleText'
 import { FlumpLibrary } from '../flump/FlumpLibrary'
-import { DRAW_DEBUG_GRID, FLOOR_OFFSET, SCORE_PER_GROUP_COMPLETE } from '../game.config'
+import {
+  DRAW_DEBUG_GRID,
+  FLOOR_OFFSET,
+  FRAME_RATE,
+  FRAME_RATE_HARD,
+  FRAME_RATE_HARDEST,
+  POINTS_PER_GROUP_COMPLETE
+} from '../game.config'
 import { TileId } from '../tiled/TileId'
 import { Scene } from './Scene'
 import { Zapp } from '@/game/src/game/components/cpu/Zapp'
@@ -54,7 +61,7 @@ export default class LevelScene extends Scene {
   public burgers: Entity[] = []
   public plates: Entity[] = []
   public burgerGroups: BurgerGroup[] = []
-  public spawnPoints: Point[] = []
+  // public spawnPoints: Point[] = []
   public flumpLibrary!: FlumpLibrary
 
   private isPlaying: boolean = true
@@ -72,6 +79,17 @@ export default class LevelScene extends Scene {
 
   override onStart() {
     super.onStart()
+
+    this.sceneManager.gameController.onShowGameBorder.emit(true)
+
+    if (this.levelNo <= 6) {
+      this.sceneManager.frameRate = FRAME_RATE
+    } else if (this.levelNo <= 12) {
+      this.sceneManager.frameRate = FRAME_RATE_HARD
+    } else {
+      this.sceneManager.frameRate = FRAME_RATE_HARDEST
+    }
+    console.log('frame rate', this.sceneManager.frameRate)
 
     this.entity.addChild(new Sprite(Assets.get('background')))
 
@@ -171,24 +189,13 @@ export default class LevelScene extends Scene {
               new PlayerAnimator(this.flumpLibrary)
             )
 
-            this.subscribe(this.player.getComponent(Player).onDied, () => this.showDefeatScreen())
-            this.subscribe(this.player.getComponent(Player).onHitCpu, () =>
+            let playerComponent = this.player.getComponent(Player)
+            this.subscribe(playerComponent.onDied, () => this.showDefeatScreen())
+            this.subscribe(playerComponent.onHitCpu, () =>
               this.cpus.forEach((cpu) => (cpu.getComponent(Cpu).state.value = 'defeat'))
             )
-            this.subscribe(this.player.getComponent(Player).onReset, () =>
-              this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset())
-            )
-          } /*else if (id === TileId.Cpu) {
-            //entity.addChild(getSprite(map, spriteSheet, id));
-            entity.addComponent(
-              new HitBox(-4, -14, 8, 14),
-              new CpuMover(1, cpuId++),
-              new CpuAnimator(flumpLibrary, "trainee01"),
-              new Input(),
-              new Cpu(),
-            );
-            this.cpus.push(entity);
-          }*/ else if (id === TileId.Cpu || id === TileId.BossCpu) {
+            this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
+          } else if (id === TileId.Cpu || id === TileId.BossCpu) {
             //  entity.addChild(getSprite(map, spriteSheet, id));
             let cpu: Cpu | undefined
             let offsetX = 0 // visual offset animation
@@ -425,7 +432,7 @@ export default class LevelScene extends Scene {
     })
     this.burgerGroups.forEach((group) => {
       this.subscribe(group.onBurgerComplete, () => {
-        const score = SCORE_PER_GROUP_COMPLETE[totalGroupsInRow]
+        const score = POINTS_PER_GROUP_COMPLETE[totalGroupsInRow]
         this.addScore(group.plate.position, score)
         totalGroupsInRow++
       })
