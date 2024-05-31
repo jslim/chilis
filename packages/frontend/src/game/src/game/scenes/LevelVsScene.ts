@@ -10,6 +10,10 @@ export class LevelVsScene extends Scene {
     super(sceneManager)
   }
   override onStart() {
+    super.onStart()
+
+    this.sceneManager.gameController.onShowGameBorder.emit(false)
+
     const gotoLevel = () => this.sceneManager.showLevel(this.levelNo)
 
     ;(async () => {

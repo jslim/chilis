@@ -80,6 +80,8 @@ export default class LevelScene extends Scene {
   override onStart() {
     super.onStart()
 
+    this.sceneManager.gameController.onShowGameBorder.emit(true)
+
     if (this.levelNo <= 6) {
       this.sceneManager.frameRate = FRAME_RATE
     } else if (this.levelNo <= 12) {

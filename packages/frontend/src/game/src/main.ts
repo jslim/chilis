@@ -11,6 +11,8 @@ export const initGame = async () => {
   // Subscribe to game events. This may change in the future
   game.onLevelComplete.subscribe((data) => console.log('Level complete!', data))
   game.onGameOver.subscribe((data) => console.log('Game over!', data))
+  game.onGameAction.subscribe((action) => console.log('Game action!', action))
+  game.onShowGameBorder.subscribe((showBorder) => console.log('Show game border:', showBorder))
 
   // needs to be set from backend
   // game.setHighScore(123)
