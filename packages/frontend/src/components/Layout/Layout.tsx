@@ -31,7 +31,6 @@ import { PlayNow } from '@/components/PlayNow'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
-import { useLocalStorage } from '@/hooks/use-local-storage'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -57,9 +56,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [userToken, setUserToken] = useLocalStorage('userToken')
 
-  console.log(userToken, 'userToken')
   //  const [introComplete, setIntroComplete] = useState(false)
 
   // const handleIntroComplete = useCallback(() => {
