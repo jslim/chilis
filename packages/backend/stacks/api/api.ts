@@ -15,9 +15,6 @@ export function ApiStack({ stack, app }: StackContext) {
   const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
 
   if (
-    // TODO: temp, skip for uat and prd 
-    isDevelop &&
-    isStage &&
     domainStage !== undefined &&
     isValidDomain(String(process.env.BASE_DOMAIN))
   ) {
