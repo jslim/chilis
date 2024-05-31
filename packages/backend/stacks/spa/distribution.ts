@@ -160,7 +160,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                   {
                     header: "Content-Security-Policy-Report-Only",
                     override: true,
-                    value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src 'self' data: blob:; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data:;`,
+                    value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src www.soundhelix.com 'self'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob:; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data:;`,
                   },
                 ],
               },
@@ -185,7 +185,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                 },
                 contentSecurityPolicy: {
                   override: true,
-                  contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data:;`,
+                  contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src www.soundhelix.com 'self'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data:;`,
                 },
               },
             }
