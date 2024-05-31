@@ -1,4 +1,4 @@
-import type { EventBridgeEvent, APIGatewayProxyResult, Context } from "aws-lambda";
+import type { EventBridgeEvent, Context } from "aws-lambda";
 import { logger } from "@/libs/powertools";
 import { SecretsManagerClient, RotateSecretCommand } from "@aws-sdk/client-secrets-manager";
 
