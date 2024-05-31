@@ -12,6 +12,7 @@ import { TestScene } from './scenes/TestScene'
 export class GameController {
   public onLevelComplete = new Signal<GameStateValues>()
   public onGameOver = new Signal<GameStateValues>()
+  public onGameAction = new Signal<GameAction>()
 
   public readonly app: Application = new Application()
   private sceneManager!: SceneManager

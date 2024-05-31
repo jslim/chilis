@@ -13,7 +13,7 @@ export class GameState extends Component {
 
     /*
     // disabled this, highscore is provided by backend
-    
+
     this.highScore.value = parseInt(localStorage.getItem('highScore') || '0')
 
     this.subscribe(this.score.onChanged, (newScore) => {
