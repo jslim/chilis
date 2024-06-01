@@ -10,6 +10,7 @@ import postUserModel from "@/stacks/user/models/post-user";
 import { BRINKER_ACCESS } from "@/libs/config";
 import { SecretsStack } from "@/stacks/secrets";
 import { AuthStack, ApiStack } from "@/stacks";
+import patchUserModel from "@/stacks/user/models/patch-user";
 
 export function userApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
@@ -40,7 +41,7 @@ export function userApiStack({ stack, app }: StackContext) {
       // eslint-disable-next-line
       // @ts-ignore
       new PolicyStatement({
-        actions: ["secretsmanager:GetSecretValue"],
+        actions: ["secretsmanager:GetSecretValue", "secretsmanager:RotateSecret"],
         effect: Effect.ALLOW,
         resources: [brinkerAccess.secretArn],
       }),
@@ -88,6 +89,7 @@ export function userApiStack({ stack, app }: StackContext) {
     // eslint-disable-next-line
     // @ts-ignore
     authorizer: api.authorizersData.Authorizer,
+    model: api.cdk.restApi.addModel(patchUserModel.modelName, patchUserModel as ModelOptions),
     validator,
   });
 
