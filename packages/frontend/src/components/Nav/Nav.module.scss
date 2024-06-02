@@ -80,15 +80,6 @@
             svg {
               @include box(100%);
               @include transform-center(absolute);
-              top: -30px;
-
-              g:nth-of-type(3) {
-                //  transform: scaleX(0.5); //  width: px(30);
-                path {
-                  // transform: scaleX(0.5);
-                  fill: red; /* Cambia el color de relleno a rojo */
-                }
-              }
             }
           }
         }
