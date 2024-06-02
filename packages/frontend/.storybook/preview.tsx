@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { StoryContext, StoryFn } from '@storybook/react'
 import { gsap } from 'gsap'
 
-import { initGsap, initRive } from '@/motion/core/init'
+import { initGsap } from '@/motion/core/init'
 
 import { FeatureFlagService } from '@/services/feature-flags'
 
@@ -66,7 +66,6 @@ export const parameters = {
 }
 
 initGsap()
-initRive()
 setBodyClasses()
 
 // register all gsap effects
