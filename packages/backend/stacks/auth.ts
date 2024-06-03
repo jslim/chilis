@@ -4,6 +4,7 @@ import { Function, use } from "sst/constructs";
 import { BRINKER_ACCESS } from "@/libs/config";
 import { detectStage } from "@/libs/detect-stage";
 import { Cognito, StackContext } from "sst/constructs";
+import { BooleanAttribute } from "aws-cdk-lib/aws-cognito";
 import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 
@@ -89,6 +90,9 @@ export function AuthStack({ stack, app }: StackContext) {
         signInAliases: { username: true },
         standardAttributes: {
           preferredUsername: {},
+        },
+        customAttributes: {
+          badActor: new BooleanAttribute({}),
         },
         accountRecovery: 5, // NONE
       },

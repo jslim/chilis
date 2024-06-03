@@ -79,6 +79,12 @@ async function registerUserIfNotFound(loyaltyID: string) {
             // This command will trigger the pre signup handler
             UserPoolId: process.env.USER_POOL_ID,
             Username: loyaltyID,
+            UserAttributes: [
+              {
+                Name: "custom:badActor",
+                Value: "false",
+              },
+            ],
           })
         );
       } catch (createError) {
