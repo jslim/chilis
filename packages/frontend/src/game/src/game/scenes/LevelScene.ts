@@ -144,6 +144,7 @@ export default class LevelScene extends Scene {
 
     this.walkGrid = connectionsToGrid(map, path)
     let cpuId = 0
+    let traineeId = 1
     for (const layer of map.layers) {
       // only process tile layers
       if (layer.type !== 'tilelayer') continue
@@ -203,7 +204,7 @@ export default class LevelScene extends Scene {
             let cpu: Cpu | undefined
             let offsetX = 0 // visual offset animation
             if (id === TileId.Cpu) {
-              cpu = new Cpu('trainee01')
+              cpu = new Cpu('trainee0' + traineeId++)
             } else if (id === TileId.BossCpu) {
               offsetX = 4
               switch (levelNo) {
@@ -248,6 +249,13 @@ export default class LevelScene extends Scene {
                 cpu
               )
               this.cpus.push(entity)
+
+              if (cpu.name.includes('trainee')) {
+                let mover = entity.getComponent(CpuMover)
+                if (traineeId == 1) mover.modeCycle = ['hunt-player', 'hunt-player-slow', 'hunt-burger', 'random']
+                else if (traineeId == 2) mover.modeCycle = ['random']
+                else if (traineeId == 3) mover.modeCycle = ['hunt-burger', 'random']
+              }
             }
           } else if (TileId.isBurger(id)) {
             const burgerHeight = burgerHeightByTileId[id] - burgerOverlap
