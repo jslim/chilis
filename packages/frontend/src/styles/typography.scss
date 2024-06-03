@@ -126,3 +126,11 @@ $generic-fonts: system-ui, 'helvetica', 'arial', sans-serif;
     @include font-size(42);
   }
 }
+
+@mixin typography-cta {
+  @include font-size(16);
+
+  @include media-desktop {
+    @include font-size(22);
+  }
+}
