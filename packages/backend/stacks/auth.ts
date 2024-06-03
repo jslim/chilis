@@ -88,7 +88,7 @@ export function AuthStack({ stack, app }: StackContext) {
         removalPolicy: !isProd ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
         signInAliases: { username: true },
         standardAttributes: {
-          nickname: {},
+          preferredUsername: {},
         },
         accountRecovery: 5, // NONE
       },

@@ -55,6 +55,18 @@ export function userApiStack({ stack, app }: StackContext) {
     functionName: `${app.stage}-patch-user`,
     description: "Endpoint to create user nickname",
     handler: "packages/backend/handlers/user/patch.handler",
+    environment: {
+      USER_POOL_ID: auth.userPoolId,
+    },
+    permissions: [
+      // eslint-disable-next-line
+      // @ts-ignore
+      new PolicyStatement({
+        actions: ["cognito-idp:ListUsers"],
+        effect: Effect.ALLOW,
+        resources: [auth.userPoolArn],
+      }),
+    ],
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
