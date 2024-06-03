@@ -77,6 +77,7 @@ export default class LevelScene extends Scene {
     front: new Entity(),
     scoreUI: new Entity()
   }
+  private mobileInput?: MobileInput
 
   override onStart() {
     super.onStart()
@@ -320,7 +321,7 @@ export default class LevelScene extends Scene {
       }
     })
 
-    this.containers.front.addEntity(new Entity().addComponent(new MobileInput(this.player)))
+    this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
   }
 
   override onUpdate(dt: number): void {
@@ -331,6 +332,8 @@ export default class LevelScene extends Scene {
   }
 
   showWinScreen() {
+    this.mobileInput?.destroy()
+
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_win').once())
     screenEntity.position.set(120, 120)
 
@@ -358,6 +361,8 @@ export default class LevelScene extends Scene {
   }
 
   showDefeatScreen() {
+    this.mobileInput?.destroy()
+
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat').once())
     screenEntity.position.set(120, 120)
 
