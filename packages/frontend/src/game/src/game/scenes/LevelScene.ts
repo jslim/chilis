@@ -32,7 +32,7 @@ import { createDelay } from '../core/Delay'
 import { Entity } from '../core/Entity'
 import { ScreenShake } from '../core/ScreenShake'
 import { Signal } from '../core/Signal'
-import { get8pxNumberFont } from '../display/SimpleText'
+import { get8pxNumberFont, getPixGamerNumberFont } from '../display/SimpleText'
 import { FlumpLibrary } from '../flump/FlumpLibrary'
 import {
   DRAW_DEBUG_GRID,
@@ -349,8 +349,11 @@ export default class LevelScene extends Scene {
     screenEntity.position.set(120, 120)
 
     const levelNo = this.gameState.level.value
-    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${getWrappedLevelNo(levelNo)}`))
+    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed`))
     labelEntity.position.set(0, -16)
+
+    let labelNoEntity = new Entity().addComponent(new SimpleTextDisplay(`${levelNo}`, 'left', getPixGamerNumberFont()))
+    labelNoEntity.position.set(labelEntity.x + labelEntity.width / 2, labelEntity.y + 5)
 
     let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
       new PointerComponent('pointerdown', () => {
@@ -362,6 +365,7 @@ export default class LevelScene extends Scene {
     screenEntity.addComponent(
       new OnStart(() => {
         screenEntity.addEntity(labelEntity)
+        screenEntity.addEntity(labelNoEntity)
       })
     )
     createDelay(this.mainContainer, 1, () => {
