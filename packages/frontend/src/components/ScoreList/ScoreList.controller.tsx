@@ -8,7 +8,7 @@ import { View } from './ScoreList.view'
 export interface ControllerProps {
   className?: string
   maxPlayers: number | null
-  players: Player[]
+  players: Player[] | undefined
   title?: string
   currentRankText: string
   fullLeaderboardText: string

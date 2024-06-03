@@ -21,7 +21,7 @@ export type ViewRefs = {
 export const View: FC<ViewProps> = ({
   className,
   title,
-  players,
+  players = [],
   maxPlayers,
   currentPlayer,
   currentRankText,
@@ -30,8 +30,10 @@ export const View: FC<ViewProps> = ({
   const refs = useRefs<ViewRefs>()
 
   const displayedPlayers = useMemo(() => {
-    const sortedPlayers = [...players].sort((a, b) => Number(b.score) - Number(a.score))
-    return maxPlayers !== null ? sortedPlayers.slice(0, maxPlayers) : sortedPlayers
+    if (players.length === 0) return []
+
+    //  const sortedPlayers = [...players].sort((a, b) => Number(b.score) - Number(a.score))
+    return maxPlayers !== null ? players.slice(0, maxPlayers) : players
   }, [players, maxPlayers])
 
   return (
@@ -41,7 +43,7 @@ export const View: FC<ViewProps> = ({
         {displayedPlayers.map((player, index) => (
           <li className={css.item} key={index}>
             <span className={css.player}>
-              {index + 1} {truncateText(player.name, 9)}
+              {index + 1} {truncateText(player.nickname, 9)}
             </span>
             <span className={css.score}>{player.score}</span>
           </li>
@@ -53,7 +55,7 @@ export const View: FC<ViewProps> = ({
           <h3 className={css.rankTitle}>{currentRankText}</h3>
           <div className={classNames(css.item, css.current)}>
             <span className={css.player}>
-              {currentPlayer.rank} {truncateText(currentPlayer.name, 9)}
+              {currentPlayer.rank} {truncateText(currentPlayer.nickname, 9)}
             </span>
             <span className={css.score}>{currentPlayer.score}</span>
           </div>

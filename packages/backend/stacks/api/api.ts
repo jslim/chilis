@@ -13,13 +13,13 @@ export function ApiStack({ stack, app }: StackContext) {
 
   let customDomain = undefined;
   const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
-  
+
   if (
     domainStage !== undefined &&
     isValidDomain(String(process.env.BASE_DOMAIN))
   ) {
     customDomain =
-      (domainStage === "" ? `api` : `api.${domainStage}`) +
+      (isProd || domainStage === "" ? `api` : `api.${domainStage}`) +
       `.${process.env.BASE_DOMAIN}`;
   }
 

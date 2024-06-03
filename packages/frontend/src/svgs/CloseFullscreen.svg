@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17">
+    <defs>
+        <style>
+            .cls-1 {
+                fill: #7a7a7a;
+            }
+
+            .cls-1,
+            .cls-2 {
+                stroke-width: 0px;
+            }
+
+            .cls-2 {
+                fill: #f8ac01;
+            }
+        </style>
+    </defs>
+    <rect class="cls-1" y="6" width="1" height="5" />
+    <rect class="cls-1" x="2" y="3" width="1" height="1" />
+    <rect class="cls-1" x="3" y="2" width="1" height="1" />
+    <rect class="cls-1" x="4" y="1" width="2" height="1" />
+    <rect class="cls-1" x="6" width="5" height="1" />
+    <rect class="cls-1" x="1" y="4" width="1" height="2" />
+    <rect class="cls-1" x="6" y="16" width="5" height="1" />
+    <rect class="cls-1" x="3" y="14" width="1" height="1" />
+    <rect class="cls-1" x="2" y="13" width="1" height="1" />
+    <rect class="cls-1" x="1" y="11" width="1" height="2" />
+    <rect class="cls-1" x="4" y="15" width="2" height="1" />
+    <rect class="cls-1" x="16" y="6" width="1" height="5" />
+    <rect class="cls-1" x="14" y="13" width="1" height="1" />
+    <rect class="cls-1" x="13" y="14" width="1" height="1" />
+    <rect class="cls-1" x="11" y="15" width="2" height="1" />
+    <rect class="cls-1" x="15" y="11" width="1" height="2" />
+    <rect class="cls-1" x="13" y="2" width="1" height="1" />
+    <rect class="cls-1" x="14" y="3" width="1" height="1" />
+    <rect class="cls-1" x="15" y="4" width="1" height="2" />
+    <rect class="cls-1" x="11" y="1" width="2" height="1" />
+    <polygon class="cls-2" points="10 7 10 5 9 5 9 8 12 8 12 7 10 7" />
+    <polygon class="cls-2" points="5 9 5 10 7 10 7 12 8 12 8 9 5 9" />
+    <polygon class="cls-2" points="9 9 9 12 10 12 10 10 12 10 12 9 9 9" />
+    <polygon class="cls-2" points="7 7 5 7 5 8 8 8 8 5 7 5 7 7" />
+</svg>

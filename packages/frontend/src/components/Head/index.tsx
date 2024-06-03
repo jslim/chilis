@@ -8,8 +8,6 @@ import config from '@/data/config.json'
 
 import { fixSlashes, prefix } from '@/utils/basic-functions'
 
-import { riveWASMResource } from '@/motion/core/init'
-
 import { MockContentSecurityPolicy } from './MockContentSecurityPolicy'
 import { MockFeaturePolicy } from './MockFeaturePolicy'
 
@@ -89,8 +87,6 @@ export const Head: FC<HeadProps> = memo(({ title, description, siteName, image }
           <link rel="dns-prefetch" href={href} />
         </>
       ))}
-
-      <link rel="preload" href={riveWASMResource} as="fetch" crossOrigin="anonymous" />
 
       {process.env.NODE_ENV === 'development' && (
         <>

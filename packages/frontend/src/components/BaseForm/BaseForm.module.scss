@@ -19,4 +19,18 @@
   border: 1px solid $dark-blue;
   border-bottom-width: thick;
   border-radius: px(30);
+
+  &.isDisabled {
+    background-color: $gray;
+    border-color: $gray;
+    border-bottom-width: thin;
+    pointer-events: none;
+  }
+}
+
+.error {
+  @include font-size(12, 12);
+  @include font-family(Montserrat, 500);
+  margin-top: px(10);
+  color: $red;
 }

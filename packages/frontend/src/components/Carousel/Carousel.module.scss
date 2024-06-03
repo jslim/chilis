@@ -11,6 +11,22 @@
     span {
       @include box(px(14));
       display: inline-block;
+      background-color: transparent;
+      border: px(10) solid transparent;
+      border-image: url('~@/assets/images/dot-nav-circle.png') 10 10 stretch;
+      opacity: 1;
+    }
+  }
+
+  :global(.swiper-pagination-bullet-active) {
+    position: relative;
+
+    &::before {
+      @include position-0(absolute);
+      @include box(px(10));
+      @include transform-center;
+      content: '';
+      display: block;
       background-color: $cilantro;
     }
   }

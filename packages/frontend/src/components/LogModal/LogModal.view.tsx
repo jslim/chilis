@@ -1,13 +1,18 @@
-import type { FC } from 'react'
+import type { ApiResponse } from '@/data/types'
 import type { ControllerProps } from './LogModal.controller'
 
+import { type FC, useState } from 'react'
 import classNames from 'classnames'
 
 import css from './LogModal.module.scss'
 
+import { localState } from '@/store'
+
 import { getImageUrl } from '@/utils/basic-functions'
 import { copy } from '@/utils/copy'
+import { Endpoints, fetchApi } from '@/utils/fetchApi'
 
+import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
@@ -16,6 +21,8 @@ import { BaseImage } from '@/components/BaseImage'
 
 import SvgChilis from '@/svgs/Chilis.svg'
 import SvgClose from '@/svgs/Close.svg'
+import SvgThreeSquares from '@/svgs/ThreeSquares.svg'
+import SvgTwoSquares from '@/svgs/TwoSquares.svg'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -31,7 +38,12 @@ export const View: FC<ViewProps> = ({
   cta,
   phone,
   password,
+  nickname,
+  nicknameTitle,
+  nicknameDescription,
+  nicknameCta,
   errorMessage,
+  errorMessageNickname,
   forgotPassword,
   skipLabel,
   skip,
@@ -39,6 +51,62 @@ export const View: FC<ViewProps> = ({
   onClose
 }) => {
   const refs = useRefs<ViewRefs>()
+  const [phoneValue, setPhoneValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
+  const [nicknameValue, setNicknameValue] = useState('')
+  const [userToken, setUserToken] = useLocalStorage('userToken')
+  const [hasError, setHasError] = useState(false)
+
+  const handleLoginSubmit = async () => {
+    try {
+      const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.USER}`, undefined, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ phone: phoneValue, password: passwordValue })
+      })
+
+      const apiResponse = response as ApiResponse
+
+      if (apiResponse.message) {
+        console.error('Login failed:', apiResponse.message)
+        setHasError(true)
+      } else {
+        setUserToken(JSON.stringify(apiResponse.token))
+        localState().user.setToken(String(apiResponse.token))
+      }
+    } catch (error) {
+      console.error(error)
+      setHasError(true)
+    }
+  }
+
+  const handleNicknameSubmit = async () => {
+    try {
+      const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.USER}`, undefined, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nickname: nicknameValue })
+      })
+
+      const apiResponse = response as ApiResponse
+
+      if (apiResponse.message.toLowerCase().includes('success')) {
+        console.log('Nickame set successful:', apiResponse.message)
+        localState().user.setNickname(nicknameValue)
+        onClose()
+      } else {
+        console.error('Error while setting nickname:', apiResponse.message)
+        setHasError(true)
+      }
+    } catch (error) {
+      console.error(error)
+      setHasError(true)
+    }
+  }
 
   return (
     <div className={classNames('LogModal', css.root, className)} ref={refs.root}>
@@ -46,29 +114,70 @@ export const View: FC<ViewProps> = ({
         <SvgClose />
       </BaseButton>
       <div className={css.top}>
+        <div className={classNames(css.squares, css.leftSquare)}>
+          <SvgTwoSquares />
+        </div>
+        <div className={classNames(css.squares, css.rightSquare)}>
+          <SvgThreeSquares />
+        </div>
+
         <div className={css.logoContainer}>
           <SvgChilis />
         </div>
-        <div className={css.title} {...copy.html(title)} />
-        <div className={css.description} {...copy.html(description)} />
 
-        <BaseForm
-          onSubmit={function (): void {
-            throw new Error('Function not implemented.')
-          }}
-          submitMessage={cta}
-          errorMessage={errorMessage}
-          isSubmitting={false}
-        >
-          <div className={css.fieldsContainer}>
-            <input type="text" id="phone" name="phone" placeholder={phone} />
-            <input type="password" id="password" name="password" placeholder={password} />
-          </div>
-        </BaseForm>
+        {!userToken ? (
+          <>
+            <div className={css.title} {...copy.html(title)} />
+            <div className={css.description} {...copy.html(description)} />
+            <BaseForm
+              onSubmit={handleLoginSubmit}
+              submitMessage={cta}
+              errorMessage={errorMessage}
+              hasError={hasError}
+              disabled={phoneValue === '' || passwordValue === ''}
+            >
+              <div className={css.fieldsContainer}>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  placeholder={phone}
+                  onChange={(e) => setPhoneValue(e.target.value)}
+                  required
+                />
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder={password}
+                  onChange={(e) => setPasswordValue(e.target.value)}
+                  required
+                />
+              </div>
+            </BaseForm>
 
-        <div className={css.forgotPassword}>
-          <BaseButton href="/">{forgotPassword}</BaseButton>
-        </div>
+            <div className={css.forgotPassword}>
+              <BaseButton href="/">{forgotPassword}</BaseButton>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={css.title} {...copy.html(nicknameTitle)} />
+            <div className={css.description} {...copy.html(nicknameDescription)} />
+            <BaseForm onSubmit={handleNicknameSubmit} submitMessage={nicknameCta} errorMessage={errorMessageNickname}>
+              <div className={css.fieldsContainer}>
+                <input
+                  type="text"
+                  id="nickname"
+                  name="nickname"
+                  placeholder={nickname}
+                  onChange={(e) => setNicknameValue(e.target.value)}
+                  required
+                />
+              </div>
+            </BaseForm>
+          </>
+        )}
       </div>
       <div className={css.bottom}>
         <div className={css.chillieContainer}>

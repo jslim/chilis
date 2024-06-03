@@ -40,7 +40,12 @@
       "skip": "SKIP",
       "phone": "PHONE",
       "password": "PASSWORD",
+      "nicknameTitle": "CREATE USERNAME",
+      "nicknameDescription": "The League of Evil Lorem just Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+      "nickname": "NICKNAME",
+      "nicknameCta": "CONFIRM",
       "errorMessage": "Invalid phone or password",
+      "errorMessageNickname": "Invalid nickname",
       "decoration": "chillie.png"
     },
     "playNow": "PLAY NOW",
