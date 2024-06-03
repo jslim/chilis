@@ -59,9 +59,9 @@ export class MobileInput extends Component {
     })
     joystickContainer.append(joystickButton)
 
-    joystickButton.addEventListener('pointerdown', this.onJoystickPointerDown)
-    joystickButton.addEventListener('pointermove', this.onJoystickPointerMove)
-    joystickButton.addEventListener('pointerup', this.onJoystickPointerUp)
+    joystickButton.addEventListener('touchstart', this.onJoystickTouchStart)
+    joystickButton.addEventListener('touchmove', this.onJoystickTouchMove)
+    joystickButton.addEventListener('touchend', this.onJoystickTouchEnd)
 
     // Create the action button
     const actionButton = document.createElement('div')
@@ -80,22 +80,21 @@ export class MobileInput extends Component {
     })
     gameContainer.append(actionButton)
 
-    actionButton.addEventListener('pointerdown', this.onActionButtonPointerDown)
-    actionButton.addEventListener('pointerup', this.onActionButtonPointerUp)
-    actionButton.addEventListener('pointerout', this.onActionButtonPointerOut)
+    actionButton.addEventListener('touchstart', this.onActionButtonTouchStart)
+    actionButton.addEventListener('touchend', this.onActionButtonTouchEnd)
+    actionButton.addEventListener('touchcancel', this.onActionButtonTouchCancel)
   }
 
-  private onJoystickPointerDown = (event: PointerEvent) => {
-    this.startX = event.clientX
-    this.startY = event.clientY
-    this.joystickButton.setPointerCapture(event.pointerId)
+  private onJoystickTouchStart = (event: TouchEvent) => {
+    const touch = event.touches[0]
+    this.startX = touch.clientX
+    this.startY = touch.clientY
   }
 
-  private onJoystickPointerMove = (event: PointerEvent) => {
-    if (event.pressure === 0) return
-
-    const dx = event.clientX - this.startX
-    const dy = event.clientY - this.startY
+  private onJoystickTouchMove = (event: TouchEvent) => {
+    const touch = event.touches[0]
+    const dx = touch.clientX - this.startX
+    const dy = touch.clientY - this.startY
     const distance = Math.sqrt(dx * dx + dy * dy)
 
     let clampedDx = dx
@@ -126,26 +125,26 @@ export class MobileInput extends Component {
     this.joystickButton.style.transform = 'translate(-50%, -50%)'
   }
 
-  private onJoystickPointerUp = () => {
+  private onJoystickTouchEnd = () => {
     this.joystickButton.style.left = '50%'
     this.joystickButton.style.top = '50%'
     this.joystickButton.style.transform = 'translate(-50%, -50%)'
     this.emitDirection(null)
   }
 
-  private onActionButtonPointerDown = () => {
+  private onActionButtonTouchStart = () => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-down.png")'
     const input = this.target.getComponent(Input)
     input.onDown.emit('action')
   }
 
-  private onActionButtonPointerUp = () => {
+  private onActionButtonTouchEnd = () => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
     const input = this.target.getComponent(Input)
     input.onUp.emit('action')
   }
 
-  private onActionButtonPointerOut = () => {
+  private onActionButtonTouchCancel = () => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
   }
 
@@ -160,12 +159,12 @@ export class MobileInput extends Component {
   }
 
   override destroy() {
-    this.joystickButton.removeEventListener('pointerdown', this.onJoystickPointerDown)
-    this.joystickButton.removeEventListener('pointermove', this.onJoystickPointerMove)
-    this.joystickButton.removeEventListener('pointerup', this.onJoystickPointerUp)
-    this.actionButton.removeEventListener('pointerdown', this.onActionButtonPointerDown)
-    this.actionButton.removeEventListener('pointerup', this.onActionButtonPointerUp)
-    this.actionButton.removeEventListener('pointerout', this.onActionButtonPointerOut)
+    this.joystickButton.removeEventListener('touchstart', this.onJoystickTouchStart)
+    this.joystickButton.removeEventListener('touchmove', this.onJoystickTouchMove)
+    this.joystickButton.removeEventListener('touchend', this.onJoystickTouchEnd)
+    this.actionButton.removeEventListener('touchstart', this.onActionButtonTouchStart)
+    this.actionButton.removeEventListener('touchend', this.onActionButtonTouchEnd)
+    this.actionButton.removeEventListener('touchcancel', this.onActionButtonTouchCancel)
 
     this.joystickContainer.remove()
     this.actionButton.remove()
