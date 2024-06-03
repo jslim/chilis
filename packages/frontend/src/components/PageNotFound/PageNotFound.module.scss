@@ -3,9 +3,19 @@
 .root {
   position: relative;
   width: 100%;
+  height: 100%;
+  background-color: $black;
+  background-image: url('~@/assets/images/not-found.png');
 
   .title {
     @include typography-h1;
-    padding-top: px(80);
+    visibility: hidden;
   }
+}
+
+.logoContainer {
+  @include box(px(32), px(20));
+  position: absolute;
+  top: px(20);
+  left: px(20);
 }
