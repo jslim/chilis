@@ -11,17 +11,17 @@
   position: relative;
   @include box(px(34));
 
-  @include media-desktop {
+  @include media-tablet-large {
     @include box(px(68));
   }
 }
 
 .note {
   position: absolute;
-  top: px(-45);
+  top: px(-22);
   width: px(16);
 
-  @include media-desktop {
+  @include media-tablet-large {
     top: px(-50);
     width: px(28);
   }

@@ -14,13 +14,22 @@
 
 .container {
   @include flex-center;
-  flex-direction: column;
-  gap: px(65);
   position: relative;
-  padding-top: px(180);
+  flex-direction: column;
+  gap: px(40);
+  padding-top: px(30);
+
+  @include media-tablet-large {
+    gap: px(65);
+    padding-top: px(180);
+  }
 
   .imageContainer {
-    width: px(440);
+    width: px(192);
+
+    @include media-tablet-large {
+      width: px(440);
+    }
 
     .image {
       @include box(100%);

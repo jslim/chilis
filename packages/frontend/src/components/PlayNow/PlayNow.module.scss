@@ -1,6 +1,10 @@
 @import 'shared';
 
 .root {
-  @include box(px(420), px(34));
+  @include box(px(255), px(20));
   display: block;
+
+  @include media-tablet-large {
+    @include box(px(420), px(34));
+  }
 }

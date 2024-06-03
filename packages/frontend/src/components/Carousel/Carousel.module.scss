@@ -37,10 +37,15 @@
   flex-direction: column;
 
   .text {
-    @include font-size(56, 47);
+    @include font-size(28, 23);
     @include font-family(PixGamer, 400);
-    margin-top: px(45);
+    margin-top: px(22);
     color: $sour-cream;
+
+    @include media-tablet-large {
+      @include font-size(56, 47);
+      margin-top: px(45);
+    }
   }
 }
 
