@@ -32,3 +32,6 @@ export const FLOOR_OFFSET = 13
 export const POINTS_PER_GROUP_COMPLETE = [100, 200, 400, 800, 800, 800]
 export const POINTS_PER_CPUS_HIT = [0, 500, 1000, 2000, 4000, 8000, 16_000]
 export const POINTS_PER_BURGER_BOUNCE = [50, 100, 150, 200, 250, 300, 350]
+
+// converts level number to 1-6 range
+export const getWrappedLevelNo = (levelNo: number) => ((levelNo - 1) % 6) + 1

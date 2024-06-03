@@ -10,18 +10,26 @@
   @include flex-center;
   position: relative;
   flex-direction: column;
-  gap: px(50);
-  padding-top: px(110);
+  gap: px(25);
+  padding-top: px(30);
+
+  @include media-tablet-large {
+    gap: px(50);
+    padding-top: px(110);
+  }
 
   .title {
     @include typography-h1;
     position: absolute;
-
     visibility: hidden;
   }
 
   .imageContainer {
-    width: px(280);
+    width: px(160);
+
+    @include media-tablet-large {
+      width: px(280);
+    }
 
     .image {
       @include box(100%);

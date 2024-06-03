@@ -68,10 +68,10 @@ export class MrBaggie extends Cpu {
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk': {
-        if (!mover.isClimbing() && this.attackCoolDown.update(dt)) {
+        /*if (!mover.isClimbing() && this.attackCoolDown.update(dt)) {
           this.state.value = 'prepare_attack'
           this.attackCoolDown.reset()
-        }
+        }*/
       }
     }
   }

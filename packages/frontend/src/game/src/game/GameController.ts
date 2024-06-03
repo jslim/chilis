@@ -75,11 +75,7 @@ export class GameController {
     // debug key to go back to intro scene
     if (DEBUG_KEYS)
       window.addEventListener('keydown', ({ key }) => {
-        if (key === 'Escape') {
-          if (confirm('Exit game?')) {
-            sceneManager.intro()
-          }
-        } else if (key.toLowerCase() === 'e') {
+        if (key.toLowerCase() === 'e') {
           if (confirm('Next level?')) {
             sceneManager.levelComplete(sceneManager.root.getComponent(GameState).getValues())
           }

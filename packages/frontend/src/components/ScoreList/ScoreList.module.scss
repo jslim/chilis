@@ -3,7 +3,11 @@
 .root {
   @include flex-center-vert;
   flex-direction: column;
-  gap: px(40);
+  gap: px(15);
+
+  @include media-tablet-large {
+    gap: px(40);
+  }
 }
 
 .list {
@@ -15,7 +19,7 @@
 .item {
   @include flex-center-vert;
   justify-content: space-between;
-  gap: px(15);
+  gap: px(10);
   margin-right: px(25);
 
   &.current {
@@ -24,15 +28,23 @@
   }
 
   .player {
-    @include font-size(32, 40);
+    @include font-size(14);
     overflow: hidden;
     color: $white;
+
+    @include media-tablet-large {
+      @include font-size(32, 40);
+    }
   }
 
   .score {
-    @include font-size(64, 40);
+    @include font-size(28, 24);
     @include font-family(Gamer, 500);
     color: $sunrise;
+
+    @include media-tablet-large {
+      @include font-size(64, 40);
+    }
   }
 }
 
@@ -41,18 +53,27 @@
   flex-direction: column;
 
   .rankTitle {
-    @include font-size(32, 39);
+    @include font-size(16, 19);
     @include font-family(PixeloidSans, 700);
-    margin-bottom: px(22);
+    margin-bottom: px(5);
     color: $sunrise;
+
+    @include media-tablet-large {
+      @include font-size(32, 39);
+      margin-bottom: px(22);
+    }
   }
 }
 
 .leaderboardLink {
-  @include font-size(32);
+  @include font-size(14, 20);
   @include font-family(b, 400);
   width: fit-content;
   color: $cilantro;
   text-decoration: underline;
   text-decoration-style: dotted;
+
+  @include media-tablet-large {
+    @include font-size(32);
+  }
 }
