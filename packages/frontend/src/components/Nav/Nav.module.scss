@@ -62,17 +62,25 @@
       }
 
       > li {
-        padding: 0 px(10);
+        padding: 0 px(3);
+
+        @include media-desktop {
+          padding: 0 px(10);
+        }
 
         .link {
           &.hasBorder {
             @include font-family(b, 400);
             @include typography-cta;
             position: relative;
-            padding: px(5);
             color: $sunrise;
             border: px(10) solid transparent;
             border-image: url('~@/assets/images/button-borders.png') 10 10 stretch;
+            white-space: nowrap;
+
+            @include media-desktop {
+              padding: px(5);
+            }
 
             &:hover,
             &.isActive {
