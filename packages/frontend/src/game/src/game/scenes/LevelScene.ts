@@ -218,7 +218,7 @@ export default class LevelScene extends Scene {
                   break
                 }
                 case 3: {
-                  cpu = new MrBaggie('baggie')
+                  cpu = new MrBaggie('mrbaggie')
 
                   break
                 }
