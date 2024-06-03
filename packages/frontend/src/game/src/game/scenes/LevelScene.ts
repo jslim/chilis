@@ -214,22 +214,18 @@ export default class LevelScene extends Scene {
                 }
                 case 2: {
                   cpu = new DinoCool('dino')
-
                   break
                 }
                 case 3: {
                   cpu = new MrBaggie('mrbaggie')
-
                   break
                 }
                 case 4: {
                   cpu = new Matey('matey')
-
                   break
                 }
                 case 5: {
                   cpu = new Zapp('zapp')
-
                   break
                 }
                 case 6: {
