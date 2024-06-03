@@ -49,6 +49,7 @@ import { Zapp } from '@/game/src/game/components/cpu/Zapp'
 import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
 import { PointerComponent } from '@/game/src/game/button/PointerComponent'
 import { OnStart } from '@/game/src/game/components/OnStart'
+import { isMobileOrTablet } from '@/game/src/game/utils/is-mobile-or-tablet'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -321,7 +322,9 @@ export default class LevelScene extends Scene {
       }
     })
 
-    this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
+    if (isMobileOrTablet()) {
+      this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
+    }
   }
 
   override onUpdate(dt: number): void {
