@@ -15,7 +15,7 @@
   @include flex-center;
   height: px(40);
 
-  @include media-desktop {
+  @include media-tablet-large {
     height: px(300);
   }
 
