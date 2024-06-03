@@ -12,6 +12,9 @@ import { device } from '@/utils/detect'
 
 import { useRefs } from '@/hooks/use-refs'
 
+import SvgRotate from '@/svgs/Rotate.svg'
+import SvgChilis from '@/svgs/Chilis.svg'
+
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -38,7 +41,12 @@ export const View: FC<ViewProps> = ({ className, content }) => {
 
   return enable ? (
     <div className={classNames('ScreenRotate', css.root, className)} ref={refs.root}>
-      <p className={css.title} {...copy.html(content.title, {}, 10)} />
+      <div className={css.logoContainer}>
+        <SvgChilis />
+      </div>
+      <div className={css.iconContainer}>
+        <SvgRotate />
+      </div>
       <p className={css.description} {...copy.html(content.description, {}, 10)} />
     </div>
   ) : null
