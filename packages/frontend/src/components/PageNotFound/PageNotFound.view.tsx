@@ -19,7 +19,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ content, onReady }) => {
+export const View: FC<ViewProps> = ({ content }) => {
   const refs = useRefs<ViewRefs>()
 
   return (
