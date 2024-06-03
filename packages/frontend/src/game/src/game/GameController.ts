@@ -12,6 +12,8 @@ import { TestScene } from './scenes/TestScene'
 export class GameController {
   public onLevelComplete = new Signal<GameStateValues>()
   public onGameOver = new Signal<GameStateValues>()
+  public onGameAction = new Signal<GameAction>()
+  public onShowGameBorder = new Signal<boolean>()
 
   public readonly app: Application = new Application()
   private sceneManager!: SceneManager
@@ -73,11 +75,7 @@ export class GameController {
     // debug key to go back to intro scene
     if (DEBUG_KEYS)
       window.addEventListener('keydown', ({ key }) => {
-        if (key === 'Escape') {
-          if (confirm('Exit game?')) {
-            sceneManager.intro()
-          }
-        } else if (key.toLowerCase() === 'e') {
+        if (key.toLowerCase() === 'e') {
           if (confirm('Next level?')) {
             sceneManager.levelComplete(sceneManager.root.getComponent(GameState).getValues())
           }
@@ -108,6 +106,10 @@ export class GameController {
           })
         }
       })
+  }
+
+  public setHighScore(value: number) {
+    this.sceneManager.root.getComponent(GameState).highScore.value = value
   }
 
   public async showLevel(levelNo: number) {

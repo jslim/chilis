@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17">
+    <defs>
+        <style>
+            .cls-1 {
+                fill: #7a7a7a;
+            }
+
+            .cls-1,
+            .cls-2 {
+                stroke-width: 0px;
+            }
+
+            .cls-2 {
+                fill: #f8ac01;
+            }
+        </style>
+    </defs>
+    <rect class="cls-1" y="6" width="1" height="5" />
+    <rect class="cls-1" x="2" y="3" width="1" height="1" />
+    <rect class="cls-1" x="3" y="2" width="1" height="1" />
+    <rect class="cls-1" x="4" y="1" width="2" height="1" />
+    <rect class="cls-1" x="6" width="5" height="1" />
+    <rect class="cls-1" x="1" y="4" width="1" height="2" />
+    <rect class="cls-1" x="6" y="16" width="5" height="1" />
+    <rect class="cls-1" x="3" y="14" width="1" height="1" />
+    <rect class="cls-1" x="2" y="13" width="1" height="1" />
+    <rect class="cls-1" x="1" y="11" width="1" height="2" />
+    <rect class="cls-1" x="4" y="15" width="2" height="1" />
+    <rect class="cls-1" x="16" y="6" width="1" height="5" />
+    <rect class="cls-1" x="14" y="13" width="1" height="1" />
+    <rect class="cls-1" x="13" y="14" width="1" height="1" />
+    <rect class="cls-1" x="11" y="15" width="2" height="1" />
+    <rect class="cls-1" x="15" y="11" width="1" height="2" />
+    <rect class="cls-1" x="13" y="2" width="1" height="1" />
+    <rect class="cls-1" x="14" y="3" width="1" height="1" />
+    <rect class="cls-1" x="15" y="4" width="1" height="2" />
+    <rect class="cls-1" x="11" y="1" width="2" height="1" />
+    <polygon class="cls-2" points="6 10 5 10 5 11 5 12 6 12 7 12 7 11 6 11 6 10" />
+    <polygon class="cls-2" points="11 11 10 11 10 12 11 12 12 12 12 11 12 10 11 10 11 11" />
+    <polygon class="cls-2" points="11 5 10 5 10 6 11 6 11 7 12 7 12 6 12 5 11 5" />
+    <polygon class="cls-2" points="6 6 7 6 7 5 6 5 5 5 5 6 5 7 6 7 6 6" />
+    <path class="cls-2" d="m10,7h-3v3h3v-3Zm-2,2v-1h1v1h-1Z" />
+</svg>

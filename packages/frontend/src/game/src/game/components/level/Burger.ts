@@ -6,7 +6,7 @@ import type { BurgerGroup } from './BurgerGroup'
 import { Rectangle, Sprite, Texture } from 'pixi.js'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
-import { DRAW_STATE_DEBUG, FLOOR_OFFSET, SCORE_PER_BURGER_BOUNCE, SCORE_PER_CPUS_HIT } from '../../game.config'
+import { DRAW_STATE_DEBUG, FLOOR_OFFSET, POINTS_PER_BURGER_BOUNCE, POINTS_PER_CPUS_HIT } from '../../game.config'
 import { TileId } from '../../tiled/TileId'
 import { Cpu } from '../cpu/Cpu'
 import { HitBox } from '../HitBox'
@@ -148,7 +148,7 @@ export class Burger extends Component {
       otherBurgerComp.state.value = 'bounce'
     })
     this.subscribe(this.onHitPlate, (_plate) => {
-      this.addScore()
+      this.addToScore()
       this.entity.getComponent(HitBox).hasIntersection = false
       this.state.value = 'complete'
     })
@@ -156,7 +156,7 @@ export class Burger extends Component {
       for (let i = 0; i < 10; i++) {
         this.stepUpdateSlicedParts()
       }
-      this.addScore()
+      this.addToScore()
       this.state.value = 'idle'
     })
   }
@@ -337,16 +337,16 @@ export class Burger extends Component {
     return platesOnSameRow[0]
   }
 
-  private addScore() {
-    let score = 0
+  private addToScore() {
+    let points = 0
 
-    score += SCORE_PER_BURGER_BOUNCE[this.fallStats.totalBurgersHit]
+    points += POINTS_PER_BURGER_BOUNCE[this.fallStats.totalBurgersHit]
     this.fallStats.totalBurgersHit = 0
 
-    score += SCORE_PER_CPUS_HIT[this.fallStats.totalCpusHit]
+    points += POINTS_PER_CPUS_HIT[this.fallStats.totalCpusHit]
     this.fallStats.totalCpusHit = 0
 
-    this.level.addScore(this.entity.position, score)
+    //this.level.addScore(this.entity.position, {action:})
   }
 }
 

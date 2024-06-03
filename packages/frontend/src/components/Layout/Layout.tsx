@@ -22,15 +22,14 @@ import { fontVariables } from '@/utils/fonts'
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useRefs } from '@/hooks/use-refs'
 
+import { BaseModal } from '@/components/BaseModal'
 import { Head } from '@/components/Head'
+import { LogModal } from '@/components/LogModal'
 import { Nav } from '@/components/Nav'
 import { PlayNow } from '@/components/PlayNow'
-// import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
-import { BaseModal } from '@/components/BaseModal'
-import { LogModal } from '@/components/LogModal'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 // const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -56,6 +55,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
   //  const [introComplete, setIntroComplete] = useState(false)
 
   // const handleIntroComplete = useCallback(() => {
@@ -187,16 +187,54 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [refs, Component, pageProps, flags.pageTransitions])
 
+  // Fullscreen
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        localState().screen.setIsfullscreen(false)
+      }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange)
+    }
+  }, [])
+
+  const handleFullscreen = () => {
+    if (document.fullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+        localState().screen.setIsfullscreen(false)
+      }
+    } else {
+      const element = document.documentElement
+      if (element.requestFullscreen) {
+        element.requestFullscreen()
+        localState().screen.setIsfullscreen(true)
+      }
+    }
+  }
+
   return (
     <div className={classNames('Layout', css.root, fontVariables)}>
       <Head {...pageProps.content.head} />
 
-      <TopNav text={pageProps.content.common.topNav.logIn} onClick={() => setIsModalOpen(true)} />
+      <TopNav
+        text={localState().user.nickname ?? pageProps.content.common.topNav.logIn}
+        onClick={() => setIsModalOpen(true)}
+        isDisabled={!!localState().user.nickname} // TODO: add a validation here to verify the token, so on ref the user stays logged in
+      />
 
       {refs.pathname.current !== '/game/' && (
         <>
           <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
-          <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+          <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} onFullscreen={handleFullscreen} />
         </>
       )}
 

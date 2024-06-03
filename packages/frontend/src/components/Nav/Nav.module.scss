@@ -7,10 +7,10 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 0 px(20);
+  padding: px(40) px(20);
   height: $navbar-height-mobile;
 
-  @include media-tablet {
+  @include media-tablet-large {
     height: $navbar-height-desktop;
   }
 
@@ -32,45 +32,82 @@
 
   > .wrapper {
     display: flex;
-    // max-width: px(1440);
     margin: 0 auto;
     width: 100%;
 
-    > ul {
+    .fullscreenWrapper {
+      margin-right: px(8);
+      @include box(px(34));
+
+      @include media-tablet-large {
+        @include box(px(60));
+        margin-right: px(20);
+      }
+    }
+
+    ul {
       @include flex-center-vert;
-      flex-grow: 1;
 
       &.routes {
-        justify-content: flex-start;
+        @include transform-center(absolute);
 
         .mainLogo {
           width: auto;
-          height: px(35);
+          height: px(20);
+
+          @include media-tablet-large {
+            height: px(32);
+          }
         }
       }
 
-      &.ctas {
-        justify-content: flex-start;
-        @include font-size(22);
-        color: $gray;
-      }
-
       > li {
-        padding: 0 px(10);
+        padding: 0 px(5);
+
+        @include media-tablet-large {
+          padding: 0 px(10);
+        }
 
         .link {
           &.hasBorder {
             @include font-family(b, 400);
-            @include font-size(22);
+            @include typography-cta;
+            position: relative;
             color: $sunrise;
+            border: px(10) solid transparent;
+            border-image: url('~@/assets/images/button-borders.png') 10 10 stretch;
+            white-space: nowrap;
+
+            @include media-tablet-large {
+              padding: px(5);
+            }
 
             &:hover,
             &.isActive {
               color: $white;
             }
+
+            svg {
+              @include box(100%);
+              @include transform-center(absolute);
+            }
           }
         }
       }
+
+      &.ctas {
+        @include typography-cta;
+        justify-content: flex-start;
+        color: $gray;
+
+        > .li {
+          padding: px(5) 0;
+        }
+      }
+    }
+
+    .gap {
+      flex: 1;
     }
   }
 }

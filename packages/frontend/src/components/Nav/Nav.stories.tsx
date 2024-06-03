@@ -2,6 +2,7 @@ import type { StoryFn } from '@storybook/react'
 import type { ViewHandle, ViewProps } from './Nav.view'
 
 import { useEffect, useRef } from 'react'
+import { action } from '@storybook/addon-actions'
 
 import { CmsService } from '@/services/cms'
 
@@ -18,7 +19,10 @@ export const Default: StoryFn<ViewProps> = (args) => {
 }
 
 Default.args = {
-  content: CmsService.getPageContent('home').common.nav
+  content: CmsService.getPageContent('home').common.nav,
+  onFullscreen: () => {
+    action('onFullscreen')
+  }
 }
 
 Default.argTypes = {}

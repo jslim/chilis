@@ -8,12 +8,13 @@ import { gsap } from 'gsap'
 
 import css from './PageContest.module.scss'
 
+import { getImageUrl } from '@/utils/basic-functions'
 import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
+
 import { BackgroundVideo } from '@/components/BackgroundVideo'
 import { BaseImage } from '@/components/BaseImage'
-import { getImageUrl } from '@/utils/basic-functions'
 
 export interface ViewProps extends ControllerProps {}
 

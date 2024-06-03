@@ -19,13 +19,12 @@ import { setBodyClasses } from '@/utils/set-body-classes'
 
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 
-import { initGsap, initRive } from '@/motion/core/init'
+import { initGsap } from '@/motion/core/init'
 
 import { Layout } from '@/components/Layout/Layout'
 
 require('focus-visible')
 
-initRive()
 initGsap()
 
 // This default export is required in a new `pages/_app.js` file.

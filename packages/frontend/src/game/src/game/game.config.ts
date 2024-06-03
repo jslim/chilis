@@ -1,6 +1,12 @@
 /* GENERAL */
 
+// default game speed
 export const FRAME_RATE = 22
+// game speed for level 7-12
+export const FRAME_RATE_HARD = 28
+// game speed for level 13-18
+export const FRAME_RATE_HARDEST = 34
+
 export const GAME_WIDTH = 240
 export const GAME_HEIGHT = 240
 
@@ -23,6 +29,9 @@ export const FLOOR_OFFSET = 13
 /* SCORING */
 
 // resets when player gets hit
-export const SCORE_PER_GROUP_COMPLETE = [100, 200, 400, 800, 800, 800]
-export const SCORE_PER_CPUS_HIT = [0, 500, 1000, 2000, 4000, 8000, 16_000]
-export const SCORE_PER_BURGER_BOUNCE = [50, 100, 150, 200, 250, 300, 350]
+export const POINTS_PER_GROUP_COMPLETE = [100, 200, 400, 800, 800, 800]
+export const POINTS_PER_CPUS_HIT = [0, 500, 1000, 2000, 4000, 8000, 16_000]
+export const POINTS_PER_BURGER_BOUNCE = [50, 100, 150, 200, 250, 300, 350]
+
+// converts level number to 1-6 range
+export const getWrappedLevelNo = (levelNo: number) => ((levelNo - 1) % 6) + 1

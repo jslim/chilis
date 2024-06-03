@@ -28,7 +28,7 @@ export function ApiStack({ stack, app }: StackContext) {
   const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
 
   if (domainStage !== undefined && isValidDomain(String(process.env.BASE_DOMAIN))) {
-    customDomain = (domainStage === "" ? "api" : `api.${domainStage}`) + `.${process.env.BASE_DOMAIN}`;
+    customDomain = (isProd || domainStage === "" ? `api` : `api.${domainStage}`) + `.${process.env.BASE_DOMAIN}`;
   }
 
   const api = new ApiGatewayV1Api(stack, "api", {
