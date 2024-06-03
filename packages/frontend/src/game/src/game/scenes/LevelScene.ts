@@ -40,6 +40,7 @@ import {
   FRAME_RATE,
   FRAME_RATE_HARD,
   FRAME_RATE_HARDEST,
+  getWrappedLevelNo,
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { TileId } from '../tiled/TileId'
@@ -129,7 +130,7 @@ export default class LevelScene extends Scene {
 
   async init(levelNo: number) {
     this.levelNo = levelNo
-    const { map, spriteSheet, spriteSheetLarge } = await this.preload(((levelNo - 1) % 6) + 1)
+    const { map, spriteSheet, spriteSheetLarge } = await this.preload(getWrappedLevelNo(levelNo))
 
     // store level number
     this.gameState.setLevel(levelNo)
@@ -334,7 +335,7 @@ export default class LevelScene extends Scene {
     screenEntity.position.set(120, 120)
 
     const levelNo = this.gameState.level.value
-    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${((levelNo - 1) % 6) + 1}`))
+    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${getWrappedLevelNo(levelNo)}`))
     labelEntity.position.set(0, -16)
 
     let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(

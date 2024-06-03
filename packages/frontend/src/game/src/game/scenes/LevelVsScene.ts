@@ -1,5 +1,6 @@
 import { Scene } from './Scene'
 import type SceneManager from '@/game/src/game/scenes/SceneManager'
+import { getWrappedLevelNo } from '@/game/src/game/game.config'
 
 export class LevelVsScene extends Scene {
   constructor(
@@ -16,8 +17,7 @@ export class LevelVsScene extends Scene {
     const gotoLevel = () => this.sceneManager.showLevel(this.levelNo)
 
     ;(async () => {
-      let levelNo = 1 //this.levelNo
-      await this.playVideo(`vs_level_0${levelNo}`, () => gotoLevel())
+      await this.playVideo(`vs_level_0${getWrappedLevelNo(this.levelNo)}`, () => gotoLevel())
     })()
   }
 }
