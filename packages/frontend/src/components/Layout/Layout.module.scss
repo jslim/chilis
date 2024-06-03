@@ -20,7 +20,7 @@
   }
 
   .soundSwitch {
-    @include z-index(pages);
+    @include z-index(sound);
     position: absolute;
     right: px(20);
     bottom: px(20);

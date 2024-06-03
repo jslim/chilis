@@ -36,27 +36,29 @@
     width: 100%;
 
     .fullscreenWrapper {
-      @include box(px(60));
-      margin-right: px(20);
+      margin-right: px(15);
+      @include box(px(34));
+
+      @include media-desktop {
+        @include box(px(60));
+        margin-right: px(20);
+      }
     }
 
-    > ul {
+    ul {
       @include flex-center-vert;
-      flex-grow: 1;
 
       &.routes {
-        justify-content: flex-start;
+        @include transform-center(absolute);
 
         .mainLogo {
           width: auto;
-          height: px(35);
-        }
-      }
+          height: px(20);
 
-      &.ctas {
-        justify-content: flex-start;
-        @include font-size(22);
-        color: $gray;
+          @include media-desktop {
+            height: px(32);
+          }
+        }
       }
 
       > li {
@@ -65,7 +67,7 @@
         .link {
           &.hasBorder {
             @include font-family(b, 400);
-            @include font-size(22);
+            @include typography-cta;
             position: relative;
             padding: px(5);
             color: $sunrise;
@@ -84,6 +86,20 @@
           }
         }
       }
+
+      &.ctas {
+        @include typography-cta;
+        justify-content: flex-start;
+        color: $gray;
+
+        > .li {
+          padding: px(5) 0;
+        }
+      }
+    }
+
+    .gap {
+      flex: 1;
     }
   }
 }

@@ -7,6 +7,8 @@ import gsap from 'gsap'
 
 import css from './SoundSwitch.module.scss'
 
+import { detect } from '@/utils/detect'
+
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
@@ -28,6 +30,7 @@ export type ViewRefs = {
 export const View: FC<ViewProps> = ({ className, audioSrc }) => {
   const refs = useRefs<ViewRefs>()
   const [switchOn, setSwitchOn] = useState(false)
+  const isDesktop = detect.device.desktop
 
   const handleClick = useCallback(() => {
     setSwitchOn((prev) => !prev)
@@ -38,7 +41,11 @@ export const View: FC<ViewProps> = ({ className, audioSrc }) => {
     const note = refs.note.current
 
     refs.cdAnimation.current = gsap.to(cd, { duration: 0.5, rotate: 360, repeat: -1, ease: 'linear', paused: true })
-    refs.noteAnimation.current = gsap.fromTo(note, { y: 55 }, { y: 0, duration: 0.5, ease: 'linear', paused: true })
+    refs.noteAnimation.current = gsap.fromTo(
+      note,
+      { y: isDesktop ? 55 : 45 },
+      { y: 0, duration: 0.5, ease: 'linear', paused: true }
+    )
 
     // Initialize audio element
     if (!refs.audio.current && audioSrc) {
@@ -49,7 +56,7 @@ export const View: FC<ViewProps> = ({ className, audioSrc }) => {
       refs.cdAnimation.current?.kill()
       refs.noteAnimation.current?.kill()
     }
-  }, [audioSrc, refs.audio, refs.cd, refs.cdAnimation, refs.note, refs.noteAnimation])
+  }, [audioSrc, isDesktop, refs.audio, refs.cd, refs.cdAnimation, refs.note, refs.noteAnimation])
 
   useEffect(() => {
     const audio = refs.audio.current
