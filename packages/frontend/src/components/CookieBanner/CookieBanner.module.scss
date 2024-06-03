@@ -76,7 +76,7 @@ $cookie-banner-padding: px(20);
     }
   }
 
-  @include media-tablet {
+  @include media-tablet-large {
     button {
       margin-bottom: 0;
     }

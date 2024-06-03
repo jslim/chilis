@@ -14,7 +14,7 @@ export class DinoCool extends Cpu {
     mover.speed.y = 2
 
     mover.modeCycle = ['hunt-player-slow']
-    mover.directionAccuracy = 0.25
+    mover.directionAccuracy = 0.5
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {

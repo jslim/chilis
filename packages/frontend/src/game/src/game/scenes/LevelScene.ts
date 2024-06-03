@@ -32,7 +32,7 @@ import { createDelay } from '../core/Delay'
 import { Entity } from '../core/Entity'
 import { ScreenShake } from '../core/ScreenShake'
 import { Signal } from '../core/Signal'
-import { get8pxNumberFont } from '../display/SimpleText'
+import { get8pxNumberFont, getPixGamerNumberFont } from '../display/SimpleText'
 import { FlumpLibrary } from '../flump/FlumpLibrary'
 import {
   DRAW_DEBUG_GRID,
@@ -40,6 +40,7 @@ import {
   FRAME_RATE,
   FRAME_RATE_HARD,
   FRAME_RATE_HARDEST,
+  getWrappedLevelNo,
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { TileId } from '../tiled/TileId'
@@ -48,6 +49,7 @@ import { Zapp } from '@/game/src/game/components/cpu/Zapp'
 import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
 import { PointerComponent } from '@/game/src/game/button/PointerComponent'
 import { OnStart } from '@/game/src/game/components/OnStart'
+import { isMobileOrTablet } from '@/game/src/game/utils/is-mobile-or-tablet'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -76,6 +78,7 @@ export default class LevelScene extends Scene {
     front: new Entity(),
     scoreUI: new Entity()
   }
+  private mobileInput?: MobileInput
 
   override onStart() {
     super.onStart()
@@ -129,7 +132,7 @@ export default class LevelScene extends Scene {
 
   async init(levelNo: number) {
     this.levelNo = levelNo
-    const { map, spriteSheet, spriteSheetLarge } = await this.preload(((levelNo - 1) % 6) + 1)
+    const { map, spriteSheet, spriteSheetLarge } = await this.preload(getWrappedLevelNo(levelNo))
 
     // store level number
     this.gameState.setLevel(levelNo)
@@ -141,6 +144,7 @@ export default class LevelScene extends Scene {
 
     this.walkGrid = connectionsToGrid(map, path)
     let cpuId = 0
+    let traineeId = 1
     for (const layer of map.layers) {
       // only process tile layers
       if (layer.type !== 'tilelayer') continue
@@ -200,7 +204,7 @@ export default class LevelScene extends Scene {
             let cpu: Cpu | undefined
             let offsetX = 0 // visual offset animation
             if (id === TileId.Cpu) {
-              cpu = new Cpu('trainee01')
+              cpu = new Cpu('trainee0' + traineeId++)
             } else if (id === TileId.BossCpu) {
               offsetX = 4
               switch (levelNo) {
@@ -210,22 +214,18 @@ export default class LevelScene extends Scene {
                 }
                 case 2: {
                   cpu = new DinoCool('dino')
-
                   break
                 }
                 case 3: {
-                  cpu = new MrBaggie('baggie')
-
+                  cpu = new MrBaggie('mrbaggie')
                   break
                 }
                 case 4: {
                   cpu = new Matey('matey')
-
                   break
                 }
                 case 5: {
                   cpu = new Zapp('zapp')
-
                   break
                 }
                 case 6: {
@@ -245,6 +245,13 @@ export default class LevelScene extends Scene {
                 cpu
               )
               this.cpus.push(entity)
+
+              if (cpu.name.includes('trainee')) {
+                let mover = entity.getComponent(CpuMover)
+                if (traineeId == 1) mover.modeCycle = ['hunt-player', 'hunt-player-slow', 'hunt-burger', 'random']
+                else if (traineeId == 2) mover.modeCycle = ['random']
+                else if (traineeId == 3) mover.modeCycle = ['hunt-burger', 'random']
+              }
             }
           } else if (TileId.isBurger(id)) {
             const burgerHeight = burgerHeightByTileId[id] - burgerOverlap
@@ -319,7 +326,9 @@ export default class LevelScene extends Scene {
       }
     })
 
-    this.containers.front.addEntity(new Entity().addComponent(new MobileInput(this.player)))
+    if (isMobileOrTablet()) {
+      this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
+    }
   }
 
   override onUpdate(dt: number): void {
@@ -330,12 +339,17 @@ export default class LevelScene extends Scene {
   }
 
   showWinScreen() {
+    this.mobileInput?.destroy()
+
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_win').once())
     screenEntity.position.set(120, 120)
 
     const levelNo = this.gameState.level.value
-    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed_${((levelNo - 1) % 6) + 1}`))
+    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed`))
     labelEntity.position.set(0, -16)
+
+    let labelNoEntity = new Entity().addComponent(new SimpleTextDisplay(`${levelNo}`, 'left', getPixGamerNumberFont()))
+    labelNoEntity.position.set(labelEntity.x + labelEntity.width / 2, labelEntity.y + 5)
 
     let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
       new PointerComponent('pointerdown', () => {
@@ -347,6 +361,7 @@ export default class LevelScene extends Scene {
     screenEntity.addComponent(
       new OnStart(() => {
         screenEntity.addEntity(labelEntity)
+        screenEntity.addEntity(labelNoEntity)
       })
     )
     createDelay(this.mainContainer, 1, () => {
@@ -357,6 +372,8 @@ export default class LevelScene extends Scene {
   }
 
   showDefeatScreen() {
+    this.mobileInput?.destroy()
+
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat').once())
     screenEntity.position.set(120, 120)
 

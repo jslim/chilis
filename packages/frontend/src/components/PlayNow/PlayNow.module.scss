@@ -1,9 +1,10 @@
 @import 'shared';
 
 .root {
-  @include box(px(420), px(34));
-  // @include font-size(48, 10);
-  // @include font-family(Gamer, 500);
+  @include box(px(255), px(20));
   display: block;
-  //  color: $sunrise;
+
+  @include media-tablet-large {
+    @include box(px(420), px(34));
+  }
 }

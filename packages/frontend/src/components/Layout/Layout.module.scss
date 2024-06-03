@@ -15,12 +15,16 @@
     @include z-index(pages);
     position: absolute;
     left: 50%;
-    bottom: px(150);
+    bottom: px(80);
     transform: translateX(-50%);
+
+    @include media-tablet-large {
+      bottom: px(150);
+    }
   }
 
   .soundSwitch {
-    @include z-index(pages);
+    @include z-index(sound);
     position: absolute;
     right: px(20);
     bottom: px(20);

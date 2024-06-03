@@ -11,6 +11,22 @@
     span {
       @include box(px(14));
       display: inline-block;
+      background-color: transparent;
+      border: px(10) solid transparent;
+      border-image: url('~@/assets/images/dot-nav-circle.png') 10 10 stretch;
+      opacity: 1;
+    }
+  }
+
+  :global(.swiper-pagination-bullet-active) {
+    position: relative;
+
+    &::before {
+      @include position-0(absolute);
+      @include box(px(10));
+      @include transform-center;
+      content: '';
+      display: block;
       background-color: $cilantro;
     }
   }
@@ -21,10 +37,15 @@
   flex-direction: column;
 
   .text {
-    @include font-size(56, 47);
+    @include font-size(28, 23);
     @include font-family(PixGamer, 400);
-    margin-top: px(45);
+    margin-top: px(22);
     color: $sour-cream;
+
+    @include media-tablet-large {
+      @include font-size(56, 47);
+      margin-top: px(45);
+    }
   }
 }
 
