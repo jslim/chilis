@@ -63,7 +63,7 @@ export class CpuAnimator extends FlumpAnimator {
         }
 
         case 'paralyzed': {
-          this.setMovie(`${this.animationName}_paralyzed`).play()
+          this.setMovie(`${this.animationName}_paralyzed`).gotoAndPlay(0)
           break
         }
 

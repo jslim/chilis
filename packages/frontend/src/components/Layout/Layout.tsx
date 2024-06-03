@@ -27,7 +27,6 @@ import { Head } from '@/components/Head'
 import { LogModal } from '@/components/LogModal'
 import { Nav } from '@/components/Nav'
 import { PlayNow } from '@/components/PlayNow'
-// import { ScreenIntro } from '@/components/ScreenIntro'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
@@ -188,6 +187,40 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [refs, Component, pageProps, flags.pageTransitions])
 
+  // Fullscreen
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        localState().screen.setIsfullscreen(false)
+      }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange)
+    }
+  }, [])
+
+  const handleFullscreen = () => {
+    if (document.fullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+        localState().screen.setIsfullscreen(false)
+      }
+    } else {
+      const element = document.documentElement
+      if (element.requestFullscreen) {
+        element.requestFullscreen()
+        localState().screen.setIsfullscreen(true)
+      }
+    }
+  }
+
   return (
     <div className={classNames('Layout', css.root, fontVariables)}>
       <Head {...pageProps.content.head} />
@@ -201,7 +234,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       {refs.pathname.current !== '/game/' && (
         <>
           <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
-          <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} />
+          <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} onFullscreen={handleFullscreen} />
         </>
       )}
 

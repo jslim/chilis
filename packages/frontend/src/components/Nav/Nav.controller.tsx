@@ -10,6 +10,7 @@ export interface ControllerProps {
   className?: string
   handleRef?: ForwardedRef<ViewHandle>
   content: CommonContent['nav']
+  onFullscreen: () => void
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

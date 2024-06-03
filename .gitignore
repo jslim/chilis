@@ -16,3 +16,6 @@ node_modules
 
 # 
 *.lnk
+RECOVER_*.fla
+.idea/
+*.tiled-session

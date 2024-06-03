@@ -20,6 +20,15 @@ export function getGamerNumberFont(): SimpleTextConfig {
   }
 }
 
+export function getPixGamerNumberFont(): SimpleTextConfig {
+  return {
+    texture: Assets.get('pix_gamer_numbers'),
+    charWidth: 6,
+    characters: '1234567890!',
+    letterSpacing: 0
+  }
+}
+
 export function getSimpleFont(): SimpleTextConfig {
   return {
     texture: Assets.get('font'),

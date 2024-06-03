@@ -47,7 +47,7 @@ export function AuthStack({ stack, app }: StackContext) {
 
   const createAuthChallengeFn = new Function(stack, "create-auth-challenge-fn", {
     functionName: `${app.stage}-create-auth-challenge-fn`,
-    description: "Lambda function invoked after Define Auth Challenge",
+    description: "Lambda function invoked after Define Auth Challenge. This Lambda function is invoked to create a challenge to present to the user",
     handler: "packages/backend/handlers/user/auth/create-auth-challenge-fn.handler",
     permissions: [
       // eslint-disable-next-line
@@ -68,14 +68,14 @@ export function AuthStack({ stack, app }: StackContext) {
 
   const verifyAuthChallengeResponseFn = new Function(stack, "verify-auth-challenge-fn", {
     functionName: `${app.stage}-verify-auth-challenge-fn`,
-    description: "",
+    description: "Amazon Cognito invokes this trigger to verify if the response from the user for a custom Auth Challenge is valid or not.",
     handler: "packages/backend/handlers/user/auth/verify-auth-challenge-fn.handler",
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
   });
 
-  const userPool = new Cognito(stack, "PooledUsers", {
+  const auth = new Cognito(stack, "PooledUsers", {
     login: ["username"],
     triggers: {
       preSignUp: preSignUpFn,
@@ -89,7 +89,7 @@ export function AuthStack({ stack, app }: StackContext) {
         removalPolicy: !isProd ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
         signInAliases: { username: true },
         standardAttributes: {
-          nickname: {},
+          preferredUsername: {},
         },
         customAttributes: {
           badActor: new BooleanAttribute({}),
@@ -107,9 +107,9 @@ export function AuthStack({ stack, app }: StackContext) {
 
   // Exportar la información necesaria
   stack.addOutputs({
-    UserPoolId: userPool.userPoolId,
-    UserPoolClientId: userPool.userPoolClientId,
+    UserPoolId: auth.userPoolId,
+    UserPoolClientId: auth.userPoolClientId,
   });
 
-  return { userPool };
+  return { auth };
 }

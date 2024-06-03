@@ -1,5 +1,6 @@
 import { logger } from "@/libs/powertools";
 import { getSecret } from "@/utils/secrets";
+import { rotateToken } from "@/utils/secrets";
 
 async function fetchFromAPI(endpoint: string, body: any) {
   const { apiUrl, token } = await getSecret(process.env.BRINKER_ACCESS!);
@@ -18,6 +19,9 @@ async function fetchFromAPI(endpoint: string, body: any) {
   });
 
   if (!apiFetch.ok) {
+    // If the external API login fails, trigger a token rotation.
+    rotateToken(process.env.BRINKER_ACCESS as string);
+
     logger.error("API request failed", { status: apiFetch.status, statusText: apiFetch.statusText });
     throw new Error("API request failed");
   }

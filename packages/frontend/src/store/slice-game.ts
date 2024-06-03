@@ -16,6 +16,12 @@ export type GameSliceState = {
     setToken: (token: string) => void
     setNickname: (nickname: string) => void
   }
+  screen: {
+    // getters
+    isFullscreen: boolean
+    // setters
+    setIsfullscreen: (isFullscreen: boolean) => void
+  }
 }
 
 export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (set) => ({
@@ -37,6 +43,15 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
     setNickname: (nickname) => {
       set((state) => {
         state.user.nickname = nickname
+      })
+    }
+  },
+  screen: {
+    isFullscreen: false,
+
+    setIsfullscreen: (flag) => {
+      set((state) => {
+        state.screen.isFullscreen = flag
       })
     }
   }

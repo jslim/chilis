@@ -1,16 +1,8 @@
-import { RuntimeLoader } from '@rive-app/react-canvas'
 import { gsap } from 'gsap'
 import CustomEase from 'gsap/dist/CustomEase'
 import ScrollToPlugin from 'gsap/dist/ScrollToPlugin'
 
 import { customEases, favouriteEases } from '../eases/eases'
-
-export const riveWASMResource = require('@rive-app/canvas/rive.wasm')
-
-export function initRive() {
-  if (typeof window === 'undefined') return
-  RuntimeLoader.setWasmUrl(riveWASMResource)
-}
 
 export function initGsap() {
   if (typeof window === 'undefined') return

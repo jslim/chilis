@@ -11,16 +11,29 @@
   position: relative;
   flex-direction: column;
   gap: px(30);
-  padding-top: px(80);
+  padding-top: px(30);
+
+  @include media-tablet-large {
+    gap: px(60);
+    padding-top: px(80);
+  }
 
   .title {
-    @include typography-h1;
     @include font-family(PixeloidSans, 700);
+    @include font-size(23, 32, -0.04);
     color: $sunrise;
+
+    @include media-tablet-large {
+      @include font-size(42);
+    }
   }
 
   .imageContainer {
-    width: px(764);
+    width: px(380);
+
+    @include media-tablet-large {
+      width: px(764);
+    }
 
     .image {
       @include box(100%);
@@ -29,8 +42,13 @@
   }
 
   .description {
-    @include font-size(32, 40);
-    max-width: px(1104);
+    @include font-size(16, 20);
+    max-width: px(520);
     color: $white;
+
+    @include media-tablet-large {
+      @include font-size(32, 40);
+      max-width: px(1104);
+    }
   }
 }

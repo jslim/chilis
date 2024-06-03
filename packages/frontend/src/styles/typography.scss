@@ -116,13 +116,17 @@ $generic-fonts: system-ui, 'helvetica', 'arial', sans-serif;
 
 @mixin typography-h1 {
   @include font-family($font-work-sans, 600);
-  @include font-size(26, 30, -0.04);
+  @include font-size(16, 20, -0.04);
 
-  @include media-tablet {
-    @include font-size(32);
-  }
-
-  @include media-desktop {
+  @include media-tablet-large {
     @include font-size(42);
+  }
+}
+
+@mixin typography-cta {
+  @include font-size(16);
+
+  @include media-tablet-large {
+    @include font-size(22);
   }
 }
