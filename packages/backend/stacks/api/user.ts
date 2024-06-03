@@ -10,11 +10,12 @@ import postUserModel from "@/stacks/user/models/post-user";
 import { BRINKER_ACCESS } from "@/libs/config";
 import { SecretsStack } from "@/stacks/secrets";
 import { AuthStack, ApiStack } from "@/stacks";
+import patchUserModel from "@/stacks/user/models/patch-user";
 
 export function userApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
+  const { auth } = use(AuthStack);
   const { api, validator } = use(ApiStack);
-  const { userPool } = use(AuthStack);
   const { brinkerAccess } = use(SecretsStack);
   const brinkerAccessSecretName = `${app.stage}${BRINKER_ACCESS}`;
 
@@ -25,8 +26,8 @@ export function userApiStack({ stack, app }: StackContext) {
     description: "login access for user",
     handler: "packages/backend/handlers/user/post.handler",
     environment: {
-      USER_POOL_ID: userPool.userPoolId,
-      USER_CLIENT_ID: userPool.userPoolClientId,
+      USER_POOL_ID: auth.userPoolId,
+      USER_CLIENT_ID: auth.userPoolClientId,
       BRINKER_ACCESS: brinkerAccessSecretName,
     },
     permissions: [
@@ -35,12 +36,12 @@ export function userApiStack({ stack, app }: StackContext) {
       new PolicyStatement({
         actions: ["cognito-idp:AdminGetUser", "cognito-idp:AdminCreateUser"],
         effect: Effect.ALLOW,
-        resources: [userPool.userPoolArn],
+        resources: [auth.userPoolArn],
       }),
       // eslint-disable-next-line
       // @ts-ignore
       new PolicyStatement({
-        actions: ["secretsmanager:GetSecretValue"],
+        actions: ["secretsmanager:GetSecretValue", "secretsmanager:RotateSecret"],
         effect: Effect.ALLOW,
         resources: [brinkerAccess.secretArn],
       }),
@@ -54,6 +55,18 @@ export function userApiStack({ stack, app }: StackContext) {
     functionName: `${app.stage}-patch-user`,
     description: "Endpoint to create user nickname",
     handler: "packages/backend/handlers/user/patch.handler",
+    environment: {
+      USER_POOL_ID: auth.userPoolId,
+    },
+    permissions: [
+      // eslint-disable-next-line
+      // @ts-ignore
+      new PolicyStatement({
+        actions: ["cognito-idp:ListUsers"],
+        effect: Effect.ALLOW,
+        resources: [auth.userPoolArn],
+      }),
+    ],
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
@@ -77,7 +90,6 @@ export function userApiStack({ stack, app }: StackContext) {
     resource: userPath,
     method: HttpMethod.POST,
     handlerFn: postUserLogin,
-    //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
     model: api.cdk.restApi.addModel(postUserModel.modelName, postUserModel as ModelOptions),
     validator,
   });
@@ -86,7 +98,10 @@ export function userApiStack({ stack, app }: StackContext) {
     resource: userPath,
     method: HttpMethod.PATCH,
     handlerFn: patchUser,
-    //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
+    // eslint-disable-next-line
+    // @ts-ignore
+    authorizer: api.authorizersData.Authorizer,
+    model: api.cdk.restApi.addModel(patchUserModel.modelName, patchUserModel as ModelOptions),
     validator,
   });
 
@@ -94,7 +109,9 @@ export function userApiStack({ stack, app }: StackContext) {
     resource: userPath,
     method: HttpMethod.PUT,
     handlerFn: putUser,
-    //  authorizer: // TODO: Validate that an authenticated user is called to this endpoint
+    // eslint-disable-next-line
+    // @ts-ignore
+    authorizer: api.authorizersData.Authorizer,
     validator,
   });
 }
