@@ -13,7 +13,11 @@
 
 .logoContainer {
   @include flex-center;
-  height: px(300);
+  height: px(40);
+
+  @include media-desktop {
+    height: px(300);
+  }
 
   .logo {
     @include box(100%);

@@ -2,8 +2,5 @@
 
 .root {
   @include box(px(420), px(34));
-  // @include font-size(48, 10);
-  // @include font-family(Gamer, 500);
   display: block;
-  //  color: $sunrise;
 }

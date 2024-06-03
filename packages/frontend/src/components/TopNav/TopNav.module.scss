@@ -20,7 +20,6 @@
 .wrapper {
   display: flex;
   justify-content: space-between;
-  // max-width: px(1440);
   margin: 0 auto;
   width: 100%;
 
@@ -30,12 +29,16 @@
 
   .button {
     @include flex-center-vert;
-    @include font-size(24);
+    @include typography-cta;
     gap: px(15);
     color: $gray;
 
     .iconContainer {
-      @include box(px(51));
+      @include box(px(34));
+
+      @include media-desktop {
+        @include box(px(51));
+      }
     }
   }
 }

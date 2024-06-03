@@ -79,7 +79,7 @@ export const View: FC<ViewProps> = ({ className, content, handleRef, onFullscree
             </li>
           ))}
         </ul>
-        <div />
+        <div className={css.gap} />
       </div>
 
       <section aria-hidden="true" id="start-of-content"></section>
