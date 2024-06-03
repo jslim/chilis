@@ -7,9 +7,24 @@
   flex-direction: column;
   color: $white;
   background-color: $black;
+  background-image: url('~@/assets/images/noise.png');
+}
 
-  .title {
-    @include typography-h1;
-    margin: 0 0 px(20);
-  }
+.logoContainer {
+  @include box(px(32), px(20));
+  position: absolute;
+  top: px(20);
+  left: px(20);
+}
+
+.iconContainer {
+  width: px(156);
+}
+
+.description {
+  @include font-family(PixGamer, 400);
+  @include font-size(28, 23);
+  max-width: 80vw;
+  margin-top: px(30);
+  color: $sour-cream;
 }
