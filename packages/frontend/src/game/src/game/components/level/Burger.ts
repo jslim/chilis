@@ -1,18 +1,25 @@
-import type {Entity} from '../../core/Entity'
-import {Component} from '../../core/Entity'
+import type { Entity } from '../../core/Entity'
+import { Component } from '../../core/Entity'
 import type LevelScene from '../../scenes/LevelScene'
-import type {BurgerGroup} from './BurgerGroup'
+import type { BurgerGroup } from './BurgerGroup'
 
-import {Rectangle, Sprite, Texture} from 'pixi.js'
-import {Signal} from '../../core/Signal'
-import {Value} from '../../core/Value'
-import {DRAW_STATE_DEBUG, FLOOR_OFFSET, POINTS_PER_BURGER_BOUNCE, POINTS_PER_CPU, POINTS_PER_TOTAL_CPUS_HIT} from '../../game.config'
-import {TileId} from '../../tiled/TileId'
-import {Cpu} from '../cpu/Cpu'
-import {HitBox} from '../HitBox'
-import {Mover} from '../Mover'
-import {StateDebugText} from '../StateDebugText'
-import {LevelComponent} from './LevelComponent'
+import { Rectangle, Sprite, Texture } from 'pixi.js'
+import { Signal } from '../../core/Signal'
+import { Value } from '../../core/Value'
+import {
+  DRAW_STATE_DEBUG,
+  FLOOR_OFFSET,
+  POINTS_PER_BURGER_BOUNCE,
+  POINTS_PER_CPU,
+  POINTS_PER_TOTAL_CPUS_HIT
+} from '../../game.config'
+import { TileId } from '../../tiled/TileId'
+import { Cpu } from '../cpu/Cpu'
+import { HitBox } from '../HitBox'
+import { Mover } from '../Mover'
+import { StateDebugText } from '../StateDebugText'
+import { LevelComponent } from './LevelComponent'
+import { getPixGamerNumberFont } from '@/game/src/game/display/SimpleText'
 
 export const burgerOverlap = 1
 export const burgerHeightByTileId = {
@@ -30,7 +37,7 @@ export const burgerHeightByTileId = {
   [TileId.Burger12]: 7
 }
 
-export const BurgerTileSize = {tilewidth: 30, tileheight: 16}
+export const BurgerTileSize = { tilewidth: 30, tileheight: 16 }
 
 export class Burger extends Component {
   public readonly state = new Value<'idle' | 'bounce' | 'fall' | 'complete'>('idle')
@@ -86,7 +93,7 @@ export class Burger extends Component {
       this.entity.addComponent(new StateDebugText(this.state, [10, 7], this.entity.color))
     }
 
-    const {tilewidth, tileheight} = BurgerTileSize
+    const { tilewidth, tileheight } = BurgerTileSize
 
     this.entity.pivot.set(Math.floor(tilewidth / 2), tileheight)
     this.entity.x += this.entity.pivot.x
@@ -150,8 +157,8 @@ export class Burger extends Component {
       cpu.getComponent(Cpu).onHitByBurger.emit(this)
 
       let points = POINTS_PER_CPU[cpu.getComponent(Cpu).name]
-      this.level.addScore(this.entity.position, points, 0xffffff)
-      this.level.emitAction({a: 'kill-enemy', l: this.level.gameState.level.value, p: points})
+      this.level.addScore(this.entity.position, points)
+      this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points })
     })
     this.subscribe(this.onHitBurger, (otherBurger) => {
       this.fallStats.burgerHit = true
@@ -171,7 +178,7 @@ export class Burger extends Component {
       for (let i = 0; i < 10; i++) {
         this.stepUpdateSlicedParts()
       }
-      const fallThrough = !this.fallStats.burgerHit;
+      const fallThrough = !this.fallStats.burgerHit
 
       if (fallThrough) {
         this.calculateCPUHitScoreAndShow()
@@ -247,7 +254,7 @@ export class Burger extends Component {
 
   private findTargetY() {
     // find y position in grid where burger will fall
-    const {grid, size} = this.level.walkGrid
+    const { grid, size } = this.level.walkGrid
     const x = Math.floor(this.entity.x + this.entity.pivot.x)
     let y = Math.floor(this.entity.y)
     while (grid[x + y * size] === 0) {
@@ -264,7 +271,7 @@ export class Burger extends Component {
       // move burger down in pixel steps
       const frameTargetY = Math.min(this.entity.y + this.fallSpeed, this.targetY)
 
-      const {cpus, burgers, plates} = this.level
+      const { cpus, burgers, plates } = this.level
       loop: while (this.entity.y < frameTargetY) {
         this.entity.y++
 
@@ -310,8 +317,7 @@ export class Burger extends Component {
     }
   }
 
-  private updateComplete() {
-  }
+  private updateComplete() {}
 
   private stepUpdateSlicedParts() {
     // slowly move sliced parts up
@@ -360,10 +366,10 @@ export class Burger extends Component {
       points += pointForCpuHit
       // reset
       this.fallStats.totalCpusHit = 0
-      this.level.emitAction({a: 'drop-enemy', l: this.level.gameState.level.value, p: pointForCpuHit})
+      this.level.emitAction({ a: 'drop-enemy', l: this.level.gameState.level.value, p: pointForCpuHit })
     }
 
-    this.level.addScore(this.entity.position, points)
+    this.level.addScore(this.entity.position, points, 0xffffff, getPixGamerNumberFont())
   }
 
   private calculateFallEndScoreAndShow() {
@@ -377,7 +383,7 @@ export class Burger extends Component {
       points += pointsForBurgerHit
       // reset
       this.fallStats.chainCollisionCount = 0
-      this.level.emitAction({a: 'burger-part', l: this.level.gameState.level.value, p: pointsForBurgerHit})
+      this.level.emitAction({ a: 'burger-part', l: this.level.gameState.level.value, p: pointsForBurgerHit })
     }
 
     // reset
@@ -388,7 +394,7 @@ export class Burger extends Component {
 }
 
 function getBurgerTextureFrame(spriteSheet: Texture, id: number): Rectangle {
-  const {tilewidth, tileheight} = BurgerTileSize
+  const { tilewidth, tileheight } = BurgerTileSize
 
   // tile ids are 1 based
   id -= 1

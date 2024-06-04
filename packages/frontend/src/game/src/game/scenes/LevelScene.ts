@@ -31,7 +31,7 @@ import { createDelay } from '../core/Delay'
 import { Entity } from '../core/Entity'
 import { ScreenShake } from '../core/ScreenShake'
 import { Signal } from '../core/Signal'
-import { get8pxNumberFont, getPixGamerNumberFont } from '../display/SimpleText'
+import { get8pxNumberFont, getPixGamerNumberFont, SimpleTextConfig } from '../display/SimpleText'
 import { FlumpLibrary } from '../flump/FlumpLibrary'
 import {
   DRAW_DEBUG_GRID,
@@ -158,7 +158,7 @@ export default class LevelScene extends Scene {
           let y = (i / layer.width) | 0
           if (layer.data[i] === TileId.Pickup) {
             this.pickupSpawnPoints.push(new Point((x + 0.5) * map.tilewidth, (y + 1) * map.tileheight - FLOOR_OFFSET))
-            console.log('pickup', this.pickupSpawnPoints.at(-1))
+            // console.log('pickup', this.pickupSpawnPoints.at(-1))
           }
         }
         continue
@@ -425,13 +425,18 @@ export default class LevelScene extends Scene {
     return this.burgers.length && !this.burgers.some((burger) => !burger.getComponent(Burger).isCompleted)
   }
 
-  public addScore(position: Point, points: number, color = 0xffc507) {
+  public addScore(
+    position: Point,
+    points: number,
+    color = 0xffc507,
+    fontConfig: SimpleTextConfig = get8pxNumberFont()
+  ) {
     if (points <= 0) return
 
     this.gameState.score.value += points
 
     const pointsEntity = new Entity().addComponent(
-      new SimpleTextDisplay(`${points}`, 'center', get8pxNumberFont()).setTint(color),
+      new SimpleTextDisplay(`${points}`, 'center', fontConfig).setTint(color),
       new ScoreAnimation(),
       new AutoDisposer(1)
     )
@@ -448,11 +453,11 @@ export default class LevelScene extends Scene {
     const entitiesByX = new Map<number, Entity[]>()
     sortedEntities.forEach((entity) => {
       // Somehow, the x position is not exactly the same for burgers and plates
-      const x = Math.round(entity.x/4);
+      const x = Math.round(entity.x / 4)
       entitiesByX.set(x, [...(entitiesByX.get(x) || []), entity])
     })
 
-    console.log(entitiesByX);
+    // console.log(entitiesByX)
     entitiesByX.forEach((entities) => {
       let currentBurgers: Entity[] = []
       entities.forEach((entity) => {
@@ -482,8 +487,9 @@ export default class LevelScene extends Scene {
           c: this.gameState.burgerCompleteCombo.value
         })
 
-        console.log(group.plate.position)
-        this.addScore(group.plate.position, points, 0x10c330)
+        let position = group.plate.position.clone()
+        position.x += 4
+        this.addScore(position, points, 0xffffff, getPixGamerNumberFont())
       })
     })
   }

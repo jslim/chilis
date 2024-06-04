@@ -45,7 +45,7 @@ export function getOgFont(): SimpleTextConfig {
   }
 }
 
-type SimpleTextConfig = {
+export type SimpleTextConfig = {
   texture: Texture
   charWidth: number | number[]
   characters: string
