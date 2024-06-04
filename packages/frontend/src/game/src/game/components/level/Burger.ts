@@ -171,10 +171,13 @@ export class Burger extends Component {
         this.stepUpdateSlicedParts()
       }
       const fallThrough = !this.fallStats.burgerHit;
-      this.calculateScoreOnFallEndAndShow()
-      this.state.value = 'idle'
+      
       if (fallThrough) {
+        this.state.value = 'idle'
         this.state.value = 'fall'
+      } else {
+        this.calculateScoreOnFallEndAndShow()
+        this.state.value = 'idle'
       }
     })
   }
