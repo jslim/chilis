@@ -162,7 +162,8 @@ export class Burger extends Component {
       otherBurgerComp.state.value = 'bounce'
     })
     this.subscribe(this.onHitPlate, (_plate) => {
-      this.calculateScoreOnFallEndAndShow()
+      this.calculateCPUHitScoreAndShow()
+      this.calculateFallEndScoreAndShow()
       this.entity.getComponent(HitBox).hasIntersection = false
       this.state.value = 'complete'
     })
@@ -171,12 +172,14 @@ export class Burger extends Component {
         this.stepUpdateSlicedParts()
       }
       const fallThrough = !this.fallStats.burgerHit;
-      
+
       if (fallThrough) {
+        this.calculateCPUHitScoreAndShow()
         this.state.value = 'idle'
         this.state.value = 'fall'
       } else {
-        this.calculateScoreOnFallEndAndShow()
+        this.calculateCPUHitScoreAndShow()
+        this.calculateFallEndScoreAndShow()
         this.state.value = 'idle'
       }
     })
@@ -346,7 +349,7 @@ export class Burger extends Component {
     return platesOnSameRow[0]
   }
 
-  private calculateScoreOnFallEndAndShow() {
+  private calculateCPUHitScoreAndShow() {
     // hack to prevent double scoring
     if (this.isCompleted) return
 
@@ -359,6 +362,15 @@ export class Burger extends Component {
       this.fallStats.totalCpusHit = 0
       this.level.emitAction({a: 'drop-enemy', l: this.level.gameState.level.value, p: pointForCpuHit})
     }
+
+    this.level.addScore(this.entity.position, points)
+  }
+
+  private calculateFallEndScoreAndShow() {
+    // hack to prevent double scoring
+    if (this.isCompleted) return
+
+    let points = 0
 
     let pointsForBurgerHit = POINTS_PER_BURGER_BOUNCE[this.fallStats.chainCollisionCount]
     if (pointsForBurgerHit) {
