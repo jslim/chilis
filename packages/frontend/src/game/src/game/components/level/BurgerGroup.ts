@@ -14,7 +14,6 @@ export class BurgerGroup extends Component {
     public plate: Entity
   ) {
     super()
-
     this.isCompleted = false
     for (const entity of burgers) {
       const burger = entity.getComponent(Burger)
