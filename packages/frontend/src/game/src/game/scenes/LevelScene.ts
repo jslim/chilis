@@ -1,8 +1,7 @@
 import type { TiledMap } from '../tiled/TiledMap'
 import type { TiledWalkGrid } from '../utils/tiles.utils'
 import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '../utils/tiles.utils'
-import type { Point } from 'pixi.js'
-import { Assets, Rectangle, Sprite, Texture } from 'pixi.js'
+import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
 import { AutoDisposer } from '../components/AutoDisposer'
 import { Cpu } from '../components/cpu/Cpu'
@@ -50,6 +49,8 @@ import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
 import { PointerComponent } from '@/game/src/game/button/PointerComponent'
 import { OnStart } from '@/game/src/game/components/OnStart'
 import { isMobileOrTablet } from '@/game/src/game/utils/is-mobile-or-tablet'
+import { getRandom, pick } from '@/game/src/game/utils/random.utils'
+import { Pickup } from '@/game/src/game/components/Pickup'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -63,7 +64,7 @@ export default class LevelScene extends Scene {
   public burgers: Entity[] = []
   public plates: Entity[] = []
   public burgerGroups: BurgerGroup[] = []
-  // public spawnPoints: Point[] = []
+  public pickupSpawnPoints: Point[] = []
   public flumpLibrary!: FlumpLibrary
 
   private isPlaying: boolean = true
@@ -150,7 +151,18 @@ export default class LevelScene extends Scene {
       if (layer.type !== 'tilelayer') continue
 
       // TODO: extras layer
-      if (layer.name == 'extras') continue
+      if (layer.name == 'extras') {
+        // map to spawn points
+        for (let i = 0; i < layer.data.length; i++) {
+          let x = i % layer.width
+          let y = (i / layer.width) | 0
+          if (layer.data[i] === TileId.Pickup) {
+            this.pickupSpawnPoints.push(new Point((x + 0.5) * map.tilewidth, (y + 1) * map.tileheight - FLOOR_OFFSET))
+            console.log('pickup', this.pickupSpawnPoints.at(-1))
+          }
+        }
+        continue
+      }
 
       let i = 0
       const layerData = layer.data
@@ -328,6 +340,8 @@ export default class LevelScene extends Scene {
       this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
     }
 
+    this.spawnPickup()
+
     this.emitAction({ a: 'start', l: this.gameState.level.value })
   }
 
@@ -341,7 +355,7 @@ export default class LevelScene extends Scene {
   showWinScreen() {
     this.mobileInput?.destroy()
 
-    const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_win').once())
+    const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_win'))
     screenEntity.position.set(120, 120)
 
     const levelNo = this.gameState.level.value
@@ -376,7 +390,7 @@ export default class LevelScene extends Scene {
   showDefeatScreen() {
     this.mobileInput?.destroy()
 
-    const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat').once())
+    const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat'))
     screenEntity.position.set(120, 120)
 
     // const levelNo = this.gameState.level.value
@@ -469,6 +483,21 @@ export default class LevelScene extends Scene {
         this.addScore(group.plate.position, points, 0x10c330)
       })
     })
+  }
+
+  public spawnPickup() {
+    const random = getRandom()
+    const spawnPoint = pick(this.pickupSpawnPoints, random)
+
+    const pickupId = (this.gameState.pickupsCollected.value % 3) + 1
+    const pickupSprite = this.flumpLibrary.createSprite(`pickup_${pickupId}`)
+    const pickupEntity = new Entity(pickupSprite).addComponent(
+      new LevelComponent(this),
+      new Pickup(),
+      new HitBox(-5, 6, 10, 8)
+    )
+    pickupEntity.position.copyFrom(spawnPoint)
+    this.containers.mid.addEntity(pickupEntity)
   }
 
   public screenShake(amount: number, duration: number) {

@@ -17,6 +17,8 @@ export class FlumpMovieSprite extends Container {
   public isPlaying = true
   public isLooping = true
 
+  private movieLayers: FlumpMovieSprite[] = []
+
   constructor(
     private readonly library: FlumpLibrary,
     public readonly movieName: string
@@ -49,9 +51,8 @@ export class FlumpMovieSprite extends Container {
       if (keyframe.index === frameNo) return keyframe
       if (keyframe.index > frameNo) {
         return frame
-      } 
-        frame = keyframe
-      
+      }
+      frame = keyframe
     }
     return frame
   }
@@ -65,15 +66,21 @@ export class FlumpMovieSprite extends Container {
       if (keyframe !== this.currentKeyFrame) {
         this.currentKeyFrame = keyframe
         if (keyframe.ref) {
-          const textureData = this.library.getTexture(keyframe.ref)
+          if (this.library.hasMovie(keyframe.ref)) {
+            if (!this.movieLayers[idx]) {
+              this.movieLayers[idx] = new FlumpMovieSprite(this.library, keyframe.ref)
+              layerSprite.addChild(this.movieLayers[idx])
+            }
+          } else {
+            const textureData = this.library.getTexture(keyframe.ref)
+            layerSprite.texture = textureData.texture
 
-          layerSprite.texture = textureData.texture
-
-          if (!layer.flipbook) {
-            layerSprite.anchor.set(
-              textureData.origin[0] / textureData.texture.width,
-              textureData.origin[1] / textureData.texture.height
-            )
+            if (!layer.flipbook) {
+              layerSprite.anchor.set(
+                textureData.origin[0] / textureData.texture.width,
+                textureData.origin[1] / textureData.texture.height
+              )
+            }
           }
           if (keyframe.pivot) {
             layerSprite.pivot.set(keyframe.pivot[0], keyframe.pivot[1])
@@ -111,6 +118,7 @@ export class FlumpMovieSprite extends Container {
 
   public update() {
     if (!this.isPlaying) return
+
     this.currentFrame++
     if (this.currentFrame >= this.totalFrames) {
       if (this.isLooping) {
@@ -123,6 +131,15 @@ export class FlumpMovieSprite extends Container {
       }
     }
     this.setFrame(this.currentFrame)
+
+    if (this.movieName.includes('panel')) console.log('update')
+    this.movieData.layers.forEach((layer, idx) => {
+      const movieSprite = this.movieLayers[idx]
+      if (movieSprite) {
+        movieSprite.update()
+        console.log('update', idx, movieSprite.movieName)
+      }
+    })
   }
 }
 

@@ -5,6 +5,7 @@ export class GameState extends Component {
   public readonly level = new Value<number>(1)
   public readonly score = new Value<number>(0)
   public readonly highScore = new Value<number>(0)
+  public readonly pickupsCollected = new Value<number>(0)
   public readonly bullets = new Value<number>(3)
   public readonly lives = new Value<number>(3)
   public readonly burgerCompleteCombo = new Value<number>(0)
