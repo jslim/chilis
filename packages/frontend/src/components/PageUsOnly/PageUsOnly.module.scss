@@ -26,7 +26,11 @@
   z-index: 2;
 
   .heroContainer {
-    width: px(379);
+    width: px(168);
+
+    @include media-tablet-large {
+      width: px(379);
+    }
   }
 
   .hero {
@@ -35,9 +39,14 @@
   }
 
   .content {
-    @include font-size(24);
+    @include font-size(14);
     @include font-family(b, 400);
-    margin-top: px(35);
+    margin-top: px(15);
     color: $white;
+
+    @include media-tablet-large {
+      @include font-size(24);
+      margin-top: px(35);
+    }
   }
 }
