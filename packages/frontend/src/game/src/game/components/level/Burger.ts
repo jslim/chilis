@@ -55,6 +55,7 @@ export class Burger extends Component {
   private readonly targetPlateRect: Rectangle | undefined = undefined
 
   private readonly fallStats = {
+    burgerHit: false,
     totalCpusHit: 0,
     // this value is passed from one to another burger, to get sum of chain of burgers hit
     chainCollisionCount: 0
@@ -153,6 +154,8 @@ export class Burger extends Component {
       this.level.emitAction({a: 'kill-enemy', l: this.level.gameState.level.value, p: points})
     })
     this.subscribe(this.onHitBurger, (otherBurger) => {
+      this.fallStats.burgerHit = true
+
       const otherBurgerComp = otherBurger.getComponent(Burger)
       otherBurgerComp.fallStats.chainCollisionCount = this.fallStats.chainCollisionCount + 1
 
@@ -167,8 +170,12 @@ export class Burger extends Component {
       for (let i = 0; i < 10; i++) {
         this.stepUpdateSlicedParts()
       }
+      const fallThrough = !this.fallStats.burgerHit;
       this.calculateScoreOnFallEndAndShow()
       this.state.value = 'idle'
+      if (fallThrough) {
+        this.state.value = 'fall'
+      }
     })
   }
 
@@ -276,8 +283,7 @@ export class Burger extends Component {
             const otherBurgerComponent = otherBurger.getComponent(Burger)
             if (this.intersectsWith(otherBurger)) {
               if (otherBurgerComponent.isIdle) {
-                console.log('intersected with burger')
-
+                // intersect with idle burger
                 this.onHitBurger.emit(otherBurger)
               } else if (otherBurgerComponent.isCompleted) {
                 // if land on burger on the plate
@@ -358,6 +364,9 @@ export class Burger extends Component {
       this.fallStats.chainCollisionCount = 0
       this.level.emitAction({a: 'burger-part', l: this.level.gameState.level.value, p: pointsForBurgerHit})
     }
+
+    // reset
+    this.fallStats.burgerHit = false
 
     this.level.addScore(this.entity.position, points)
   }
