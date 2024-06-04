@@ -340,8 +340,6 @@ export default class LevelScene extends Scene {
       this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
     }
 
-    this.spawnPickup()
-
     this.emitAction({ a: 'start', l: this.gameState.level.value })
   }
 
@@ -419,10 +417,7 @@ export default class LevelScene extends Scene {
   }
 
   checkIfAllBurgersCompleted() {
-    // TODO: reinder
-    // return this.burgers.length && !this.burgerGroups.some((group) => !group.isCompleted)
-
-    return this.burgers.length && !this.burgers.some((burger) => !burger.getComponent(Burger).isCompleted)
+    return this.burgers.length && !this.burgerGroups.some((group) => !group.isCompleted)
   }
 
   public addScore(
@@ -475,8 +470,15 @@ export default class LevelScene extends Scene {
     this.subscribe(this.player.getComponent(Player).onHitCpu, () => {
       this.gameState.burgerCompleteCombo.value = 0
     })
+
+    let totalGroupsCompleted = 0
     this.burgerGroups.forEach((group) => {
       this.subscribe(group.onBurgerComplete, () => {
+        totalGroupsCompleted++
+        if (totalGroupsCompleted === 1) {
+          this.spawnPickup()
+        }
+
         this.gameState.burgerCompleteCombo.value++
         const points = this.gameState.burgerCompleteCombo.value * POINTS_PER_GROUP_COMPLETE
 
@@ -502,6 +504,7 @@ export default class LevelScene extends Scene {
     const pickupSprite = this.flumpLibrary.createSprite(`pickup_${pickupId}`)
     const pickupEntity = new Entity(pickupSprite).addComponent(
       new LevelComponent(this),
+      new AutoDisposer(30), // disposes after 30 seconds
       new Pickup(),
       new HitBox(-5, 6, 10, 8)
     )
