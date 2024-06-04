@@ -155,7 +155,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                     header: "permissions-policy",
                     override: true,
                     value:
-                      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), fullscreen=(), sync-xhr=(), midi=(), picture-in-picture=(), autoplay=(), encrypted-media=()",
+                      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), fullscreen=(self), sync-xhr=(), midi=(), picture-in-picture=(), autoplay=(), encrypted-media=()",
                   },
                   {
                     header: "Content-Security-Policy-Report-Only",
