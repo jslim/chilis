@@ -1,29 +1,29 @@
 type GameAction = {
-  // action
+  /// action
   a:
     | 'pause'
     | 'resume'
-    | 'game-start'
-    | 'game-end'
-    | 'level-start'
-    | 'level-end'
+    | 'start'
+    | 'end'
+    | 'complete'
+    | 'burger-part'
+    | 'kill-enemy'
+    | 'drop-enemy'
     | 'burger-complete'
-    | 'burger-drop'
-    | 'enemy-hit'
-    | 'player-hit'
+    | '3-for-me'
 
-  // name
+  /// name
   n?: string
 
-  // level
+  /// level
   l: number
 
-  // count
+  /// count
   c?: number
 
-  // points
+  /// points
   p?: number
 
-  // points
+  /// points
   s?: number
 }

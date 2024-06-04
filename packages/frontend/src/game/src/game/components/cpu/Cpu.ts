@@ -18,6 +18,17 @@ import { CpuMover } from './CpuMover'
 import { Burger } from '@/game/src/game/components/level/Burger'
 import { createDelay } from '@/game/src/game/core/Delay'
 
+export type CpuName =
+  | 'trainee01'
+  | 'trainee02'
+  | 'trainee03'
+  | 'piggles'
+  | 'mrbaggie'
+  | 'zapp'
+  | 'matey'
+  | 'dino'
+  | 'burgertron'
+
 export class Cpu extends Component {
   public readonly state = new Value<
     'walk' | 'paralyzed' | 'die' | 'spawn' | 'defeat' | 'prepare_attack' | 'attack' | 'attack_complete'
@@ -34,7 +45,7 @@ export class Cpu extends Component {
   protected paralyzedCoolDown = new CoolDown(2)
   protected dieCoolDown = new CoolDown(6)
 
-  constructor(public name = 'trainee01') {
+  constructor(public name: CpuName = 'trainee01') {
     super()
   }
 

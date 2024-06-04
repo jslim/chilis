@@ -1,6 +1,8 @@
 /* GENERAL */
 
 // default game speed
+import { CpuName } from '@/game/src/game/components/cpu/Cpu'
+
 export const FRAME_RATE = 22
 // game speed for level 7-12
 export const FRAME_RATE_HARD = 28
@@ -30,7 +32,20 @@ export const FLOOR_OFFSET = 13
 
 // resets when player gets hit
 export const POINTS_PER_GROUP_COMPLETE = [100, 200, 400, 800, 800, 800]
-export const POINTS_PER_CPUS_HIT = [0, 500, 1000, 2000, 4000, 8000, 16_000]
+export const POINTS_PER_CPU: { [key in CpuName]: number } = {
+  trainee01: 100,
+  trainee02: 100,
+  trainee03: 100,
+  piggles: 200,
+  mrbaggie: 200,
+  zapp: 200,
+  matey: 200,
+  dino: 200,
+  burgertron: 200
+}
+
+export const POINTS_PER_TOTAL_CPUS_HIT = [0, 1000, 2000, 3000, 4000, 5000, 6000]
+
 export const POINTS_PER_BURGER_BOUNCE = [50, 100, 150, 200, 250, 300, 350]
 
 // converts level number to 1-6 range

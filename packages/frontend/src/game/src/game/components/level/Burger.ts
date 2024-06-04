@@ -6,7 +6,13 @@ import type { BurgerGroup } from './BurgerGroup'
 import { Rectangle, Sprite, Texture } from 'pixi.js'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
-import { DRAW_STATE_DEBUG, FLOOR_OFFSET, POINTS_PER_BURGER_BOUNCE, POINTS_PER_CPUS_HIT } from '../../game.config'
+import {
+  DRAW_STATE_DEBUG,
+  FLOOR_OFFSET,
+  POINTS_PER_BURGER_BOUNCE,
+  POINTS_PER_CPU,
+  POINTS_PER_TOTAL_CPUS_HIT
+} from '../../game.config'
 import { TileId } from '../../tiled/TileId'
 import { Cpu } from '../cpu/Cpu'
 import { HitBox } from '../HitBox'
@@ -139,6 +145,10 @@ export class Burger extends Component {
     this.subscribe(this.onHitCpu, (cpu) => {
       this.fallStats.totalCpusHit++
       cpu.getComponent(Cpu).onHitByBurger.emit(this)
+
+      let points = POINTS_PER_CPU[cpu.getComponent(Cpu).name]
+      this.level.addScore(this.entity.position, points, 0xffffff)
+      this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points })
     })
     this.subscribe(this.onHitBurger, (otherBurger) => {
       this.fallStats.totalBurgersHit++
@@ -340,13 +350,23 @@ export class Burger extends Component {
   private addToScore() {
     let points = 0
 
-    points += POINTS_PER_BURGER_BOUNCE[this.fallStats.totalBurgersHit]
-    this.fallStats.totalBurgersHit = 0
+    if (this.fallStats.totalCpusHit) {
+      let pointForCpuHit = POINTS_PER_TOTAL_CPUS_HIT[this.fallStats.totalCpusHit]
+      points += pointForCpuHit
+      // reset
+      this.fallStats.totalCpusHit = 0
+      this.level.emitAction({ a: 'drop-enemy', l: this.level.gameState.level.value, p: pointForCpuHit })
+    }
 
-    points += POINTS_PER_CPUS_HIT[this.fallStats.totalCpusHit]
-    this.fallStats.totalCpusHit = 0
+    if (this.fallStats.totalBurgersHit) {
+      let pointsForBurgerHit = POINTS_PER_BURGER_BOUNCE[this.fallStats.totalBurgersHit]
+      points += pointsForBurgerHit
+      // reset
+      this.fallStats.totalBurgersHit = 0
+      this.level.emitAction({ a: 'burger-part', l: this.level.gameState.level.value, p: pointsForBurgerHit })
+    }
 
-    //this.level.addScore(this.entity.position, {action:})
+    this.level.addScore(this.entity.position, points)
   }
 }
 

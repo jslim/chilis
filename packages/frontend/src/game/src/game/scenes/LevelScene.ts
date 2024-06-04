@@ -184,7 +184,6 @@ export default class LevelScene extends Scene {
           if (id === TileId.Player) {
             this.player = entity.addComponent(
               new HitBox(-3, -10, 6, 8),
-              // new PlayerMover(1.5),
               new PlayerPacManMover(1.5),
               new Input(),
               new KeyboardInput(),
@@ -200,11 +199,10 @@ export default class LevelScene extends Scene {
             )
             this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
-            //  entity.addChild(getSprite(map, spriteSheet, id));
             let cpu: Cpu | undefined
-            let offsetX = 0 // visual offset animation
+            let offsetX = 0 // a visual offset for the animation
             if (id === TileId.Cpu) {
-              cpu = new Cpu('trainee0' + traineeId++)
+              cpu = new Cpu(('trainee0' + traineeId++) as 'trainee01' | 'trainee02' | 'trainee03')
             } else if (id === TileId.BossCpu) {
               offsetX = 4
               switch (levelNo) {
@@ -329,6 +327,8 @@ export default class LevelScene extends Scene {
     if (isMobileOrTablet()) {
       this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
     }
+
+    this.emitAction({ a: 'start', l: this.gameState.level.value })
   }
 
   override onUpdate(dt: number): void {
@@ -369,6 +369,8 @@ export default class LevelScene extends Scene {
     })
 
     this.entity.addEntity(screenEntity)
+
+    this.emitAction({ a: 'complete', l: this.gameState.level.value })
   }
 
   showDefeatScreen() {
@@ -398,19 +400,21 @@ export default class LevelScene extends Scene {
     })
 
     this.entity.addEntity(screenEntity)
+
+    this.emitAction({ a: 'end', l: this.gameState.level.value })
   }
 
   checkIfAllBurgersCompleted() {
     return this.burgers.length && !this.burgers.some((burger) => !burger.getComponent(Burger).isCompleted)
   }
 
-  public addScore(position: Point, points: number) {
+  public addScore(position: Point, points: number, color = 0xffc507) {
     if (points <= 0) return
 
     this.gameState.score.value += points
 
     const pointsEntity = new Entity().addComponent(
-      new SimpleTextDisplay(`${points}`, 'center', get8pxNumberFont()).setTint(0xffc507),
+      new SimpleTextDisplay(`${points}`, 'center', get8pxNumberFont()).setTint(color),
       new ScoreAnimation(),
       new AutoDisposer(1)
     )
@@ -449,15 +453,25 @@ export default class LevelScene extends Scene {
     })
     this.burgerGroups.forEach((group) => {
       this.subscribe(group.onBurgerComplete, () => {
-        const score = POINTS_PER_GROUP_COMPLETE[totalGroupsInRow]
-        this.addScore(group.plate.position, score)
+        const points = POINTS_PER_GROUP_COMPLETE[totalGroupsInRow]
+
         totalGroupsInRow++
+
+        this.emitAction({ a: 'burger-complete', l: this.gameState.level.value, p: points })
+
+        createDelay(this.entity, 0.2, () => {
+          this.addScore(group.plate.position, points, 0x10c330)
+        })
       })
     })
   }
 
   public screenShake(amount: number, duration: number) {
     this.entity.addComponent(new ScreenShake(amount, duration))
+  }
+
+  public emitAction(action: GameAction) {
+    this.sceneManager.gameController.onGameAction.emit(action)
   }
 }
 
