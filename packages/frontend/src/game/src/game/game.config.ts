@@ -36,11 +36,11 @@ export const POINTS_PER_CPU: { [key in CpuName]: number } = {
   trainee01: 100,
   trainee02: 100,
   trainee03: 100,
-  piggles: 200,
-  mrbaggie: 200,
-  zapp: 200,
-  matey: 200,
-  dino: 200,
+  piggles: 500,
+  mrbaggie: 600,
+  dino: 700,
+  matey: 800,
+  zapp: 900,
   burgertron: 200
 }
 
