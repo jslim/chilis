@@ -447,9 +447,12 @@ export default class LevelScene extends Scene {
     // Group by x
     const entitiesByX = new Map<number, Entity[]>()
     sortedEntities.forEach((entity) => {
-      entitiesByX.set(entity.x, [...(entitiesByX.get(entity.x) || []), entity])
+      // Somehow, the x position is not exactly the same for burgers and plates
+      const x = Math.round(entity.x/4);
+      entitiesByX.set(x, [...(entitiesByX.get(x) || []), entity])
     })
 
+    console.log(entitiesByX);
     entitiesByX.forEach((entities) => {
       let currentBurgers: Entity[] = []
       entities.forEach((entity) => {
