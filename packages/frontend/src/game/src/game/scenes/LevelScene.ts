@@ -405,6 +405,9 @@ export default class LevelScene extends Scene {
   }
 
   checkIfAllBurgersCompleted() {
+    // TODO: reinder
+    // return this.burgers.length && !this.burgerGroups.some((group) => !group.isCompleted)
+
     return this.burgers.length && !this.burgers.some((burger) => !burger.getComponent(Burger).isCompleted)
   }
 
@@ -447,21 +450,23 @@ export default class LevelScene extends Scene {
     })
 
     // Listen for burger group completion, and add score
-    let totalGroupsInRow = 0
     this.subscribe(this.player.getComponent(Player).onHitCpu, () => {
-      totalGroupsInRow = 0
+      this.gameState.burgerCompleteCombo.value = 0
     })
     this.burgerGroups.forEach((group) => {
       this.subscribe(group.onBurgerComplete, () => {
-        const points = POINTS_PER_GROUP_COMPLETE[totalGroupsInRow]
+        this.gameState.burgerCompleteCombo.value++
+        const points = this.gameState.burgerCompleteCombo.value * POINTS_PER_GROUP_COMPLETE
 
-        totalGroupsInRow++
-
-        this.emitAction({ a: 'burger-complete', l: this.gameState.level.value, p: points })
-
-        createDelay(this.entity, 0.2, () => {
-          this.addScore(group.plate.position, points, 0x10c330)
+        this.emitAction({
+          a: 'burger-complete',
+          l: this.gameState.level.value,
+          p: points,
+          c: this.gameState.burgerCompleteCombo.value
         })
+
+        console.log(group.plate.position)
+        this.addScore(group.plate.position, points, 0x10c330)
       })
     })
   }

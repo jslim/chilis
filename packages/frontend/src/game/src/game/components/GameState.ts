@@ -7,6 +7,7 @@ export class GameState extends Component {
   public readonly highScore = new Value<number>(0)
   public readonly bullets = new Value<number>(3)
   public readonly lives = new Value<number>(3)
+  public readonly burgerCompleteCombo = new Value<number>(0)
 
   constructor() {
     super()
@@ -36,6 +37,7 @@ export class GameState extends Component {
     this.lives.value = 3
     this.bullets.value = 3
     this.score.value = 0
+    if (levelNo === 1) this.burgerCompleteCombo.value = 0
   }
 
   public getValues() {

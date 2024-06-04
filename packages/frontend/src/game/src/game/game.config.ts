@@ -31,7 +31,7 @@ export const FLOOR_OFFSET = 13
 /* SCORING */
 
 // resets when player gets hit
-export const POINTS_PER_GROUP_COMPLETE = [100, 200, 400, 800, 800, 800]
+export const POINTS_PER_GROUP_COMPLETE = 100
 export const POINTS_PER_CPU: { [key in CpuName]: number } = {
   trainee01: 100,
   trainee02: 100,
