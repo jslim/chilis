@@ -236,10 +236,27 @@
         "title": "404 Page"
       }
     },
+    "usOnly": {
+      "head": {
+        "title": "US Ony Page",
+        "description": "This experience is only available in the U.S."
+      },
+      "body": {
+        "image": {
+          "src": "us-only-background.png",
+          "alt": "US Only"
+        },
+        "hero": {
+          "src": "sorry.png",
+          "alt": "Sorry"
+        },
+        "title": "This experience is only available in the U.S."
+      }
+    },
     "unsupported": {
       "head": {
         "title": "Unsupported",
-        "description": "Some unsupported page description"
+        "description": "Your browser is not supported."
       },
       "body": {
         "title": "Your browser is not supported."

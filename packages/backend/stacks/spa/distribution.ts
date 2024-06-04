@@ -107,12 +107,12 @@ export function FrontendDistribution({ stack, app }: StackContext) {
           {
             httpStatus: 403,
             responseHttpStatus: 403,
-            responsePagePath: "/403.html",
+            responsePagePath: "/us-only/index.html",
           },
           {
             httpStatus: 404,
             responseHttpStatus: 200,
-            responsePagePath: "/index.html",
+            responsePagePath: "/404/index.html",
           },
         ],
         defaultBehavior: {

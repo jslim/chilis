@@ -1,0 +1,52 @@
+@import 'shared';
+
+.root {
+  @include flex-center;
+  width: 100%;
+
+  &:after {
+    @include box(100%);
+    @include position-100(absolute);
+    content: '';
+    background: radial-gradient(50% 50% at 50% 50%, rgba($black, 0.8) 0%, rgba($black, 0) 100%);
+    z-index: 1;
+  }
+}
+
+.background {
+  @include box(100%);
+  @include position-100(absolute);
+  object-fit: cover;
+}
+
+.container {
+  @include flex-center;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+
+  .heroContainer {
+    width: px(168);
+
+    @include media-tablet-large {
+      width: px(379);
+    }
+  }
+
+  .hero {
+    @include box(100%);
+    object-fit: cover;
+  }
+
+  .content {
+    @include font-size(14);
+    @include font-family(b, 400);
+    margin-top: px(15);
+    color: $white;
+
+    @include media-tablet-large {
+      @include font-size(24);
+      margin-top: px(35);
+    }
+  }
+}
