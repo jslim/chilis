@@ -43,7 +43,7 @@ export const View: FC<ViewProps> = ({ className, audioSrc }) => {
     refs.cdAnimation.current = gsap.to(cd, { duration: 0.5, rotate: 360, repeat: -1, ease: 'linear', paused: true })
     refs.noteAnimation.current = gsap.fromTo(
       note,
-      { y: isDesktop ? 55 : 45 },
+      { y: isDesktop ? 55 : 25 },
       { y: 0, duration: 0.5, ease: 'linear', paused: true }
     )
 

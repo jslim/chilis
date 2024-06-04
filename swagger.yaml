@@ -44,9 +44,9 @@ paths:
           description: Session started successfully.
           schema:
             properties:
-              nickname:
+              IdToken:
                 type: string
-              token:
+              AccessToken:
                 type: string
         "400":
           description: Bad request - invalid request parameters

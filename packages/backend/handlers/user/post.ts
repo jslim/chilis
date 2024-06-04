@@ -44,7 +44,8 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context): Pr
       }
 
       return Success({
-        token: signInResult.AccessToken,
+        IdToken: signInResult.IdToken,
+        AccessToken: signInResult.AccessToken,
       });
     } catch (error) {
       logger.error("Error during authentication process:", { error });
@@ -78,6 +79,12 @@ async function registerUserIfNotFound(loyaltyID: string) {
             // This command will trigger the pre signup handler
             UserPoolId: process.env.USER_POOL_ID,
             Username: loyaltyID,
+            UserAttributes: [
+              {
+                Name: "custom:badActor",
+                Value: "false",
+              },
+            ],
           })
         );
       } catch (createError) {

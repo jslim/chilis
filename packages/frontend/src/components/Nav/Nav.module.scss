@@ -10,7 +10,7 @@
   padding: px(40) px(20);
   height: $navbar-height-mobile;
 
-  @include media-tablet {
+  @include media-tablet-large {
     height: $navbar-height-desktop;
   }
 
@@ -36,10 +36,10 @@
     width: 100%;
 
     .fullscreenWrapper {
-      margin-right: px(15);
+      margin-right: px(8);
       @include box(px(34));
 
-      @include media-desktop {
+      @include media-tablet-large {
         @include box(px(60));
         margin-right: px(20);
       }
@@ -55,16 +55,16 @@
           width: auto;
           height: px(20);
 
-          @include media-desktop {
+          @include media-tablet-large {
             height: px(32);
           }
         }
       }
 
       > li {
-        padding: 0 px(3);
+        padding: 0 px(5);
 
-        @include media-desktop {
+        @include media-tablet-large {
           padding: 0 px(10);
         }
 
@@ -78,7 +78,7 @@
             border-image: url('~@/assets/images/button-borders.png') 10 10 stretch;
             white-space: nowrap;
 
-            @include media-desktop {
+            @include media-tablet-large {
               padding: px(5);
             }
 
