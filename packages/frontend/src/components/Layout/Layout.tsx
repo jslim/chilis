@@ -247,7 +247,6 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
           <LogModal {...pageProps.content.common.logModal} onClose={() => setIsModalOpen(false)} />
         </BaseModal>
       )}
-      {/* {!introComplete ? <ScreenIntro onComplete={handleIntroComplete} /> : null} */}
       <ScreenRotate content={pageProps.content.common.screenRotate} />
       <ScreenNoScript content={pageProps.content.common.screenNoScript} />
 
