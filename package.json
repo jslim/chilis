@@ -31,6 +31,7 @@
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
     "@ls-lint/ls-lint": "^1.11.2",
+    "@mediamonks/channels": "^1.0.6",
     "@next/bundle-analyzer": "^14.0.2",
     "@next/eslint-plugin-next": "^14.0.2",
     "@rive-app/react-canvas": "^4.5.0",

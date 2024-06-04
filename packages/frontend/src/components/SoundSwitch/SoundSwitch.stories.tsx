@@ -13,7 +13,8 @@ export const Default: StoryFn<ViewProps> = (args) => {
 
 Default.args = {
   onClick: action('onClick'),
-  audioSrc: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+  audioSrc: '/common/assets/sounds/',
+  audioName: 'soundhelix'
 }
 
 Default.argTypes = {}

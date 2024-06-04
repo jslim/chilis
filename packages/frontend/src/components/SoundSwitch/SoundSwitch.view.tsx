@@ -1,7 +1,8 @@
-/* eslint-disable jsx-a11y/media-has-caption */
+import type { FC } from 'react'
 import type { ControllerProps } from './SoundSwitch.controller'
 
-import { type FC, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { Channels } from '@mediamonks/channels'
 import classNames from 'classnames'
 import gsap from 'gsap'
 
@@ -24,12 +25,12 @@ export type ViewRefs = {
   cd: HTMLDivElement
   cdAnimation: gsap.core.Tween
   noteAnimation: gsap.core.Tween
-  audio: HTMLAudioElement
 }
 
-export const View: FC<ViewProps> = ({ className, audioSrc }) => {
+export const View: FC<ViewProps> = ({ className, audioName, audioSrc = '/common/assets/sounds/' }) => {
   const refs = useRefs<ViewRefs>()
   const [switchOn, setSwitchOn] = useState(false)
+  const [channelsInstance, setChannelsInstance] = useState<Channels | null>(null)
   const isDesktop = detect.device.desktop
 
   const handleClick = useCallback(() => {
@@ -47,37 +48,56 @@ export const View: FC<ViewProps> = ({ className, audioSrc }) => {
       { y: 0, duration: 0.5, ease: 'linear', paused: true }
     )
 
-    // Initialize audio element
-    if (!refs.audio.current && audioSrc) {
-      refs.audio.current = new Audio(audioSrc)
-    }
-
     return () => {
       refs.cdAnimation.current?.kill()
       refs.noteAnimation.current?.kill()
     }
-  }, [audioSrc, isDesktop, refs.audio, refs.cd, refs.cdAnimation, refs.note, refs.noteAnimation])
+  }, [isDesktop, refs.cd, refs.cdAnimation, refs.note, refs.noteAnimation])
 
   useEffect(() => {
-    const audio = refs.audio.current
+    if (audioSrc) {
+      const soundFiles = [audioName].map((name) => ({
+        name
+      }))
 
-    if (switchOn) {
-      if (audio) {
-        audio.play().catch((error) => console.log('Failed to play audio:', error))
-        audio.muted = false
+      const instance = new Channels({
+        soundsExtension: 'mp3',
+        soundsPath: audioSrc,
+        sounds: soundFiles
+      })
+
+      const loadSounds = async () => {
+        try {
+          await instance.loadSounds()
+          setChannelsInstance(instance)
+        } catch (error) {
+          console.error('Failed to load sounds:', error)
+        }
+      }
+
+      loadSounds()
+    }
+  }, [audioName, audioSrc])
+
+  useEffect(() => {
+    if (channelsInstance) {
+      if (switchOn) {
+        try {
+          channelsInstance.play(audioName)
+        } catch (error) {
+          console.error('Failed to play sound:', error)
+        }
 
         refs.cdAnimation.current?.play()
         refs.noteAnimation.current?.play()
-      }
-    } else {
-      refs.cdAnimation.current?.pause()
-      refs.noteAnimation.current?.reverse()
+      } else {
+        refs.cdAnimation.current?.pause()
+        refs.noteAnimation.current?.reverse()
 
-      if (audio) {
-        audio.pause()
+        channelsInstance.stopAll()
       }
     }
-  }, [audioSrc, refs.audio, refs.cdAnimation, refs.noteAnimation, switchOn])
+  }, [channelsInstance, switchOn, refs.cdAnimation, refs.noteAnimation, audioName])
 
   return (
     <div>
@@ -89,11 +109,6 @@ export const View: FC<ViewProps> = ({ className, audioSrc }) => {
           <SvgCd />
         </div>
       </BaseButton>
-
-      <audio>
-        <source src="" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
     </div>
   )
 }

@@ -238,7 +238,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         </>
       )}
 
-      <SoundSwitch className={css.soundSwitch} audioSrc={pageProps.content.common.testAudio} />
+      <SoundSwitch className={css.soundSwitch} audioName={pageProps.content.common.testAudio} />
 
       <div className={css.content}>{currentPage}</div>
 
