@@ -259,7 +259,9 @@
         "description": "Your browser is not supported."
       },
       "body": {
-        "title": "Your browser is not supported."
+        "title": "Your browser is not supported.",
+        "image": { "src": "noise.png", "alt": "background" },
+        "hero": { "src": "browser.png", "alt": "browser" }
       }
     }
   }

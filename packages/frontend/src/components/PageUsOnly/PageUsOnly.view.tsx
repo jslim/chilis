@@ -13,6 +13,8 @@ import { useRefs } from '@/hooks/use-refs'
 
 import { BaseImage } from '@/components/BaseImage'
 
+import SvgChilis from '@/svgs/Chilis.svg'
+
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -32,6 +34,10 @@ export const View: FC<ViewProps> = ({ content }) => {
           <BaseImage className={css.hero} data={getImageUrl(content.body.hero.src)} alt={content.body.hero.alt} />
         </div>
         <h1 className={css.content} {...copy.html(content.body.title)} />
+      </div>
+
+      <div className={css.logoContainer}>
+        <SvgChilis />
       </div>
     </main>
   )

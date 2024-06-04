@@ -50,3 +50,13 @@
     }
   }
 }
+
+.logoContainer {
+  @include box(px(64), px(40));
+  position: absolute;
+  bottom: px(25);
+
+  @include media-tablet-large {
+    bottom: px(100);
+  }
+}
