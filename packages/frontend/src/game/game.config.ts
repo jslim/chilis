@@ -12,7 +12,7 @@ export const FRAME_RATE_HARDEST = 34
 export const GAME_WIDTH = 240
 export const GAME_HEIGHT = 240
 
-export const GAME_ASSETS_BASE_URL = '/game/'
+export const GAME_ASSETS_BASE_URL = process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true' ? './game/' : '/game/'
 
 /* DEBUG */
 

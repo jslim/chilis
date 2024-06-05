@@ -1,12 +1,13 @@
 import type SceneManager from './SceneManager'
 import type { VideoSource } from 'pixi.js'
+
 import { Assets, Sprite } from 'pixi.js'
 
+import { getOgFont, SimpleText } from '@/game/display/SimpleText'
 import { FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from '@/game/game.config'
 
 import { GameState } from '../components/GameState'
 import { Component, Entity } from '../core/Entity'
-import { getOgFont, SimpleText } from '@/game/display/SimpleText'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
@@ -21,7 +22,7 @@ export class Scene extends Component {
   }
 
   protected async playVideo(videoId: string, onEnd: () => void) {
-    const videoUrl = `/videos/${videoId}.mp4`
+    const videoUrl = `${process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true' ? '.' : ''}/videos/${videoId}.mp4`
     await Assets.load(videoUrl)
     const videoSprite = Sprite.from(videoUrl)
     videoSprite.width = GAME_WIDTH
