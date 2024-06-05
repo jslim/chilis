@@ -30,7 +30,7 @@ export class GameState extends Component {
         localStorage.setItem('highScore', highScore.toString())
       } catch {}
     })
-    
+
   } */
 
   setLevel(levelNo: number) {
@@ -39,7 +39,10 @@ export class GameState extends Component {
     this.lives.value = 3
     this.bullets.value = 3
     this.score.value = 0
-    if (levelNo === 1) this.burgerCompleteCombo.value = 0
+    if (levelNo === 1) {
+      this.burgerCompleteCombo.value = 0
+      this.pickupsCollected.value = 0
+    }
   }
 
   public getValues() {

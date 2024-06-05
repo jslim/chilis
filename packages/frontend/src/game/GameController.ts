@@ -77,7 +77,7 @@ export class GameController {
         if (key.toLowerCase() === 'e') {
           // eslint-disable-next-line no-alert
           if (confirm('Next level?')) {
-            sceneManager.levelComplete(sceneManager.root.getComponent(GameState).getValues())
+            sceneManager.levelComplete(this.gameState.getValues())
           }
         } else if (key.toLowerCase() === 'o') {
           sceneManager.currentScene?.getComponent(LevelScene).burgers.forEach((burger) => {
@@ -95,9 +95,9 @@ export class GameController {
         } else if (key === ']') {
           sceneManager.root.timescale *= 1.5
         } else if (key === '1') {
-          sceneManager.root.getComponent(GameState).lives.value += 1
+          this.gameState.lives.value += 1
         } else if (key === '2') {
-          sceneManager.root.getComponent(GameState).bullets.value += 1
+          this.gameState.bullets.value += 1
         } else if (key === '3') {
           Player.GOD_MODE = !Player.GOD_MODE
         } else if (key === 'k') {
@@ -112,15 +112,29 @@ export class GameController {
   }
 
   public setHighScore(value: number) {
-    this.sceneManager.root.getComponent(GameState).highScore.value = value
+    this.gameState.highScore.value = value
   }
 
   public async showLevel(levelNo: number) {
     return this.sceneManager.showLevel(levelNo)
   }
 
+  public pause() {
+    this.sceneManager.pause()
+    this.onGameAction.emit({ a: 'pause', l: this.gameState.level.value })
+  }
+
+  public resume() {
+    this.sceneManager.pause()
+    this.onGameAction.emit({ a: 'resume', l: this.gameState.level.value })
+  }
+
   setChannels(channels: Channels) {
     this.channels = channels
     this.soundChannel = channels.createChannel('game')
+  }
+
+  get gameState(): GameState {
+    return this.sceneManager.root.getComponent(GameState)
   }
 }
