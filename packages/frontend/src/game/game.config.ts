@@ -44,6 +44,9 @@ export const POINTS_PER_CPU: { [key in CpuName]: number } = {
   burgertron: 200
 }
 
+export const POINTS_PER_PICKUP = 500
+export const POINTS_PER_3_PICKUPS = 1099
+
 export const POINTS_PER_TOTAL_CPUS_HIT = [0, 1000, 2000, 3000, 4000, 5000, 6000]
 
 export const POINTS_PER_BURGER_BOUNCE = [50, 100, 150, 200, 250, 300, 350]
