@@ -202,22 +202,18 @@ export class CpuMover extends Mover {
       switch (newDirection) {
         case 'left': {
           mover.left()
-
           break
         }
         case 'right': {
           mover.right()
-
           break
         }
         case 'up': {
           mover.up()
-
           break
         }
         case 'down': {
           mover.down()
-
           break
         }
         // No default
@@ -228,22 +224,18 @@ export class CpuMover extends Mover {
       switch (currentDirection) {
         case 'left': {
           this.right()
-
           break
         }
         case 'right': {
           this.left()
-
           break
         }
         case 'up': {
           this.down()
-
           break
         }
         case 'down': {
           this.up()
-
           break
         }
         // No default

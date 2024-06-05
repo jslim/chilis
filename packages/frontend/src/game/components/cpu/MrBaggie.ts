@@ -21,7 +21,7 @@ export class MrBaggie extends Cpu {
     mover.setSpeed(1.5)
     mover.modeCycle = ['random']
 
-    mover.directionAccuracy = 1
+    mover.directionAccuracy = 0
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {

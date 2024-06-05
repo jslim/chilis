@@ -118,3 +118,19 @@ export function haltonSequence(index: number, base: number): number {
   }
   return result
 }
+
+export function lerpColor(color1: number, color2: number, t: number = 0.5) {
+  const r1 = (color1 >> 16) & 0xff
+  const g1 = (color1 >> 8) & 0xff
+  const b1 = color1 & 0xff
+
+  const r2 = (color2 >> 16) & 0xff
+  const g2 = (color2 >> 8) & 0xff
+  const b2 = color2 & 0xff
+
+  const r = Math.round(r1 + t * (r2 - r1))
+  const g = Math.round(g1 + t * (g2 - g1))
+  const b = Math.round(b1 + t * (b2 - b1))
+
+  return (r << 16) | (g << 8) | b
+}

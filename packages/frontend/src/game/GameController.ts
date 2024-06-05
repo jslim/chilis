@@ -9,6 +9,7 @@ import { Signal } from './core/Signal'
 import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
+import { Channel, Channels } from '@mediamonks/channels'
 
 export class GameController {
   public onLevelComplete = new Signal<GameStateValues>()
@@ -18,6 +19,9 @@ export class GameController {
 
   public readonly app: Application = new Application()
   private sceneManager!: SceneManager
+
+  public soundChannel!: Channel
+  public channels!: Channels
 
   // get only after init()
   public get canvas(): HTMLCanvasElement {
@@ -113,5 +117,10 @@ export class GameController {
 
   public async showLevel(levelNo: number) {
     return this.sceneManager.showLevel(levelNo)
+  }
+
+  setChannels(channels: Channels) {
+    this.channels = channels
+    this.soundChannel = channels.createChannel('game')
   }
 }
