@@ -149,6 +149,7 @@ export default class LevelScene extends Scene {
     this.flumpLibrary = new FlumpLibrary('flump')
 
     this.walkGrid = connectionsToGrid(map, path)
+
     let cpuId = 0
     let traineeId = 1
     for (const layer of map.layers) {
@@ -233,6 +234,7 @@ export default class LevelScene extends Scene {
                   break
                 }
                 case 3: {
+                  offsetX = 0
                   cpu = new MrBaggie('mrbaggie')
                   break
                 }
@@ -540,6 +542,13 @@ export default class LevelScene extends Scene {
 
   public emitAction(action: GameAction) {
     this.sceneManager.gameController.onGameAction.emit(action)
+  }
+
+  public playSound(sound: string, volume: number = 0.75, pan: number = 0) {
+    this.sceneManager.gameController.soundChannel.play(sound, {
+      volume: 0.5,
+      pan
+    })
   }
 }
 
