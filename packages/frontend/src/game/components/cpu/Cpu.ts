@@ -13,7 +13,7 @@ import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
 import { DRAW_STATE_DEBUG } from '../../game.config'
 import { sortByDistanceTo } from '@/game/utils/array.utils'
-import { lerp } from '@/game/utils/math.utils'
+import { clamp01, lerp, lerpColor } from '@/game/utils/math.utils'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
@@ -49,6 +49,8 @@ export class Cpu extends Component {
   protected paralyzedCoolDown = new CoolDown(2)
   protected dieCoolDown = new CoolDown(6)
 
+  private spawnProcess: number = 0
+
   constructor(public name: CpuName = 'trainee01') {
     super()
   }
@@ -71,7 +73,7 @@ export class Cpu extends Component {
 
       switch (newState) {
         case 'spawn': {
-          this.entity.alpha = 0
+          this.spawnProcess = 0
           break
         }
 
@@ -162,11 +164,15 @@ export class Cpu extends Component {
       }
 
       case 'spawn': {
-        if (this.entity.alpha < 1) {
-          this.entity.alpha += 0.03
+        // lerp tint from black to original color using this.spawnProcess
+
+        if (this.spawnProcess < 1) {
+          this.spawnProcess += 0.03
         } else {
+          this.spawnProcess = 1
           this.state.value = 'walk'
         }
+        this.entity.tint = lerpColor(0x000000, 0xffffff, clamp01(this.spawnProcess))
         break
       }
     }
