@@ -1,6 +1,8 @@
-import { Application } from 'pixi.js'
+import type { GameAction } from '@/game/src/game/GameAction'
+import type { GameStateValues } from './components/GameState'
+import { GameState } from './components/GameState'
 
-import { GameState, GameStateValues } from './components/GameState'
+import { Application } from 'pixi.js'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
@@ -17,8 +19,6 @@ export class GameController {
 
   public readonly app: Application = new Application()
   private sceneManager!: SceneManager
-
-  constructor() {}
 
   // get only after init()
   public get canvas(): HTMLCanvasElement {
@@ -76,6 +76,7 @@ export class GameController {
     if (DEBUG_KEYS)
       window.addEventListener('keydown', ({ key }) => {
         if (key.toLowerCase() === 'e') {
+          // eslint-disable-next-line no-alert
           if (confirm('Next level?')) {
             sceneManager.levelComplete(sceneManager.root.getComponent(GameState).getValues())
           }
@@ -85,21 +86,24 @@ export class GameController {
             if (!b.isCompleted) b.state.value = 'fall'
           })
         }
+
         // debug keys
         if (key.toLowerCase() === 'p') {
           sceneManager.root.timescale = sceneManager.root.timescale <= 0 ? 1 : 0
-        } else if (key == '[') {
+        } // eslint-disable-next-line unicorn/prefer-switch
+        else if (key === '[') {
           sceneManager.root.timescale = Math.max(0, sceneManager.root.timescale * 0.75)
-        } else if (key == ']') {
+        } else if (key === ']') {
           sceneManager.root.timescale *= 1.5
-        } else if (key == '1') {
+        } else if (key === '1') {
           sceneManager.root.getComponent(GameState).lives.value += 1
-        } else if (key == '2') {
+        } else if (key === '2') {
           sceneManager.root.getComponent(GameState).bullets.value += 1
-        } else if (key == '3') {
+        } else if (key === '3') {
           Player.GOD_MODE = !Player.GOD_MODE
-        } else if (key == 'k') {
+        } else if (key === 'k') {
           //open canvas as image in new window
+          // eslint-disable-next-line unicorn/consistent-destructuring
           this.app.canvas.toBlob((blob) => {
             const url = URL.createObjectURL(blob!)
             window.open(url, '_blank')

@@ -38,7 +38,7 @@ export function getTileConnections(tiledMap: TiledMap, tiledLayer: TiledLayer): 
 
   for (let i = 0, leni = grid.length; i < leni; i++) {
     const x = i % tiledLayer.width
-    const y = (i / tiledLayer.width) | 0
+    const y = Math.trunc(i / tiledLayer.width)
     const tileId = getTileId(x, y)
     const leftTileId = getTileId(x - 1, y)
     const rightTileId = getTileId(x + 1, y)
@@ -123,7 +123,7 @@ export function drawGrid({ grid, size }: TiledWalkGrid) {
   for (const [i, element] of grid.entries()) {
     if (element) {
       const x = i % size
-      const y = (i / size) | 0
+      const y = Math.trunc(i / size)
       graphics.rect(x, y, 1, 1).fill(0xffffff)
     }
   }

@@ -1,8 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import { Signal } from './Signal'
 
-export class Value<T = any> {
-  private _value: T
+export class Value<T = unknown> {
   onChanged: Signal<T>
+  private _value: T
 
   constructor(initialValue: T) {
     this._value = initialValue

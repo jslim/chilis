@@ -3,7 +3,12 @@ import { clamp01 } from '../utils/math.utils'
 export class CoolDown {
   public time: number = 0
 
+  // eslint-disable-next-line no-empty-function
   constructor(public interval: number) {}
+
+  public get progress() {
+    return clamp01(this.time / this.interval)
+  }
 
   public update(dt: number) {
     this.time += dt
@@ -16,9 +21,5 @@ export class CoolDown {
 
   public isExpired() {
     return this.time >= this.interval
-  }
-
-  public get progress() {
-    return clamp01(this.time / this.interval)
   }
 }

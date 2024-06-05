@@ -2,6 +2,7 @@ import type { Entity } from '../../core/Entity'
 import { Component } from '../../core/Entity'
 import type LevelScene from '../../scenes/LevelScene'
 import { Signal } from '../../core/Signal'
+// eslint-disable-next-line import/no-cycle
 import { Cpu } from '../cpu/Cpu'
 import { HitBox } from '../HitBox'
 import { Player } from '../player/Player'
@@ -17,6 +18,7 @@ export class Bullet extends Component {
 
   override onStart() {
     super.onStart()
+
     this.level = this.entity.getComponent(LevelComponent).level
   }
 

@@ -12,8 +12,8 @@ import { device } from '@/utils/detect'
 
 import { useRefs } from '@/hooks/use-refs'
 
-import SvgRotate from '@/svgs/Rotate.svg'
 import SvgChilis from '@/svgs/Chilis.svg'
+import SvgRotate from '@/svgs/Rotate.svg'
 
 export interface ViewProps extends ControllerProps {}
 

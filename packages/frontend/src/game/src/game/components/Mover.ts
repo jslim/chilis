@@ -5,6 +5,7 @@ import { Point } from 'pixi.js'
 import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
 import { FLOOR_OFFSET } from '../game.config'
+// eslint-disable-next-line import/no-cycle
 import { canMove, canMoveTo } from '../utils/grid.utils'
 import { LevelComponent } from './level/LevelComponent'
 
@@ -48,11 +49,6 @@ export class Mover extends Component {
     this.setSpeed(speed)
   }
 
-  public setSpeed(speed: number) {
-    this.speed.x = speed
-    this.speed.y = this.speed.x / 1.72
-  }
-
   public get hasMoved(): boolean {
     return !this.isEqual(this.prevPosition.x, this.position.x) || !this.isEqual(this.prevPosition.y, this.position.y)
   }
@@ -61,6 +57,11 @@ export class Mover extends Component {
     const canMoveLeft = canMove(this.position.x, this.position.y, -1, 0, this.level)
     const canMoveRight = canMove(this.position.x, this.position.y, 1, 0, this.level)
     return canMoveLeft || canMoveRight
+  }
+
+  public setSpeed(speed: number) {
+    this.speed.x = speed
+    this.speed.y = this.speed.x / 1.72
   }
 
   override onStart() {

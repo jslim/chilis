@@ -5,12 +5,12 @@ export function getRandom(seed = Math.random()): RandomFunction {
   return (from = 0, to = 1) => {
     let r = 1_103_515_245 * ((current >> 1) ^ current++)
     r = 1_103_515_245 * (r ^ (r >> 3))
-    r ^= (r >> 16)
+    r ^= r >> 16
     const value = (r / 1_103_515_245) % 1
     return from + value * (to - from)
   }
 }
 
 export function pick<T>(array: T[], random: RandomFunction): T {
-  return array[(random() * array.length) | 0]
+  return array[Math.trunc(random() * array.length)]
 }

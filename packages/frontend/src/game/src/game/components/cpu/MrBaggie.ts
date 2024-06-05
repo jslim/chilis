@@ -34,11 +34,12 @@ export class MrBaggie extends Cpu {
             const playerHitBoxRect = this.entity
 
             const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-            const mover = this.entity.getComponent(Mover)
+
+            const moverInner = this.entity.getComponent(Mover)
             const bulletSize = { width: 28, height: 11 }
             const bulletOffset = -bulletSize.width / 3
-            if (mover.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
-            else if (mover.currentDirection.value === 'right') bulletPos.x += bulletOffset
+            if (moverInner.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
+            else if (moverInner.currentDirection.value === 'right') bulletPos.x += bulletOffset
 
             const bullet = new Entity(this.level.flumpLibrary!.createSprite('mrbaggie_ball')).addComponent(
               new LevelComponent(this.level!),
@@ -65,14 +66,12 @@ export class MrBaggie extends Cpu {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
-      case 'walk': {
-        /*if (!mover.isClimbing() && this.attackCoolDown.update(dt)) {
+      case 'walk':
+      /*if (!mover.isClimbing() && this.attackCoolDown.update(dt)) {
           this.state.value = 'prepare_attack'
           this.attackCoolDown.reset()
         }*/
-      }
     }
   }
 }

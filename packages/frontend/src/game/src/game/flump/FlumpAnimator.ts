@@ -7,10 +7,10 @@ import { Value } from '../core/Value'
 import { FlumpMovieSprite } from './FlumpMovieSprite'
 
 export class FlumpAnimator extends Component {
+  public currentMovie = new Value<FlumpMovieSprite | undefined>(undefined)
   protected root = new Container()
 
   protected cache = new Map<string, FlumpMovieSprite>()
-  public currentMovie = new Value<FlumpMovieSprite | undefined>(undefined)
 
   constructor(protected readonly library: FlumpLibrary) {
     super()

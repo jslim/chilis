@@ -1,8 +1,9 @@
 import { Assets, Graphics } from 'pixi.js'
 
+import { GAME_ASSETS_BASE_URL } from '@/game/src/game/game.config'
+
 import { assetsManifest } from '../assets.manifest'
 import { Scene } from './Scene'
-import { GAME_ASSETS_BASE_URL } from '@/game/src/game/game.config'
 
 export class PreloadScene extends Scene {
   private readonly graphics = new Graphics()
@@ -30,7 +31,9 @@ export class PreloadScene extends Scene {
     await Assets.loadBundle(['game'], (p) => this.drawProgress(p))
 
     // wait a bit
-    await new Promise((resolve) => setTimeout(resolve, 130))
+    await new Promise((resolve) => {
+      setTimeout(resolve, 130)
+    })
   }
 
   drawProgress(progress: number) {

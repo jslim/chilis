@@ -10,6 +10,7 @@ export class GameState extends Component {
   public readonly lives = new Value<number>(3)
   public readonly burgerCompleteCombo = new Value<number>(0)
 
+  /*
   constructor() {
     super()
 
@@ -29,8 +30,8 @@ export class GameState extends Component {
         localStorage.setItem('highScore', highScore.toString())
       } catch {}
     })
-    */
-  }
+    
+  } */
 
   setLevel(levelNo: number) {
     this.level.value = levelNo

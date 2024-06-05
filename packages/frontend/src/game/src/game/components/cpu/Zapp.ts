@@ -1,5 +1,8 @@
 import { Point } from 'pixi.js'
 
+import { CpuAnimator } from '@/game/src/game/components/cpu/CpuAnimator'
+import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
+
 import { createDelay } from '../../core/Delay'
 import { Entity } from '../../core/Entity'
 import { AutoDisposer } from '../AutoDisposer'
@@ -9,8 +12,6 @@ import { LevelComponent } from '../level/LevelComponent'
 import { Mover } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
-import { CpuAnimator } from '@/game/src/game/components/cpu/CpuAnimator'
-import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
 
 export class Zapp extends Cpu {
   override onStart() {
@@ -21,6 +22,7 @@ export class Zapp extends Cpu {
     this.paralyzedCoolDown.interval = 3
 
     const animator = this.entity.getComponent(CpuAnimator)
+
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['hunt-burger']
@@ -29,7 +31,7 @@ export class Zapp extends Cpu {
 
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
-        case 'prepare_attack':
+        case 'prepare_attack': {
           // should longest distance
           if (this.entity.x < 120) {
             mover.currentDirection.value = 'right'
@@ -39,18 +41,20 @@ export class Zapp extends Cpu {
             animator.flipToLeft()
           }
           break
+        }
 
         case 'attack': {
           this.level!.screenShake(3, 0.3)
           const playerHitBoxRect = this.entity
 
           const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-          const mover = this.entity.getComponent(Mover)
+
+          const moverInner = this.entity.getComponent(Mover)
           const bulletSize = { width: 240, height: 8 }
           const bulletOffset = 0
 
-          if (mover.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
-          else if (mover.currentDirection.value === 'right') bulletPos.x += bulletOffset
+          if (moverInner.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
+          else if (moverInner.currentDirection.value === 'right') bulletPos.x += bulletOffset
 
           const bullet = new Entity().addComponent(
             new LevelComponent(this.level!),
@@ -68,7 +72,7 @@ export class Zapp extends Cpu {
           break
         }
         case 'attack_complete': {
-          let dissolveAnimation = new FlumpAnimator(this.level!.flumpLibrary)
+          const dissolveAnimation = new FlumpAnimator(this.level!.flumpLibrary)
           dissolveAnimation.setMovie('zapp_dissolve_attack').gotoAndPlay(0).once()
           this.subscribeOnce(dissolveAnimation.currentMovie.value!.onEnd, () => animationEntity.destroy())
           const animationEntity = new Entity().addComponent(dissolveAnimation)

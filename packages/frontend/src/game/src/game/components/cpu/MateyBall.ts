@@ -6,7 +6,7 @@ import { LevelComponent } from '../level/LevelComponent'
 
 export class MateyBall extends Component {
   //public floorPositions = [60, 80, 100, 120, 150, 180, 260];
-  private readonly tween = new Tween(0)
+  private readonly tween = new Tween<number>(0)
 
   constructor(
     private readonly floorPositions: number[]
@@ -21,6 +21,12 @@ export class MateyBall extends Component {
     this.tween.to(this.entity.y, 0)
 
     this.tweenToNextFloor()
+  }
+
+  override onUpdate(dt: number) {
+    super.onUpdate(dt)
+    this.tween.update(dt)
+    //if (this.tween) console.log(this.tween.progress);
   }
 
   private tweenToFloor(toY: number) {
@@ -48,11 +54,5 @@ export class MateyBall extends Component {
     } else {
       this.entity.destroy()
     }
-  }
-
-  override onUpdate(dt: number) {
-    super.onUpdate(dt)
-    this.tween.update(dt)
-    //if (this.tween) console.log(this.tween.progress);
   }
 }

@@ -8,14 +8,13 @@ import { Signal } from '../core/Signal'
 export class FlumpMovieSprite extends Container {
   public readonly onEnd = new Signal()
   public readonly onLoop = new Signal()
+  public isPlaying = true
+  public isLooping = true
 
   public readonly movieData: FlumpMovieData
   public readonly totalFrames: number
   private currentFrame = 0
   private currentKeyFrame: FlumpKeyFrame | undefined = undefined
-
-  public isPlaying = true
-  public isLooping = true
 
   private movieLayers: FlumpMovieSprite[] = []
 

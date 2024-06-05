@@ -1,9 +1,14 @@
+/* eslint-disable no-labels */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-direct-mutation-state */
 import type { Entity } from '../../core/Entity'
 import { Component } from '../../core/Entity'
 import type LevelScene from '../../scenes/LevelScene'
 import type { BurgerGroup } from './BurgerGroup'
 
 import { Rectangle, Sprite, Texture } from 'pixi.js'
+
+import { getPixGamerNumberFont } from '@/game/src/game/display/SimpleText'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
 import {
@@ -14,12 +19,12 @@ import {
   POINTS_PER_TOTAL_CPUS_HIT
 } from '../../game.config'
 import { TileId } from '../../tiled/TileId'
+// eslint-disable-next-line import/no-cycle
 import { Cpu } from '../cpu/Cpu'
 import { HitBox } from '../HitBox'
 import { Mover } from '../Mover'
 import { StateDebugText } from '../StateDebugText'
 import { LevelComponent } from './LevelComponent'
-import { getPixGamerNumberFont } from '@/game/src/game/display/SimpleText'
 
 export const burgerOverlap = 1
 export const burgerHeightByTileId = {
@@ -90,7 +95,7 @@ export class Burger extends Component {
     //const sprite = get(this.spriteSheetLarge, this.tileId);
 
     if (DRAW_STATE_DEBUG) {
-      this.entity.addComponent(new StateDebugText(this.state, [10, 7], this.entity.color))
+      this.entity.addComponent(new StateDebugText(this.state as Value, [10, 7], this.entity.color))
     }
 
     const { tilewidth, tileheight } = BurgerTileSize
@@ -156,7 +161,7 @@ export class Burger extends Component {
       this.fallStats.totalCpusHit++
       cpu.getComponent(Cpu).onHitByBurger.emit(this)
 
-      let points = POINTS_PER_CPU[cpu.getComponent(Cpu).name]
+      const points = POINTS_PER_CPU[cpu.getComponent(Cpu).name]
       this.level.addScore(this.entity.position, points)
       this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points })
     })
@@ -241,7 +246,7 @@ export class Burger extends Component {
             this.onSlice.emit()
           }
         }
-        if (sliceSprite.y == MAX_Y_DOWN) this.totalSlicesTouched++
+        if (sliceSprite.y === MAX_Y_DOWN) this.totalSlicesTouched++
       }
     }
 
@@ -296,12 +301,9 @@ export class Burger extends Component {
             const otherBurgerComponent = otherBurger.getComponent(Burger)
             if (this.intersectsWith(otherBurger)) {
               if (otherBurgerComponent.isIdle) {
-                // intersect with idle burger
                 this.onHitBurger.emit(otherBurger)
               } else if (otherBurgerComponent.isCompleted) {
-                // if land on burger on the plate
                 this.onHitPlate.emit(otherBurger)
-                // this.state.value = "complete";
                 break loop
               }
               break
@@ -317,6 +319,7 @@ export class Burger extends Component {
     }
   }
 
+  // eslint-disable-next-line no-empty-function
   private updateComplete() {}
 
   private stepUpdateSlicedParts() {
@@ -362,7 +365,7 @@ export class Burger extends Component {
     let points = 0
 
     if (this.fallStats.totalCpusHit) {
-      let pointForCpuHit = POINTS_PER_TOTAL_CPUS_HIT[this.fallStats.totalCpusHit]
+      const pointForCpuHit = POINTS_PER_TOTAL_CPUS_HIT[this.fallStats.totalCpusHit]
       points += pointForCpuHit
       // reset
       this.fallStats.totalCpusHit = 0
@@ -378,7 +381,7 @@ export class Burger extends Component {
 
     let points = 0
 
-    let pointsForBurgerHit = POINTS_PER_BURGER_BOUNCE[this.fallStats.chainCollisionCount]
+    const pointsForBurgerHit = POINTS_PER_BURGER_BOUNCE[this.fallStats.chainCollisionCount]
     if (pointsForBurgerHit) {
       points += pointsForBurgerHit
       // reset
@@ -397,10 +400,11 @@ function getBurgerTextureFrame(spriteSheet: Texture, id: number): Rectangle {
   const { tilewidth, tileheight } = BurgerTileSize
 
   // tile ids are 1 based
+  // eslint-disable-next-line no-param-reassign
   id -= 1
 
   const totalTilesPerRow = spriteSheet.width / tilewidth
   const tx = id % totalTilesPerRow
-  const ty = (id / totalTilesPerRow) | 0
+  const ty = Math.trunc(id / totalTilesPerRow)
   return new Rectangle(tx * tilewidth, ty * tileheight, tilewidth, tileheight)
 }

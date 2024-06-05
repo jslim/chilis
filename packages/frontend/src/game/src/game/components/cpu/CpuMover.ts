@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/consistent-destructuring */
+
 import type { Entity } from '../../core/Entity'
 import type { RandomFunction } from '../../utils/random.utils'
 import { getRandom, pick } from '../../utils/random.utils'
@@ -10,24 +12,18 @@ import { DRAW_CPU_DEBUG } from '../../game.config'
 import { sortByDistanceTo } from '../../utils/array.utils'
 import { getMoveDirections } from '../../utils/grid.utils'
 import { HitBox } from '../HitBox'
+// eslint-disable-next-line import/no-cycle
 import { Burger } from '../level/Burger'
 import { Mover } from '../Mover'
 
 const modes = ['random', 'hunt-player', 'hunt-player-slow', 'hunt-burger', 'hunt-cpu', 'stairs'] as const
 
 export class CpuMover extends Mover {
-  private modeId = 0
-  private readonly debugGraphics = new Graphics()
   public readonly mode = new Value<(typeof modes)[number]>('random')
-
   public targetX = 0
   public targetY = 0
-  private targetEntity: Entity | undefined = undefined
-  private nextModeCooldown: CoolDown | undefined = undefined
   public directionAccuracy = 1 // 0=accurate, 1=sometimes takes second best direction
-
   public random!: RandomFunction
-
   public modeCycle: (typeof modes)[number][] = [
     'hunt-player',
     'hunt-player-slow',
@@ -39,6 +35,12 @@ export class CpuMover extends Mover {
     'hunt-player',
     'random'
   ]
+
+  private modeId = 0
+  private readonly debugGraphics = new Graphics()
+
+  private targetEntity: Entity | undefined = undefined
+  private nextModeCooldown: CoolDown | undefined = undefined
 
   constructor(
     speed: number = 1,
@@ -64,6 +66,7 @@ export class CpuMover extends Mover {
         case 'hunt-burger': {
           // find closest to player burger (in idle state)
           const burgerToHunt = this.level.burgers
+
             .filter((burger) => burger.getComponent(Burger).isIdle)
             .sort(sortByDistanceTo(this.level.player))
             .shift()
@@ -154,13 +157,14 @@ export class CpuMover extends Mover {
         }
 
         case 'hunt-player':
-        case 'hunt-cpu':
+        case 'hunt-cpu': {
           targetX = this.targetEntity!.x
           targetY = this.targetEntity!.y
+        }
 
         // fall through
         case 'hunt-player-slow':
-        case 'hunt-burger':
+        case 'hunt-burger': {
           // find direction that is closest to target
           const directionsSorted = this.findClosestToTarget(directions, cpuX, cpuY, targetX, targetY)
 
@@ -172,6 +176,7 @@ export class CpuMover extends Mover {
             this.nextMode()
           }
           break
+        }
       }
       /*
       if (this.cpuId === 1) {
@@ -192,6 +197,7 @@ export class CpuMover extends Mover {
       // }
 
       // move in new direction
+
       const mover = this.entity.getComponent(Mover)!
       switch (newDirection) {
         case 'left': {
@@ -253,6 +259,11 @@ export class CpuMover extends Mover {
     return this.currentDirection.value === 'up' || this.currentDirection.value === 'down'
   }
 
+  public reset() {
+    this.random = getRandom(this.cpuId)
+    this.modeId = this.cpuId
+  }
+
   private nextMode() {
     const oldMode = this.mode.value
     this.mode.value = this.modeCycle[this.modeId++ % this.modeCycle.length]
@@ -262,40 +273,38 @@ export class CpuMover extends Mover {
   }
 
   private findClosestToTarget(directions: string[], cpuX: number, cpuY: number, targetX: number, targetY: number) {
-    return directions
-      .map((dir) => {
-        switch (dir) {
-          case 'left': {
-            return {
-              distance: Math.hypot(cpuX - targetX - 24, cpuY - targetY),
-              dir
+    return (
+      directions
+        // eslint-disable-next-line array-callback-return
+        .map((dir) => {
+          switch (dir) {
+            case 'left': {
+              return {
+                distance: Math.hypot(cpuX - targetX - 24, cpuY - targetY),
+                dir
+              }
+            }
+            case 'right': {
+              return {
+                distance: Math.hypot(cpuX - targetX + 24, cpuY - targetY),
+                dir
+              }
+            }
+            case 'up': {
+              return {
+                distance: Math.hypot(cpuX - targetX, cpuY - targetY - 16),
+                dir
+              }
+            }
+            case 'down': {
+              return {
+                distance: Math.hypot(cpuX - targetX, cpuY - targetY + 16),
+                dir
+              }
             }
           }
-          case 'right': {
-            return {
-              distance: Math.hypot(cpuX - targetX + 24, cpuY - targetY),
-              dir
-            }
-          }
-          case 'up': {
-            return {
-              distance: Math.hypot(cpuX - targetX, cpuY - targetY - 16),
-              dir
-            }
-          }
-          case 'down': {
-            return {
-              distance: Math.hypot(cpuX - targetX, cpuY - targetY + 16),
-              dir
-            }
-          }
-        }
-      })
-      .sort((a, b) => a!.distance - b!.distance)
-  }
-
-  public reset() {
-    this.random = getRandom(this.cpuId)
-    this.modeId = this.cpuId
+        })
+        .sort((a, b) => a!.distance - b!.distance)
+    )
   }
 }

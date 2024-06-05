@@ -6,7 +6,7 @@ import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
 import { Bullet } from '../level/Bullet'
 import { LevelComponent } from '../level/LevelComponent'
-import { getOppositeDirection, Mover } from '../Mover'
+import { getOppositeDirection } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 
@@ -32,7 +32,6 @@ export class Piggles extends Cpu {
           const playerHitBoxRect = this.entity
 
           const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-          const mover = this.entity.getComponent(Mover)
           const bulletSize = { width: 20, height: 10 }
           const bulletOffset = 10
           if (mover.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
@@ -75,10 +74,11 @@ export class Piggles extends Cpu {
         }
         break
       }
-      case 'prepare_attack':
+      case 'prepare_attack': {
         if (Math.abs(this.entity.x - this.level!.player.x) > ATTACK_RANGE * 1.25) {
           this.state.value = 'walk'
         }
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-type GameAction = {
+export type GameAction = {
   /// action
   a:
     | 'pause'

@@ -7,8 +7,8 @@ export class AnimationSprite extends Sprite {
   public readonly onLoop = new Signal()
 
   public totalFrames: number
-  private readonly frameTextures: Texture[] = []
   public isLooping: boolean = true
+  private readonly frameTextures: Texture[] = []
   private isPlaying: boolean = true
   private currentFrame = 0
 

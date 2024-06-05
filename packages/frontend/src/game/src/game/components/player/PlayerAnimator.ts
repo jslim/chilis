@@ -8,6 +8,7 @@ export class PlayerAnimator extends FlumpAnimator {
 
     const player = this.entity.getComponent(Player)
     this.root.pivot.x = 1 // visual correction of animation
+
     const mover = this.entity.getComponent(Mover)
 
     this.subscribe(mover.currentDirection.onChanged, (direction) => {

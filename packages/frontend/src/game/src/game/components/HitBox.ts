@@ -7,15 +7,14 @@ import { Mover } from './Mover'
 
 export class HitBox extends Component {
   public isActive = new Value<boolean>(true)
+  public readonly current: Rectangle
+  public hasIntersection: boolean = false
 
   // a and b are used to avoid creating new objects, they are only used for comparison
   private readonly a: Rectangle = new Rectangle()
   private readonly b: Rectangle = new Rectangle()
 
-  public readonly current: Rectangle
-
   private readonly graphics = new Graphics()
-  public hasIntersection: boolean = false
 
   constructor(x: number, y: number, width: number, height: number) {
     super()
@@ -52,6 +51,7 @@ export class HitBox extends Component {
 
   public getRect(temp = new Rectangle()): Rectangle {
     temp.copyFrom(this.current)
+
     const position = this.entity.getComponent(Mover)?.position ?? this.entity.position
     temp.x += position.x
     temp.y += position.y

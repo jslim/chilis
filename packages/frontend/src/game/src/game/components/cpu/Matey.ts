@@ -1,3 +1,7 @@
+import { createDelay } from '@/game/src/game/core/Delay'
+import { removeItem } from '@/game/src/game/utils/array.utils'
+import { getRandom, pick } from '@/game/src/game/utils/random.utils'
+
 import { CoolDown } from '../../core/CoolDown'
 import { Entity } from '../../core/Entity'
 import { FLOOR_OFFSET } from '../../game.config'
@@ -8,9 +12,6 @@ import { LevelComponent } from '../level/LevelComponent'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 import { MateyBall } from './MateyBall'
-import { getRandom, pick } from '@/game/src/game/utils/random.utils'
-import { removeItem } from '@/game/src/game/utils/array.utils'
-import { createDelay } from '@/game/src/game/core/Delay'
 
 export class Matey extends Cpu {
   override onStart() {
@@ -36,8 +37,8 @@ export class Matey extends Cpu {
           this.level!.screenShake(4, 0.3)
 
           const shootPositions = [2, 3, 4, 5, 6, 7, 8]
-          const random = getRandom((Math.random() * 777) | 0)
-          const totalBalls = random(4, 7) | 0
+          const random = getRandom(Math.trunc(Math.random() * 777))
+          const totalBalls = Math.trunc(random(4, 7))
           for (let i = 0; i < totalBalls; i++) {
             const shootPos = pick(shootPositions, random)
             removeItem(shootPositions, shootPos)
@@ -67,7 +68,7 @@ export class Matey extends Cpu {
 
   private shootBall(tileX: number) {
     if (this.level) {
-      const mover = this.entity.getComponent(CpuMover)
+      // const mover = this.entity.getComponent(CpuMover)
       const x = tileX * this.level.map.tilewidth
       const ballSize = { width: 16, height: 16 }
 

@@ -1,4 +1,6 @@
+/* eslint-disable no-param-reassign */
 import type { DestroyOptions, TextStyleAlign } from 'pixi.js'
+
 import { Assets, Container, Rectangle, Sprite, Texture } from 'pixi.js'
 
 import { Value } from '../core/Value'
@@ -79,21 +81,19 @@ export class SimpleText extends Container {
     this.text = new Value('')
     this.connection = this.text.onChanged.subscribe((newLabel) => {
       // newLabel replace everything thats not in `characters` with a space
-      newLabel = newLabel
-        .toLowerCase()
-        .split('')
-        .map((c) => (characters.includes(c) ? c : ' '))
-        .join('')
+      newLabel = [...newLabel.toLowerCase()].map((c) => (characters.includes(c) ? c : ' ')).join('')
 
       sprites = sprites.filter((sprite: Sprite, i) => {
         if (i < newLabel.length) {
           sprite.texture = characterMap.get(newLabel[i])!
           return true
         }
+        // eslint-disable-next-line unicorn/prefer-dom-node-remove
         sprite.parent?.removeChild(sprite)
         return false
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       let x = this.width + letterSpacing
       for (let i = sprites.length; i < newLabel.length; i++) {
         const char = newLabel[i]

@@ -1,8 +1,8 @@
-import type { Direction, MoveDirection} from '../Mover';
+import type { Direction, MoveDirection } from '../Mover'
+import { Mover } from '../Mover'
 
 import { CoolDown } from '../../core/CoolDown'
 import { Input } from '../input/Input'
-import { Mover } from '../Mover'
 import { Player } from './Player'
 
 export class PlayerPacManMover extends Mover {
@@ -11,6 +11,7 @@ export class PlayerPacManMover extends Mover {
 
   override onStart() {
     super.onStart()
+
     this.subscribe(this.entity.getComponent(Player).onReset, () => {
       this.queuedDirection = ''
       this.currentDirection.value = ''
@@ -58,8 +59,8 @@ export class PlayerPacManMover extends Mover {
         }
 
         if (!hasMoved && this.queuedDirection && move(this.queuedDirection)) {
-            this.queuedDirection = ''
-          }
+          this.queuedDirection = ''
+        }
 
         if (!hasMoved && currentDirection) {
           move(currentDirection)
