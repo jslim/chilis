@@ -6,7 +6,7 @@ import { LevelComponent } from '../level/LevelComponent'
 
 export class MateyBall extends Component {
   //public floorPositions = [60, 80, 100, 120, 150, 180, 260];
-  private readonly tween = new Tween(0)
+  private readonly tween = new Tween<number>(0)
 
   constructor(
     private readonly floorPositions: number[]
@@ -18,7 +18,6 @@ export class MateyBall extends Component {
   override onStart() {
     super.onStart()
 
-    // @ts-expect-error - argument of type 'number' is not assignable to parameter of type '0'.
     this.tween.to(this.entity.y, 0)
 
     this.tweenToNextFloor()
@@ -35,7 +34,6 @@ export class MateyBall extends Component {
     const duration = 1 //distance / this.speed;
 
     this.tween.to(
-      // @ts-expect-error - argument of type 'number' is not assignable to parameter of type '0'.
       toY,
       duration,
       (v) => {
@@ -51,7 +49,6 @@ export class MateyBall extends Component {
   private tweenToNextFloor() {
     const nextFloor = this.floorPositions.shift()
     if (nextFloor !== undefined) {
-      // @ts-expect-error - entity is private
       this.entity.getComponent(LevelComponent).level.screenShake(2, 3 / FRAME_RATE)
       this.tweenToFloor(nextFloor)
     } else {

@@ -1,8 +1,8 @@
 import type { Direction, MoveDirection } from '../Mover'
+import { Mover } from '../Mover'
 
 import { CoolDown } from '../../core/CoolDown'
 import { Input } from '../input/Input'
-import { Mover } from '../Mover'
 import { Player } from './Player'
 
 export class PlayerPacManMover extends Mover {
@@ -11,7 +11,7 @@ export class PlayerPacManMover extends Mover {
 
   override onStart() {
     super.onStart()
-    // @ts-expect-error - entity is private
+
     this.subscribe(this.entity.getComponent(Player).onReset, () => {
       this.queuedDirection = ''
       this.currentDirection.value = ''
@@ -26,7 +26,6 @@ export class PlayerPacManMover extends Mover {
       this.queuedDirection = ''
     }
 
-    // @ts-expect-error - entity is private
     const player = this.entity.getComponent(Player)
     const input = this.entity.getComponent(Input)
 

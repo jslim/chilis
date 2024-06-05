@@ -17,10 +17,9 @@ export class CpuAnimator extends FlumpAnimator {
   override onStart() {
     super.onStart()
 
-    // @ts-expect-error - entity is private
     const cpu = this.entity.getComponent(Cpu)
     this.root.pivot.x = this.offsetX // visual correction of animation
-    // @ts-expect-error - entity is private
+
     const mover = this.entity.getComponent(Mover)
 
     this.subscribe(mover.currentDirection.onChanged, (direction) => {

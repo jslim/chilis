@@ -6,7 +6,6 @@ export class PlayerMover extends Mover {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    // @ts-expect-error - entity is private
     const player = this.entity.getComponent(Player)
     const input = this.entity.getComponent(Input)
     if (input && player.canWalk) {

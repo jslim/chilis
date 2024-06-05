@@ -1,7 +1,9 @@
 import type { GameAction } from '@/game/src/game/GameAction'
 import type { SimpleTextConfig } from '../display/SimpleText'
+import { get8pxNumberFont, getPixGamerNumberFont } from '../display/SimpleText'
 import type { TiledMap } from '../tiled/TiledMap'
 import type { TiledWalkGrid } from '../utils/tiles.utils'
+import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '../utils/tiles.utils'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
@@ -41,7 +43,6 @@ import { createDelay } from '../core/Delay'
 import { Entity } from '../core/Entity'
 import { ScreenShake } from '../core/ScreenShake'
 import { Signal } from '../core/Signal'
-import { get8pxNumberFont, getPixGamerNumberFont } from '../display/SimpleText'
 import { FlumpLibrary } from '../flump/FlumpLibrary'
 import {
   DRAW_DEBUG_GRID,
@@ -53,7 +54,6 @@ import {
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { TileId } from '../tiled/TileId'
-import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '../utils/tiles.utils'
 import { Scene } from './Scene'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
@@ -116,10 +116,8 @@ export default class LevelScene extends Scene {
 
     this.subscribe(this.onAllBurgersCompleted, () => {
       this.isPlaying = false
-      // @ts-expect-error - entity is private
       this.player.getComponent(Player).state.value = 'victory'
       for (const cpu of this.cpus) {
-        // @ts-expect-error - entity is private
         cpu.getComponent(Cpu).state.value = 'defeat'
       }
       createDelay(this.entity, 2, () => this.showWinScreen())
@@ -211,14 +209,12 @@ export default class LevelScene extends Scene {
               new PlayerAnimator(this.flumpLibrary)
             )
 
-            // @ts-expect-error - entity is private
             const playerComponent = this.player.getComponent(Player)
             this.subscribe(playerComponent.onDied, () => this.showDefeatScreen())
             this.subscribe(playerComponent.onHitCpu, () =>
-              // @ts-expect-error - entity is private
               this.cpus.forEach((cpu) => (cpu.getComponent(Cpu).state.value = 'defeat'))
             )
-            // @ts-expect-error - entity is private
+
             this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
             let cpu: Cpu | undefined
@@ -267,7 +263,6 @@ export default class LevelScene extends Scene {
               this.cpus.push(entity)
 
               if (cpu.name.includes('trainee')) {
-                // @ts-expect-error - entity is private
                 const mover = entity.getComponent(CpuMover)
                 switch (traineeId) {
                   case 1: {
@@ -494,7 +489,6 @@ export default class LevelScene extends Scene {
     })
 
     // Listen for burger group completion, and add score
-    // @ts-expect-error - entity is private
     this.subscribe(this.player.getComponent(Player).onHitCpu, () => {
       this.gameState.burgerCompleteCombo.value = 0
     })

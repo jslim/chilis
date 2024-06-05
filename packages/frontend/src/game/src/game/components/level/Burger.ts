@@ -2,14 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-direct-mutation-state */
 import type { Entity } from '../../core/Entity'
+import { Component } from '../../core/Entity'
 import type LevelScene from '../../scenes/LevelScene'
 import type { BurgerGroup } from './BurgerGroup'
 
 import { Rectangle, Sprite, Texture } from 'pixi.js'
 
 import { getPixGamerNumberFont } from '@/game/src/game/display/SimpleText'
-
-import { Component } from '../../core/Entity'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
 import {
@@ -92,13 +91,11 @@ export class Burger extends Component {
   override onStart() {
     super.onStart()
 
-    // @ts-expect-error - entity is private
     this.level = this.entity.getComponent(LevelComponent).level
     //const sprite = get(this.spriteSheetLarge, this.tileId);
 
     if (DRAW_STATE_DEBUG) {
-      // @ts-expect-error - entity is private
-      this.entity.addComponent(new StateDebugText(this.state, [10, 7], this.entity.color))
+      this.entity.addComponent(new StateDebugText(this.state as Value, [10, 7], this.entity.color))
     }
 
     const { tilewidth, tileheight } = BurgerTileSize
@@ -162,10 +159,8 @@ export class Burger extends Component {
     })
     this.subscribe(this.onHitCpu, (cpu) => {
       this.fallStats.totalCpusHit++
-      // @ts-expect-error - entity is private
       cpu.getComponent(Cpu).onHitByBurger.emit(this)
 
-      // @ts-expect-error - entity is private
       const points = POINTS_PER_CPU[cpu.getComponent(Cpu).name]
       this.level.addScore(this.entity.position, points)
       this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points })
@@ -173,7 +168,6 @@ export class Burger extends Component {
     this.subscribe(this.onHitBurger, (otherBurger) => {
       this.fallStats.burgerHit = true
 
-      // @ts-expect-error - entity is private
       const otherBurgerComp = otherBurger.getComponent(Burger)
       otherBurgerComp.fallStats.chainCollisionCount = this.fallStats.chainCollisionCount + 1
 
@@ -182,7 +176,6 @@ export class Burger extends Component {
     this.subscribe(this.onHitPlate, (_plate) => {
       this.calculateCPUHitScoreAndShow()
       this.calculateFallEndScoreAndShow()
-      // @ts-expect-error - entity is private
       this.entity.getComponent(HitBox).hasIntersection = false
       this.state.value = 'complete'
     })
@@ -230,14 +223,12 @@ export class Burger extends Component {
   }
 
   public intersectsWith(other: Entity) {
-    // @ts-expect-error - entity is private
     return this.entity.getComponent(HitBox).intersects(other.getComponent(HitBox))
   }
 
   // wait for player touches
   private updateIdle() {
     const player = this.level.player
-    // @ts-expect-error - entity is private
     const playerMover = player.getComponent(Mover)
     if (playerMover.hasMoved && Math.abs(player.y - this.entity.y) <= 1) {
       this.totalSlicesTouched = 0
@@ -307,16 +298,12 @@ export class Burger extends Component {
         if (this.isCurrentState('fall')) {
           for (const otherBurger of burgers) {
             if (otherBurger === this.entity) continue
-            // @ts-expect-error - entity is private
             const otherBurgerComponent = otherBurger.getComponent(Burger)
             if (this.intersectsWith(otherBurger)) {
               if (otherBurgerComponent.isIdle) {
-                // intersect with idle burger
                 this.onHitBurger.emit(otherBurger)
               } else if (otherBurgerComponent.isCompleted) {
-                // if land on burger on the plate
                 this.onHitPlate.emit(otherBurger)
-                // this.state.value = "complete";
                 break loop
               }
               break
@@ -353,22 +340,18 @@ export class Burger extends Component {
   }
 
   private findTargetPlate() {
-    // @ts-expect-error - entity is private
     const thisRect = this.entity.getComponent(HitBox).getRect()
     const tempRect1 = new Rectangle()
     const tempRect2 = new Rectangle()
 
     const platesOnSameRow = this.level.plates.filter((plate) => {
-      // @ts-expect-error - entity is private
       const plateHitBox = plate.getComponent(HitBox)
       const plateRect = plateHitBox.getRect(tempRect1)
       return plateHitBox.contains(thisRect.x, plateRect.y)
     })
     // sort by closest y position to burger
     platesOnSameRow.sort((a, b) => {
-      // @ts-expect-error - entity is private
       const aRect = a.getComponent(HitBox).getRect(tempRect1)
-      // @ts-expect-error - entity is private
       const bRect = b.getComponent(HitBox).getRect(tempRect2)
       return aRect.y - bRect.y
     })

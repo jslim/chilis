@@ -21,9 +21,8 @@ export class Zapp extends Cpu {
     this.attackCoolDown.interval = 10
     this.paralyzedCoolDown.interval = 3
 
-    // @ts-expect-error - entity is private
     const animator = this.entity.getComponent(CpuAnimator)
-    // @ts-expect-error - entity is private
+
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['hunt-burger']
@@ -49,7 +48,7 @@ export class Zapp extends Cpu {
           const playerHitBoxRect = this.entity
 
           const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-          // @ts-expect-error - entity is private
+
           const moverInner = this.entity.getComponent(Mover)
           const bulletSize = { width: 240, height: 8 }
           const bulletOffset = 0
@@ -91,7 +90,6 @@ export class Zapp extends Cpu {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk': {

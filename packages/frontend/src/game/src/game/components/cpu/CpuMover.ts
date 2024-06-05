@@ -2,6 +2,7 @@
 
 import type { Entity } from '../../core/Entity'
 import type { RandomFunction } from '../../utils/random.utils'
+import { getRandom, pick } from '../../utils/random.utils'
 
 import { Graphics } from 'pixi.js'
 
@@ -10,7 +11,6 @@ import { Value } from '../../core/Value'
 import { DRAW_CPU_DEBUG } from '../../game.config'
 import { sortByDistanceTo } from '../../utils/array.utils'
 import { getMoveDirections } from '../../utils/grid.utils'
-import { getRandom, pick } from '../../utils/random.utils'
 import { HitBox } from '../HitBox'
 // eslint-disable-next-line import/no-cycle
 import { Burger } from '../level/Burger'
@@ -66,7 +66,7 @@ export class CpuMover extends Mover {
         case 'hunt-burger': {
           // find closest to player burger (in idle state)
           const burgerToHunt = this.level.burgers
-            // @ts-expect-error - entity is private
+
             .filter((burger) => burger.getComponent(Burger).isIdle)
             .sort(sortByDistanceTo(this.level.player))
             .shift()
@@ -87,7 +87,6 @@ export class CpuMover extends Mover {
 
         case 'hunt-cpu': {
           this.targetEntity = pick(
-            // @ts-expect-error - entity is private
             this.level.cpus.filter((cpu) => cpu.getComponent(HitBox).isActive),
             this.random
           )
@@ -198,7 +197,7 @@ export class CpuMover extends Mover {
       // }
 
       // move in new direction
-      // @ts-expect-error - entity is private
+
       const mover = this.entity.getComponent(Mover)!
       switch (newDirection) {
         case 'left': {

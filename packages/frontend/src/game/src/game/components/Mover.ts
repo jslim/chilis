@@ -67,7 +67,6 @@ export class Mover extends Component {
   override onStart() {
     super.onStart()
 
-    // @ts-expect-error - entity is private
     this.level = this.entity.getComponent(LevelComponent).level
 
     this.position.copyFrom(this.entity.position)

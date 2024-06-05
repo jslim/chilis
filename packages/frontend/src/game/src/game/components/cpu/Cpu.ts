@@ -56,18 +56,13 @@ export class Cpu extends Component {
   override onStart() {
     super.onStart()
 
-    // @ts-expect-error - entity is private
     this.level = this.entity.getComponent(LevelComponent).level
-
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
-    // @ts-expect-error - entity is private
     const hitBox = this.entity.getComponent(HitBox)
 
     if (DRAW_STATE_DEBUG) {
-      // @ts-expect-error - entity is private
       this.entity.addComponent(new StateDebugText(mover.mode, [0, 0], this.entity.color))
-      // @ts-expect-error - entity is private
+
       this.entity.addEntity(new Entity().addComponent(new StateDebugText(this.state, [-8, 6])))
     }
 
@@ -116,7 +111,6 @@ export class Cpu extends Component {
     })
 
     this.subscribe(this.onHitPlayer, (player) => {
-      // @ts-expect-error - entity is private
       player.getComponent(Player).onHitCpu.emit(this.entity)
     })
     this.subscribe(this.onHitByBurger, () => {
@@ -132,7 +126,6 @@ export class Cpu extends Component {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
 
     switch (this.state.value) {
@@ -183,16 +176,15 @@ export class Cpu extends Component {
     const { player, cpus } = this.level!
     // find position the furthest from player
     const spawnPosition = cpus
-      // @ts-expect-error - entity is private
+
       .map((cpu: Entity) => cpu.getComponent(Mover).startPosition)
       .sort(sortByDistanceTo(player))
       .pop()
-    // @ts-expect-error - entity is private
+
     this.entity.getComponent(Mover).respawn(spawnPosition)
   }
 
   public reset() {
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     mover.reset()
 
@@ -202,10 +194,10 @@ export class Cpu extends Component {
 
   private checkCollision() {
     const { player } = this.level!
-    // @ts-expect-error - entity is private
+
     const hitBox = this.entity.getComponent(HitBox)
     // check if hits player
-    // @ts-expect-error - entity is private
+
     if (hitBox.intersects(player.getComponent(HitBox))) {
       this.onHitPlayer.emit(player)
     }

@@ -68,14 +68,14 @@ export class Entity extends Container {
   public removeComponent(component: Component): this {
     const componentClass = component.constructor as ComponentClass
     if (this.components.has(componentClass)) {
-      // @ts-expect-error - TO FIX
+      // @ts-expect-error - clears reference to entity
       component.entity = undefined
       this.mapInheritance(component, false)
     }
     return this
   }
 
-  public getComponent<T extends Component>(componentClass: new (...args: unknown[]) => T): T {
+  public getComponent<T extends Component>(componentClass: new (...args: never[]) => T): T {
     return this.componentTypeCache.get(componentClass) as T
   }
 

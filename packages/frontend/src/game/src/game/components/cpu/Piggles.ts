@@ -6,7 +6,7 @@ import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
 import { Bullet } from '../level/Bullet'
 import { LevelComponent } from '../level/LevelComponent'
-import { getOppositeDirection, Mover } from '../Mover'
+import { getOppositeDirection } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 
@@ -19,7 +19,6 @@ export class Piggles extends Cpu {
     this.attackCoolDown.interval = 3
     this.paralyzedCoolDown.interval = 3
 
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['hunt-player-slow']
@@ -33,12 +32,10 @@ export class Piggles extends Cpu {
           const playerHitBoxRect = this.entity
 
           const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-          // @ts-expect-error - entity is private
-          const moverInner = this.entity.getComponent(Mover)
           const bulletSize = { width: 20, height: 10 }
           const bulletOffset = 10
-          if (moverInner.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
-          else if (moverInner.currentDirection.value === 'right') bulletPos.x += bulletOffset
+          if (mover.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
+          else if (mover.currentDirection.value === 'right') bulletPos.x += bulletOffset
 
           const bullet = new Entity().addComponent(
             new LevelComponent(this.level!),
@@ -63,7 +60,6 @@ export class Piggles extends Cpu {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk': {

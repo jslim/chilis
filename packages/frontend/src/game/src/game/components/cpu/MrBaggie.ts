@@ -17,7 +17,6 @@ export class MrBaggie extends Cpu {
     this.paralyzedCoolDown.interval = 3
     this.walksWhenPrepareAttack = false
 
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['random']
@@ -35,7 +34,7 @@ export class MrBaggie extends Cpu {
             const playerHitBoxRect = this.entity
 
             const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-            // @ts-expect-error - entity is private
+
             const moverInner = this.entity.getComponent(Mover)
             const bulletSize = { width: 28, height: 11 }
             const bulletOffset = -bulletSize.width / 3

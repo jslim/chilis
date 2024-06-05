@@ -58,11 +58,9 @@ export class Player extends Component {
   override onStart() {
     super.onStart()
 
-    // @ts-expect-error - entity is private
     this.level = this.entity.getComponent(LevelComponent).level
 
     if (DRAW_STATE_DEBUG) {
-      // @ts-expect-error - entity is private
       this.entity.addComponent(new StateDebugText(this.state, [0, 0], this.entity.color))
     }
     this.subscribe(this.lives.onChanged, (newLives) => {
@@ -89,7 +87,7 @@ export class Player extends Component {
         case 'reset': {
           this.onReset.emit()
           this.entity.alpha = 1
-          // @ts-expect-error - entity is private
+
           this.entity.getComponent(Mover).respawn()
           this.idle()
           break
@@ -174,7 +172,7 @@ export class Player extends Component {
     const playerHitBoxRect = this.entity
 
     const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-    // @ts-expect-error - entity is private
+
     const mover = this.entity.getComponent(Mover)
     const bulletSize = { width: 20, height: 10 }
     const bulletOffset = 13

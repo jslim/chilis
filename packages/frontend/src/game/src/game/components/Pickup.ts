@@ -12,11 +12,10 @@ export class Pickup extends Component {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    // @ts-expect-error - entity is private
     const level = this.entity.getComponent(LevelComponent).level
-    // @ts-expect-error - entity is private
+
     const pickupHitBox = this.entity.getComponent(HitBox)
-    // @ts-expect-error - entity is private
+
     const playerHitBox = level.player.getComponent(HitBox)
 
     if (!this.isPickedUp && pickupHitBox.intersects(playerHitBox)) {

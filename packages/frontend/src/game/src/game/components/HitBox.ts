@@ -32,7 +32,6 @@ export class HitBox extends Component {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
     if (DRAW_HIT_BOX_DEBUG) {
-      // @ts-expect-error - entity is private
       const position = this.entity.getComponent(Mover)?.position ?? this.entity.position
       this.graphics.alpha = this.hasIntersection ? 1 : 0.85
       if (!this.isActive) this.graphics.alpha = 0.1
@@ -52,7 +51,7 @@ export class HitBox extends Component {
 
   public getRect(temp = new Rectangle()): Rectangle {
     temp.copyFrom(this.current)
-    // @ts-expect-error - entity is private
+
     const position = this.entity.getComponent(Mover)?.position ?? this.entity.position
     temp.x += position.x
     temp.y += position.y

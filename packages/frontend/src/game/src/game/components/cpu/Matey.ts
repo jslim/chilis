@@ -21,7 +21,6 @@ export class Matey extends Cpu {
     this.attackCoolDown = new CoolDown(8)
     this.paralyzedCoolDown.interval = 3
 
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['hunt-player-slow']
@@ -56,7 +55,6 @@ export class Matey extends Cpu {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk': {

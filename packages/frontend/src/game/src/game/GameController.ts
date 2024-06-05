@@ -1,9 +1,8 @@
 import type { GameAction } from '@/game/src/game/GameAction'
 import type { GameStateValues } from './components/GameState'
+import { GameState } from './components/GameState'
 
 import { Application } from 'pixi.js'
-
-import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
@@ -82,55 +81,34 @@ export class GameController {
             sceneManager.levelComplete(sceneManager.root.getComponent(GameState).getValues())
           }
         } else if (key.toLowerCase() === 'o') {
-          // @ts-expect-error - entity is private
           sceneManager.currentScene?.getComponent(LevelScene).burgers.forEach((burger) => {
-            // @ts-expect-error - entity is private
             const b = burger.getComponent(Burger)
             if (!b.isCompleted) b.state.value = 'fall'
           })
         }
+
         // debug keys
         if (key.toLowerCase() === 'p') {
           sceneManager.root.timescale = sceneManager.root.timescale <= 0 ? 1 : 0
-        } else
-          switch (key) {
-            case '[': {
-              sceneManager.root.timescale = Math.max(0, sceneManager.root.timescale * 0.75)
-
-              break
-            }
-            case ']': {
-              sceneManager.root.timescale *= 1.5
-
-              break
-            }
-            case '1': {
-              sceneManager.root.getComponent(GameState).lives.value += 1
-
-              break
-            }
-            case '2': {
-              sceneManager.root.getComponent(GameState).bullets.value += 1
-
-              break
-            }
-            case '3': {
-              Player.GOD_MODE = !Player.GOD_MODE
-
-              break
-            }
-            case 'k': {
-              //open canvas as image in new window
-              // eslint-disable-next-line unicorn/consistent-destructuring
-              this.app.canvas.toBlob((blob) => {
-                const url = URL.createObjectURL(blob!)
-                window.open(url, '_blank')
-              })
-
-              break
-            }
-            // No default
-          }
+        } // eslint-disable-next-line unicorn/prefer-switch
+        else if (key === '[') {
+          sceneManager.root.timescale = Math.max(0, sceneManager.root.timescale * 0.75)
+        } else if (key === ']') {
+          sceneManager.root.timescale *= 1.5
+        } else if (key === '1') {
+          sceneManager.root.getComponent(GameState).lives.value += 1
+        } else if (key === '2') {
+          sceneManager.root.getComponent(GameState).bullets.value += 1
+        } else if (key === '3') {
+          Player.GOD_MODE = !Player.GOD_MODE
+        } else if (key === 'k') {
+          //open canvas as image in new window
+          // eslint-disable-next-line unicorn/consistent-destructuring
+          this.app.canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob!)
+            window.open(url, '_blank')
+          })
+        }
       })
   }
 

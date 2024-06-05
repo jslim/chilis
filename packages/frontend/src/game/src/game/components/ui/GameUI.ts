@@ -51,7 +51,6 @@ function addPanel(
   panel.addEntity(text)
 
   return value.onChanged.subscribe((value) => {
-    // @ts-expect-error - entity is private
     text.getComponent(SimpleTextDisplay).label.text.value = formatter(value)
   })
 }
@@ -82,7 +81,6 @@ function addSmallPanel(
   panel.addEntity(textOverlay)
 
   return value.onChanged.subscribe((value) => {
-    // @ts-expect-error - entity is private
     text.getComponent(SimpleTextDisplay).label.text.value = formatter(value)
   })
 }
