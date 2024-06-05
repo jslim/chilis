@@ -7,7 +7,7 @@ import css from './Container.module.scss'
 
 import { useRefs } from '@/hooks/use-refs'
 
-import { initGame } from '@/game/src/main'
+import { initGame } from '@/game/game'
 
 export interface ViewProps extends ControllerProps {}
 
