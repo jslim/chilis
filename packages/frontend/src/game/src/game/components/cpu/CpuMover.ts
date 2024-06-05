@@ -43,8 +43,8 @@ export class CpuMover extends Mover {
   private nextModeCooldown: CoolDown | undefined = undefined
 
   constructor(
-    public cpuId: number,
-    speed: number = 1
+    speed: number = 1,
+    public cpuId: number
   ) {
     super(speed)
     this.reset()
