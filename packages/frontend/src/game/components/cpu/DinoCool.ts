@@ -1,5 +1,5 @@
-import { Cpu } from './Cpu'
-import { CpuMover } from './CpuMover'
+import {Cpu} from './Cpu';
+import {CpuMover} from './CpuMover';
 
 const ATTACK_RANGE = 30
 
@@ -10,8 +10,7 @@ export class DinoCool extends Cpu {
     this.paralyzedCoolDown.interval = 3
 
     const mover = this.entity.getComponent(CpuMover)
-    mover.setSpeed(1)
-    mover.speed.y = 2
+    mover.setSpeed(2)
 
     mover.modeCycle = ['hunt-player-slow']
     mover.directionAccuracy = 0.75
