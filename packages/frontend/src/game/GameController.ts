@@ -9,7 +9,6 @@ import { Signal } from './core/Signal'
 import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
-import { TestScene } from './scenes/TestScene'
 
 export class GameController {
   public onLevelComplete = new Signal<GameStateValues>()
@@ -50,10 +49,6 @@ export class GameController {
 
       const sceneFromUrl = urlParams.get('scene')
       switch (sceneFromUrl) {
-        case 'test': {
-          sceneManager.goto(new TestScene(sceneManager))
-          break
-        }
         case 'game': {
           const levelNo = urlParams.get('level')
           await sceneManager.showLevel(levelNo ? parseInt(levelNo, 10) : 1)

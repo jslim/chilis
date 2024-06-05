@@ -3,19 +3,19 @@ import { Assets, Container } from 'pixi.js'
 
 import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
-import { AnimationSprite } from '@/game/display/AnimationSprite'
+import { SimpleAnimationSpriteSheet } from '@/game/display/SimpleAnimationSpriteSheet'
 
 export type AnimatorLibrary = Map<string, { texture: Texture; frameWidth: number }>
 
-export class Animator extends Component {
+export class SimpleSpriteSheetAnimator extends Component {
   public root = new Container()
-  protected animationSprites = new Map<string, AnimationSprite>()
-  protected currentMovie = new Value<AnimationSprite | undefined>(undefined)
+  protected animationSprites = new Map<string, SimpleAnimationSpriteSheet>()
+  protected currentMovie = new Value<SimpleAnimationSpriteSheet | undefined>(undefined)
 
   constructor(library: AnimatorLibrary) {
     super()
     for (const [movieName, { texture, frameWidth }] of library) {
-      this.animationSprites.set(movieName, new AnimationSprite(texture, frameWidth))
+      this.animationSprites.set(movieName, new SimpleAnimationSpriteSheet(texture, frameWidth))
     }
   }
 

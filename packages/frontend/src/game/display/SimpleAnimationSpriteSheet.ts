@@ -2,7 +2,7 @@ import { Rectangle, Sprite, Texture } from 'pixi.js'
 
 import { Signal } from '../core/Signal'
 
-export class AnimationSprite extends Sprite {
+export class SimpleAnimationSpriteSheet extends Sprite {
   public readonly onEnd = new Signal()
   public readonly onLoop = new Signal()
 
