@@ -10,7 +10,7 @@ export class DinoCool extends Cpu {
     this.paralyzedCoolDown.interval = 3
 
     const mover = this.entity.getComponent(CpuMover)
-    mover.setSpeed(2)
+    mover.setSpeed(3)
 
     mover.modeCycle = ['hunt-player-slow']
     mover.directionAccuracy = 0.75
