@@ -1,53 +1,61 @@
-import type {SimpleTextConfig} from '@/game/display/SimpleText';
-import type {GameAction} from '@/game/GameAction';
-import type {TiledMap} from '@/game/tiled/TiledMap';
-import type {TiledWalkGrid} from '@/game/utils/tiles.utils';
+import type { SimpleTextConfig } from '@/game/display/SimpleText'
+import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
+import type { GameAction } from '@/game/GameAction'
+import type { TiledMap } from '@/game/tiled/TiledMap'
+import type { TiledWalkGrid } from '@/game/utils/tiles.utils'
+import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '@/game/utils/tiles.utils'
 
-import {Assets, Point, Rectangle, Sprite, Texture} from 'pixi.js';
+import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
-import {PointerComponent} from '@/game/button/PointerComponent';
-import {Cpu} from '@/game/components/cpu/Cpu';
-import {CpuAnimator} from '@/game/components/cpu/CpuAnimator';
-import {CpuMover} from '@/game/components/cpu/CpuMover';
-import {DinoCool} from '@/game/components/cpu/DinoCool';
-import {Matey} from '@/game/components/cpu/Matey';
-import {MrBaggie} from '@/game/components/cpu/MrBaggie';
-import {Piggles} from '@/game/components/cpu/Piggles';
-import {Zapp} from '@/game/components/cpu/Zapp';
-import {GamepadInput} from '@/game/components/input/GamepadInput';
-import {Input} from '@/game/components/input/Input';
-import {KeyboardInput} from '@/game/components/input/KeyboardInput';
-import {MobileInput} from '@/game/components/input/MobileInput';
-import {Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize} from '@/game/components/level/Burger';
-import {BurgerGroup} from '@/game/components/level/BurgerGroup';
-import {LevelComponent} from '@/game/components/level/LevelComponent';
-import {Light} from '@/game/components/level/Light';
-import {Plate} from '@/game/components/level/Plate';
-import {OnStart} from '@/game/components/OnStart';
-import {Pickup} from '@/game/components/Pickup';
-import {Player} from '@/game/components/player/Player';
-import {PlayerAnimator} from '@/game/components/player/PlayerAnimator';
-import {PlayerPacManMover} from '@/game/components/player/PlayerPacManMover';
-import {GameUI} from '@/game/components/ui/GameUI';
-import {ScoreAnimation} from '@/game/components/ui/ScoreAnimation';
-import {SimpleTextDisplay} from '@/game/components/ui/SimpleTextDisplay';
-import {get8pxNumberFont, getPixGamerNumberFont} from '@/game/display/SimpleText';
-import {FlumpAnimator} from '@/game/flump/FlumpAnimator';
-import {TileId} from '@/game/tiled/TileId';
-import {isMobileOrTablet} from '@/game/utils/is-mobile-or-tablet';
-import {getRandom, pick} from '@/game/utils/random.utils';
-import {connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections} from '@/game/utils/tiles.utils';
+import { PointerComponent } from '@/game/button/PointerComponent'
+import { Cpu } from '@/game/components/cpu/Cpu'
+import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
+import { CpuMover } from '@/game/components/cpu/CpuMover'
+import { DinoCool } from '@/game/components/cpu/DinoCool'
+import { Matey } from '@/game/components/cpu/Matey'
+import { MrBaggie } from '@/game/components/cpu/MrBaggie'
+import { Piggles } from '@/game/components/cpu/Piggles'
+import { Zapp } from '@/game/components/cpu/Zapp'
+import { GamepadInput } from '@/game/components/input/GamepadInput'
+import { Input } from '@/game/components/input/Input'
+import { KeyboardInput } from '@/game/components/input/KeyboardInput'
+import { MobileInput } from '@/game/components/input/MobileInput'
+import { Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize } from '@/game/components/level/Burger'
+import { BurgerGroup } from '@/game/components/level/BurgerGroup'
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { Light } from '@/game/components/level/Light'
+import { Plate } from '@/game/components/level/Plate'
+import { OnStart } from '@/game/components/OnStart'
+import { Pickup } from '@/game/components/Pickup'
+import { Player } from '@/game/components/player/Player'
+import { PlayerAnimator } from '@/game/components/player/PlayerAnimator'
+import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
+import { GameUI } from '@/game/components/ui/GameUI'
+import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
+import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
+import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
+import { TileId } from '@/game/tiled/TileId'
+import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
+import { getRandom, pick } from '@/game/utils/random.utils'
 
-import {AutoDisposer} from '../components/AutoDisposer';
-import DinoCoolMover from "../components/cpu/DinoCoolMover";
-import {HitBox} from '../components/HitBox';
-import {createDelay} from '../core/Delay';
-import {Entity} from '../core/Entity';
-import {ScreenShake} from '../core/ScreenShake';
-import {Signal} from '../core/Signal';
-import {FlumpLibrary} from '../flump/FlumpLibrary';
-import {DRAW_DEBUG_GRID, FLOOR_OFFSET, FRAME_RATE, FRAME_RATE_HARD, FRAME_RATE_HARDEST, getWrappedLevelNo, POINTS_PER_GROUP_COMPLETE} from '../game.config';
-import {Scene} from './Scene';
+import { AutoDisposer } from '../components/AutoDisposer'
+import DinoCoolMover from '../components/cpu/DinoCoolMover'
+import { HitBox } from '../components/HitBox'
+import { createDelay } from '../core/Delay'
+import { Entity } from '../core/Entity'
+import { ScreenShake } from '../core/ScreenShake'
+import { Signal } from '../core/Signal'
+import { FlumpLibrary } from '../flump/FlumpLibrary'
+import {
+  DRAW_DEBUG_GRID,
+  FLOOR_OFFSET,
+  FRAME_RATE,
+  FRAME_RATE_HARD,
+  FRAME_RATE_HARDEST,
+  getWrappedLevelNo,
+  POINTS_PER_GROUP_COMPLETE
+} from '../game.config'
+import { Scene } from './Scene'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -399,7 +407,7 @@ export default class LevelScene extends Scene {
 
     this.entity.addEntity(screenEntity)
 
-    this.emitAction({ a: 'complete', l: this.gameState.level.value })
+    this.emitAction({ a: 'complete', l: this.gameState.level.value, s: this.gameState.score.value })
   }
 
   showDefeatScreen() {
@@ -430,7 +438,8 @@ export default class LevelScene extends Scene {
 
     this.entity.addEntity(screenEntity)
 
-    this.emitAction({ a: 'end', l: this.gameState.level.value })
+    this.emitAction({ a: 'complete', l: this.gameState.level.value, s: this.gameState.score.value })
+    this.emitAction({ a: 'end', l: this.gameState.level.value, s: this.gameState.score.value })
   }
 
   checkIfAllBurgersCompleted() {
