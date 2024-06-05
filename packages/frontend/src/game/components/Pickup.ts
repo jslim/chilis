@@ -27,8 +27,10 @@ export class Pickup extends Component {
 
       if (level.gameState.pickupsCollected.value % 3 == 0) {
         level.addScore(this.entity.position, POINTS_PER_3_PICKUPS, 0xffffff, getPixGamerNumberFont())
+        level.emitAction({ a: '3-for-me', p: POINTS_PER_3_PICKUPS, l: level.gameState.pickupsCollected.value })
       } else {
         level.addScore(this.entity.position, POINTS_PER_PICKUP)
+        level.emitAction({ a: '3-for-me', p: POINTS_PER_PICKUP, l: level.gameState.pickupsCollected.value })
       }
 
       this.entity.destroy()
