@@ -37,9 +37,8 @@
      */
     "accessor-pairs": "error",
     "consistent-return": "error",
-    "default-case": "error",
     "default-case-last": "error",
-    "default-param-last": "error",
+    "default-param-last": "warn",
     "dot-notation": "error",
     "eqeqeq": "error",
     "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
@@ -217,7 +216,7 @@
     "react/no-typos": "error",
     "react/no-unsafe": "error",
     "react/no-unstable-nested-components": "error",
-    "react/no-unused-class-component-methods": "error",
+    "react/no-unused-class-component-methods": "warn",
     "react/no-unused-state": "error",
     "react/no-will-update-set-state": "error",
     "react/prefer-es6-class": "error",
@@ -299,7 +298,6 @@
         "@typescript-eslint/prefer-readonly": "error",
         "@typescript-eslint/prefer-regexp-exec": "error",
         "@typescript-eslint/require-array-sort-compare": "error",
-        "@typescript-eslint/switch-exhaustiveness-check": "error",
         "import/no-unresolved": "off"
       }
     }

@@ -1,11 +1,12 @@
 import type { Entity } from '../../core/Entity'
-import { Component } from '../../core/Entity'
-import LevelScene from '../../scenes/LevelScene'
+import type LevelScene from '../../scenes/LevelScene'
 import type { InputKey } from './Input'
+
+import { Component } from '../../core/Entity'
 import { Input } from './Input'
 
 export class MobileInput extends Component {
-  private joystickRadius: number = 200 // Configurable radius
+  private readonly joystickRadius: number = 200 // Configurable radius
   private currentDirection: InputKey | null = null
   private readonly target: Entity
   private joystickButton!: HTMLDivElement
@@ -23,9 +24,9 @@ export class MobileInput extends Component {
     super.onStart()
 
     // get size of app
-    let appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
+    const appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
     // compare how much this is scaled to the original size
-    let scaleX = appBounds.width / 240
+    const scaleX = appBounds.width / 240
 
     const gameContainer = document.body
     const joystickContainer = document.createElement('div')
@@ -36,8 +37,8 @@ export class MobileInput extends Component {
       zIndex: '10',
       bottom: '10rem',
       left: '3.5%',
-      width: `${(scaleX * 78) | 0}px`,
-      height: `${(scaleX * 82) | 0}px`,
+      width: `${Math.trunc(scaleX * 78)}px`,
+      height: `${Math.trunc(scaleX * 82)}px`,
       imageRendering: 'pixelated',
       backgroundImage: 'url("/game/mobile-joystick-back.png")',
       backgroundSize: 'cover'
@@ -48,8 +49,8 @@ export class MobileInput extends Component {
     this.joystickButton = joystickButton
     Object.assign(joystickButton.style, {
       position: 'absolute',
-      width: `${((39 / 78) * 100) | 0}%`,
-      height: `${((39 / 82) * 100) | 0}%`,
+      width: `${Math.trunc((39 / 78) * 100)}%`,
+      height: `${Math.trunc((39 / 82) * 100)}%`,
       imageRendering: 'pixelated',
       backgroundImage: 'url("/game/mobile-joystick-thumb.png")',
       backgroundSize: 'cover',
@@ -68,8 +69,8 @@ export class MobileInput extends Component {
     this.actionButton = actionButton
     Object.assign(actionButton.style, {
       position: 'absolute',
-      width: `${(scaleX * 78) | 0}px`,
-      height: `${(scaleX * 82) | 0}px`,
+      width: `${Math.trunc(scaleX * 78)}px`,
+      height: `${Math.trunc(scaleX * 82)}px`,
       imageRendering: 'pixelated',
       backgroundImage: 'url("/game/mobile-action-button-up.png")',
       backgroundSize: 'cover',
@@ -85,17 +86,40 @@ export class MobileInput extends Component {
     actionButton.addEventListener('touchcancel', this.onActionButtonTouchCancel)
   }
 
-  private onJoystickTouchStart = (event: TouchEvent) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  override onUpdate(_dt: number) {
+    const appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
+    const scaleX = appBounds.width / 240
+
+    this.joystickContainer.style.width = `${Math.trunc(scaleX * 78)}px`
+    this.joystickContainer.style.height = `${Math.trunc(scaleX * 82)}px`
+    this.actionButton.style.width = `${Math.trunc(scaleX * 78)}px`
+    this.actionButton.style.height = `${Math.trunc(scaleX * 82)}px`
+  }
+
+  override destroy() {
+    this.joystickButton.removeEventListener('touchstart', this.onJoystickTouchStart)
+    this.joystickButton.removeEventListener('touchmove', this.onJoystickTouchMove)
+    this.joystickButton.removeEventListener('touchend', this.onJoystickTouchEnd)
+    this.actionButton.removeEventListener('touchstart', this.onActionButtonTouchStart)
+    this.actionButton.removeEventListener('touchend', this.onActionButtonTouchEnd)
+    this.actionButton.removeEventListener('touchcancel', this.onActionButtonTouchCancel)
+
+    this.joystickContainer.remove()
+    this.actionButton.remove()
+  }
+
+  private readonly onJoystickTouchStart = (event: TouchEvent) => {
     const touch = event.touches[0]
     this.startX = touch.clientX
     this.startY = touch.clientY
   }
 
-  private onJoystickTouchMove = (event: TouchEvent) => {
+  private readonly onJoystickTouchMove = (event: TouchEvent) => {
     const touch = event.touches[0]
     const dx = touch.clientX - this.startX
     const dy = touch.clientY - this.startY
-    const distance = Math.sqrt(dx * dx + dy * dy)
+    const distance = Math.hypot(dx, dy)
 
     let clampedDx = dx
     let clampedDy = dy
@@ -125,49 +149,27 @@ export class MobileInput extends Component {
     this.joystickButton.style.transform = 'translate(-50%, -50%)'
   }
 
-  private onJoystickTouchEnd = () => {
+  private readonly onJoystickTouchEnd = () => {
     this.joystickButton.style.left = '50%'
     this.joystickButton.style.top = '50%'
     this.joystickButton.style.transform = 'translate(-50%, -50%)'
     this.emitDirection(null)
   }
 
-  private onActionButtonTouchStart = () => {
+  private readonly onActionButtonTouchStart = () => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-down.png")'
     const input = this.target.getComponent(Input)
     input.onDown.emit('action')
   }
 
-  private onActionButtonTouchEnd = () => {
+  private readonly onActionButtonTouchEnd = () => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
     const input = this.target.getComponent(Input)
     input.onUp.emit('action')
   }
 
-  private onActionButtonTouchCancel = () => {
+  private readonly onActionButtonTouchCancel = () => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
-  }
-
-  override onUpdate(dt: number) {
-    let appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
-    let scaleX = appBounds.width / 240
-
-    this.joystickContainer.style.width = `${(scaleX * 78) | 0}px`
-    this.joystickContainer.style.height = `${(scaleX * 82) | 0}px`
-    this.actionButton.style.width = `${(scaleX * 78) | 0}px`
-    this.actionButton.style.height = `${(scaleX * 82) | 0}px`
-  }
-
-  override destroy() {
-    this.joystickButton.removeEventListener('touchstart', this.onJoystickTouchStart)
-    this.joystickButton.removeEventListener('touchmove', this.onJoystickTouchMove)
-    this.joystickButton.removeEventListener('touchend', this.onJoystickTouchEnd)
-    this.actionButton.removeEventListener('touchstart', this.onActionButtonTouchStart)
-    this.actionButton.removeEventListener('touchend', this.onActionButtonTouchEnd)
-    this.actionButton.removeEventListener('touchcancel', this.onActionButtonTouchCancel)
-
-    this.joystickContainer.remove()
-    this.actionButton.remove()
   }
 
   private getDirection(dx: number, dy: number): InputKey | null {
@@ -180,9 +182,8 @@ export class MobileInput extends Component {
 
     if (absDx > absDy) {
       return dx > 0 ? 'right' : 'left'
-    } else {
-      return dy > 0 ? 'down' : 'up'
     }
+    return dy > 0 ? 'down' : 'up'
   }
 
   private emitDirection(direction: InputKey | null) {

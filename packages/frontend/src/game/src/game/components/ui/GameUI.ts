@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+/* eslint-disable @typescript-eslint/no-shadow */
 import type { Value } from '../../core/Value'
 import type { FlumpLibrary } from '../../flump/FlumpLibrary'
 import type LevelScene from '../../scenes/LevelScene'
@@ -16,10 +18,12 @@ export class GameUI extends Component {
 
     const { gameState, flumpLibrary } = this.levelScene
 
-    this.disposables.push(addPanel(flumpLibrary, this.entity, [9, 0], 'label_score', gameState.score))
-    this.disposables.push(addPanel(flumpLibrary, this.entity, [82, 0], 'label_highscore', gameState.highScore))
-    this.disposables.push(addSmallPanel(flumpLibrary, this.entity, [189, 0], 'life', gameState.lives))
-    this.disposables.push(addSmallPanel(flumpLibrary, this.entity, [209, 0], 'pepper', gameState.bullets))
+    this.disposables.push(
+      addPanel(flumpLibrary, this.entity, [9, 0], 'label_score', gameState.score),
+      addPanel(flumpLibrary, this.entity, [82, 0], 'label_highscore', gameState.highScore),
+      addSmallPanel(flumpLibrary, this.entity, [189, 0], 'life', gameState.lives),
+      addSmallPanel(flumpLibrary, this.entity, [209, 0], 'pepper', gameState.bullets)
+    )
   }
 }
 
@@ -47,6 +51,7 @@ function addPanel(
   panel.addEntity(text)
 
   return value.onChanged.subscribe((value) => {
+    // @ts-expect-error - entity is private
     text.getComponent(SimpleTextDisplay).label.text.value = formatter(value)
   })
 }
@@ -77,6 +82,7 @@ function addSmallPanel(
   panel.addEntity(textOverlay)
 
   return value.onChanged.subscribe((value) => {
+    // @ts-expect-error - entity is private
     text.getComponent(SimpleTextDisplay).label.text.value = formatter(value)
   })
 }

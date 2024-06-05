@@ -6,7 +6,7 @@ export const removeItem = <T>(array: T[], item: T) => {
   if (!array) return
   let index
   while ((index = array.indexOf(item)) !== -1) {
-    // @ts-ignore
+    // @ts-expect-error - Type 'T | undefined' is not assignable to type 'T'.
     array[index] = array.at(-1)
     array.pop()
   }

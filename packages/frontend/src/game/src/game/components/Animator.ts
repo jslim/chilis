@@ -1,4 +1,5 @@
 import type { Texture } from 'pixi.js'
+
 import { Assets, Container } from 'pixi.js'
 
 import { Component } from '../core/Entity'

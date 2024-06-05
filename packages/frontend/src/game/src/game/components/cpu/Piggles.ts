@@ -19,6 +19,7 @@ export class Piggles extends Cpu {
     this.attackCoolDown.interval = 3
     this.paralyzedCoolDown.interval = 3
 
+    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
     mover.modeCycle = ['hunt-player-slow']
@@ -32,11 +33,12 @@ export class Piggles extends Cpu {
           const playerHitBoxRect = this.entity
 
           const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
-          const mover = this.entity.getComponent(Mover)
+          // @ts-expect-error - entity is private
+          const moverInner = this.entity.getComponent(Mover)
           const bulletSize = { width: 20, height: 10 }
           const bulletOffset = 10
-          if (mover.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
-          else if (mover.currentDirection.value === 'right') bulletPos.x += bulletOffset
+          if (moverInner.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
+          else if (moverInner.currentDirection.value === 'right') bulletPos.x += bulletOffset
 
           const bullet = new Entity().addComponent(
             new LevelComponent(this.level!),
@@ -61,6 +63,7 @@ export class Piggles extends Cpu {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
+    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk': {
@@ -75,10 +78,11 @@ export class Piggles extends Cpu {
         }
         break
       }
-      case 'prepare_attack':
+      case 'prepare_attack': {
         if (Math.abs(this.entity.x - this.level!.player.x) > ATTACK_RANGE * 1.25) {
           this.state.value = 'walk'
         }
+      }
     }
   }
 }

@@ -1,10 +1,13 @@
 import type SceneManager from './SceneManager'
+import type { VideoSource } from 'pixi.js'
+
+import { Assets, Sprite } from 'pixi.js'
+
+import { FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from '@/game/src/game/game.config'
 
 import { GameState } from '../components/GameState'
 import { Component, Entity } from '../core/Entity'
 import { getOgFont, SimpleText } from '../display/SimpleText'
-import { Assets, Sprite, VideoSource } from 'pixi.js'
-import { FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from '@/game/src/game/game.config'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
@@ -14,17 +17,21 @@ export class Scene extends Component {
     this.sceneManager.frameRate = FRAME_RATE
   }
 
+  public get gameState(): GameState {
+    return this.sceneManager.root.getComponent(GameState)
+  }
+
   protected async playVideo(videoId: string, onEnd: () => void) {
-    let videoUrl = `/videos/${videoId}.mp4`
+    const videoUrl = `/videos/${videoId}.mp4`
     await Assets.load(videoUrl)
-    let videoSprite = Sprite.from(videoUrl)
+    const videoSprite = Sprite.from(videoUrl)
     videoSprite.width = GAME_WIDTH
     videoSprite.height = GAME_HEIGHT
-    let videoSource = videoSprite.texture.source as VideoSource
+    const videoSource = videoSprite.texture.source as VideoSource
     videoSource.resource.loop = false
     videoSource.resource.playsInline = true
 
-    videoSource.resource.onended = () => onEnd()
+    videoSource.resource.addEventListener('ended', () => onEnd())
     await videoSource.resource.play()
 
     this.disposables.push(() =>
@@ -57,9 +64,5 @@ export class Scene extends Component {
       .fill(0xff0000);
     this.entity.addChild(graphics);
      */
-  }
-
-  public get gameState(): GameState {
-    return this.sceneManager.root.getComponent(GameState)
   }
 }

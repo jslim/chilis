@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 //
 // Note: you have to call Tween.update in your own update loop!
 // Declare the type of tween variable by (default type is number):
@@ -15,7 +16,7 @@ export type TweenClassValue = {
   clone: () => TweenClassValue
   lerp: (b: TweenValue, t: number) => TweenClassValue
 }
-export type TweenValue = any | TweenClassValue
+export type TweenValue = number | TweenClassValue
 
 export default class Tween<T extends TweenValue = number> {
   private _from!: T
@@ -37,12 +38,6 @@ export default class Tween<T extends TweenValue = number> {
     return this._from
   }
 
-  private set from(value: T) {
-    this.isNumber = typeof value === 'number'
-    this._from = this.clone(value)
-    this._value = this.clone(value)
-  }
-
   public get completed(): boolean {
     return this.progress >= 1
   }
@@ -61,6 +56,13 @@ export default class Tween<T extends TweenValue = number> {
 
   public get target(): T {
     return this._target
+  }
+
+  // eslint-disable-next-line grouped-accessor-pairs
+  private set from(value: T) {
+    this.isNumber = typeof value === 'number'
+    this._from = this.clone(value)
+    this._value = this.clone(value)
   }
 
   public to(

@@ -9,14 +9,6 @@ export class Signal<T = void> {
     return () => this.unsubscribe(listener) // Return an unsubscribe function
   }
 
-  // Unsubscribe from this signal
-  private unsubscribe(listener: Listener<T>): void {
-    const index = this.listeners.indexOf(listener)
-    if (index > -1) {
-      this.listeners.splice(index, 1)
-    }
-  }
-
   // Emit this signal to all subscribed listeners
   emit(value: T): void {
     this.listeners.forEach((listener) => listener(value))
@@ -25,5 +17,13 @@ export class Signal<T = void> {
   // Dispose of this signal
   destroy(): void {
     this.listeners = []
+  }
+
+  // Unsubscribe from this signal
+  private unsubscribe(listener: Listener<T>): void {
+    const index = this.listeners.indexOf(listener)
+    if (index > -1) {
+      this.listeners.splice(index, 1)
+    }
   }
 }

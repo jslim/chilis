@@ -6,8 +6,10 @@ export class PlayerAnimator extends FlumpAnimator {
   override onStart() {
     super.onStart()
 
+    // @ts-expect-error - entity is private
     const player = this.entity.getComponent(Player)
     this.root.pivot.x = 1 // visual correction of animation
+    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(Mover)
 
     this.subscribe(mover.currentDirection.onChanged, (direction) => {

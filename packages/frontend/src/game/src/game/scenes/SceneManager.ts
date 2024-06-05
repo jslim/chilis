@@ -1,5 +1,10 @@
+import type { GameStateValues } from '@/game/src/game/components/GameState'
+import type { GameController } from '@/game/src/game/GameController'
 import type { Scene } from './Scene'
 import type { Application } from 'pixi.js'
+
+import { LevelIntroScene } from '@/game/src/game/scenes/LevelIntroScene'
+import { LevelVsScene } from '@/game/src/game/scenes/LevelVsScene'
 
 import { CoolDown } from '../core/CoolDown'
 import { Entity } from '../core/Entity'
@@ -8,10 +13,6 @@ import { EndScene } from './EndScene'
 import { IntroScene } from './IntroScene'
 import LevelScene from './LevelScene'
 import { PreloadScene } from './PreloadScene'
-import { GameController } from '@/game/src/game/GameController'
-import { GameStateValues } from '@/game/src/game/components/GameState'
-import { LevelIntroScene } from '@/game/src/game/scenes/LevelIntroScene'
-import { LevelVsScene } from '@/game/src/game/scenes/LevelVsScene'
 
 export default class SceneManager {
   public app: Application

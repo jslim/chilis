@@ -9,6 +9,7 @@ import css from './PageNotFound.module.scss'
 import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
+
 import SvgChilis from '@/svgs/Chilis.svg'
 
 export interface ViewProps extends ControllerProps {}

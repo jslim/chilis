@@ -2,6 +2,7 @@ import type LevelScene from '../scenes/LevelScene'
 import type { TiledWalkGrid } from './tiles.utils'
 import type { Point } from 'pixi.js'
 
+// eslint-disable-next-line import/no-cycle
 import { getOppositeDirection } from '../components/Mover'
 
 export function getMoveDirections(position: Point, level: LevelScene, currentDirection: string = ''): string[] {

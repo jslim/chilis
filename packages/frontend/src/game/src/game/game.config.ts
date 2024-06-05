@@ -1,7 +1,7 @@
 /* GENERAL */
 
 // default game speed
-import { CpuName } from '@/game/src/game/components/cpu/Cpu'
+import type { CpuName } from '@/game/src/game/components/cpu/Cpu'
 
 export const FRAME_RATE = 22
 // game speed for level 7-12

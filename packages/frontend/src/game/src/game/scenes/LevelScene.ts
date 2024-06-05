@@ -1,7 +1,17 @@
+import type { GameAction } from '@/game/src/game/GameAction'
+import type { SimpleTextConfig } from '../display/SimpleText'
 import type { TiledMap } from '../tiled/TiledMap'
 import type { TiledWalkGrid } from '../utils/tiles.utils'
-import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '../utils/tiles.utils'
+
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
+
+import { PointerComponent } from '@/game/src/game/button/PointerComponent'
+import { Zapp } from '@/game/src/game/components/cpu/Zapp'
+import { OnStart } from '@/game/src/game/components/OnStart'
+import { Pickup } from '@/game/src/game/components/Pickup'
+import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
+import { isMobileOrTablet } from '@/game/src/game/utils/is-mobile-or-tablet'
+import { getRandom, pick } from '@/game/src/game/utils/random.utils'
 
 import { AutoDisposer } from '../components/AutoDisposer'
 import { Cpu } from '../components/cpu/Cpu'
@@ -31,7 +41,7 @@ import { createDelay } from '../core/Delay'
 import { Entity } from '../core/Entity'
 import { ScreenShake } from '../core/ScreenShake'
 import { Signal } from '../core/Signal'
-import { get8pxNumberFont, getPixGamerNumberFont, SimpleTextConfig } from '../display/SimpleText'
+import { get8pxNumberFont, getPixGamerNumberFont } from '../display/SimpleText'
 import { FlumpLibrary } from '../flump/FlumpLibrary'
 import {
   DRAW_DEBUG_GRID,
@@ -43,14 +53,8 @@ import {
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { TileId } from '../tiled/TileId'
+import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '../utils/tiles.utils'
 import { Scene } from './Scene'
-import { Zapp } from '@/game/src/game/components/cpu/Zapp'
-import { FlumpAnimator } from '@/game/src/game/flump/FlumpAnimator'
-import { PointerComponent } from '@/game/src/game/button/PointerComponent'
-import { OnStart } from '@/game/src/game/components/OnStart'
-import { isMobileOrTablet } from '@/game/src/game/utils/is-mobile-or-tablet'
-import { getRandom, pick } from '@/game/src/game/utils/random.utils'
-import { Pickup } from '@/game/src/game/components/Pickup'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -69,6 +73,7 @@ export default class LevelScene extends Scene {
 
   private isPlaying: boolean = true
   private readonly mainContainer = new Entity()
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   public containers = {
     back: new Entity(),
     ui: new Entity(),
@@ -111,8 +116,10 @@ export default class LevelScene extends Scene {
 
     this.subscribe(this.onAllBurgersCompleted, () => {
       this.isPlaying = false
+      // @ts-expect-error - entity is private
       this.player.getComponent(Player).state.value = 'victory'
       for (const cpu of this.cpus) {
+        // @ts-expect-error - entity is private
         cpu.getComponent(Cpu).state.value = 'defeat'
       }
       createDelay(this.entity, 2, () => this.showWinScreen())
@@ -151,11 +158,11 @@ export default class LevelScene extends Scene {
       if (layer.type !== 'tilelayer') continue
 
       // TODO: extras layer
-      if (layer.name == 'extras') {
+      if (layer.name === 'extras') {
         // map to spawn points
         for (let i = 0; i < layer.data.length; i++) {
-          let x = i % layer.width
-          let y = (i / layer.width) | 0
+          const x = i % layer.width
+          const y = Math.trunc(i / layer.width)
           if (layer.data[i] === TileId.Pickup) {
             this.pickupSpawnPoints.push(new Point((x + 0.5) * map.tilewidth, (y + 1) * map.tileheight - FLOOR_OFFSET))
             // console.log('pickup', this.pickupSpawnPoints.at(-1))
@@ -168,7 +175,7 @@ export default class LevelScene extends Scene {
       const layerData = layer.data
       for (let id of layerData) {
         const x = i % layer.width
-        const y = (i / layer.width) | 0
+        const y = Math.trunc(i / layer.width)
         if (id !== 0) {
           let container = this.containers.mid
 
@@ -204,17 +211,20 @@ export default class LevelScene extends Scene {
               new PlayerAnimator(this.flumpLibrary)
             )
 
-            let playerComponent = this.player.getComponent(Player)
+            // @ts-expect-error - entity is private
+            const playerComponent = this.player.getComponent(Player)
             this.subscribe(playerComponent.onDied, () => this.showDefeatScreen())
             this.subscribe(playerComponent.onHitCpu, () =>
+              // @ts-expect-error - entity is private
               this.cpus.forEach((cpu) => (cpu.getComponent(Cpu).state.value = 'defeat'))
             )
+            // @ts-expect-error - entity is private
             this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
             let cpu: Cpu | undefined
             let offsetX = 0 // a visual offset for the animation
             if (id === TileId.Cpu) {
-              cpu = new Cpu(('trainee0' + traineeId++) as 'trainee01' | 'trainee02' | 'trainee03')
+              cpu = new Cpu(`trainee0${traineeId++}` as 'trainee01' | 'trainee02' | 'trainee03')
             } else if (id === TileId.BossCpu) {
               offsetX = 4
               switch (levelNo) {
@@ -257,10 +267,25 @@ export default class LevelScene extends Scene {
               this.cpus.push(entity)
 
               if (cpu.name.includes('trainee')) {
-                let mover = entity.getComponent(CpuMover)
-                if (traineeId == 1) mover.modeCycle = ['hunt-player', 'hunt-player-slow', 'hunt-burger', 'random']
-                else if (traineeId == 2) mover.modeCycle = ['random']
-                else if (traineeId == 3) mover.modeCycle = ['hunt-burger', 'random']
+                // @ts-expect-error - entity is private
+                const mover = entity.getComponent(CpuMover)
+                switch (traineeId) {
+                  case 1: {
+                    mover.modeCycle = ['hunt-player', 'hunt-player-slow', 'hunt-burger', 'random']
+                    break
+                  }
+                  case 2: {
+                    mover.modeCycle = ['random']
+                    break
+                  }
+                  case 3: {
+                    {
+                      mover.modeCycle = ['hunt-burger', 'random']
+                      // No default
+                    }
+                    break
+                  }
+                }
               }
             }
           } else if (TileId.isBurger(id)) {
@@ -310,7 +335,7 @@ export default class LevelScene extends Scene {
           light.x = Math.floor(light.x / map.tilewidth) * map.tilewidth
           light.y = Math.floor(light.y / map.tileheight) * map.tileheight
           // align light to center of tile
-          light.x += (map.tilewidth / 2) | 0
+          light.x += Math.trunc(map.tilewidth / 2)
           light.y += 1
 
           this.containers.back.addEntity(light)
@@ -329,7 +354,7 @@ export default class LevelScene extends Scene {
 
     // Add inbetween floor tiles
     path.points.forEach((point) => {
-      if (Math.floor((point.x + map.tilewidth * 0.5) / (map.tilewidth * 0.5)) % 2 == 1) {
+      if (Math.floor((point.x + map.tilewidth * 0.5) / (map.tilewidth * 0.5)) % 2 === 1) {
         const sprite = getSprite(map, spriteSheet, TileId.FloorInBetween)
         sprite.position.set(point.x - map.tilewidth / 2, point.y - map.tileheight)
         this.containers.floorFront.addChildAt(sprite, 0)
@@ -357,13 +382,15 @@ export default class LevelScene extends Scene {
     screenEntity.position.set(120, 120)
 
     const levelNo = this.gameState.level.value
-    let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed`))
+    const labelEntity = new Entity(this.flumpLibrary.createSprite(`label_level_completed`))
     labelEntity.position.set(0, -16)
 
-    let labelNoEntity = new Entity().addComponent(new SimpleTextDisplay(`${levelNo}`, 'left', getPixGamerNumberFont()))
+    const labelNoEntity = new Entity().addComponent(
+      new SimpleTextDisplay(`${levelNo}`, 'left', getPixGamerNumberFont())
+    )
     labelNoEntity.position.set(labelEntity.x + labelEntity.width / 2, labelEntity.y + 5)
 
-    let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
+    const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
       new PointerComponent('pointerdown', () => {
         this.sceneManager.levelComplete(this.gameState.getValues())
       })
@@ -395,7 +422,7 @@ export default class LevelScene extends Scene {
     // let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_defeat`))
     // labelEntity.position.set(0, -16)
 
-    let buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
+    const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
       new PointerComponent('pointerdown', () => {
         this.sceneManager.end(this.gameState.getValues())
       })
@@ -417,7 +444,7 @@ export default class LevelScene extends Scene {
   }
 
   checkIfAllBurgersCompleted() {
-    return this.burgers.length && !this.burgerGroups.some((group) => !group.isCompleted)
+    return this.burgers.length > 0 && !this.burgerGroups.some((group) => !group.isCompleted)
   }
 
   public addScore(
@@ -467,6 +494,7 @@ export default class LevelScene extends Scene {
     })
 
     // Listen for burger group completion, and add score
+    // @ts-expect-error - entity is private
     this.subscribe(this.player.getComponent(Player).onHitCpu, () => {
       this.gameState.burgerCompleteCombo.value = 0
     })
@@ -489,7 +517,7 @@ export default class LevelScene extends Scene {
           c: this.gameState.burgerCompleteCombo.value
         })
 
-        let position = group.plate.position.clone()
+        const position = group.plate.position.clone()
         position.x += 4
         this.addScore(position, points, 0xffffff, getPixGamerNumberFont())
       })
@@ -525,11 +553,12 @@ function getSprite(map: TiledMap, spriteSheet: Texture, id: number): Sprite {
   const { tilewidth, tileheight } = map
 
   // tile ids are 1 based
+  // eslint-disable-next-line no-param-reassign
   id -= 1
 
   const totalTilesPerRow = spriteSheet.width / tilewidth
   const tx = id % totalTilesPerRow
-  const ty = (id / totalTilesPerRow) | 0
+  const ty = Math.trunc(id / totalTilesPerRow)
   const texture = new Texture({
     source: spriteSheet.source,
     frame: new Rectangle(tx * tilewidth, ty * tileheight, tilewidth, tileheight)

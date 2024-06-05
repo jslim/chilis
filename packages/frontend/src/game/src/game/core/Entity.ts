@@ -1,3 +1,6 @@
+/* eslint-disable unicorn/prefer-dom-node-remove */
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Signal } from './Signal'
 
 import { Container } from 'pixi.js'
@@ -5,11 +8,12 @@ import { Container } from 'pixi.js'
 import { removeItem } from '../utils/array.utils'
 import { getRandom } from '../utils/random.utils'
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type ComponentClass = Function
 
 const random = getRandom(777)
 const getRandomColor = () =>
-  65_536 * ((random(0, 4) | 0) * 64) + 256 * ((random(0, 4) | 0) * 64) + (random(0, 4.4) | 0) * 64
+  65_536 * (Math.trunc(random(0, 4)) * 64) + 256 * (Math.trunc(random(0, 4)) * 64) + Math.trunc(random(0, 4.4)) * 64
 
 export class Entity extends Container {
   components = new Map<ComponentClass, Component>()
@@ -30,6 +34,7 @@ export class Entity extends Container {
   }
 
   public onUpdate(dt: number) {
+    // eslint-disable-next-line no-param-reassign
     dt *= this.timescale
     for (const [_, component] of this.components) {
       if (!component.entity) continue
@@ -60,29 +65,17 @@ export class Entity extends Container {
     return this
   }
 
-  private mapInheritance(component: Component, add: boolean): void {
-    let currentProto = Object.getPrototypeOf(component)
-    while (currentProto && currentProto.constructor !== Object && currentProto.constructor !== Component) {
-      if (add) {
-        this.componentTypeCache.set(currentProto.constructor, component)
-      } else {
-        this.componentTypeCache.delete(currentProto.constructor)
-      }
-      currentProto = Object.getPrototypeOf(currentProto)
-    }
-  }
-
   public removeComponent(component: Component): this {
     const componentClass = component.constructor as ComponentClass
     if (this.components.has(componentClass)) {
-      // @ts-expect-error
+      // @ts-expect-error - TO FIX
       component.entity = undefined
       this.mapInheritance(component, false)
     }
     return this
   }
 
-  public getComponent<T extends Component>(componentClass: new (...args: any[]) => T): T {
+  public getComponent<T extends Component>(componentClass: new (...args: unknown[]) => T): T {
     return this.componentTypeCache.get(componentClass) as T
   }
 
@@ -98,15 +91,26 @@ export class Entity extends Container {
     this.parent?.removeChild(this)
     super.destroy()
   }
+
+  private mapInheritance(component: Component, add: boolean): void {
+    let currentProto = Object.getPrototypeOf(component)
+    while (currentProto && currentProto.constructor !== Object && currentProto.constructor !== Component) {
+      if (add) {
+        this.componentTypeCache.set(currentProto.constructor, component)
+      } else {
+        this.componentTypeCache.delete(currentProto.constructor)
+      }
+      currentProto = Object.getPrototypeOf(currentProto)
+    }
+  }
 }
 
 export type DisposeFunction = () => void
 
 export abstract class Component {
-  protected disposables: DisposeFunction[] = []
-
   public isStarted = false
   public entity!: Entity
+  protected disposables: DisposeFunction[] = []
 
   public onUpdate(_dt: number) {}
 

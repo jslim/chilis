@@ -2,7 +2,7 @@ import { Component } from '@/game/src/game/core/Entity'
 
 export class PointerComponent extends Component {
   constructor(
-    protected event: String,
+    protected event: string,
     protected func: () => void
   ) {
     super()
@@ -11,7 +11,7 @@ export class PointerComponent extends Component {
   public enable(): void {
     this.entity.interactive = true
     this.entity.cursor = 'pointer'
-    this.entity.on(this.event as any, this.func)
+    this.entity.on(this.event as never, this.func)
   }
 
   /// Emits the function. Useful to fake interaction events.
@@ -23,7 +23,7 @@ export class PointerComponent extends Component {
   public disable(): void {
     if (!this.entity) return
     this.entity.cursor = 'none'
-    this.entity.off(this.event as any, this.func)
+    this.entity.off(this.event as never, this.func)
   }
 
   public override onStart(): void {

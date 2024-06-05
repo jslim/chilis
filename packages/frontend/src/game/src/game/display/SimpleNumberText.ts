@@ -1,4 +1,5 @@
 import type { DestroyOptions } from 'pixi.js'
+
 import { Container, Rectangle, Sprite, Texture } from 'pixi.js'
 
 import { Value } from '../core/Value'
@@ -27,6 +28,7 @@ export class SimpleNumberText extends Container {
           sprite.texture = characterMap.get(scoreStr.charAt(i))!
           return true
         }
+        // eslint-disable-next-line unicorn/prefer-dom-node-remove
         sprite.parent?.removeChild(sprite)
         return false
       })

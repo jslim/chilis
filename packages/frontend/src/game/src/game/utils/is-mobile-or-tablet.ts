@@ -1,8 +1,9 @@
 export function isMobileOrTablet(): boolean {
   const userAgent = navigator.userAgent
-  if (/android/i.test(userAgent)) {
+  if (/android/iu.test(userAgent)) {
     return true
-  } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+  }
+  if (/iPad|iPhone|iPod/u.test(userAgent) && !window.MSStream) {
     return true
   }
   return false

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 export function posMod(x: number, m: number): number {
   return ((x % m) + m) % m
 }
@@ -12,7 +13,7 @@ export function lerp(a: number, b: number, i: number): number {
 
 //exponential interpolation. Use for camera zooms etc
 export function eerp(a: number, b: number, i: number): number {
-  return a * (b / a)**i
+  return a * (b / a) ** i
 }
 
 export function map(a: number, b: number, i: number): number {
@@ -31,10 +32,9 @@ export function clamp01(x: number): number {
 // https://www.shadertoy.com/view/ldBfR1
 export function gain01(x: number, P: number) {
   if (x > 0.5) {
-    return 1 - 0.5 * (2 - 2 * x)**P
-  } 
-    return 0.5 * (2 * x)**P
-  
+    return 1 - 0.5 * (2 - 2 * x) ** P
+  }
+  return 0.5 * (2 * x) ** P
 }
 
 export function smootherStep01(x: number): number {
@@ -66,27 +66,29 @@ export function lineairStep(e0: number, e1: number, x: number): number {
 }
 
 export function nearestPowerOfTwo(x: number): number {
-  return 2**Math.round(Math.log2(x))
+  return 2 ** Math.round(Math.log2(x))
 }
 
 export function nextPowerOfTwo(x: number): number {
-  return 2**Math.ceil(Math.log2(x))
+  return 2 ** Math.ceil(Math.log2(x))
 }
 
 export function isPowerOfTwo(x: number): boolean {
   return (x & (x - 1)) === 0
 }
 
-export function isNumber(n: any) {
+export function isNumber(n: never) {
   return !isNaN(parseFloat(n)) && isFinite(n)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isVector3(n: any): boolean {
+  // @ts-expect-error - Argument of type 'any' is not assignable to parameter of type 'never'.
   return n && isNumber(n.x) && isNumber(n.y) && isNumber(n.z)
 }
 
 export function smallerPowerOfTwo(x: number): number {
-  return 2**Math.floor(Math.log2(x))
+  return 2 ** Math.floor(Math.log2(x))
 }
 
 export function clamp(val: number, min: number, max: number) {

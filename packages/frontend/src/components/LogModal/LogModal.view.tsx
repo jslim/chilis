@@ -73,8 +73,8 @@ export const View: FC<ViewProps> = ({
         console.error('Login failed:', apiResponse.message)
         setHasError(true)
       } else {
-        setUserToken(JSON.stringify(apiResponse.token))
-        localState().user.setToken(String(apiResponse.token))
+        setUserToken(JSON.stringify(apiResponse.AccessToken))
+        localState().user.setToken(String(apiResponse.AccessToken))
       }
     } catch (error) {
       console.error(error)
@@ -87,7 +87,8 @@ export const View: FC<ViewProps> = ({
       const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.USER}`, undefined, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}`
         },
         body: JSON.stringify({ nickname: nicknameValue })
       })

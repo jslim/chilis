@@ -1,3 +1,5 @@
+/* eslint-disable react/no-direct-mutation-state */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type LevelScene from '../../scenes/LevelScene'
 
 import { Assets, Point, Sprite } from 'pixi.js'
@@ -10,6 +12,7 @@ import { Value } from '../../core/Value'
 import { DRAW_STATE_DEBUG, FRAME_RATE } from '../../game.config'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
+// eslint-disable-next-line import/no-cycle
 import { Bullet } from '../level/Bullet'
 import { LevelComponent } from '../level/LevelComponent'
 import { Mover } from '../Mover'
@@ -39,16 +42,31 @@ export class Player extends Component {
     super()
   }
 
+  get isInvisible() {
+    return !this.invincibleCoolDown.isExpired()
+  }
+
+  public get canWalk(): boolean {
+    const state = this.state.value
+    return state === 'walk' || state === 'idle'
+  }
+
+  public get canShoot(): boolean {
+    return this.bullets.value > 0
+  }
+
   override onStart() {
     super.onStart()
 
+    // @ts-expect-error - entity is private
     this.level = this.entity.getComponent(LevelComponent).level
 
     if (DRAW_STATE_DEBUG) {
+      // @ts-expect-error - entity is private
       this.entity.addComponent(new StateDebugText(this.state, [0, 0], this.entity.color))
     }
     this.subscribe(this.lives.onChanged, (newLives) => {
-      this.state.value = newLives <= 0 ? 'die' : 'reset';
+      this.state.value = newLives <= 0 ? 'die' : 'reset'
     })
     this.subscribe(this.state.onChanged, (newState) => {
       switch (newState) {
@@ -71,6 +89,7 @@ export class Player extends Component {
         case 'reset': {
           this.onReset.emit()
           this.entity.alpha = 1
+          // @ts-expect-error - entity is private
           this.entity.getComponent(Mover).respawn()
           this.idle()
           break
@@ -101,17 +120,13 @@ export class Player extends Component {
 
   reduceLife() {
     if (!Player.GOD_MODE && !this.isInvisible) {
-        if (this.lives.value - 1 <= 0) {
-          this.lives.value = 0
-        } else {
-          this.state.value = 'hit'
-        }
+      if (this.lives.value - 1 <= 0) {
+        this.lives.value = 0
+      } else {
+        this.state.value = 'hit'
       }
+    }
     this.invincibleCoolDown.reset()
-  }
-
-  get isInvisible() {
-    return !this.invincibleCoolDown.isExpired()
   }
 
   override onUpdate(dt: number) {
@@ -150,15 +165,6 @@ export class Player extends Component {
     }
   }
 
-  public get canWalk(): boolean {
-    const state = this.state.value
-    return state === 'walk' || state === 'idle'
-  }
-
-  public get canShoot(): boolean {
-    return this.bullets.value > 0
-  }
-
   public idle() {
     this.state.value = 'idle'
   }
@@ -168,6 +174,7 @@ export class Player extends Component {
     const playerHitBoxRect = this.entity
 
     const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
+    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(Mover)
     const bulletSize = { width: 20, height: 10 }
     const bulletOffset = 13

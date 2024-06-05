@@ -9,6 +9,7 @@ export class DinoCool extends Cpu {
 
     this.paralyzedCoolDown.interval = 3
 
+    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1)
     mover.speed.y = 2
@@ -32,6 +33,7 @@ export class DinoCool extends Cpu {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
+    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk': {

@@ -17,8 +17,10 @@ export class CpuAnimator extends FlumpAnimator {
   override onStart() {
     super.onStart()
 
+    // @ts-expect-error - entity is private
     const cpu = this.entity.getComponent(Cpu)
     this.root.pivot.x = this.offsetX // visual correction of animation
+    // @ts-expect-error - entity is private
     const mover = this.entity.getComponent(Mover)
 
     this.subscribe(mover.currentDirection.onChanged, (direction) => {
@@ -26,20 +28,20 @@ export class CpuAnimator extends FlumpAnimator {
         case 'up':
         case 'down': {
           this.flipNeutral()
-          if (cpu.state.value == 'walk') {
+          if (cpu.state.value === 'walk') {
             this.setMovie(`${this.animationName}_climb`).gotoAndPlay(0)
           }
           break
         }
         case 'left': {
-          if (cpu.state.value == 'walk') {
+          if (cpu.state.value === 'walk') {
             this.setMovie(`${this.animationName}_walk`).play()
           }
           this.flipToLeft()
           break
         }
         case 'right': {
-          if (cpu.state.value == 'walk') {
+          if (cpu.state.value === 'walk') {
             this.setMovie(`${this.animationName}_walk`).play()
           }
           this.flipToRight()

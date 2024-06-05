@@ -18,9 +18,16 @@ export class MateyBall extends Component {
   override onStart() {
     super.onStart()
 
+    // @ts-expect-error - argument of type 'number' is not assignable to parameter of type '0'.
     this.tween.to(this.entity.y, 0)
 
     this.tweenToNextFloor()
+  }
+
+  override onUpdate(dt: number) {
+    super.onUpdate(dt)
+    this.tween.update(dt)
+    //if (this.tween) console.log(this.tween.progress);
   }
 
   private tweenToFloor(toY: number) {
@@ -28,6 +35,7 @@ export class MateyBall extends Component {
     const duration = 1 //distance / this.speed;
 
     this.tween.to(
+      // @ts-expect-error - argument of type 'number' is not assignable to parameter of type '0'.
       toY,
       duration,
       (v) => {
@@ -43,16 +51,11 @@ export class MateyBall extends Component {
   private tweenToNextFloor() {
     const nextFloor = this.floorPositions.shift()
     if (nextFloor !== undefined) {
+      // @ts-expect-error - entity is private
       this.entity.getComponent(LevelComponent).level.screenShake(2, 3 / FRAME_RATE)
       this.tweenToFloor(nextFloor)
     } else {
       this.entity.destroy()
     }
-  }
-
-  override onUpdate(dt: number) {
-    super.onUpdate(dt)
-    this.tween.update(dt)
-    //if (this.tween) console.log(this.tween.progress);
   }
 }
