@@ -6,6 +6,7 @@ import type { PageHandle, PageProps } from '@/data/types'
 import { memo, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
+import { CognitoJwtVerifier } from 'aws-jwt-verify'
 import classNames from 'classnames'
 import { gsap } from 'gsap'
 import { nanoid } from 'nanoid'
@@ -14,12 +15,13 @@ import css from './Layout.module.scss'
 
 import { routes } from '@/data/routes'
 
-import { localState } from '@/store'
+import { localState, localStore } from '@/store'
 
 import { getScrollTop } from '@/utils/basic-functions'
 import { fontVariables } from '@/utils/fonts'
 
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
+import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseModal } from '@/components/BaseModal'
@@ -56,11 +58,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  //  const [introComplete, setIntroComplete] = useState(false)
-
-  // const handleIntroComplete = useCallback(() => {
-  //   setIntroComplete(true)
-  // }, [])
+  const [idToken] = useLocalStorage('idToken')
 
   //
   // Update pathname ref
@@ -187,6 +185,33 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [refs, Component, pageProps, flags.pageTransitions])
 
+  // Verifying ID token
+  useEffect(() => {
+    const verifyToken = async () => {
+      if (!idToken) return
+      const verifier = CognitoJwtVerifier.create({
+        userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID ?? '',
+        tokenUse: 'id',
+        clientId: process.env.NEXT_PUBLIC_CLIENT_ID ?? ''
+      })
+
+      try {
+        const payload = await verifier.verify(idToken)
+        console.log('Token is valid. Payload:', payload)
+        localState().user.setIsTokenValid(true)
+        localState().user.setNickname(String(payload.preferred_username))
+      } catch (error) {
+        console.log('Token not valid!', error)
+        localState().user.setNickname('')
+        localState().user.setAccessToken('')
+        localState().user.setIdToken('')
+        localState().user.setIsTokenValid(false) // TODO: Refactor all this into one to reset the user state
+      }
+    }
+
+    verifyToken()
+  }, [idToken])
+
   // Fullscreen
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -226,19 +251,28 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <Head {...pageProps.content.head} />
 
       <TopNav
-        text={localState().user.nickname ?? pageProps.content.common.topNav.logIn}
+        text={localStore().user.nickname !== '' ? localState().user.nickname : pageProps.content.common.topNav.logIn}
         onClick={() => setIsModalOpen(true)}
         isDisabled={!!localState().user.nickname} // TODO: add a validation here to verify the token, so on ref the user stays logged in
       />
 
-      {refs.pathname.current !== '/game/' && (
-        <>
-          <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
-          <Nav content={pageProps.content.common.nav} handleRef={refs.navHandle} onFullscreen={handleFullscreen} />
-        </>
-      )}
-
-      <SoundSwitch className={css.soundSwitch} audioName={pageProps.content.common.testAudio} />
+      {refs.pathname.current !== routes.FULL_LEADERBOARD &&
+        refs.pathname.current !== routes.FAQ &&
+        refs.pathname.current !== routes.TERMS && (
+          <>
+            {refs.pathname.current !== routes.GAME && (
+              <>
+                <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
+                <Nav
+                  content={pageProps.content.common.nav}
+                  handleRef={refs.navHandle}
+                  onFullscreen={handleFullscreen}
+                />
+              </>
+            )}
+            <SoundSwitch className={css.soundSwitch} audioName={pageProps.content.common.testAudio} />
+          </>
+        )}
 
       <div className={css.content}>{currentPage}</div>
 

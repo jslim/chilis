@@ -8,9 +8,9 @@ import { gsap } from 'gsap'
 
 import css from './PageTerms.module.scss'
 
-import { copy } from '@/utils/copy'
-
 import { useRefs } from '@/hooks/use-refs'
+
+import { TermsLayout } from '@/components/TermsLayout'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -35,7 +35,7 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
 
   return (
     <main className={classNames('PageTerms', css.root)} ref={refs.root}>
-      <h1 className={css.title} {...copy.html(content.body.title)} />
+      <TermsLayout content={content} />
     </main>
   )
 }

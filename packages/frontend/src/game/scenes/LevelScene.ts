@@ -1,9 +1,6 @@
 import type { SimpleTextConfig } from '@/game/display/SimpleText'
-import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import type { GameAction } from '@/game/GameAction'
 import type { TiledMap } from '@/game/tiled/TiledMap'
-import type { TiledWalkGrid } from '@/game/utils/tiles.utils'
-import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '@/game/utils/tiles.utils'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
@@ -33,10 +30,18 @@ import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 import { GameUI } from '@/game/components/ui/GameUI'
 import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
 import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
+import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
 import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
 import { getRandom, pick } from '@/game/utils/random.utils'
+import {
+  connectionsToGrid,
+  drawGrid,
+  drawPointsAndConnections,
+  getTileConnections,
+  type TiledWalkGrid
+} from '@/game/utils/tiles.utils'
 
 import { AutoDisposer } from '../components/AutoDisposer'
 import DinoCoolMover from '../components/cpu/DinoCoolMover'
@@ -546,6 +551,7 @@ export default class LevelScene extends Scene {
     this.sceneManager.gameController.onGameAction.emit(action)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public playSound(sound: string, volume: number = 0.75, pan: number = 0) {
     this.sceneManager.gameController.soundChannel.play(sound, {
       volume: 0.5,

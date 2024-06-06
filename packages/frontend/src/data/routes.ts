@@ -3,5 +3,8 @@ export const routes = {
   GAME: '/game/',
   LEADERBOARD: '/leaderboard/',
   CONTEST: '/contest/',
-  HOW_TO_PLAY: '/how-to-play/'
+  HOW_TO_PLAY: '/how-to-play/',
+  FAQ: '/faq/',
+  TERMS: '/terms/',
+  FULL_LEADERBOARD: '/full-leaderboard/'
 }

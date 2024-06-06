@@ -7,11 +7,11 @@ import { View } from './ScoreList.view'
 
 export interface ControllerProps {
   className?: string
-  maxPlayers: number | null
+  maxPlayers?: number
   players: Player[] | undefined
   title?: string
   currentRankText: string
-  fullLeaderboardText: string
+  fullLeaderboardText?: string
   currentPlayer?: Player
 }
 

@@ -5,10 +5,10 @@ import type { Application } from 'pixi.js'
 
 import { LevelIntroScene } from '@/game/scenes/LevelIntroScene'
 import { LevelVsScene } from '@/game/scenes/LevelVsScene'
+import { clamp01 } from '@/game/utils/math.utils'
 
 import { CoolDown } from '../core/CoolDown'
 import { Entity } from '../core/Entity'
-import { clamp01 } from '@/game/utils/math.utils'
 import { EndScene } from './EndScene'
 import { IntroScene } from './IntroScene'
 import LevelScene from './LevelScene'
