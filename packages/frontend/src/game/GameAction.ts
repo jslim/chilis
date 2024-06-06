@@ -4,7 +4,7 @@ export type GameAction = {
     | 'pause'
     | 'resume'
     | 'start'
-    | 'end'
+    | 'game-over'
     | 'complete'
     | 'burger-part'
     | 'kill-enemy'

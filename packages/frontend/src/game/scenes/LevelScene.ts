@@ -1,4 +1,5 @@
 import type { SimpleTextConfig } from '@/game/display/SimpleText'
+import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import type { GameAction } from '@/game/GameAction'
 import type { TiledMap } from '@/game/tiled/TiledMap'
 
@@ -30,7 +31,6 @@ import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 import { GameUI } from '@/game/components/ui/GameUI'
 import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
 import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
-import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
 import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
@@ -421,22 +421,14 @@ export default class LevelScene extends Scene {
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat'))
     screenEntity.position.set(120, 120)
 
-    // const levelNo = this.gameState.level.value
-    // let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_defeat`))
-    // labelEntity.position.set(0, -16)
-
     const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
       new PointerComponent('pointerdown', () => {
         this.sceneManager.end(this.gameState.getValues())
+        this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
       })
     )
     buttonEntity.position.set(0, 0)
 
-    /*screenEntity.addComponent(
-      new OnStart(() => {
-        screenEntity.addEntity(labelEntity)
-      })
-    )*/
     createDelay(this.mainContainer, 1, () => {
       screenEntity.addEntity(buttonEntity)
     })
@@ -444,7 +436,6 @@ export default class LevelScene extends Scene {
     this.entity.addEntity(screenEntity)
 
     this.emitAction({ a: 'complete', l: this.gameState.level.value, s: this.gameState.score.value })
-    this.emitAction({ a: 'end', l: this.gameState.level.value, s: this.gameState.score.value })
   }
 
   checkIfAllBurgersCompleted() {
