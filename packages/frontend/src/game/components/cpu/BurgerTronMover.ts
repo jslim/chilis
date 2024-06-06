@@ -1,23 +1,109 @@
 import { CpuMover } from './CpuMover'
 import { GAME_WIDTH } from '@/game/game.config'
 import { pick } from '@/game/utils/random.utils'
+import { Cpu } from '../cpu/Cpu'
+import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
 
 const LEFT_X = 40
+const LEFT_OUTSIDE_X = -50
 const RIGHT_X = GAME_WIDTH - 40
+const RIGHT_OUTSIDE_X = GAME_WIDTH + 50
 
 export default class BurgerTronMover extends CpuMover {
   private currentSide: 'left' | 'right' = 'left'
 
-  private currentPlatform: number = -1
-
   private leftFloorPositions!: number[]
   private rightFloorPositions!: number[]
+  private flyMode: 'in' | 'out' | 'none' = 'in'
 
   override onStart() {
     super.onStart()
     const walkGrid = this.level.walkGrid
     this.leftFloorPositions = this.getWalkGridYPositionsAt(LEFT_X)
     this.rightFloorPositions = this.getWalkGridYPositionsAt(RIGHT_X)
+
+    this.subscribe(this.entity.getComponent(Cpu).state.onChanged, (state) => {
+      switch (state) {
+        case 'walk': {
+          this.appear()
+          break
+        }
+        case 'prepare_attack': {
+          this.flyMode = 'none'
+          break
+        }
+        case 'attack_complete': {
+          this.flyMode = 'out'
+          console.log('out')
+
+          // very hackish, but hey deadlines
+          let animator = this.entity.getComponent(CpuAnimator)
+          this.subscribeOnce(animator.currentMovie.value!.onEnd, () => {
+            animator.setMovie('burgertron_walk')
+          })
+          break
+        }
+      }
+    })
+  }
+
+  appear() {
+    this.currentSide = pick(['left', 'right'])
+    this.position.x = this.currentSide === 'left' ? LEFT_OUTSIDE_X : RIGHT_OUTSIDE_X
+    this.position.y = pick(this.currentSide === 'left' ? this.leftFloorPositions : this.rightFloorPositions)
+    this.flyMode = 'in'
+  }
+
+  flyIn() {
+    switch (this.currentSide) {
+      case 'left': {
+        this.position.x += this.speed.x
+        if (this.position.x >= LEFT_X) {
+          this.position.x = LEFT_X
+          this.land()
+        }
+        break
+      }
+      case 'right': {
+        this.position.x -= this.speed.x
+        if (this.position.x <= RIGHT_X) {
+          this.position.x = RIGHT_X
+          this.land()
+        }
+        break
+      }
+    }
+  }
+
+  flyAway() {
+    console.log('fly away')
+    switch (this.currentSide) {
+      case 'left': {
+        this.position.x -= this.speed.x * 3
+        if (this.position.x <= LEFT_OUTSIDE_X) {
+          this.position.x = LEFT_OUTSIDE_X
+          this.outsideScreen()
+        }
+        break
+      }
+      case 'right': {
+        this.position.x += this.speed.x * 3
+        if (this.position.x >= RIGHT_OUTSIDE_X) {
+          this.position.x = RIGHT_OUTSIDE_X
+          this.outsideScreen()
+        }
+        break
+      }
+    }
+  }
+
+  outsideScreen() {
+    this.entity.getComponent(Cpu).state.value = 'walk'
+  }
+
+  land() {
+    this.entity.getComponent(Cpu).state.value = 'prepare_attack'
+    this.flyMode = 'none'
   }
 
   getWalkGridYPositionsAt(x: number): number[] {
@@ -32,28 +118,11 @@ export default class BurgerTronMover extends CpuMover {
   }
 
   override walk(dt: number) {
-    return
-    let stepY = 1 //this.speed.y;
-    if (this.targetY < this.position.y) {
-      stepY = -stepY
-    }
-    // move to the target y position
-    this.position.y += stepY
-
-    // if near target
-    if (Math.abs(this.targetY - this.position.y) < 1) {
-    }
-  }
-
-  pickNewTargetY() {
-    if (this.currentSide === 'left') {
-      this.currentSide = 'right'
-      this.targetX = RIGHT_X
-      this.targetY = pick(this.rightFloorPositions)
-    } else {
-      this.currentSide = 'left'
-      this.targetX = LEFT_X
-      this.targetY = pick(this.leftFloorPositions)
+    this.currentDirection.value = this.currentSide === 'left' ? 'right' : 'left'
+    if (this.flyMode === 'out') {
+      this.flyAway()
+    } else if (this.flyMode === 'in') {
+      this.flyIn()
     }
   }
 }

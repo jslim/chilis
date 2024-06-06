@@ -262,6 +262,7 @@ export default class LevelScene extends Scene {
                 case 6: {
                   cpu = new BurgerTron('burgertron')
                   cpuMover = new BurgerTronMover(1, cpuId++)
+                  entity.position.x = -100
                   break
                 }
                 // No default

@@ -43,6 +43,7 @@ export class Cpu extends Component {
   public readonly onHitByBurger = new Signal<Burger>()
 
   protected level: LevelScene | undefined = undefined
+  protected autoCompleteAttack = true
   protected walksWhenPrepareAttack = true
 
   protected attackCoolDown = new CoolDown(1.5)
@@ -107,7 +108,9 @@ export class Cpu extends Component {
 
         case 'attack_complete': {
           this.attackCoolDown.reset()
-          createDelay(this.entity, 0.1, () => (this.state.value = 'walk'))
+          if (this.autoCompleteAttack) {
+            createDelay(this.entity, 0.1, () => (this.state.value = 'walk'))
+          }
           break
         }
       }
@@ -150,6 +153,11 @@ export class Cpu extends Component {
       case 'jump': {
         this.checkCollision()
         this.entity.scale.x = mover.directionX > 0 ? 1 : -1
+        break
+      }
+
+      case 'attack_complete': {
+        mover.walk(dt)
         break
       }
 

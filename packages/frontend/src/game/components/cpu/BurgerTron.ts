@@ -6,6 +6,7 @@ export class BurgerTron extends Cpu {
     super.onStart()
 
     this.paralyzedCoolDown.interval = 3
+    this.autoCompleteAttack = false
 
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1)
