@@ -13,7 +13,7 @@ import {
 } from "@/libs/config";
 import { getWebDomain } from "@/libs/get-domain";
 
-import { WebACL, S3Origin, ApiStack } from "@/stacks";
+import { WebACL, S3Origin, ApiStack, AuthStack } from "@/stacks";
 import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
@@ -79,6 +79,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
   );
 
   const { api } = use(ApiStack);
+  const { auth } = use(AuthStack);
 
   const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     path: "packages/frontend",
@@ -87,6 +88,8 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     environment: {
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
       NEXT_PUBLIC_API_URL: api.customDomainUrl ?? api.url,
+      NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
+      NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },
     ...(enableCustomDomain ? { customDomain: domainName, certificate } : {}),
     cdk: {
