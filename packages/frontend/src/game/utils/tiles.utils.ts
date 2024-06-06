@@ -2,8 +2,9 @@ import type { TiledLayer, TiledMap } from '@/game/tiled/TiledMap'
 
 import { Graphics, Point } from 'pixi.js'
 
-import { FLOOR_OFFSET } from '../game.config'
 import { TileId } from '@/game/tiled/TileId'
+
+import { FLOOR_OFFSET } from '../game.config'
 
 // Define a type for the connections, which is a tuple of two points
 export type TileConnection = [from: Point, to: Point]
