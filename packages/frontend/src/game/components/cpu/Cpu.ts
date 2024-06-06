@@ -69,7 +69,8 @@ export class Cpu extends Component {
     }
 
     this.subscribe(this.state.onChanged, (newState) => {
-      hitBox.isActive.value = newState === 'walk' || newState === 'prepare_attack' || newState === 'attack'
+      hitBox.isActive.value =
+        newState === 'walk' || newState === 'prepare_attack' || newState === 'attack' || newState === 'jump'
 
       switch (newState) {
         case 'spawn': {
@@ -141,6 +142,12 @@ export class Cpu extends Component {
       }
       case 'walk': {
         mover.walk(dt)
+        this.checkCollision()
+        this.entity.scale.x = mover.directionX > 0 ? 1 : -1
+        break
+      }
+
+      case 'jump': {
         this.checkCollision()
         this.entity.scale.x = mover.directionX > 0 ? 1 : -1
         break
