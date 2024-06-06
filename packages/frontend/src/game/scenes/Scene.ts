@@ -6,7 +6,7 @@ import { FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from '@/game/game.config'
 
 import { GameState } from '../components/GameState'
 import { Component, Entity } from '../core/Entity'
-import { getOgFont, SimpleText } from '@/game/display/SimpleText'
+import { getSimpleFont, SimpleText } from '@/game/display/SimpleText'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
@@ -27,6 +27,7 @@ export class Scene extends Component {
     videoSprite.width = GAME_WIDTH
     videoSprite.height = GAME_HEIGHT
     const videoSource = videoSprite.texture.source as VideoSource
+    videoSource.resource.style.imageRendering = 'pixelated'
     videoSource.resource.loop = false
     videoSource.resource.playsInline = true
 
@@ -43,7 +44,7 @@ export class Scene extends Component {
   }
 
   protected addButton(label: string, position: [x: number, y: number], onclick: () => void) {
-    const textField = new SimpleText(label, 'center', getOgFont())
+    const textField = new SimpleText(label, 'center', getSimpleFont())
 
     textField.interactive = true
     textField.cursor = 'pointer'
