@@ -21,7 +21,7 @@ export class LevelIntroScene extends Scene {
     ;(async () => {
       const levelNo = 1 //this.levelNo
       await this.playVideo(`cutscene_level_0${levelNo}`, () => gotoLevel())
-      this.addButton('SKIP', [GAME_WIDTH - 40, GAME_HEIGHT - 20], () => gotoLevel())
+      this.addButton('SKIP', [GAME_WIDTH - 23, GAME_HEIGHT - 10], () => gotoLevel())
     })()
   }
 }

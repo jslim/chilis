@@ -6,7 +6,7 @@ import { FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from '@/game/game.config'
 
 import { GameState } from '../components/GameState'
 import { Component, Entity } from '../core/Entity'
-import { getSimpleFont, SimpleText } from '@/game/display/SimpleText'
+import { getOgFont, SimpleText } from '@/game/display/SimpleText'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
@@ -44,7 +44,7 @@ export class Scene extends Component {
   }
 
   protected addButton(label: string, position: [x: number, y: number], onclick: () => void) {
-    const textField = new SimpleText(label, 'center', getSimpleFont())
+    const textField = new SimpleText(label, 'center', getOgFont())
 
     textField.interactive = true
     textField.cursor = 'pointer'
