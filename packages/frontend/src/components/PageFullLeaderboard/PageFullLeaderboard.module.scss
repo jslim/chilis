@@ -4,9 +4,82 @@
   position: relative;
   opacity: 0;
   width: 100%;
+  overflow: scroll;
 
   .title {
     @include typography-h1;
     padding-top: px(80);
+  }
+}
+
+.titleContainer {
+  @include flex-center;
+  position: relative;
+  flex-direction: column;
+  height: px(240);
+
+  @include media-tablet-large {
+    height: px(343);
+  }
+
+  .wrapper {
+    @include flex-center;
+    position: relative;
+    flex-direction: column;
+    z-index: 0;
+
+    .heroWrapper {
+      width: px(679);
+
+      .hero {
+        @include box(100%);
+        object-fit: cover;
+      }
+    }
+
+    .title {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .description {
+      @include font-size(24, 20);
+      @include font-family(Montserrat, 500);
+      max-width: px(700);
+      color: $sour-cream;
+      text-align: center;
+      margin-top: px(50);
+    }
+  }
+
+  .background {
+    @include position-100(absolute);
+    object-fit: cover;
+  }
+}
+
+.content {
+  background-image: url('~@/assets/images/noise.png');
+  padding: px(40) px(65);
+  height: auto;
+
+  @include media-tablet-large {
+    padding: px(180) px(200);
+  }
+
+  .wrapper {
+    @include flex-center;
+
+    .label {
+      @include font-size(80, 96);
+      @include font-family(Dirk, 800);
+      margin-left: px(50);
+      margin-right: px(50);
+      color: $sunrise;
+    }
+  }
+
+  .list {
+    margin-top: px(50);
   }
 }

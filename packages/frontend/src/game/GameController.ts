@@ -1,8 +1,9 @@
-import type { GameAction } from './GameAction'
 import type { GameStateValues } from './components/GameState'
-import { GameState } from './components/GameState'
+import type { GameAction } from './GameAction'
 
 import { Application } from 'pixi.js'
+
+import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'

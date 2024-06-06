@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   background-color: $black;
+  overflow: hidden;
 
   .content {
     position: relative;
@@ -15,7 +16,7 @@
     @include z-index(pages);
     position: absolute;
     left: 50%;
-    bottom: px(80);
+    bottom: px(100);
     transform: translateX(-50%);
 
     @include media-tablet-large {

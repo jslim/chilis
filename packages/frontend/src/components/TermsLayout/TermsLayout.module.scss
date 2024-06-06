@@ -1,0 +1,102 @@
+@import 'shared';
+
+.root {
+  display: block;
+  height: 100vh;
+  background-color: $sour-cream;
+}
+
+.titleContainer {
+  @include flex-center;
+  height: px(240);
+  background-color: $night;
+
+  @include media-tablet-large {
+    height: px(343);
+  }
+
+  .title {
+    @include font-size(80, 96);
+    @include font-family(Dirk, 800);
+    color: $sour-cream;
+    text-align: center;
+  }
+}
+
+.content {
+  position: relative;
+  padding: px(40) px(65);
+  text-align: left;
+
+  @include media-tablet-large {
+    padding: px(180) px(200);
+  }
+
+  p {
+    @include font-size(20, 24);
+    @include font-family(Montserrat, 500);
+    color: $black;
+  }
+
+  strong {
+    @include font-size(30, 36);
+    @include font-family(Montserrat, 700);
+    color: $night;
+  }
+
+  .squares {
+    position: absolute;
+
+    svg {
+      @include box(px(20));
+    }
+
+    &.leftSquareBottom {
+      top: px(10);
+      left: px(10);
+    }
+
+    &.leftSquare {
+      bottom: px(10);
+      left: px(10);
+    }
+
+    &.rightSquare {
+      top: px(30);
+      right: px(5);
+      transform: rotate(90deg);
+    }
+
+    &.rightSquareBottom {
+      bottom: px(10);
+      right: px(5);
+      transform: rotate(90deg);
+    }
+
+    @include media-tablet-large {
+      svg {
+        @include box(px(40));
+      }
+
+      &.leftSquareBottom {
+        top: px(40);
+        left: px(40);
+      }
+
+      &.leftSquare {
+        bottom: px(40);
+        left: px(40);
+      }
+
+      &.rightSquare {
+        top: px(60);
+        right: px(40);
+      }
+
+      &.rightSquareBottom {
+        bottom: px(20);
+        right: px(40);
+      }
+    }
+  }
+}

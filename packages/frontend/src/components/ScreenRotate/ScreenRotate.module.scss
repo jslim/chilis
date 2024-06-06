@@ -12,9 +12,9 @@
 
 .logoContainer {
   @include box(px(32), px(20));
-  position: absolute;
-  top: px(20);
-  left: px(20);
+  @include transform-center(absolute);
+  top: unset;
+  bottom: px(20);
 }
 
 .iconContainer {

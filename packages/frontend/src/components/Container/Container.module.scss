@@ -2,6 +2,7 @@
 
 .root {
   display: block;
+  position: relative;
 
   :global(#app) {
     height: 100vh;

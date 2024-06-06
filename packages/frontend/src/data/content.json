@@ -21,12 +21,12 @@
       ],
       "links": [
         {
-          "path": "https://brinker.com/terms-and-conditions",
+          "path": "/terms/",
           "title": "TERMS"
         },
         {
-          "path": "https://brinker.com/privacy",
-          "title": "PRIVACY"
+          "path": "/faq/",
+          "title": "FAQ"
         }
       ]
     },
@@ -87,7 +87,7 @@
           "alt": "Chilis Logo"
         },
         "backgroundVideo": {
-          "src": "",
+          "src": "/videos/homepage.mp4",
           "poster": "home-background.png"
         },
         "title": "PLAY THE GAME",
@@ -113,7 +113,11 @@
       },
       "body": {
         "title": "Chilis Burger Time",
-        "description": "Some landing page description"
+        "description": "Some landing page description",
+        "background": {
+          "src": "game-background.png",
+          "alt": ""
+        }
       }
     },
     "leaderboard": {
@@ -206,7 +210,17 @@
         "description": "Full leaderboard Page"
       },
       "body": {
-        "title": "Full Leaderboard Page"
+        "title": "Full Leaderboard Page",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "topLabel": "TOP 20",
+        "background": {
+          "src": "fullleaderboard-background.png",
+          "alt": "Leaderboard"
+        },
+        "hero": {
+          "src": "full-leaderboard.png",
+          "alt": "Full Leaderboard"
+        }
       }
     },
     "terms": {
@@ -215,7 +229,8 @@
         "description": "Terms and conditions "
       },
       "body": {
-        "title": "Terms Page"
+        "title": "Terms Page",
+        "content": "<strong>Title</strong></br><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.</p>"
       }
     },
     "faq": {
@@ -224,7 +239,8 @@
         "description": "FAQ page"
       },
       "body": {
-        "title": "FAQ Page"
+        "title": "FAQ Page",
+        "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.</p>"
       }
     },
     "notFound": {
