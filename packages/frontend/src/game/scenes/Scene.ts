@@ -29,7 +29,10 @@ export class Scene extends Component {
     const videoSource = videoSprite.texture.source as VideoSource
     videoSource.resource.style.imageRendering = 'pixelated'
     videoSource.resource.loop = false
+    videoSource.resource.muted = false
     videoSource.resource.playsInline = true
+    videoSource.antialias = false
+    videoSource.scaleMode = 'nearest'
 
     videoSource.resource.addEventListener('ended', () => onEnd())
     await videoSource.resource.play()
