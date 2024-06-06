@@ -1,6 +1,7 @@
-import { CpuMover } from './CpuMover'
 import { GAME_WIDTH } from '@/game/game.config'
 import { pick } from '@/game/utils/random.utils'
+
+import { CpuMover } from './CpuMover'
 
 const LEFT_X = 40
 const RIGHT_X = GAME_WIDTH - 40
@@ -8,14 +9,14 @@ const RIGHT_X = GAME_WIDTH - 40
 export default class BurgerTronMover extends CpuMover {
   private currentSide: 'left' | 'right' = 'left'
 
-  private currentPlatform: number = -1
+  // private currentPlatform: number = -1
 
   private leftFloorPositions!: number[]
   private rightFloorPositions!: number[]
 
   override onStart() {
     super.onStart()
-    const walkGrid = this.level.walkGrid
+    //  const walkGrid = this.level.walkGrid
     this.leftFloorPositions = this.getWalkGridYPositionsAt(LEFT_X)
     this.rightFloorPositions = this.getWalkGridYPositionsAt(RIGHT_X)
   }
@@ -31,18 +32,19 @@ export default class BurgerTronMover extends CpuMover {
     return yPositions
   }
 
-  override walk(dt: number) {
+  override walk() // dt: number
+  {
     return
-    let stepY = 1 //this.speed.y;
-    if (this.targetY < this.position.y) {
-      stepY = -stepY
-    }
-    // move to the target y position
-    this.position.y += stepY
+    // let stepY = 1 //this.speed.y;
+    // if (this.targetY < this.position.y) {
+    //   stepY = -stepY
+    // }
+    // // move to the target y position
+    // this.position.y += stepY
 
-    // if near target
-    if (Math.abs(this.targetY - this.position.y) < 1) {
-    }
+    // // if near target
+    // if (Math.abs(this.targetY - this.position.y) < 1) {
+    // }
   }
 
   pickNewTargetY() {

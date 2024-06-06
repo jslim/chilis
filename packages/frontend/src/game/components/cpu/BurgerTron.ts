@@ -26,10 +26,9 @@ export class BurgerTron extends Cpu {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    const mover = this.entity.getComponent(CpuMover)
+    // const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
-      case 'walk': {
-      }
+      case 'walk':
     }
   }
 }
