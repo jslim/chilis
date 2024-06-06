@@ -61,6 +61,8 @@ import {
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { Scene } from './Scene'
+import { BurgerTron } from '@/game/components/cpu/BurgerTron'
+import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -128,6 +130,9 @@ export default class LevelScene extends Scene {
       }
       createDelay(this.entity, 2, () => this.showWinScreen())
     })
+
+    this.playSound('game_music', true)
+    this.playSound('game_start')
   }
 
   async preload(levelNo: number): Promise<{
@@ -225,6 +230,7 @@ export default class LevelScene extends Scene {
             this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
             let cpu: Cpu | undefined
+            let cpuMover: CpuMover | undefined
             let offsetX = 0 // a visual offset for the animation
             if (id === TileId.Cpu) {
               cpu = new Cpu(`trainee0${traineeId++}` as 'trainee01' | 'trainee02' | 'trainee03')
@@ -237,6 +243,7 @@ export default class LevelScene extends Scene {
                 }
                 case 2: {
                   cpu = new DinoCool('dino')
+                  cpuMover = new DinoCoolMover(1, cpuId++)
                   break
                 }
                 case 3: {
@@ -253,7 +260,8 @@ export default class LevelScene extends Scene {
                   break
                 }
                 case 6: {
-                  cpu = new Piggles('piggles')
+                  cpu = new BurgerTron('burgertron')
+                  cpuMover = new BurgerTronMover(1, cpuId++)
                   break
                 }
                 // No default
@@ -263,7 +271,7 @@ export default class LevelScene extends Scene {
             if (cpu) {
               entity.addComponent(
                 new HitBox(-3, -9, 6, 8),
-                cpu.name === 'dino' ? new DinoCoolMover(1, cpuId++) : new CpuMover(1, cpuId++),
+                cpuMover ?? new CpuMover(1, cpuId++),
                 new CpuAnimator(this.flumpLibrary, cpu.name, offsetX),
                 new Input(),
                 cpu
@@ -526,7 +534,7 @@ export default class LevelScene extends Scene {
     const pickupSprite = this.flumpLibrary.createSprite(`pickup_${pickupId}`)
     const pickupEntity = new Entity(pickupSprite).addComponent(
       new LevelComponent(this),
-      new AutoDisposer(30), // disposes after 30 seconds
+      new AutoDisposer(20), // disposes after 20 seconds
       new Pickup(),
       new HitBox(-5, 6, 10, 8)
     )
@@ -540,14 +548,6 @@ export default class LevelScene extends Scene {
 
   public emitAction(action: GameAction) {
     this.sceneManager.gameController.onGameAction.emit(action)
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public playSound(sound: string, volume: number = 0.75, pan: number = 0) {
-    this.sceneManager.gameController.soundChannel.play(sound, {
-      volume: 0.5,
-      pan
-    })
   }
 }
 

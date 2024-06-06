@@ -3,6 +3,7 @@ import type SceneManager from '@/game/scenes/SceneManager'
 import { getWrappedLevelNo } from '@/game/game.config'
 
 import { Scene } from './Scene'
+import { createDelay } from '@/game/core/Delay'
 
 export class LevelVsScene extends Scene {
   constructor(
@@ -13,6 +14,8 @@ export class LevelVsScene extends Scene {
   }
   override onStart() {
     super.onStart()
+
+    createDelay(this.entity, 1, () => this.playSound('vs_level_start'))
 
     this.sceneManager.gameController.onShowGameBorder.emit(false)
 

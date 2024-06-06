@@ -9,6 +9,8 @@ export class Pickup extends Component {
 
   override onStart() {
     super.onStart()
+
+    this.entity.getComponent(LevelComponent)?.level.playSound('pickup_appears')
   }
 
   override onUpdate(dt: number) {
@@ -35,5 +37,10 @@ export class Pickup extends Component {
 
       this.entity.destroy()
     }
+  }
+
+  override destroy() {
+    this.entity.getComponent(LevelComponent)?.level.playSound('pickup_disappears')
+    super.destroy()
   }
 }

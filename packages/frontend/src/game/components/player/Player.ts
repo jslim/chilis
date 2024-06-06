@@ -85,6 +85,7 @@ export class Player extends Component {
         }
 
         case 'reset': {
+          this.level?.playSound('player_hit_cpu')
           this.onReset.emit()
           this.entity.alpha = 1
 
@@ -94,11 +95,13 @@ export class Player extends Component {
         }
 
         case 'die': {
+          this.level?.playSound('player_die')
           this.entity.alpha = 1
           break
         }
 
         case 'shoot': {
+          this.level?.playSound('player_shoot_pepper')
           this.shootPepper()
           this.bullets.value--
           break

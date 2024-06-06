@@ -25,6 +25,8 @@ import { HitBox } from '../HitBox'
 import { Mover } from '../Mover'
 import { StateDebugText } from '../StateDebugText'
 import { LevelComponent } from './LevelComponent'
+import { pick } from '@/game/utils/random.utils'
+import { SoundName } from '@/game/assets.manifest'
 
 export const burgerOverlap = 1
 export const burgerHeightByTileId = {
@@ -145,6 +147,7 @@ export class Burger extends Component {
         case 'fall': {
           this.entity.y += 1
           this.targetY = this.findTargetY()
+          this.level.playSound(pick(['burger_fall_a', 'burger_fall_b', 'burger_fall_c']) as SoundName)
           break
         }
         case 'complete': {
@@ -284,6 +287,7 @@ export class Burger extends Component {
         for (const cpuEntity of cpus) {
           if (this.intersectsWith(cpuEntity)) {
             this.onHitCpu.emit(cpuEntity)
+            this.level.playSound('burger_hit_cpu')
             break loop
           }
         }
