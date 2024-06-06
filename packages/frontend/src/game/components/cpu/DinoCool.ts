@@ -1,5 +1,6 @@
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
+import { Mover } from '@/game/components/Mover'
 
 const ATTACK_RANGE = 30
 
@@ -11,38 +12,17 @@ export class DinoCool extends Cpu {
 
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(2.25)
-
-    mover.modeCycle = ['hunt-player-slow']
-    mover.directionAccuracy = 0.75
-
-    this.subscribe(this.state.onChanged, (state) => {
-      switch (state) {
-        case 'prepare_attack': {
-          break
-        }
-
-        case 'attack': {
-          break
-        }
-      }
-    })
   }
 
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    const mover = this.entity.getComponent(CpuMover)
-    switch (this.state.value) {
-      case 'walk': {
-        if (
-          this.attackCoolDown.update(dt) &&
-          !mover.isClimbing &&
-          this.entity.y === this.level!.player.y &&
-          Math.abs(this.entity.x - this.level!.player.x) < ATTACK_RANGE
-        ) {
-          this.attackCoolDown.reset()
-          //this.state.value = 'prepare_attack';
-        }
+    if (this.state.value === 'jump') {
+      const mover = this.entity.getComponent(Mover)
+      if (mover.currentDirection.value === 'left') {
+        mover.position.x -= mover.speed.x
+      } else {
+        mover.position.x += mover.speed.x
       }
     }
   }

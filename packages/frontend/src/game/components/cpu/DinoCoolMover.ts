@@ -36,6 +36,7 @@ export default class DinoCoolMover extends CpuMover {
         if (width > 1 && start > 200) this.platforms.push({ direction: 'left', y, x: start, width })
       }
     }
+    this.position.x = -100
   }
 
   override walk(dt: number) {
@@ -54,6 +55,10 @@ export default class DinoCoolMover extends CpuMover {
       } else {
         this.right()
       }
+
+      this.entity.getComponent(Cpu).state.value = 'jump'
+      // hack, during the jump animation the DinoCool component will move the dino, so offset the position a bit
+      this.position.x += platform.direction === 'left' ? 32 : -32
     } else if (this.currentPlatform >= 0) {
       const platform = this.platforms[this.currentPlatform]
       let hasMoved = false
@@ -71,6 +76,7 @@ export default class DinoCoolMover extends CpuMover {
         }
       }
       if (!hasMoved) {
+        this.entity.getComponent(Cpu).state.value = 'jump'
         this.newPlatformCooldown.reset()
         this.currentPlatform = -1
       }

@@ -35,7 +35,7 @@ export type CpuName =
 
 export class Cpu extends Component {
   public readonly state = new Value<
-    'walk' | 'paralyzed' | 'die' | 'spawn' | 'defeat' | 'prepare_attack' | 'attack' | 'attack_complete'
+    'walk' | 'paralyzed' | 'die' | 'spawn' | 'defeat' | 'prepare_attack' | 'attack' | 'attack_complete' | 'jump'
   >('walk')
 
   public readonly onHitPlayer = new Signal<Entity>()
