@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/consistent-destructuring */
+import type { Channel, Channels } from '@mediamonks/channels'
 import type { GameStateValues } from './components/GameState'
 import type { GameAction } from './GameAction'
 
@@ -10,7 +12,6 @@ import { Signal } from './core/Signal'
 import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
-import { Channel, Channels } from '@mediamonks/channels'
 
 export class GameController {
   public onLevelComplete = new Signal<GameStateValues>()
@@ -19,10 +20,14 @@ export class GameController {
   public onShowGameBorder = new Signal<boolean>()
 
   public readonly app: Application = new Application()
-  private sceneManager!: SceneManager
-
   public soundChannel!: Channel
   public channels!: Channels
+
+  private sceneManager!: SceneManager
+
+  get gameState(): GameState {
+    return this.sceneManager.root.getComponent(GameState)
+  }
 
   // get only after init()
   public get canvas(): HTMLCanvasElement {
@@ -133,9 +138,5 @@ export class GameController {
   setChannels(channels: Channels) {
     this.channels = channels
     this.soundChannel = channels.createChannel('game')
-  }
-
-  get gameState(): GameState {
-    return this.sceneManager.root.getComponent(GameState)
   }
 }
