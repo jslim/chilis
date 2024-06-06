@@ -1,12 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 422 40" xmlns="http://www.w3.org/2000/svg">
+<svg fill="none" viewBox="0 0 457 72" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#c)">
+        <path d="m334 68h-4v4h4v-4z" fill="#141020" />
+        <path d="m358 44h-4v4h4v-4z" fill="#141020" />
+        <path d="m346 60h-4v4h4v-4z" fill="#141020" />
+        <path d="m350 56h-4v4h4v-4z" fill="#141020" />
+        <path d="m354 52h-4v4h4v-4z" fill="#141020" />
+        <path d="m342 64h-8v4h8v-4z" fill="#141020" />
+        <path d="m334 0v4h8v4h4v4h4v4h4v8h4v20h-4v8h-4v4h-4v4h-4v4h-8v4h-4v-68h4z" fill="#ED1C24" />
+    </g>
+    <g clip-path="url(#b)">
+        <path d="M330 0H130V68H330V0Z" fill="#ED1C24" />
+        <path d="m330 68h-200v4h200v-4z" fill="#141020" />
+    </g>
+    <g clip-path="url(#a)">
+        <path d="m130 68h-4v4h4v-4z" fill="#141020" />
+        <path d="m106 44h-4v4h4v-4z" fill="#141020" />
+        <path d="m118 60h-4v4h4v-4z" fill="#141020" />
+        <path d="m114 56h-4v4h4v-4z" fill="#141020" />
+        <path d="m110 52h-4v4h4v-4z" fill="#141020" />
+        <path d="m126 64h-8v4h8v-4z" fill="#141020" />
+        <path d="m126 0v4h-8v4h-4v4h-4v4h-4v8h-4v20h4v8h4v4h4v4h4v4h8v4h4v-68h-4z" fill="#ED1C24" />
+    </g>
     <path
-        d="m64 40h-6v-36h30v24h-18v12h-6zm12-18v-12h-6v12h6zm42 12h6v6h-30v-36h12v30h12zm36 6h-6v-12h-6v12h-12v-36h30v36h-6zm-6-18v-12h-6v12h6zm36 18h-6v-18h-12v-18h12v12h12v-12h12v18h-12v18h-6zm84 0h-6v-12h-6v-6h-6v18h-12v-36h12v6h6v6h6v-12h12v36h-6zm36 0h-24v-36h30v36h-6zm-6-6v-24h-6v24h6zm54 6h-6v-6h-6v-6h-6v6h-6v6h-12v-36h12v18h6v-6h6v6h6v-18h12v36h-6z"
-        fill="#ED1C24" />
+        d="m134 50h-4v-24h20v16h-12v8h-4zm8-12v-8h-4v8h4zm28 8h4v4h-20v-24h8v20h8zm24 4h-4v-8h-4v8h-8v-24h20v24h-4zm-4-12v-8h-4v8h4zm24 12h-4v-12h-8v-12h8v8h8v-8h8v12h-8v12h-4zm56 0h-4v-8h-4v-4h-4v12h-8v-24h8v4h4v4h4v-8h8v24h-4zm24 0h-16v-24h20v24h-4zm-4-4v-16h-4v16h4zm36 4h-4v-4h-4v-4h-4v4h-4v4h-8v-24h8v12h4v-4h4v4h4v-12h8v24h-4z"
+        fill="#140F1F" />
     <path
-        d="m64 36h-6v-36h30v24h-18v12h-6zm12-18v-12h-6v12h6zm42 12h6v6h-30v-36h12v30h12zm36 6h-6v-12h-6v12h-12v-36h30v36h-6zm-6-18v-12h-6v12h6zm36 18h-6v-18h-12v-18h12v12h12v-12h12v18h-12v18h-6zm84 0h-6v-12h-6v-6h-6v18h-12v-36h12v6h6v6h6v-12h12v36h-6zm36 0h-24v-36h30v36h-6zm-6-6v-24h-6v24h6zm54 6h-6v-6h-6v-6h-6v6h-6v6h-12v-36h12v18h6v-6h6v6h6v-18h12v36h-6z"
+        d="m134 46h-4v-24h20v16h-12v8h-4zm8-12v-8h-4v8h4zm28 8h4v4h-20v-24h8v20h8zm24 4h-4v-8h-4v8h-8v-24h20v24h-4zm-4-12v-8h-4v8h4zm24 12h-4v-12h-8v-12h8v8h8v-8h8v12h-8v12h-4zm56 0h-4v-8h-4v-4h-4v12h-8v-24h8v4h4v4h4v-8h8v24h-4zm24 0h-16v-24h20v24h-4zm-4-4v-16h-4v16h4zm36 4h-4v-4h-4v-4h-4v4h-4v4h-8v-24h8v12h4v-4h4v4h4v-12h8v24h-4z"
         fill="#EEECE7" />
-    <path
-        d="m64 38h-6v-36h30v24h-18v12h-6zm12-18v-12h-6v12h6zm42 12h6v6h-30v-36h12v30h12zm36 6h-6v-12h-6v12h-12v-36h30v36h-6zm-6-18v-12h-6v12h6zm36 18h-6v-18h-12v-18h12v12h12v-12h12v18h-12v18h-6zm84 0h-6v-12h-6v-6h-6v18h-12v-36h12v6h6v6h6v-12h12v36h-6zm36 0h-24v-36h30v36h-6zm-6-6v-24h-6v24h6zm54 6h-6v-6h-6v-6h-6v6h-6v6h-12v-36h12v18h6v-6h6v6h6v-18h12v36h-6z"
-        fill="#FFC60B" />
+    <defs>
+        <clipPath id="c">
+            <rect transform="translate(330)" width="28" height="72" fill="#fff" />
+        </clipPath>
+        <clipPath id="b">
+            <rect transform="translate(130)" width="200" height="72" fill="#fff" />
+        </clipPath>
+        <clipPath id="a">
+            <rect transform="translate(102)" width="28" height="72" fill="#fff" />
+        </clipPath>
+    </defs>
 </svg>

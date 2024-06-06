@@ -5,6 +5,8 @@ import classNames from 'classnames'
 
 import css from './ScoreList.module.scss'
 
+import { routes } from '@/data/routes'
+
 import { truncateText } from '@/utils/basic-functions'
 
 import { useRefs } from '@/hooks/use-refs'
@@ -62,7 +64,11 @@ export const View: FC<ViewProps> = ({
         </div>
       )}
 
-      <BaseButton className={css.leaderboardLink}>{fullLeaderboardText}</BaseButton>
+      {fullLeaderboardText && (
+        <BaseButton className={css.leaderboardLink} href={routes.FULL_LEADERBOARD}>
+          {fullLeaderboardText}
+        </BaseButton>
+      )}
     </div>
   )
 }

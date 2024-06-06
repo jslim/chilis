@@ -7,8 +7,11 @@ import { gsap } from 'gsap'
 
 import css from './PageGame.module.scss'
 
+import { getImageUrl } from '@/utils/basic-functions'
+
 import { useRefs } from '@/hooks/use-refs'
 
+import { BaseImage } from '@/components/BaseImage'
 import { Container } from '@/components/Container'
 
 export interface ViewProps extends ControllerProps {}
@@ -19,7 +22,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ onReady }) => {
+export const View: FC<ViewProps> = ({ onReady, content }) => {
   const refs = useRefs<ViewRefs>()
 
   useEffect(() => {
@@ -34,6 +37,7 @@ export const View: FC<ViewProps> = ({ onReady }) => {
 
   return (
     <main className={classNames('PageGame', css.root)} ref={refs.root}>
+      <BaseImage className={css.background} data={getImageUrl(content.body.background.src)} alt="" />
       <Container />
     </main>
   )

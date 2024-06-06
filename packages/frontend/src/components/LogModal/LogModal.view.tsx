@@ -54,7 +54,8 @@ export const View: FC<ViewProps> = ({
   const [phoneValue, setPhoneValue] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
   const [nicknameValue, setNicknameValue] = useState('')
-  const [userToken, setUserToken] = useLocalStorage('userToken')
+  const [accessToken, setAccessToken] = useLocalStorage('acessToken')
+  const [, setIdToken] = useLocalStorage('idToken')
   const [hasError, setHasError] = useState(false)
 
   const handleLoginSubmit = async () => {
@@ -69,12 +70,17 @@ export const View: FC<ViewProps> = ({
 
       const apiResponse = response as ApiResponse
 
-      if (apiResponse.message) {
+      console.log('Login response:', apiResponse)
+
+      if (!apiResponse.IdToken || !apiResponse.AccessToken) {
         console.error('Login failed:', apiResponse.message)
         setHasError(true)
       } else {
-        setUserToken(JSON.stringify(apiResponse.AccessToken))
-        localState().user.setToken(String(apiResponse.AccessToken))
+        setAccessToken(String(apiResponse.AccessToken))
+        setIdToken(String(apiResponse.IdToken))
+        localState().user.setAccessToken(String(apiResponse.AccessToken))
+        localState().user.setIdToken(String(apiResponse.IdToken))
+        localState().user.setIsTokenValid(true)
       }
     } catch (error) {
       console.error(error)
@@ -88,12 +94,14 @@ export const View: FC<ViewProps> = ({
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${userToken}`
+          Authorization: `Bearer ${accessToken}`
         },
         body: JSON.stringify({ nickname: nicknameValue })
       })
 
       const apiResponse = response as ApiResponse
+
+      console.log('Nickname response:', apiResponse)
 
       if (apiResponse.message.toLowerCase().includes('success')) {
         console.log('Nickame set successful:', apiResponse.message)
@@ -126,7 +134,7 @@ export const View: FC<ViewProps> = ({
           <SvgChilis />
         </div>
 
-        {!userToken ? (
+        {!localState().user.isTokenValid ? (
           <>
             <div className={css.title} {...copy.html(title)} />
             <div className={css.description} {...copy.html(description)} />

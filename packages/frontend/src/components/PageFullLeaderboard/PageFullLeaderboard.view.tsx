@@ -8,9 +8,15 @@ import { gsap } from 'gsap'
 
 import css from './PageFullLeaderboard.module.scss'
 
+import { getImageUrl } from '@/utils/basic-functions'
 import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
+
+import { BaseImage } from '@/components/BaseImage'
+import { ScoreList } from '@/components/ScoreList'
+
+import SvgYellowSquares from '@/svgs/YellowSquares.svg'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -20,7 +26,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ content, onReady }) => {
+export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
   const refs = useRefs<ViewRefs>()
 
   useEffect(() => {
@@ -35,7 +41,30 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
 
   return (
     <main className={classNames('PageFullLeaderboard', css.root)} ref={refs.root}>
-      <h1 className={css.title} {...copy.html(content.body.title)} />
+      <section className={css.titleContainer}>
+        <BaseImage className={css.background} data={getImageUrl(content.body.background.src)} alt="" />
+        <div className={css.wrapper}>
+          <h1 className={css.title} {...copy.html(content.body.title)} />
+          <div className={css.heroWrapper}>
+            <BaseImage className={css.hero} data={getImageUrl(content.body.hero.src)} alt={content.body.hero.alt} />
+          </div>
+          <p className={css.description} {...copy.html(content.body.description)} />
+        </div>
+      </section>
+      <section className={css.content}>
+        <div className={css.wrapper}>
+          <div className={css.iconWrapper}>
+            <SvgYellowSquares />
+          </div>
+          <div className={css.label} {...copy.html(content.body.topLabel)} />
+          <div className={css.iconWrapper}>
+            <SvgYellowSquares />
+          </div>
+        </div>
+
+        {/* TODO: Render top 20, but then we need to render all of them  */}
+        <ScoreList className={css.list} players={arrayOfPlayers} currentRankText="" />
+      </section>
     </main>
   )
 }

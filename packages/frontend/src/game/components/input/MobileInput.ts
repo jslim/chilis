@@ -33,7 +33,7 @@ export class MobileInput extends Component {
     gameContainer.style.userSelect = 'none'
     Object.assign(joystickContainer.style, {
       position: 'absolute',
-      zIndex: '10',
+      zIndex: '7',
       bottom: '10rem',
       left: '3.5%',
       width: `${Math.trunc(scaleX * 78)}px`,
