@@ -1,14 +1,20 @@
 /* eslint-disable no-labels */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-direct-mutation-state */
-import type { Entity } from '../../core/Entity'
-import { Component } from '../../core/Entity'
+import type { SoundName } from '@/game/assets.manifest'
 import type LevelScene from '@/game/scenes/LevelScene'
+import type { Entity } from '../../core/Entity'
 import type { BurgerGroup } from './BurgerGroup'
 
 import { Rectangle, Sprite, Texture } from 'pixi.js'
 
+// eslint-disable-next-line import/no-cycle
+import { Cpu } from '@/game/components/cpu/Cpu'
 import { getPixGamerNumberFont } from '@/game/display/SimpleText'
+import { TileId } from '@/game/tiled/TileId'
+import { pick } from '@/game/utils/random.utils'
+
+import { Component } from '../../core/Entity'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
 import {
@@ -18,15 +24,10 @@ import {
   POINTS_PER_CPU,
   POINTS_PER_TOTAL_CPUS_HIT
 } from '../../game.config'
-import { TileId } from '@/game/tiled/TileId'
-// eslint-disable-next-line import/no-cycle
-import { Cpu } from '@/game/components/cpu/Cpu'
 import { HitBox } from '../HitBox'
 import { Mover } from '../Mover'
 import { StateDebugText } from '../StateDebugText'
 import { LevelComponent } from './LevelComponent'
-import { pick } from '@/game/utils/random.utils'
-import { SoundName } from '@/game/assets.manifest'
 
 export const burgerOverlap = 1
 export const burgerHeightByTileId = {

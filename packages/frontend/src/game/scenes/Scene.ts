@@ -1,13 +1,14 @@
+import type { SoundName } from '@/game/assets.manifest'
 import type SceneManager from './SceneManager'
 import type { VideoSource } from 'pixi.js'
+
 import { Assets, Sprite } from 'pixi.js'
 
+import { getOgFont, SimpleText } from '@/game/display/SimpleText'
 import { FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from '@/game/game.config'
 
 import { GameState } from '../components/GameState'
 import { Component, Entity } from '../core/Entity'
-import { getOgFont, SimpleText } from '@/game/display/SimpleText'
-import { SoundName } from '@/game/assets.manifest'
 
 export class Scene extends Component {
   constructor(public sceneManager: SceneManager) {
@@ -19,6 +20,16 @@ export class Scene extends Component {
 
   public get gameState(): GameState {
     return this.sceneManager.root.getComponent(GameState)
+  }
+
+  public playSound(sound: SoundName, loop = false, volume: number = 0.75, pan: number = 0) {
+    const disposable = this.sceneManager.gameController.soundChannel.play(sound, {
+      loop,
+      volume,
+      pan
+    })
+    this.disposables.push(() => disposable.destruct())
+    return disposable
   }
 
   protected async playVideo(videoId: string, onEnd: () => void) {
@@ -68,15 +79,5 @@ export class Scene extends Component {
       .fill(0xff0000);
     this.entity.addChild(graphics);
      */
-  }
-
-  public playSound(sound: SoundName, loop = false, volume: number = 0.75, pan: number = 0) {
-    const disposable = this.sceneManager.gameController.soundChannel.play(sound, {
-      loop,
-      volume,
-      pan
-    })
-    this.disposables.push(() => disposable.destruct())
-    return disposable
   }
 }

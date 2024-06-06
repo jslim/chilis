@@ -1,8 +1,9 @@
-import { Cpu } from './Cpu'
-import { CpuMover } from './CpuMover'
 import { Mover } from '@/game/components/Mover'
 
-const ATTACK_RANGE = 30
+import { Cpu } from './Cpu'
+import { CpuMover } from './CpuMover'
+
+// const ATTACK_RANGE = 30
 
 export class DinoCool extends Cpu {
   override onStart() {
