@@ -1,12 +1,13 @@
-import { CpuMover } from './CpuMover'
 import { GAME_WIDTH } from '@/game/game.config'
 import { pick } from '@/game/utils/random.utils'
-import { Cpu } from '../cpu/Cpu'
-import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
 
-const LEFT_X = 40
+import { Cpu } from './Cpu'
+import { CpuAnimator } from './CpuAnimator'
+import { CpuMover } from './CpuMover'
+
+const LEFT_X = 55
 const LEFT_OUTSIDE_X = -50
-const RIGHT_X = GAME_WIDTH - 40
+const RIGHT_X = GAME_WIDTH - 35
 const RIGHT_OUTSIDE_X = GAME_WIDTH + 50
 
 export default class BurgerTronMover extends CpuMover {
@@ -18,7 +19,7 @@ export default class BurgerTronMover extends CpuMover {
 
   override onStart() {
     super.onStart()
-    const walkGrid = this.level.walkGrid
+
     this.leftFloorPositions = this.getWalkGridYPositionsAt(LEFT_X)
     this.rightFloorPositions = this.getWalkGridYPositionsAt(RIGHT_X)
 
@@ -32,12 +33,16 @@ export default class BurgerTronMover extends CpuMover {
           this.flyMode = 'none'
           break
         }
+        case 'attack': {
+          this.flyMode = 'none'
+          break
+        }
         case 'attack_complete': {
           this.flyMode = 'out'
           console.log('out')
 
           // very hackish, but hey deadlines
-          let animator = this.entity.getComponent(CpuAnimator)
+          const animator = this.entity.getComponent(CpuAnimator)
           this.subscribeOnce(animator.currentMovie.value!.onEnd, () => {
             animator.setMovie('burgertron_walk')
           })
@@ -76,7 +81,7 @@ export default class BurgerTronMover extends CpuMover {
   }
 
   flyAway() {
-    console.log('fly away')
+    console.log('fly away', this.currentSide)
     switch (this.currentSide) {
       case 'left': {
         this.position.x -= this.speed.x * 3
@@ -117,7 +122,7 @@ export default class BurgerTronMover extends CpuMover {
     return yPositions
   }
 
-  override walk(dt: number) {
+  override walk() {
     this.currentDirection.value = this.currentSide === 'left' ? 'right' : 'left'
     if (this.flyMode === 'out') {
       this.flyAway()

@@ -1,24 +1,24 @@
 /* eslint-disable react/no-direct-mutation-state */
 
 /* eslint-disable import/no-cycle */
+import type { Bullet } from '@/game/components/level/Bullet'
 import type { Burger } from '@/game/components/level/Burger'
 import type LevelScene from '@/game/scenes/LevelScene'
-import type { Bullet } from '@/game/components/level/Bullet'
 
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { Player } from '@/game/components/player/Player'
 import { createDelay } from '@/game/core/Delay'
+import { sortByDistanceTo } from '@/game/utils/array.utils'
+import { clamp01, lerp, lerpColor } from '@/game/utils/math.utils'
 
 import { CoolDown } from '../../core/CoolDown'
 import { Component, Entity } from '../../core/Entity'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
 import { DRAW_STATE_DEBUG } from '../../game.config'
-import { sortByDistanceTo } from '@/game/utils/array.utils'
-import { clamp01, lerp, lerpColor } from '@/game/utils/math.utils'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Mover } from '../Mover'
-import { Player } from '@/game/components/player/Player'
 import { StateDebugText } from '../StateDebugText'
 import { CpuMover } from './CpuMover'
 
@@ -45,6 +45,7 @@ export class Cpu extends Component {
   protected level: LevelScene | undefined = undefined
   protected autoCompleteAttack = true
   protected walksWhenPrepareAttack = true
+  protected respawnAfterDied = true
 
   protected attackCoolDown = new CoolDown(1.5)
   protected paralyzedCoolDown = new CoolDown(2)
@@ -171,7 +172,7 @@ export class Cpu extends Component {
       }
 
       case 'die': {
-        if (this.dieCoolDown.update(dt)) {
+        if (this.dieCoolDown.update(dt) && this.respawnAfterDied) {
           this.state.value = 'spawn'
           this.respawn()
         }

@@ -1,12 +1,13 @@
+import { BurgerTronBullet } from '@/game/components/cpu/BurgerTronBullet'
+import { HitBox } from '@/game/components/HitBox'
+import { Bullet } from '@/game/components/level/Bullet'
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { createDelay } from '@/game/core/Delay'
+import { Entity } from '@/game/core/Entity'
+import { FLOOR_OFFSET } from '@/game/game.config'
+
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
-import { Entity } from '@/game/core/Entity'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
-import { Bullet } from '@/game/components/level/Bullet'
-import { HitBox } from '@/game/components/HitBox'
-import { BurgerTronBullet } from '@/game/components/cpu/BurgerTronBullet'
-import { createDelay } from '@/game/core/Delay'
-import { FLOOR_OFFSET } from '@/game/game.config'
 
 export class BurgerTron extends Cpu {
   override onStart() {
@@ -14,7 +15,9 @@ export class BurgerTron extends Cpu {
 
     this.paralyzedCoolDown.interval = 3
     this.autoCompleteAttack = false
+    this.respawnAfterDied = false
 
+    const cpu = this.entity.getComponent(Cpu)
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1)
 
@@ -26,14 +29,15 @@ export class BurgerTron extends Cpu {
 
         case 'attack': {
           createDelay(this.entity, 0.1, () => this.shootBall(mover.currentDirection.value === 'left' ? -5 : 5))
+          createDelay(this.entity, 2, () => (cpu.state.value = 'attack_complete'))
           break
         }
       }
     })
   }
 
-  override onUpdate(dt: number) {
-    super.onUpdate(dt)
+  override onUpdate(_dt: number) {
+    super.onUpdate(_dt)
 
     // const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
@@ -46,7 +50,9 @@ export class BurgerTron extends Cpu {
       // const mover = this.entity.getComponent(CpuMover)
       const bulletSize = { width: 15, height: 10 }
 
-      let bulletSprite = this.level.flumpLibrary!.createSprite('burgertron_bullet')
+      this.level?.screenShake(2, 0.35)
+
+      const bulletSprite = this.level.flumpLibrary!.createSprite('burgertron_bullet')
       bulletSprite.pivot.y = 10
       const bullet = new Entity(bulletSprite).addComponent(
         new LevelComponent(this.level),
@@ -58,7 +64,7 @@ export class BurgerTron extends Cpu {
       bullet.position.copyFrom(this.entity.position)
       bullet.position.y -= FLOOR_OFFSET
 
-      this.level.containers.mid.addEntity(bullet)
+      this.level.containers.burgerParts.addEntity(bullet)
     }
   }
 }

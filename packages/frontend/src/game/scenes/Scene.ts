@@ -1,6 +1,7 @@
 import type { SoundName } from '@/game/assets.manifest'
 import type SceneManager from './SceneManager'
 import type { VideoSource } from 'pixi.js'
+
 import { Assets, Sprite } from 'pixi.js'
 
 import { getOgFont, SimpleText } from '@/game/display/SimpleText'

@@ -1,11 +1,10 @@
 /* eslint-disable unicorn/consistent-destructuring */
 import type { Channel, Channels } from '@mediamonks/channels'
 import type { GameStateValues } from './components/GameState'
+import { GameState } from './components/GameState'
 import type { GameAction } from './GameAction'
 
 import { Application } from 'pixi.js'
-
-import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
@@ -86,10 +85,18 @@ export class GameController {
             sceneManager.levelComplete(this.gameState.getValues())
           }
         } else if (key.toLowerCase() === 'o') {
-          sceneManager.currentScene?.getComponent(LevelScene).burgers.forEach((burger) => {
-            const b = burger.getComponent(Burger)
-            if (!b.isCompleted) b.state.value = 'fall'
-          })
+          let burgers = sceneManager.currentScene?.getComponent(LevelScene).burgers
+          if (burgers) {
+            // filter on non-completed burgers
+            burgers = burgers.filter((burger) => !burger.getComponent(Burger).isCompleted)
+            // sort by y, top most first
+            burgers.sort((a, b) => a.y - b.y)
+
+            // drop 3 burgers
+            for (let i = 0; i < 4 && i < burgers.length; i++) {
+              burgers[i].getComponent(Burger).state.value = 'fall'
+            }
+          }
         }
 
         // debug keys

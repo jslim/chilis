@@ -2,15 +2,8 @@ import { Component } from '../../core/Entity'
 import { GAME_WIDTH } from '../../game.config'
 
 export class BurgerTronBullet extends Component {
-  constructor(
-    private readonly speedX: number
-    // private speed: number,
-  ) {
+  constructor(private readonly speedX: number) {
     super()
-  }
-
-  override onStart() {
-    super.onStart()
   }
 
   override onUpdate(dt: number) {
