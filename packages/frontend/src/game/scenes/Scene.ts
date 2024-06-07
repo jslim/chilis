@@ -33,7 +33,7 @@ export class Scene extends Component {
   }
 
   protected async playVideo(videoId: string, onEnd: () => void) {
-    const videoUrl = `/videos/${videoId}.mp4`
+    const videoUrl = `${process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true' ? '.' : ''}/videos/${videoId}.mp4`
     await Assets.load(videoUrl)
     const videoSprite = Sprite.from(videoUrl)
     videoSprite.width = GAME_WIDTH
