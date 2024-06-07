@@ -41,6 +41,9 @@ export class Mover extends Component {
   public position = new Point(0, 0)
   public speed = new Point(0, 0)
 
+  public directionX = 0
+  public directionY = 0
+
   protected level!: LevelScene
 
   constructor(speed: number = 1) {
