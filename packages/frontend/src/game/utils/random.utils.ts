@@ -11,6 +11,6 @@ export function getRandom(seed = Math.random()): RandomFunction {
   }
 }
 
-export function pick<T>(array: T[], random: RandomFunction): T {
+export function pick<T>(array: T[], random: RandomFunction = Math.random): T {
   return array[Math.trunc(random() * array.length)]
 }

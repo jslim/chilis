@@ -13,7 +13,7 @@ import {
 } from "@/libs/config";
 import { getWebDomain } from "@/libs/get-domain";
 
-import { WebACL, S3Origin, ApiStack } from "@/stacks";
+import { WebACL, S3Origin, ApiStack, AuthStack } from "@/stacks";
 import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
@@ -79,6 +79,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
   );
 
   const { api } = use(ApiStack);
+  const { auth } = use(AuthStack);
 
   const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     path: "packages/frontend",
@@ -87,6 +88,8 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     environment: {
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
       NEXT_PUBLIC_API_URL: api.customDomainUrl ?? api.url,
+      NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
+      NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },
     ...(enableCustomDomain ? { customDomain: domainName, certificate } : {}),
     cdk: {
@@ -160,7 +163,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                   {
                     header: "Content-Security-Policy-Report-Only",
                     override: true,
-                    value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob:; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data:;`,
+                    value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data:;`,
                   },
                 ],
               },

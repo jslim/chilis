@@ -1,14 +1,16 @@
 import { HitBox } from '@/game/components/HitBox'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Component } from '@/game/core/Entity'
-import { POINTS_PER_3_PICKUPS, POINTS_PER_PICKUP } from '@/game/game.config'
 import { getPixGamerNumberFont } from '@/game/display/SimpleText'
+import { POINTS_PER_3_PICKUPS, POINTS_PER_PICKUP } from '@/game/game.config'
 
 export class Pickup extends Component {
   private isPickedUp = false
 
   override onStart() {
     super.onStart()
+
+    this.entity.getComponent(LevelComponent)?.level.playSound('pickup_appears')
   }
 
   override onUpdate(dt: number) {
@@ -25,7 +27,7 @@ export class Pickup extends Component {
 
       level.gameState.pickupsCollected.value++
 
-      if (level.gameState.pickupsCollected.value % 3 == 0) {
+      if (level.gameState.pickupsCollected.value % 3 === 0) {
         level.addScore(this.entity.position, POINTS_PER_3_PICKUPS, 0xffffff, getPixGamerNumberFont())
         level.emitAction({ a: '3-for-me', p: POINTS_PER_3_PICKUPS, l: level.gameState.pickupsCollected.value })
       } else {
@@ -35,5 +37,10 @@ export class Pickup extends Component {
 
       this.entity.destroy()
     }
+  }
+
+  override destroy() {
+    this.entity.getComponent(LevelComponent)?.level.playSound('pickup_disappears')
+    super.destroy()
   }
 }

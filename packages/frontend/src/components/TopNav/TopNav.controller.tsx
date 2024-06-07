@@ -6,7 +6,7 @@ import { View } from './TopNav.view'
 
 export interface ControllerProps {
   className?: string
-  text: string
+  text?: string
   isDisabled?: boolean
   onClick?: () => void
 }

@@ -36,11 +36,13 @@ export class Bullet extends Component {
       if (isCollided) {
         switch (this.objective) {
           case 'cpu': {
+            this.level.playSound('pepper_hit_cpu')
             target.getComponent(Cpu).onHitByPepper.emit(this)
             break
           }
 
           case 'player': {
+            this.level.playSound('cpu_die')
             target.getComponent(Player).onHitByBullet.emit(this)
             break
           }

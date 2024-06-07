@@ -2,7 +2,7 @@ import { Assets, Graphics } from 'pixi.js'
 
 import { GAME_ASSETS_BASE_URL } from '@/game/game.config'
 
-import { assetsManifest } from '../assets.manifest'
+import { assetsManifest, soundManifest } from '../assets.manifest'
 import { Scene } from './Scene'
 
 export class PreloadScene extends Scene {
@@ -26,6 +26,10 @@ export class PreloadScene extends Scene {
         [`level${level}/tileset_large`]: `${GAME_ASSETS_BASE_URL}tileset-large.png`
       })
     }
+
+    this.sceneManager.gameController.channels.sampleManager.addSamples(
+      Object.entries(soundManifest).map(([name, url]) => ({ name, fileName: url }))
+    )
 
     // preload assets = 0-50%
     await Assets.loadBundle(['game'], (p) => this.drawProgress(p * 0.5))

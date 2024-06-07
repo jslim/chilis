@@ -1,6 +1,8 @@
-import type { GameAction } from './GameAction'
+/* eslint-disable unicorn/consistent-destructuring */
+import type { Channel, Channels } from '@mediamonks/channels'
 import type { GameStateValues } from './components/GameState'
 import { GameState } from './components/GameState'
+import type { GameAction } from './GameAction'
 
 import { Application } from 'pixi.js'
 import { Burger } from './components/level/Burger'
@@ -9,7 +11,6 @@ import { Signal } from './core/Signal'
 import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
-import { Channel, Channels } from '@mediamonks/channels'
 
 export class GameController {
   public onLevelComplete = new Signal<GameStateValues>()
@@ -18,10 +19,14 @@ export class GameController {
   public onShowGameBorder = new Signal<boolean>()
 
   public readonly app: Application = new Application()
-  private sceneManager!: SceneManager
-
   public soundChannel!: Channel
   public channels!: Channels
+
+  private sceneManager!: SceneManager
+
+  get gameState(): GameState {
+    return this.sceneManager.root.getComponent(GameState)
+  }
 
   // get only after init()
   public get canvas(): HTMLCanvasElement {
@@ -77,13 +82,21 @@ export class GameController {
         if (key.toLowerCase() === 'e') {
           // eslint-disable-next-line no-alert
           if (confirm('Next level?')) {
-            sceneManager.levelComplete(sceneManager.root.getComponent(GameState).getValues())
+            sceneManager.levelComplete(this.gameState.getValues())
           }
         } else if (key.toLowerCase() === 'o') {
-          sceneManager.currentScene?.getComponent(LevelScene).burgers.forEach((burger) => {
-            const b = burger.getComponent(Burger)
-            if (!b.isCompleted) b.state.value = 'fall'
-          })
+          let burgers = sceneManager.currentScene?.getComponent(LevelScene).burgers
+          if (burgers) {
+            // filter on non-completed burgers
+            burgers = burgers.filter((burger) => !burger.getComponent(Burger).isCompleted)
+            // sort by y, top most first
+            burgers.sort((a, b) => a.y - b.y)
+
+            // drop 3 burgers
+            for (let i = 0; i < 4 && i < burgers.length; i++) {
+              burgers[i].getComponent(Burger).state.value = 'fall'
+            }
+          }
         }
 
         // debug keys
@@ -95,9 +108,9 @@ export class GameController {
         } else if (key === ']') {
           sceneManager.root.timescale *= 1.5
         } else if (key === '1') {
-          sceneManager.root.getComponent(GameState).lives.value += 1
+          this.gameState.lives.value += 1
         } else if (key === '2') {
-          sceneManager.root.getComponent(GameState).bullets.value += 1
+          this.gameState.bullets.value += 1
         } else if (key === '3') {
           Player.GOD_MODE = !Player.GOD_MODE
         } else if (key === 'k') {
@@ -112,11 +125,21 @@ export class GameController {
   }
 
   public setHighScore(value: number) {
-    this.sceneManager.root.getComponent(GameState).highScore.value = value
+    this.gameState.highScore.value = value
   }
 
   public async showLevel(levelNo: number) {
     return this.sceneManager.showLevel(levelNo)
+  }
+
+  public pause() {
+    this.sceneManager.pause()
+    this.onGameAction.emit({ a: 'pause', l: this.gameState.level.value })
+  }
+
+  public resume() {
+    this.sceneManager.pause()
+    this.onGameAction.emit({ a: 'resume', l: this.gameState.level.value })
   }
 
   setChannels(channels: Channels) {

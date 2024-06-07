@@ -1,53 +1,68 @@
-import type {SimpleTextConfig} from '@/game/display/SimpleText';
-import type {GameAction} from '@/game/GameAction';
-import type {TiledMap} from '@/game/tiled/TiledMap';
-import type {TiledWalkGrid} from '@/game/utils/tiles.utils';
+import type { SimpleTextConfig } from '@/game/display/SimpleText'
+import type { GameAction } from '@/game/GameAction'
+import type { TiledMap } from '@/game/tiled/TiledMap'
 
-import {Assets, Point, Rectangle, Sprite, Texture} from 'pixi.js';
+import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
-import {PointerComponent} from '@/game/button/PointerComponent';
-import {Cpu} from '@/game/components/cpu/Cpu';
-import {CpuAnimator} from '@/game/components/cpu/CpuAnimator';
-import {CpuMover} from '@/game/components/cpu/CpuMover';
-import {DinoCool} from '@/game/components/cpu/DinoCool';
-import {Matey} from '@/game/components/cpu/Matey';
-import {MrBaggie} from '@/game/components/cpu/MrBaggie';
-import {Piggles} from '@/game/components/cpu/Piggles';
-import {Zapp} from '@/game/components/cpu/Zapp';
-import {GamepadInput} from '@/game/components/input/GamepadInput';
-import {Input} from '@/game/components/input/Input';
-import {KeyboardInput} from '@/game/components/input/KeyboardInput';
-import {MobileInput} from '@/game/components/input/MobileInput';
-import {Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize} from '@/game/components/level/Burger';
-import {BurgerGroup} from '@/game/components/level/BurgerGroup';
-import {LevelComponent} from '@/game/components/level/LevelComponent';
-import {Light} from '@/game/components/level/Light';
-import {Plate} from '@/game/components/level/Plate';
-import {OnStart} from '@/game/components/OnStart';
-import {Pickup} from '@/game/components/Pickup';
-import {Player} from '@/game/components/player/Player';
-import {PlayerAnimator} from '@/game/components/player/PlayerAnimator';
-import {PlayerPacManMover} from '@/game/components/player/PlayerPacManMover';
-import {GameUI} from '@/game/components/ui/GameUI';
-import {ScoreAnimation} from '@/game/components/ui/ScoreAnimation';
-import {SimpleTextDisplay} from '@/game/components/ui/SimpleTextDisplay';
-import {get8pxNumberFont, getPixGamerNumberFont} from '@/game/display/SimpleText';
-import {FlumpAnimator} from '@/game/flump/FlumpAnimator';
-import {TileId} from '@/game/tiled/TileId';
-import {isMobileOrTablet} from '@/game/utils/is-mobile-or-tablet';
-import {getRandom, pick} from '@/game/utils/random.utils';
-import {connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections} from '@/game/utils/tiles.utils';
+import { PointerComponent } from '@/game/button/PointerComponent'
+import { BurgerTron } from '@/game/components/cpu/BurgerTron'
+import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
+import { Cpu } from '@/game/components/cpu/Cpu'
+import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
+import { CpuMover } from '@/game/components/cpu/CpuMover'
+import { DinoCool } from '@/game/components/cpu/DinoCool'
+import { Matey } from '@/game/components/cpu/Matey'
+import { MrBaggie } from '@/game/components/cpu/MrBaggie'
+import { Piggles } from '@/game/components/cpu/Piggles'
+import { Zapp } from '@/game/components/cpu/Zapp'
+import { GamepadInput } from '@/game/components/input/GamepadInput'
+import { Input } from '@/game/components/input/Input'
+import { KeyboardInput } from '@/game/components/input/KeyboardInput'
+import { MobileInput } from '@/game/components/input/MobileInput'
+import { Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize } from '@/game/components/level/Burger'
+import { BurgerGroup } from '@/game/components/level/BurgerGroup'
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { Light } from '@/game/components/level/Light'
+import { Plate } from '@/game/components/level/Plate'
+import { OnStart } from '@/game/components/OnStart'
+import { Pickup } from '@/game/components/Pickup'
+import { Player } from '@/game/components/player/Player'
+import { PlayerAnimator } from '@/game/components/player/PlayerAnimator'
+import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
+import { GameUI } from '@/game/components/ui/GameUI'
+import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
+import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
+import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
+import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
+import { TileId } from '@/game/tiled/TileId'
+import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
+import { getRandom, pick } from '@/game/utils/random.utils'
+import {
+  connectionsToGrid,
+  drawGrid,
+  drawPointsAndConnections,
+  getTileConnections,
+  type TiledWalkGrid
+} from '@/game/utils/tiles.utils'
 
-import {AutoDisposer} from '../components/AutoDisposer';
-import DinoCoolMover from "../components/cpu/DinoCoolMover";
-import {HitBox} from '../components/HitBox';
-import {createDelay} from '../core/Delay';
-import {Entity} from '../core/Entity';
-import {ScreenShake} from '../core/ScreenShake';
-import {Signal} from '../core/Signal';
-import {FlumpLibrary} from '../flump/FlumpLibrary';
-import {DRAW_DEBUG_GRID, FLOOR_OFFSET, FRAME_RATE, FRAME_RATE_HARD, FRAME_RATE_HARDEST, getWrappedLevelNo, POINTS_PER_GROUP_COMPLETE} from '../game.config';
-import {Scene} from './Scene';
+import { AutoDisposer } from '../components/AutoDisposer'
+import DinoCoolMover from '../components/cpu/DinoCoolMover'
+import { HitBox } from '../components/HitBox'
+import { createDelay } from '../core/Delay'
+import { Entity } from '../core/Entity'
+import { ScreenShake } from '../core/ScreenShake'
+import { Signal } from '../core/Signal'
+import { FlumpLibrary } from '../flump/FlumpLibrary'
+import {
+  DRAW_DEBUG_GRID,
+  FLOOR_OFFSET,
+  FRAME_RATE,
+  FRAME_RATE_HARD,
+  FRAME_RATE_HARDEST,
+  getWrappedLevelNo,
+  POINTS_PER_GROUP_COMPLETE
+} from '../game.config'
+import { Scene } from './Scene'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -115,6 +130,9 @@ export default class LevelScene extends Scene {
       }
       createDelay(this.entity, 2, () => this.showWinScreen())
     })
+
+    this.playSound('game_music', true)
+    this.playSound('game_start')
   }
 
   async preload(levelNo: number): Promise<{
@@ -211,7 +229,9 @@ export default class LevelScene extends Scene {
 
             this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
+            const hitBox = new HitBox(-3, -9, 6, 8)
             let cpu: Cpu | undefined
+            let cpuMover: CpuMover | undefined
             let offsetX = 0 // a visual offset for the animation
             if (id === TileId.Cpu) {
               cpu = new Cpu(`trainee0${traineeId++}` as 'trainee01' | 'trainee02' | 'trainee03')
@@ -224,6 +244,7 @@ export default class LevelScene extends Scene {
                 }
                 case 2: {
                   cpu = new DinoCool('dino')
+                  cpuMover = new DinoCoolMover(1, cpuId++)
                   break
                 }
                 case 3: {
@@ -240,7 +261,11 @@ export default class LevelScene extends Scene {
                   break
                 }
                 case 6: {
-                  cpu = new Piggles('piggles')
+                  cpu = new BurgerTron('burgertron')
+                  cpuMover = new BurgerTronMover(1, cpuId++)
+                  entity.position.x = -100
+                  hitBox.current.x = -10
+                  hitBox.current.width = 32
                   break
                 }
                 // No default
@@ -249,8 +274,8 @@ export default class LevelScene extends Scene {
 
             if (cpu) {
               entity.addComponent(
-                new HitBox(-3, -9, 6, 8),
-                cpu.name === 'dino' ? new DinoCoolMover(1, cpuId++) : new CpuMover(1, cpuId++),
+                hitBox,
+                cpuMover ?? new CpuMover(1, cpuId++),
                 new CpuAnimator(this.flumpLibrary, cpu.name, offsetX),
                 new Input(),
                 cpu
@@ -399,7 +424,7 @@ export default class LevelScene extends Scene {
 
     this.entity.addEntity(screenEntity)
 
-    this.emitAction({ a: 'complete', l: this.gameState.level.value })
+    this.emitAction({ a: 'complete', l: this.gameState.level.value, s: this.gameState.score.value })
   }
 
   showDefeatScreen() {
@@ -408,29 +433,21 @@ export default class LevelScene extends Scene {
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat'))
     screenEntity.position.set(120, 120)
 
-    // const levelNo = this.gameState.level.value
-    // let labelEntity = new Entity(this.flumpLibrary.createSprite(`label_defeat`))
-    // labelEntity.position.set(0, -16)
-
     const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
       new PointerComponent('pointerdown', () => {
         this.sceneManager.end(this.gameState.getValues())
+        this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
       })
     )
     buttonEntity.position.set(0, 0)
 
-    /*screenEntity.addComponent(
-      new OnStart(() => {
-        screenEntity.addEntity(labelEntity)
-      })
-    )*/
     createDelay(this.mainContainer, 1, () => {
       screenEntity.addEntity(buttonEntity)
     })
 
     this.entity.addEntity(screenEntity)
 
-    this.emitAction({ a: 'end', l: this.gameState.level.value })
+    this.emitAction({ a: 'complete', l: this.gameState.level.value, s: this.gameState.score.value })
   }
 
   checkIfAllBurgersCompleted() {
@@ -521,7 +538,7 @@ export default class LevelScene extends Scene {
     const pickupSprite = this.flumpLibrary.createSprite(`pickup_${pickupId}`)
     const pickupEntity = new Entity(pickupSprite).addComponent(
       new LevelComponent(this),
-      new AutoDisposer(30), // disposes after 30 seconds
+      new AutoDisposer(20), // disposes after 20 seconds
       new Pickup(),
       new HitBox(-5, 6, 10, 8)
     )
@@ -535,13 +552,6 @@ export default class LevelScene extends Scene {
 
   public emitAction(action: GameAction) {
     this.sceneManager.gameController.onGameAction.emit(action)
-  }
-
-  public playSound(sound: string, volume: number = 0.75, pan: number = 0) {
-    this.sceneManager.gameController.soundChannel.play(sound, {
-      volume: 0.5,
-      pan
-    })
   }
 }
 

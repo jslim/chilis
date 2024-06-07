@@ -2,12 +2,13 @@ import type LevelScene from '@/game/scenes/LevelScene'
 
 import { Point } from 'pixi.js'
 
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+// eslint-disable-next-line import/no-cycle
+import { canMove, canMoveTo } from '@/game/utils/grid.utils'
+
 import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
 import { FLOOR_OFFSET } from '../game.config'
-// eslint-disable-next-line import/no-cycle
-import { canMove, canMoveTo } from '@/game/utils/grid.utils'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
 
 export type Direction = 'up' | 'down' | 'left' | 'right'
 export type MoveDirection = Direction | ''
@@ -39,6 +40,7 @@ export class Mover extends Component {
   public prevPosition = new Point(0, 0)
   public position = new Point(0, 0)
   public speed = new Point(0, 0)
+
   public directionX = 0
   public directionY = 0
 

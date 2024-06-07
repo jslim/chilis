@@ -1,3 +1,4 @@
+import type { SoundName } from '@/game/assets.manifest'
 import type SceneManager from './SceneManager'
 import type { VideoSource } from 'pixi.js'
 
@@ -21,6 +22,16 @@ export class Scene extends Component {
     return this.sceneManager.root.getComponent(GameState)
   }
 
+  public playSound(sound: SoundName, loop = false, volume: number = 0.75, pan: number = 0) {
+    const disposable = this.sceneManager.gameController.soundChannel.play(sound, {
+      loop,
+      volume,
+      pan
+    })
+    this.disposables.push(() => disposable.destruct())
+    return disposable
+  }
+
   protected async playVideo(videoId: string, onEnd: () => void) {
     const videoUrl = `${process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true' ? '.' : ''}/videos/${videoId}.mp4`
     await Assets.load(videoUrl)
@@ -28,8 +39,12 @@ export class Scene extends Component {
     videoSprite.width = GAME_WIDTH
     videoSprite.height = GAME_HEIGHT
     const videoSource = videoSprite.texture.source as VideoSource
+    videoSource.resource.style.imageRendering = 'pixelated'
     videoSource.resource.loop = false
+    videoSource.resource.muted = false
     videoSource.resource.playsInline = true
+    videoSource.antialias = false
+    videoSource.scaleMode = 'nearest'
 
     videoSource.resource.addEventListener('ended', () => onEnd())
     await videoSource.resource.play()
@@ -41,6 +56,9 @@ export class Scene extends Component {
       })
     )
     this.entity.addEntity(new Entity(videoSprite))
+
+    // connect to channels so that the volume can be controlled from outside
+    this.sceneManager.gameController.soundChannel.connectMediaElement(videoSource.resource)
   }
 
   protected addButton(label: string, position: [x: number, y: number], onclick: () => void) {
