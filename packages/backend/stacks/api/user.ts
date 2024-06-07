@@ -72,15 +72,6 @@ export function userApiStack({ stack, app }: StackContext) {
     }),
   });
 
-  const putUser = new Function(stack, "put-user", {
-    functionName: `${app.stage}-put-user`,
-    description: "Endpoint to save user history score",
-    handler: "packages/backend/handlers/user/put.handler",
-    ...(isProd && {
-      reservedConcurrentExecutions: 50,
-    }),
-  });
-
   /**
    * user API endpoints
    */
@@ -102,16 +93,6 @@ export function userApiStack({ stack, app }: StackContext) {
     // @ts-ignore
     authorizer: api.authorizersData.Authorizer,
     model: api.cdk.restApi.addModel(patchUserModel.modelName, patchUserModel as ModelOptions),
-    validator,
-  });
-
-  generateApiMethod({
-    resource: userPath,
-    method: HttpMethod.PUT,
-    handlerFn: putUser,
-    // eslint-disable-next-line
-    // @ts-ignore
-    authorizer: api.authorizersData.Authorizer,
     validator,
   });
 }

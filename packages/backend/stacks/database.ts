@@ -6,9 +6,25 @@ export function Database({ stack, app }: StackContext) {
   const gameHistoryTable = new DynamoDbTable(stack, "userGameHistory", {
     fields: {
       subReference: "string",
-      gameScore: "string", // StringSet <{score: string; level: number; timestamp: string;}>
+      gameScore: "string", // StringSet <{gameId: string; score: string; level: number; timestamp: string; valid: boolean;}>
     },
     primaryIndex: { partitionKey: "subReference" },
+    cdk: {
+      table: {
+        removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+      },
+    },
+  });
+
+  const gameSessionTable = new DynamoDbTable(stack, "gameSession", {
+    fields: {
+      subReference: "string", // Cognito user sub
+      gameId: "string",
+      status: "string", // active, inactive, completed
+      timestamp: "string",
+      steps: "string", // StringSet <{action: enum; name: string; level: number; point: number; timestamp: string;}>
+    },
+    primaryIndex: { partitionKey: "subReference", sortKey: "gameId" },
     cdk: {
       table: {
         removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
@@ -24,7 +40,7 @@ export function Database({ stack, app }: StackContext) {
       timestamp: "string",
       nickname: "string",
     },
-    primaryIndex: { partitionKey: "subReference", sortKey: "score" },
+    primaryIndex: { partitionKey: "subReference" },
     cdk: {
       table: {
         removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
@@ -32,5 +48,5 @@ export function Database({ stack, app }: StackContext) {
     },
   });
 
-  return { gameHistoryTable, leaderbaordTable };
+  return { gameHistoryTable, gameSessionTable, leaderbaordTable };
 }

@@ -11,6 +11,7 @@ export { WebACL } from "@/stacks/spa/web-acl";
 export { AuthStack } from "@/stacks/auth";
 export { ApiStack } from "@/stacks/api/api";
 export { userApiStack } from "@/stacks/api/user";
+export { gameApiStack } from "@/stacks/api/game";
 export { leaderboardApiStack } from "@/stacks/api/leaderboard";
 export { Database } from "@/stacks/database";
 export { SecretsStack } from "@/stacks/secrets";
