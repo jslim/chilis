@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/consistent-destructuring */
 import type { Channel, Channels } from '@mediamonks/channels'
+import type { GameAction } from '@/game/GameAction'
 import type { GameStateValues } from './components/GameState'
-import type { GameAction } from './GameAction'
 
 import { Application } from 'pixi.js'
 
@@ -24,7 +24,6 @@ export class GameController {
   public channels!: Channels
 
   private sceneManager!: SceneManager
-
   get gameState(): GameState {
     return this.sceneManager.root.getComponent(GameState)
   }
@@ -39,7 +38,7 @@ export class GameController {
       width: GAME_WIDTH,
       height: GAME_HEIGHT
     })
-    //
+
     document.querySelector('#app')!.append(this.app.canvas)
     this.app.canvas.style.imageRendering = 'pixelated'
 
@@ -131,7 +130,7 @@ export class GameController {
   }
 
   public resume() {
-    this.sceneManager.pause()
+    this.sceneManager.resume()
     this.onGameAction.emit({ a: 'resume', l: this.gameState.level.value })
   }
 

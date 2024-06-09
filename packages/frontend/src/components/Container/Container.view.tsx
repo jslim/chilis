@@ -5,9 +5,9 @@ import classNames from 'classnames'
 
 import css from './Container.module.scss'
 
-import { useRefs } from '@/hooks/use-refs'
+import { initializeGame } from '@/services/game'
 
-import { initGame } from '@/game/game'
+import { useRefs } from '@/hooks/use-refs'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -20,8 +20,7 @@ export const View: FC<ViewProps> = ({ className }) => {
   const refs = useRefs<ViewRefs>()
 
   useEffect(() => {
-    // Initialize the game
-    initGame()
+    initializeGame()
   }, [])
 
   return (

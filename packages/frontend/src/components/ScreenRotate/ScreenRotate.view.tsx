@@ -5,6 +5,7 @@ import classNames from 'classnames'
 
 import css from './ScreenRotate.module.scss'
 
+import { getGameInstance } from '@/services/game'
 import { ResizeService } from '@/services/resize'
 
 import { copy } from '@/utils/copy'
@@ -21,11 +22,10 @@ export type ViewRefs = {
   root: HTMLDivElement
 }
 
-// View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ className, content }) => {
   const refs = useRefs<ViewRefs>()
-
   const [enable, setEnable] = useState(process.env.STORYBOOK || (!device.desktop && device.phone && device.portrait))
+  const [paused, setPaused] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,6 +38,20 @@ export const View: FC<ViewProps> = ({ className, content }) => {
       ResizeService.dismiss(handleResize)
     }
   }, [])
+
+  useEffect(() => {
+    const gameInstance = getGameInstance()
+
+    if (gameInstance) {
+      if (enable && !paused) {
+        gameInstance.pause()
+        setPaused(true)
+      } else if (!enable && paused) {
+        gameInstance.resume()
+        setPaused(false)
+      }
+    }
+  }, [enable, paused])
 
   return enable ? (
     <div className={classNames('ScreenRotate', css.root, className)} ref={refs.root}>
