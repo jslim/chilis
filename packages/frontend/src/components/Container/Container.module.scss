@@ -6,5 +6,12 @@
 
   :global(#app) {
     height: calc(100vh - 4rem);
+
+    &.hasBorder {
+      canvas {
+        border: px(10) solid transparent;
+        border-image: url('~@/assets/images/frame.png') 40;
+      }
+    }
   }
 }
