@@ -62,25 +62,25 @@ export function WebACL({ stack, app }: StackContext) {
       getWAFManagedRule("AWSManagedRulesCommonRuleSet", 20, app.stage),
       getWAFManagedRule("AWSManagedRulesKnownBadInputsRuleSet", 30, app.stage),
       getWAFManagedRule("AWSManagedRulesAnonymousIpList", 40, app.stage),
-      {
-        name: "allow-specific-countries-rule",
-        priority: 0,
-        action: { block: {} },
-        statement: {
-          notStatement: {
-            statement: {
-              geoMatchStatement: {
-                countryCodes: COUNTRIES_ALLOW_LIST,
-              },
-            },
-          },
-        },
-        visibilityConfig: {
-          cloudWatchMetricsEnabled: true,
-          metricName: "allow-specific-countries-rule",
-          sampledRequestsEnabled: true,
-        },
-      },
+      // {
+      //   name: "allow-specific-countries-rule",
+      //   priority: 0,
+      //   action: { block: {} },
+      //   statement: {
+      //     notStatement: {
+      //       statement: {
+      //         geoMatchStatement: {
+      //           countryCodes: COUNTRIES_ALLOW_LIST,
+      //         },
+      //       },
+      //     },
+      //   },
+      //   visibilityConfig: {
+      //     cloudWatchMetricsEnabled: true,
+      //     metricName: "allow-specific-countries-rule",
+      //     sampledRequestsEnabled: true,
+      //   },
+      // },
       // ...(enableCustomDomain
       //   ? [
       //       {
