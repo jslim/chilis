@@ -19,8 +19,7 @@ export class LevelIntroScene extends Scene {
     const gotoLevel = () => this.sceneManager.showLevelVsScene(this.levelNo)
 
     ;(async () => {
-      const levelNo = 1 //this.levelNo
-      await this.playVideo(`cutscene_level_0${levelNo}`, () => gotoLevel())
+      await this.playVideo(`cutscene_level_0${this.levelNo}`, () => gotoLevel())
       this.addButton('SKIP', [GAME_WIDTH - 23, GAME_HEIGHT - 10], () => gotoLevel())
     })()
   }
