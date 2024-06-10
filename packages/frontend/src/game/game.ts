@@ -1,6 +1,8 @@
 import { Channels } from '@mediamonks/channels'
-import { GameController } from './GameController'
+
 import { GAME_SOUNDS_BASE_URL } from '@/game/game.config'
+
+import { GameController } from './GameController'
 
 export const initGame = async () => {
   const game = new GameController()

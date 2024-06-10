@@ -8,7 +8,6 @@ export interface ControllerProps {
   className?: string
   onClick?: () => void
   audioSrc?: string
-  audioName: string
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

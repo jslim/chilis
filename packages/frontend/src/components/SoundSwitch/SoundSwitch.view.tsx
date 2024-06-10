@@ -2,11 +2,12 @@ import type { FC } from 'react'
 import type { ControllerProps } from './SoundSwitch.controller'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Channels } from '@mediamonks/channels'
 import classNames from 'classnames'
 import gsap from 'gsap'
 
 import css from './SoundSwitch.module.scss'
+
+import { getGameInstance } from '@/services/game'
 
 import { detect } from '@/utils/detect'
 
@@ -27,11 +28,12 @@ export type ViewRefs = {
   noteAnimation: gsap.core.Tween
 }
 
-export const View: FC<ViewProps> = ({ className, audioName, audioSrc = '/common/assets/sounds/' }) => {
+export const View: FC<ViewProps> = ({ className }) => {
   const refs = useRefs<ViewRefs>()
-  const [switchOn, setSwitchOn] = useState(false)
-  const [channelsInstance, setChannelsInstance] = useState<Channels | null>(null)
+
   const isDesktop = detect.device.desktop
+  const channelsInstance = getGameInstance()?.channels
+  const [switchOn, setSwitchOn] = useState(channelsInstance?.isDisposed())
 
   const handleClick = useCallback(() => {
     setSwitchOn((prev) => !prev)
@@ -55,35 +57,12 @@ export const View: FC<ViewProps> = ({ className, audioName, audioSrc = '/common/
   }, [isDesktop, refs.cd, refs.cdAnimation, refs.note, refs.noteAnimation])
 
   useEffect(() => {
-    if (audioSrc) {
-      const soundFiles = [audioName].map((name) => ({
-        name
-      }))
+    console.log('channelsInstance:', channelsInstance?.getPlayingSounds())
 
-      const instance = new Channels({
-        soundsExtension: 'mp3',
-        soundsPath: audioSrc,
-        sounds: soundFiles
-      })
-
-      const loadSounds = async () => {
-        try {
-          await instance.loadSounds()
-          setChannelsInstance(instance)
-        } catch (error) {
-          console.error('Failed to load sounds:', error)
-        }
-      }
-
-      loadSounds()
-    }
-  }, [audioName, audioSrc])
-
-  useEffect(() => {
     if (channelsInstance) {
       if (switchOn) {
         try {
-          channelsInstance.play(audioName)
+          channelsInstance.unmute()
         } catch (error) {
           console.error('Failed to play sound:', error)
         }
@@ -94,10 +73,12 @@ export const View: FC<ViewProps> = ({ className, audioName, audioSrc = '/common/
         refs.cdAnimation.current?.pause()
         refs.noteAnimation.current?.reverse()
 
-        channelsInstance.stopAll()
+        channelsInstance.mute()
       }
     }
-  }, [channelsInstance, switchOn, refs.cdAnimation, refs.noteAnimation, audioName])
+
+    console.log(channelsInstance)
+  }, [switchOn, refs.cdAnimation, refs.noteAnimation, channelsInstance])
 
   return (
     <div>
