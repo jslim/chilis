@@ -57,6 +57,8 @@ export const View: FC<ViewProps> = ({
   const [accessToken, setAccessToken] = useLocalStorage('acessToken')
   const [, setIdToken] = useLocalStorage('idToken')
   const [hasError, setHasError] = useState(false)
+  const [hasLogged, setHasLogged] = useState(false)
+  const preferredNickname = localState().user.nickname
 
   const handleLoginSubmit = async () => {
     try {
@@ -81,6 +83,7 @@ export const View: FC<ViewProps> = ({
         localState().user.setAccessToken(String(apiResponse.AccessToken))
         localState().user.setIdToken(String(apiResponse.IdToken))
         localState().user.setIsTokenValid(true)
+        setHasLogged(true)
       }
     } catch (error) {
       console.error(error)
@@ -170,22 +173,25 @@ export const View: FC<ViewProps> = ({
             </div>
           </>
         ) : (
-          <>
-            <div className={css.title} {...copy.html(nicknameTitle)} />
-            <div className={css.description} {...copy.html(nicknameDescription)} />
-            <BaseForm onSubmit={handleNicknameSubmit} submitMessage={nicknameCta} errorMessage={errorMessageNickname}>
-              <div className={css.fieldsContainer}>
-                <input
-                  type="text"
-                  id="nickname"
-                  name="nickname"
-                  placeholder={nickname}
-                  onChange={(e) => setNicknameValue(e.target.value)}
-                  required
-                />
-              </div>
-            </BaseForm>
-          </>
+          hasLogged &&
+          !preferredNickname && (
+            <>
+              <div className={css.title} {...copy.html(nicknameTitle)} />
+              <div className={css.description} {...copy.html(nicknameDescription)} />
+              <BaseForm onSubmit={handleNicknameSubmit} submitMessage={nicknameCta} errorMessage={errorMessageNickname}>
+                <div className={css.fieldsContainer}>
+                  <input
+                    type="text"
+                    id="nickname"
+                    name="nickname"
+                    placeholder={nickname}
+                    onChange={(e) => setNicknameValue(e.target.value)}
+                    required
+                  />
+                </div>
+              </BaseForm>
+            </>
+          )
         )}
       </div>
       <div className={css.bottom}>
