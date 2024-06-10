@@ -13,6 +13,7 @@ import {
   leaderboardApiStack,
   Database,
   SecretsStack,
+  WafStack,
 } from "@app/backend/stacks";
 
 import { SST_APP_NAME } from "@app/backend/libs/config";
@@ -39,6 +40,7 @@ export default {
       .stack(userApiStack)
       .stack(gameApiStack)
       .stack(leaderboardApiStack)
+      .stack(WafStack)
       /* Frontend */
       .stack(WebACL)
       .stack(S3Origin)

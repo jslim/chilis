@@ -15,3 +15,4 @@ export { gameApiStack } from "@/stacks/api/game";
 export { leaderboardApiStack } from "@/stacks/api/leaderboard";
 export { Database } from "@/stacks/database";
 export { SecretsStack } from "@/stacks/secrets";
+export { WafStack } from "@/stacks/api/waf";
