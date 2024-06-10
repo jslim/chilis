@@ -1,9 +1,18 @@
+import type { QueryOutput } from "@aws-sdk/client-dynamodb";
 import type LeaderboardRepository from "@/repositories/leaderboard";
 
 export default class GameService {
   constructor(private repository: LeaderboardRepository) {}
 
-  public async getLeaderboard(pageSize: number) {
+  /**
+   * Retrieves a portion of the leaderboard based on the specified page size.
+   * Default oage size 100 records
+   *
+   * @param pageSize The number of items to retrieve in a single page.
+   * @returns A Promise that resolves to the leaderboard data.
+   * @throws Error if an error occurs while retrieving the leaderboard.
+   */
+  public async getLeaderboard(pageSize: number): Promise<QueryOutput> {
     try {
       return await this.repository.getLeaderboard(pageSize);
     } catch (err) {
@@ -11,6 +20,12 @@ export default class GameService {
     }
   }
 
+  /**
+   * Retrieves all-time leaderboard data.
+   *
+   * @returns An array of all items in the all-time leaderboard.
+   * @throws Error if an error occurs while retrieving the all-time leaderboard.
+   */
   public async getAllTimeLeaderboard() {
     let lastEvaluatedKey = undefined;
 

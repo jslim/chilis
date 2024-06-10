@@ -23,9 +23,9 @@ const leaderboardService = new LeaderboardService(new LeaderboardRepository(new 
  *
  * @param {APIGatewayProxyEvent} event - The event object containing request details.
  * @param {Context} context - The context object providing information about the runtime environment.
- * @returns - The result object containing the HTTP response with leaderboard data.
+ * @returns {Promise<APIGatewayProxyResult>}- The result object containing the HTTP response with leaderboard data.
  */
-export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
+export const handler = async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> =>
   defaultHttpHandler(event, context, async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     logger.info("Handler to retrieve the leaderboard", { event, ...context });
 
