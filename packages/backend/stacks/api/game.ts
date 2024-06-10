@@ -13,7 +13,7 @@ import putGameModal from "@/stacks/game/models/put";
 export function gameApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
   const { api, validator } = use(ApiStack);
-  const { leaderbaordTable, gameSessionTable, gameHistoryTable } = use(Database);
+  const { leaderboardTable, gameSessionTable, gameHistoryTable } = use(Database);
 
   setDefaultFunctionProps({ stack, app });
 
@@ -48,7 +48,7 @@ export function gameApiStack({ stack, app }: StackContext) {
       new PolicyStatement({
         actions: ["dynamodb:PutItem", "dynamodb:UpdateItem"],
         effect: Effect.ALLOW,
-        resources: [gameHistoryTable.tableArn, leaderbaordTable.tableArn],
+        resources: [gameHistoryTable.tableArn, leaderboardTable.tableArn],
       }),
       // eslint-disable-next-line
       // @ts-ignore
@@ -59,7 +59,7 @@ export function gameApiStack({ stack, app }: StackContext) {
       }),
     ],
     environment: {
-      LEADERBOARD_TABLE_NAME: leaderbaordTable.tableName,
+      LEADERBOARD_TABLE_NAME: leaderboardTable.tableName,
       GAMES_SESSION_TABLE_NAME: gameSessionTable.tableName,
       GAMES_HISTORY_TABLE_NAME: gameHistoryTable.tableName,
     },

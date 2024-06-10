@@ -1,4 +1,4 @@
-import { GameScore, GameStatus } from "@/types/game";
+import { GameScore, GameStatus, GSILeaderboard } from "@/types/game";
 import { PutItemOutput, UpdateItemOutput } from "@aws-sdk/client-dynamodb";
 import type DynamoDBClient from "@/services/dynamodb";
 import { generateExpression } from "@/services/dynamodb";
@@ -147,10 +147,10 @@ class GameRepository {
    * @param gameScore - An object containing the gameId, score, level, and timestamp of the game.
    * @returns Promise - The result of updating the leaderboard with the new game score.
    */
-  public async updateLeaderboard(userSub: string, gameScore: GameScore): Promise<PutItemOutput | UpdateItemOutput> {
+  public async updateLeaderboard(userSub: string, gameScore: GameScore): Promise<PutItemOutput | UpdateItemOutput | undefined> {
     try {
       return await this.client.save(
-        { ...gameScore, subReference: userSub },
+        { ...gameScore, subReference: userSub, gsiPK: GSILeaderboard.ALL_TIME_LEADERBOARD },
         { ConditionExpression: "attribute_not_exists(subReference)" },
         process.env.LEADERBOARD_TABLE_NAME
       );
@@ -162,7 +162,7 @@ class GameRepository {
         try {
           return await this.client.update({ subReference: userSub }, params, process.env.LEADERBOARD_TABLE_NAME);
         } catch (updateError) {
-          throw new Error(`Error trying to update leaderboard: ${updateError}`);
+          if (error.name !== "ConditionalCheckFailedException") throw new Error(`Error trying to update leaderboard: ${updateError}`);
         }
       } else {
         throw new Error(`updateLeaderboard Error: ${error}`);
