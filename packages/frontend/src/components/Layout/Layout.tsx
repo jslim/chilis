@@ -129,8 +129,6 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   // Page transitions
   //
   useEffect(() => {
-    // if (!introComplete) return
-
     const transitionTimeline = gsap.timeline()
 
     // if the current page has an animateOut(), do it
@@ -202,6 +200,10 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         console.log('Token is valid. Payload:', payload)
         localState().user.setIsTokenValid(true)
         localState().user.setNickname(String(payload.preferred_username))
+
+        if (isModalOpen && String(payload.preferred_username)) {
+          setIsModalOpen(false)
+        }
       } catch (error) {
         console.log('Token not valid!', error)
         localState().user.setNickname('')
@@ -212,7 +214,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
 
     verifyToken()
-  }, [idToken])
+  }, [idToken, isModalOpen])
 
   // Fullscreen
   useEffect(() => {
@@ -253,7 +255,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <Head {...pageProps.content.head} />
 
       <TopNav
-        text={localStore().user.nickname !== '' ? localState().user.nickname : pageProps.content.common.topNav.logIn}
+        text={localStore().user.nickname ? localState().user.nickname : pageProps.content.common.topNav.logIn}
         onClick={() => setIsModalOpen(true)}
         isDisabled={!!localState().user.nickname} // TODO: add a validation here to verify the token, so on ref the user stays logged in
       />

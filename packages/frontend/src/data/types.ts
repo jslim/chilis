@@ -30,4 +30,5 @@ export type ApiResponse = {
   [key: string]: unknown
   // array of players
   data: Player[]
+  user: Player
 }

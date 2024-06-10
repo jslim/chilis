@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import type { PageHandle } from '@/data/types'
+import type { PageHandle, Player } from '@/data/types'
 import type { ControllerProps } from './PageLeaderboard.controller'
 
 import { useEffect, useImperativeHandle } from 'react'
@@ -17,17 +17,18 @@ import { BackgroundVideo } from '@/components/BackgroundVideo'
 import { BaseImage } from '@/components/BaseImage'
 import { ScoreList } from '@/components/ScoreList'
 
-export interface ViewProps extends ControllerProps {}
+export interface ViewProps extends ControllerProps {
+  currentPlayer?: Player
+  arrayOfPlayers: Player[]
+}
 
 export type ViewRefs = {
   root: HTMLElement
   pageHandle: PageHandle
 }
 
-const currentPlayer = { rank: '500', nickname: 'Player', score: '542' }
-
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ content, onReady, arrayOfPlayers }) => {
+export const View: FC<ViewProps> = ({ content, onReady, arrayOfPlayers, currentPlayer }) => {
   const refs = useRefs<ViewRefs>()
 
   useEffect(() => {
