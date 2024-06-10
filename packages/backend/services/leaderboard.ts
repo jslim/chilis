@@ -51,4 +51,24 @@ export default class GameService {
 
     return allItems;
   }
+
+  public async deleteRecordByPrefix(prefix: string) {
+    try {
+      const { Items } = await this.repository.getRecordByPrefix(prefix);
+      Items;
+      if (Items && Items.length > 0) {
+        const deleteRequests = Items.map((item) => ({
+          DeleteRequest: {
+            Key: {
+              subReference: item.subReference,
+            },
+          },
+        }));
+
+        await this.repository.batchWrite(deleteRequests);
+      }
+    } catch (err) {
+      throw new Error(`An error occurred returning leaderboard. ${err}`);
+    }
+  }
 }
