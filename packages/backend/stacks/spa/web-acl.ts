@@ -6,7 +6,9 @@ import { detectStage } from "@/libs/detect-stage";
 import { getWAFManagedRule } from "@/utils/waf-utils";
 // import { isValidDomain } from "@/utils/domain-validator";
 
-const COUNTRIES_ALLOW_LIST = ["CA", "US", "UY", "NL", "BR"];
+const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")
+  ?.split(",")
+  .map((country) => country.trim()) || ["CA", "US", "UY", "NL", "BR"];
 
 export function WebACL({ stack, app }: StackContext) {
   const { isDevelopment, isProd } = detectStage(app.stage);
