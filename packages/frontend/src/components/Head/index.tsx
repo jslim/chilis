@@ -49,10 +49,6 @@ export const Head: FC<HeadProps> = memo(({ title, description, siteName, image }
       <link rel="icon" type="image/png" sizes="16x16" href={prefix('/common/favicons/favicon-16x16.png')} />
       <link rel="icon" type="image/png" sizes="32x32" href={prefix('/common/favicons/favicon-32x32.png')} />
       <link rel="icon" type="image/png" sizes="144x144" href={prefix('/common/favicons/favicon-144x144.png')} />
-      <link rel="icon" type="image/png" sizes="150x150" href={prefix('/common/favicons/favicon-150x150.png')} />
-      <link rel="icon" type="image/png" sizes="192x192" href={prefix('/common/favicons/favicon-192x192.png')} />
-      <link rel="icon" type="image/png" sizes="384x384" href={prefix('/common/favicons/favicon-384x384.png')} />
-      <link rel="icon" type="image/png" sizes="512x512" href={prefix('/common/favicons/favicon-512x512.png')} />
       <link rel="apple-touch-icon" sizes="180x180" href={prefix('/common/favicons/apple-touch-icon.png')} />
       <link rel="shortcut icon" href={prefix('/common/favicons/favicon.ico')} />
       <link rel="mask-icon" href={prefix('/common/favicons/safari-pinned-tab.svg')} color="#000" />
@@ -60,7 +56,6 @@ export const Head: FC<HeadProps> = memo(({ title, description, siteName, image }
         <link rel="manifest" href={prefix('/common/favicons/site.webmanifest')} crossOrigin="use-credentials" />
       ) : null}
       <meta name="theme-color" content="#1c1c1c" />
-      <meta name="msapplication-config" content={prefix('/common/favicons/browserconfig.xml')} />
 
       {/* Share meta tags */}
       <meta property="og:url" content={fullPath} />
