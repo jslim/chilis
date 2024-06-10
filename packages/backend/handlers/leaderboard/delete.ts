@@ -1,6 +1,6 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { logger } from "@/libs/powertools";
-import { Success, Forbidden, BadRequest } from "@/libs/http-response";
+import { Success, Forbidden } from "@/libs/http-response";
 import defaultHttpHandler from "@/libs/middlewares/default-http-handler";
 import LeaderboardService from "@/services/leaderboard";
 import LeaderboardRepository from "@/repositories/leaderboard";
