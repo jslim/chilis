@@ -6,6 +6,7 @@ import defaultHttpHandler from "@/libs/middlewares/default-http-handler";
 import GameService from "@/services/game";
 import GameRepository from "@/repositories/game";
 import DynamoDBClient from "@/services/dynamodb";
+import UserService from "@/services/user";
 import UserRepository from "@/repositories/user";
 import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 
@@ -14,7 +15,7 @@ logger.appendKeys({
   service: "AWS::Lambda",
 });
 
-const userRepository = new UserRepository(new CognitoIdentityProviderClient());
+const userService = new UserService(new UserRepository(new CognitoIdentityProviderClient()));
 const gameService = new GameService(new GameRepository(new DynamoDBClient(process.env.GAMES_HISTORY_TABLE_NAME as string)));
 
 /**
@@ -30,16 +31,9 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
 
     const { gameId, score, level } = parseBody(event.body);
     const userSub = event.requestContext.authorizer?.principalId;
-    const token = event.headers?.Authorization?.split(" ");
 
     try {
-      const accessToken =
-        token?.[1] ??
-        (() => {
-          throw new Error("Authorization header should have a format Bearer JWT Token");
-        })();
-      const userData = await userRepository.getUserByToken(accessToken);
-      const currentNickname = userData.UserAttributes?.find((attr) => attr.Name === "preferred_username")?.Value;
+      const currentNickname = event.headers?.Authorization && (await userService.getUsername(event.headers.Authorization));
 
       if (currentNickname) {
         await gameService.recordGameScore(currentNickname, { userSub, gameId, score, level });

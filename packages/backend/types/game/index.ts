@@ -10,6 +10,10 @@ export enum GameActions {
   DROP_ENEMY = "drop-enemy",
 }
 
+export enum GSILeaderboard {
+  ALL_TIME_LEADERBOARD = "ALL_TIME_LEADERBOARD",
+}
+
 export type Game = {
   subReference: string;
   gameId: string;
@@ -31,4 +35,5 @@ export type GameScore = {
   level: number;
   nickname?: string;
   timestamp: string;
+  gsiPK?: GSILeaderboard;
 };

@@ -126,12 +126,34 @@ paths:
     get:
       tags:
         - Leaderboard
-      summary: Retrieve the leaderboard.
+      summary: Returns leaderboard.
       operationId: getLeaderboard
+      responses:
+        "200":
+          description: Top items in the leaderboard.
+          schema:
+            $ref: "#/definitions/Leaderboard"
+        "400":
+          description: Bad request - invalid request parameters
+        "401":
+          description: Unauthorized - authentication failure
+        "403":
+          description: Forbidden - authorization failure
+        "404":
+          description: Not found - the session ID does not exist
+        "500":
+          description: Internal server error
+  /leaderboard/{cantRecords}:
+    get:
+      tags:
+        - Leaderboard
+      summary: Returns the number of records indicated in the URL.
+      operationId: getCantLeaderboard
       parameters:
-        - name: number
-          in: query
-          required: false
+        - name: cantRecords
+          in: path
+          description: Number of records to return
+          required: true
           type: integer
       responses:
         "200":
@@ -180,26 +202,29 @@ definitions:
   Score:
     type: object
     properties:
-      rank:
-        type: number
-        example: 1
-        description: The position on the board
-      score:
-        type: string
-        example: 210448
-        description: Highest score obtained by the user.
-      level:
-        type: string
-        example: 18
-        description: Level inthe game the player reached to achieve the score.
-      lastUpdateTimestamp:
-        type: string
-        example: 2011-10-05T14:48:00.000Z
-        description: When this score was created.
       nickname:
         type: string
         example: jam3
         description: User name to display on the dashboard
+      score:
+        type: string
+        example: 210448
+        description: Highest score obtained by the user.
+  UserScore:
+    type: object
+    properties:
+      nickname:
+        type: string
+        example: jam3
+        description: User name to display on the dashboard
+      score:
+        type: string
+        example: 210448
+        description: Highest score obtained by the user.
+      rank:
+        type: number
+        example: 1
+        description: The position on the board
   Scores:
     type: array
     items:
@@ -210,7 +235,7 @@ definitions:
       leaderboard:
         $ref: "#/definitions/Scores"
       user:
-        $ref: "#/definitions/Score"
+        $ref: "#/definitions/UserScore"
   ApiResponse:
     type: object
     properties:

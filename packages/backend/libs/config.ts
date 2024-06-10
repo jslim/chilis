@@ -13,3 +13,6 @@ export const S3_REFERER_KEY = "s3-header-referer-secret";
 // Backend
 // Brinker API
 export const BRINKER_ACCESS = "/brinker/api/access";
+
+// DYNAMO
+export const ALLTIME_LEADERBOARD_INDEX = "alltime_leaderboard";

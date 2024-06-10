@@ -1,14 +1,18 @@
 import type { StackContext } from "sst/constructs";
 import { Function, use } from "sst/constructs";
-import { ApiStack } from "@/stacks/api/api";
-import { HttpMethod } from "aws-cdk-lib/aws-events";
+import { AuthStack, ApiStack, Database } from "@/stacks";
 import { detectStage } from "@/libs/detect-stage";
+import { HttpMethod } from "aws-cdk-lib/aws-events";
 import generateApiMethod from "@/utils/generate-api-method";
+import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
+import { ALLTIME_LEADERBOARD_INDEX } from "@/libs/config";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 
 export function leaderboardApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
-  const { api } = use(ApiStack);
+  const { auth } = use(AuthStack);
+  const { api, validator } = use(ApiStack);
+  const { leaderboardTable } = use(Database);
 
   setDefaultFunctionProps({ stack, app });
 
@@ -16,6 +20,20 @@ export function leaderboardApiStack({ stack, app }: StackContext) {
     functionName: `${app.stage}-get-leaderboard`,
     description: "Retrieve the leaderboard",
     handler: "packages/backend/handlers/leaderboard/get.handler",
+    permissions: [
+      // eslint-disable-next-line
+      // @ts-ignore
+      new PolicyStatement({
+        actions: ["dynamodb:Query"],
+        effect: Effect.ALLOW,
+        resources: [`${leaderboardTable.tableArn}/index/${ALLTIME_LEADERBOARD_INDEX}`],
+      }),
+    ],
+    environment: {
+      USER_POOL_ID: auth.userPoolId,
+      USER_CLIENT_ID: auth.userPoolClientId,
+      LEADERBOARD_TABLE_NAME: leaderboardTable.tableName,
+    },
     ...(isProd && {
       reservedConcurrentExecutions: 50,
     }),
@@ -30,5 +48,13 @@ export function leaderboardApiStack({ stack, app }: StackContext) {
     resource: leaderboardPath,
     method: HttpMethod.GET,
     handlerFn: getLeaderboard,
+    validator,
+  });
+
+  generateApiMethod({
+    resource: leaderboardPath.addResource("{records}"),
+    method: HttpMethod.GET,
+    handlerFn: getLeaderboard,
+    validator,
   });
 }

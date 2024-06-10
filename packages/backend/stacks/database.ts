@@ -1,6 +1,7 @@
 import { RemovalPolicy } from "aws-cdk-lib";
 import type { StackContext } from "sst/constructs";
 import { Table as DynamoDbTable } from "sst/constructs";
+import { ALLTIME_LEADERBOARD_INDEX } from "@/libs/config";
 
 export function Database({ stack, app }: StackContext) {
   const gameHistoryTable = new DynamoDbTable(stack, "userGameHistory", {
@@ -32,15 +33,23 @@ export function Database({ stack, app }: StackContext) {
     },
   });
 
-  const leaderbaordTable = new DynamoDbTable(stack, "leaderbaordTable", {
+  const leaderboardTable = new DynamoDbTable(stack, "leaderboardTable", {
     fields: {
       subReference: "string",
       score: "number",
       level: "number",
       timestamp: "string",
       nickname: "string",
+      gsiPK: "string",
     },
     primaryIndex: { partitionKey: "subReference" },
+    globalIndexes: {
+      [ALLTIME_LEADERBOARD_INDEX]: {
+        partitionKey: "gsiPK",
+        sortKey: "score",
+        projection: ["gsiPK", "nickname", "score", "timestamp"],
+      },
+    },
     cdk: {
       table: {
         removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
@@ -48,5 +57,5 @@ export function Database({ stack, app }: StackContext) {
     },
   });
 
-  return { gameHistoryTable, gameSessionTable, leaderbaordTable };
+  return { gameHistoryTable, gameSessionTable, leaderboardTable };
 }
