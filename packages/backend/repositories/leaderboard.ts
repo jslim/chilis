@@ -1,6 +1,6 @@
 import { GSILeaderboard } from "@/types/game";
 import type DynamoDBClient from "@/services/dynamodb";
-import type { QueryOutput } from "@aws-sdk/client-dynamodb";
+import type { QueryOutput, WriteRequest } from "@aws-sdk/client-dynamodb";
 import { ALLTIME_LEADERBOARD_INDEX } from "@/libs/config";
 
 const repository: LeaderboardRepository | null = null;
@@ -31,6 +31,25 @@ class LeaderboardRepository {
     };
 
     return await this.client.query(params);
+  };
+
+  public getRecordByPrefix = async (prefix: string) => {
+    const params = {
+      FilterExpression: "begins_with(#nickname, :prefix)",
+      ExpressionAttributeNames: {
+        "#nickname": "nickname",
+      },
+      ExpressionAttributeValues: {
+        ":prefix": prefix,
+      },
+      ProjectionExpression: "subReference, nickname",
+    };
+
+    return await this.client.scan(params);
+  };
+
+  public batchWrite = async (deleteRequest: WriteRequest[]) => {
+    await this.client.batchWrite(deleteRequest);
   };
 }
 
