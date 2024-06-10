@@ -4,6 +4,8 @@ import type { GameAction } from '@/game/GameAction'
 import type { GameStateValues } from './components/GameState'
 
 import { Application } from 'pixi.js'
+
+import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
