@@ -5,7 +5,7 @@ import { GameController } from '@/game/GameController'
 
 let gameInstance: GameController | null = null
 
-const isOggSupported = () => {
+export const isOggSupported = () => {
   const audio = document.createElement('audio')
   return !!audio.canPlayType && audio.canPlayType('audio/ogg; codecs="vorbis"') !== ''
 }
