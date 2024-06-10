@@ -42,7 +42,7 @@ export default class SceneManager {
   }
 
   showLevelIntro(levelNo: number) {
-    if (levelNo <= 6) {
+    if (levelNo <= 7) {
       this.goto(new LevelIntroScene(this, levelNo))
     } else {
       this.showLevelVsScene(levelNo)

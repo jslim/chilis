@@ -11,6 +11,7 @@ export class LevelIntroScene extends Scene {
   ) {
     super(sceneManager)
   }
+
   override onStart() {
     super.onStart()
 
@@ -20,7 +21,9 @@ export class LevelIntroScene extends Scene {
 
     ;(async () => {
       await this.playVideo(`cutscene_level_0${this.levelNo}`, () => gotoLevel())
-      this.addButton('SKIP', [GAME_WIDTH - 23, GAME_HEIGHT - 10], () => gotoLevel())
+      if (this.levelNo !== 7) {
+        this.addButton('SKIP', [GAME_WIDTH - 23, GAME_HEIGHT - 10], () => gotoLevel())
+      }
     })()
   }
 }
