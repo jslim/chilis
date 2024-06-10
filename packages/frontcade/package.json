@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "name": "chilis-burger-time",
+  "description": "Boilerplate code for building Electron apps with Next.js, TypeScript, Tailwind, and Electron",
+  "version": "1.0.0",
+  "author": "Nick Lind <nthorlind@gmail.com>",
+  "main": "app/background.js",
+  "scripts": {
+    "dev": "nextron",
+    "build": "EXECUTABLE_BUILD=true nextron build",
+    "build:mac": "EXECUTABLE_BUILD=true nextron build --mac",
+    "build:mac:universal": "EXECUTABLE_BUILD=true nextron build --mac --universal",
+    "build:linux": "EXECUTABLE_BUILD=true nextron build --linux",
+    "build:win32": "EXECUTABLE_BUILD=true nextron build --win --ia32",
+    "build:win64": "EXECUTABLE_BUILD=true nextron build --win --x64",
+    "package": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "electron-serve": "^1.1.0",
+    "electron-store": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "electron": "^30.0.9",
+    "electron-builder": "^23.0.3",
+    "nextron": "^8.15.0",
+    "typescript": "^4.6.4"
+  }
+}

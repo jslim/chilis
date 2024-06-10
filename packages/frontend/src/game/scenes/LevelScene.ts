@@ -1,11 +1,12 @@
 import type { SimpleTextConfig } from '@/game/display/SimpleText'
-import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import type { GameAction } from '@/game/GameAction'
 import type { TiledMap } from '@/game/tiled/TiledMap'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
 import { PointerComponent } from '@/game/button/PointerComponent'
+import { BurgerTron } from '@/game/components/cpu/BurgerTron'
+import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
 import { Cpu } from '@/game/components/cpu/Cpu'
 import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
 import { CpuMover } from '@/game/components/cpu/CpuMover'
@@ -31,6 +32,7 @@ import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 import { GameUI } from '@/game/components/ui/GameUI'
 import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
 import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
+import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
 import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
@@ -61,8 +63,6 @@ import {
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { Scene } from './Scene'
-import { BurgerTron } from '@/game/components/cpu/BurgerTron'
-import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
 
 const VIEW_OFFSET = { x: -12, y: 16 }
 
@@ -229,6 +229,7 @@ export default class LevelScene extends Scene {
 
             this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
+            const hitBox = new HitBox(-3, -9, 6, 8)
             let cpu: Cpu | undefined
             let cpuMover: CpuMover | undefined
             let offsetX = 0 // a visual offset for the animation
@@ -262,6 +263,9 @@ export default class LevelScene extends Scene {
                 case 6: {
                   cpu = new BurgerTron('burgertron')
                   cpuMover = new BurgerTronMover(1, cpuId++)
+                  entity.position.x = -100
+                  hitBox.current.x = -10
+                  hitBox.current.width = 32
                   break
                 }
                 // No default
@@ -270,7 +274,7 @@ export default class LevelScene extends Scene {
 
             if (cpu) {
               entity.addComponent(
-                new HitBox(-3, -9, 6, 8),
+                hitBox,
                 cpuMover ?? new CpuMover(1, cpuId++),
                 new CpuAnimator(this.flumpLibrary, cpu.name, offsetX),
                 new Input(),

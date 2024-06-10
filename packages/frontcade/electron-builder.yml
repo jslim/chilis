@@ -1,0 +1,11 @@
+productName: chilis-burger-time
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
+electronVersion: "30.0.9"

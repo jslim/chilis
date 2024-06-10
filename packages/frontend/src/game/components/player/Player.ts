@@ -111,9 +111,10 @@ export class Player extends Component {
 
     this.subscribe(this.onHitCpu, (_cpu) => {
       this.reduceLife()
-      this.level!.screenShake(4, 0.3)
+      this.level!.screenShake(3, 0.35)
     })
     this.subscribe(this.onHitByBullet, (bullet) => {
+      this.level?.screenShake(3, 0.35)
       this.reduceLife()
       bullet.entity.destroy()
     })

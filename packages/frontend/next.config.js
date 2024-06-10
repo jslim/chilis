@@ -3,7 +3,7 @@
 const path = require('node:path')
 
 const nextConfig = {
-  output: process.env.OUTPUT,
+  output: process.env.EXECUTABLE_BUILD === 'true' ? undefined : process.env.OUTPUT,
   assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX || undefined,
   trailingSlash: true,
   reactStrictMode: false,

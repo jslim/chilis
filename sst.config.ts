@@ -9,6 +9,7 @@ import {
   AuthStack,
   ApiStack,
   userApiStack,
+  gameApiStack,
   leaderboardApiStack,
   Database,
   SecretsStack,
@@ -36,6 +37,7 @@ export default {
       .stack(AuthStack)
       .stack(ApiStack)
       .stack(userApiStack)
+      .stack(gameApiStack)
       .stack(leaderboardApiStack)
       /* Frontend */
       .stack(WebACL)

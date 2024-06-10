@@ -1,5 +1,5 @@
 import { logger } from "@/libs/powertools";
-import { APIGatewayTokenAuthorizerEvent, APIGatewayAuthorizerResult, Context } from "aws-lambda";
+import { APIGatewayTokenAuthorizerEvent, Context } from "aws-lambda";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 import generateApiAuthPolicy, { extractApiArnParts } from "@/utils/generate-api-auth-policy";
 

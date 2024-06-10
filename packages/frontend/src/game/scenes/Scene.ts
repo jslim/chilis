@@ -33,7 +33,7 @@ export class Scene extends Component {
   }
 
   protected async playVideo(videoId: string, onEnd: () => void) {
-    const videoUrl = `/videos/${videoId}.mp4`
+    const videoUrl = `${process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true' ? '.' : ''}/videos/${videoId}.mp4`
     await Assets.load(videoUrl)
     const videoSprite = Sprite.from(videoUrl)
     videoSprite.width = GAME_WIDTH
@@ -56,6 +56,9 @@ export class Scene extends Component {
       })
     )
     this.entity.addEntity(new Entity(videoSprite))
+
+    // connect to channels so that the volume can be controlled from outside
+    this.sceneManager.gameController.soundChannel.connectMediaElement(videoSource.resource)
   }
 
   protected addButton(label: string, position: [x: number, y: number], onclick: () => void) {
