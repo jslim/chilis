@@ -6,7 +6,9 @@ import { detectStage } from "@/libs/detect-stage";
 import { getWAFManagedRule } from "@/utils/waf-utils";
 // import { isValidDomain } from "@/utils/domain-validator";
 
-const COUNTRIES_ALLOW_LIST = ["CA", "US", "UY", "NL", "BR"];
+const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")
+  ?.split(",")
+  .map((country) => country.trim()) || ["CA", "US", "UY", "NL", "BR"];
 
 export function WebACL({ stack, app }: StackContext) {
   const { isDevelopment, isProd } = detectStage(app.stage);
@@ -60,25 +62,25 @@ export function WebACL({ stack, app }: StackContext) {
       getWAFManagedRule("AWSManagedRulesCommonRuleSet", 20, app.stage),
       getWAFManagedRule("AWSManagedRulesKnownBadInputsRuleSet", 30, app.stage),
       getWAFManagedRule("AWSManagedRulesAnonymousIpList", 40, app.stage),
-      {
-        name: "allow-specific-countries-rule",
-        priority: 0,
-        action: { block: {} },
-        statement: {
-          notStatement: {
-            statement: {
-              geoMatchStatement: {
-                countryCodes: COUNTRIES_ALLOW_LIST,
-              },
-            },
-          },
-        },
-        visibilityConfig: {
-          cloudWatchMetricsEnabled: true,
-          metricName: "allow-specific-countries-rule",
-          sampledRequestsEnabled: true,
-        },
-      },
+      // {
+      //   name: "allow-specific-countries-rule",
+      //   priority: 0,
+      //   action: { block: {} },
+      //   statement: {
+      //     notStatement: {
+      //       statement: {
+      //         geoMatchStatement: {
+      //           countryCodes: COUNTRIES_ALLOW_LIST,
+      //         },
+      //       },
+      //     },
+      //   },
+      //   visibilityConfig: {
+      //     cloudWatchMetricsEnabled: true,
+      //     metricName: "allow-specific-countries-rule",
+      //     sampledRequestsEnabled: true,
+      //   },
+      // },
       // ...(enableCustomDomain
       //   ? [
       //       {

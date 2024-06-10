@@ -130,6 +130,9 @@ export function CICD({ stack, app }: StackContext) {
         SST_STAGE: {
           value: app.stage,
         },
+        COUNTRIES_ALLOW_LIST: {
+          value: ["CA", "US", "UY", "NL", "BR"],
+        },
       },
       buildSpec: codebuild.BuildSpec.fromObject({
         version: "0.2",
