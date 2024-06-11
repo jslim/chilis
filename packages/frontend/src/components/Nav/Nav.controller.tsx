@@ -11,6 +11,7 @@ export interface ControllerProps {
   handleRef?: ForwardedRef<ViewHandle>
   content: CommonContent['nav']
   onFullscreen: () => void
+  isGameOver: boolean
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

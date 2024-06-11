@@ -90,6 +90,7 @@ export const View = forwardRef<HTMLElement, ViewProps>(
           href={`${prefix}${href}${suffix}`}
           className={className}
           onClick={handleClick}
+          data-text={props['data-text']}
         >
           {children}
         </a>
@@ -101,6 +102,7 @@ export const View = forwardRef<HTMLElement, ViewProps>(
         disabled={disabled}
         className={className}
         onClick={handleClick}
+        data-text={props['data-text']}
       >
         {children}
       </button>

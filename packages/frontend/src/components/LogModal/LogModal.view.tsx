@@ -6,7 +6,7 @@ import classNames from 'classnames'
 
 import css from './LogModal.module.scss'
 
-import { localState } from '@/store'
+import { localState, localStore } from '@/store'
 
 import { getImageUrl } from '@/utils/basic-functions'
 import { copy } from '@/utils/copy'
@@ -137,7 +137,7 @@ export const View: FC<ViewProps> = ({
           <SvgChilis />
         </div>
 
-        {!localState().user.isTokenValid ? (
+        {!localStore().user.isTokenValid ? (
           <>
             <div className={css.title} {...copy.html(title)} />
             <div className={css.description} {...copy.html(description)} />

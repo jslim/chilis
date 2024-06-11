@@ -10,9 +10,3 @@
     padding-top: px(80);
   }
 }
-
-.background {
-  @include box(100%);
-  position: absolute;
-  object-fit: cover;
-}
