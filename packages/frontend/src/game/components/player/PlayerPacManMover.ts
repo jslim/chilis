@@ -1,10 +1,12 @@
 import type { Direction, MoveDirection } from '../Mover'
-import { Mover } from '../Mover'
+
+import { Point } from 'pixi.js'
+
+import { Input } from '@/game/components/input/Input'
 
 import { CoolDown } from '../../core/CoolDown'
-import { Input } from '@/game/components/input/Input'
+import { Mover } from '../Mover'
 import { Player } from './Player'
-import { Point } from 'pixi.js'
 
 export class PlayerPacManMover extends Mover {
   public slowDownCoolDown: CoolDown | undefined = undefined
@@ -12,7 +14,7 @@ export class PlayerPacManMover extends Mover {
   private queuedDirection: MoveDirection = ''
   private readonly queuedDirectionCooldown = new CoolDown(0.5)
 
-  private normalSpeed = new Point()
+  private readonly normalSpeed = new Point()
   private slowSpeed = new Point()
 
   override onStart() {
