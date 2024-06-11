@@ -34,13 +34,25 @@ export const View: FC<ViewProps> = ({
   const isLowPowerMode = useLowPowerMode()
 
   useEffect(() => {
-    // alert(isLowPowerMode)
-
     const video = refs.video.current
-    if (video && autoPlay && !isLowPowerMode && !video.paused) {
-      video.play()
+    if (!video) return
+
+    const onVideoEnded = () => {
+      video.currentTime = 0
     }
-  }, [refs.video, autoPlay, isLowPowerMode])
+
+    video.addEventListener('canplay', async () => {
+      if (autoPlay && !isLowPowerMode && !video.paused) {
+        await video.play()
+      } else {
+        video.addEventListener('ended', onVideoEnded)
+      }
+    })
+    video.load()
+    return () => {
+      video.removeEventListener('ended', onVideoEnded)
+    }
+  }, [refs.video, autoPlay, src, isLowPowerMode])
 
   return (
     <div
