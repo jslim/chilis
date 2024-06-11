@@ -17,6 +17,14 @@ export function WafStack({ stack, app }: StackContext) {
 
   const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "US")?.split(",").map((country) => country.trim());
 
+  const customResponseBody = {
+    contentType: "APPLICATION_JSON",
+    content: JSON.stringify({
+      message: "Access restricted based on your country.",
+      reason: "CountryRestriction",
+    }),
+  };
+
   const WAF = new CfnWebACL(stack, `${stage}-API-Cognito-ACL`, {
     name: `${stage}-API-Cognito-ACL`,
     scope: "REGIONAL",
@@ -29,6 +37,9 @@ export function WafStack({ stack, app }: StackContext) {
       metricName: `apiAclMetric-${stage}`,
       sampledRequestsEnabled: true,
     },
+    customResponseBodies: {
+      CountryRestrictionResponse: customResponseBody,
+    },
     rules: [
       getWAFManagedRule("AWSManagedRulesCommonRuleSet", 1, stage),
       getWAFManagedRule("AWSManagedRulesAnonymousIpList", 2, stage),
@@ -36,7 +47,20 @@ export function WafStack({ stack, app }: StackContext) {
       {
         name: "allowSpecificCountriesRule",
         priority: 0,
-        action: { block: {} },
+        action: {
+          block: {
+            customResponse: {
+              responseCode: 403,
+              customResponseBodyKey: "CountryRestrictionResponse",
+              responseHeaders: [
+                {
+                  name: "X-Custom-Header",
+                  value: "CountryRestriction",
+                },
+              ],
+            },
+          },
+        },
         statement: {
           notStatement: {
             statement: {
