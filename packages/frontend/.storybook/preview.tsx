@@ -101,6 +101,8 @@ export const globalTypes = {
     )
 }
 
+document.querySelector('#storybook-root')?.classList.add(fontVariables)
+
 export const decorators = [
   (Story: StoryFn, context: StoryContext) => {
     require('focus-visible')
@@ -121,10 +123,6 @@ export const decorators = [
     return <Story />
   },
   (Story: StoryFn) => {
-    return (
-      <div className={fontVariables}>
-        <Story />
-      </div>
-    )
+    return <Story />
   }
 ]
