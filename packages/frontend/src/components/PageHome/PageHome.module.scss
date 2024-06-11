@@ -17,22 +17,3 @@
     }
   }
 }
-
-.hero {
-  @include box(100%);
-  margin-top: px(80);
-}
-
-.logoContainer {
-  @include flex-center;
-  height: px(40);
-
-  @include media-tablet-large {
-    height: px(300);
-  }
-
-  .logo {
-    @include box(100%);
-    object-fit: contain;
-  }
-}

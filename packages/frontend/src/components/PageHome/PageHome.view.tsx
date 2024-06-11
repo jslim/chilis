@@ -8,12 +8,9 @@ import { gsap } from 'gsap'
 
 import css from './PageHome.module.scss'
 
-import { getImageUrl } from '@/utils/basic-functions'
-
 import { useRefs } from '@/hooks/use-refs'
 
 import { BackgroundVideo } from '@/components/BackgroundVideo'
-import { BaseImage } from '@/components/BaseImage'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -51,11 +48,6 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
   return (
     <main className={classNames('PageHome', css.root)} ref={refs.root}>
       <BackgroundVideo className={css.media} videoData={content.body.backgroundVideo} />
-      <section className={css.hero}>
-        <div className={css.logoContainer}>
-          <BaseImage className={css.logo} data={getImageUrl(content.body.hero.src)} alt={content.body.hero.alt} />
-        </div>
-      </section>
     </main>
   )
 }
