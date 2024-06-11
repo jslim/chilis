@@ -2,17 +2,8 @@ import { Bucket, StackContext } from "sst/constructs";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
 import * as codepipeline from "aws-cdk-lib/aws-codepipeline";
 import * as codepipeline_actions from "aws-cdk-lib/aws-codepipeline-actions";
-import {
-  DetailType,
-  NotificationRule,
-} from "aws-cdk-lib/aws-codestarnotifications";
-import {
-  Effect,
-  ManagedPolicy,
-  PolicyStatement,
-  Role,
-  ServicePrincipal,
-} from "aws-cdk-lib/aws-iam";
+import { DetailType, NotificationRule } from "aws-cdk-lib/aws-codestarnotifications";
+import { Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { RemovalPolicy, SecretValue } from "aws-cdk-lib/core";
@@ -35,7 +26,7 @@ const REPO_OWNER = "Experience-Monks";
 const BRANCH = "main";
 
 export function CICD({ stack, app }: StackContext) {
-  const { isStage, isProd, isUat, isDevelopment } = detectStage(app.stage);
+  const { isStage, isProd, isUat, isDevelopment, isDevelop } = detectStage(app.stage);
 
   if (isDevelopment || !ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET]) {
     return;
@@ -59,11 +50,7 @@ export function CICD({ stack, app }: StackContext) {
     },
   });
 
-  const ssmParam = StringParameter.fromStringParameterName(
-    stack,
-    `${app.stage}-parameter-store-base-domain`,
-    "/prj-240137971-chilis-burger-time/base-domain"
-  );
+  const ssmParam = StringParameter.fromStringParameterName(stack, `${app.stage}-parameter-store-base-domain`, "/prj-240137971-chilis-burger-time/base-domain");
 
   // Add a custom role (with broader permissions) that can be assumed through STS inside Authorizer Lambda (further narrowing permissions)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -71,9 +58,7 @@ export function CICD({ stack, app }: StackContext) {
   const accessRole = new Role(stack, `${app.stage}-codbuild-role`, {
     roleName: `${app.stage}-codbuild-role`,
     assumedBy: new ServicePrincipal("codebuild.amazonaws.com"),
-    managedPolicies: [
-      ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess"),
-    ],
+    managedPolicies: [ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")],
   });
   accessRole.addToPolicy(
     new PolicyStatement({
@@ -102,91 +87,87 @@ export function CICD({ stack, app }: StackContext) {
   });
 
   // Create a new CodeBuild project
-  const buildProject = new codebuild.PipelineProject(
-    stack,
-    `${app.stage}-BuildProject`,
-    {
-      projectName: `${app.stage}-BuildProject`,
-      environment: {
-        buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
-        computeType: codebuild.ComputeType.LARGE,
+  const buildProject = new codebuild.PipelineProject(stack, `${app.stage}-BuildProject`, {
+    projectName: `${app.stage}-BuildProject`,
+    environment: {
+      buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
+      computeType: codebuild.ComputeType.LARGE,
+    },
+    role: accessRole,
+    checkSecretsInPlainTextEnvVariables: false,
+    // eslint-disable-next-line
+    // @ts-ignore
+    cache: codebuild.Cache.bucket(cacheBucket.cdk.bucket),
+    environmentVariables: {
+      BASE_DOMAIN: {
+        type: BuildEnvironmentVariableType.PARAMETER_STORE,
+        value: ssmParam.parameterName,
       },
-      role: accessRole,
-      checkSecretsInPlainTextEnvVariables: false,
-      // eslint-disable-next-line
-      // @ts-ignore
-      cache: codebuild.Cache.bucket(cacheBucket.cdk.bucket),
-      environmentVariables: {
-        BASE_DOMAIN: {
-          type: BuildEnvironmentVariableType.PARAMETER_STORE,
-          value: ssmParam.parameterName,
-        },
-        GITHUB_TOKEN: {
-          value: SecretValue.secretsManager(`GitHubToken`),
-        },
-        NODE_ENV: {
-          value: "production",
-        },
-        SST_STAGE: {
-          value: app.stage,
-        },
-        COUNTRIES_ALLOW_LIST: {
-          value: ["CA", "US", "UY", "NL", "BR"],
-        },
+      GITHUB_TOKEN: {
+        value: SecretValue.secretsManager(`GitHubToken`),
       },
-      buildSpec: codebuild.BuildSpec.fromObject({
-        version: "0.2",
-        phases: {
-          install: {
-            commands: [
-              'echo "Cloning repository"',
-              "git clone https://$GITHUB_TOKEN@github.com/Experience-Monks/prj-240137971-chilis-burger-time.git",
-              "cd prj-240137971-chilis-burger-time",
-              'echo "Using Node.js version $(node -v)"',
-              "echo Installing dependencies",
-              // Add your dependency installation commands here
-              "npm install --prefer-offline --no-audit --force",
-            ],
-          },
-          pre_build: {
-            commands: [
-              'echo "Using Node.js version $(node -v)"',
-              "echo Pre-build steps",
-              // Add any pre-build commands here
-            ],
-          },
-          build: {
-            commands: [
-              'echo "Using Node.js version $(node -v)"',
-              "echo Build started",
-              'NEXT_PUBLIC_VERSION_NUMBER=$(echo "$CODEBUILD_BUILD_NUMBER")',
-              "NEXT_PUBLIC_COMMIT_ID=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-6)",
-              'NEXT_PUBLIC_COMMIT_DATE=$(git log --date=format:"%Y-%m-%d %H:%M" --pretty="%cd" --no-merges -1)',
-              "npm run deploy",
-              // Add your build commands here
-              "echo Build completed",
-            ],
-          },
-          post_build: {
-            commands: [
-              'echo "Using Node.js version $(node -v)"',
-              "echo Post-build steps",
-              // Add any post-build commands or actions here
-            ],
-          },
-        },
-        artifacts: {
-          files: [
-            // Specify the output files and directories to be uploaded as build artifacts
-            "**/*",
+      NODE_ENV: {
+        value: "production",
+      },
+      SST_STAGE: {
+        value: app.stage,
+      },
+      COUNTRIES_ALLOW_LIST: {
+        value: isDevelop || isStage ? "CA, US, UY, NL, BR" : "US",
+      },
+    },
+    buildSpec: codebuild.BuildSpec.fromObject({
+      version: "0.2",
+      phases: {
+        install: {
+          commands: [
+            'echo "Cloning repository"',
+            "git clone https://$GITHUB_TOKEN@github.com/Experience-Monks/prj-240137971-chilis-burger-time.git",
+            "cd prj-240137971-chilis-burger-time",
+            'echo "Using Node.js version $(node -v)"',
+            "echo Installing dependencies",
+            // Add your dependency installation commands here
+            "npm install --prefer-offline --no-audit --force",
           ],
         },
-        cache: {
-          paths: ["node_modules/**/*", ".sst/**/*"],
+        pre_build: {
+          commands: [
+            'echo "Using Node.js version $(node -v)"',
+            "echo Pre-build steps",
+            // Add any pre-build commands here
+          ],
         },
-      }),
-    }
-  );
+        build: {
+          commands: [
+            'echo "Using Node.js version $(node -v)"',
+            "echo Build started",
+            'NEXT_PUBLIC_VERSION_NUMBER=$(echo "$CODEBUILD_BUILD_NUMBER")',
+            "NEXT_PUBLIC_COMMIT_ID=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-6)",
+            'NEXT_PUBLIC_COMMIT_DATE=$(git log --date=format:"%Y-%m-%d %H:%M" --pretty="%cd" --no-merges -1)',
+            "npm run deploy",
+            // Add your build commands here
+            "echo Build completed",
+          ],
+        },
+        post_build: {
+          commands: [
+            'echo "Using Node.js version $(node -v)"',
+            "echo Post-build steps",
+            // Add any post-build commands or actions here
+          ],
+        },
+      },
+      artifacts: {
+        files: [
+          // Specify the output files and directories to be uploaded as build artifacts
+          "**/*",
+        ],
+      },
+      cache: {
+        paths: ["node_modules/**/*", ".sst/**/*"],
+      },
+    }),
+  });
 
   // Add build stage to pipeline
   const buildAction = new codepipeline_actions.CodeBuildAction({
@@ -217,10 +198,7 @@ export function CICD({ stack, app }: StackContext) {
     // eslint-disable-next-line
     // @ts-ignore
     artifactBucket: artifactBucket.cdk.bucket,
-    stages:
-      isStage || isUat || isProd
-        ? [sourceStage, approvalStage, buildStage]
-        : [sourceStage, buildStage],
+    stages: isStage || isUat || isProd ? [sourceStage, approvalStage, buildStage] : [sourceStage, buildStage],
   });
 
   // Notify on fail
