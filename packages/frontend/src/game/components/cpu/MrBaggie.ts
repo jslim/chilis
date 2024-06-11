@@ -1,13 +1,15 @@
 import { Point } from 'pixi.js'
-import { Entity } from '../../core/Entity'
-import { HitBox } from '../HitBox'
+
 import { Bullet } from '@/game/components/level/Bullet'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { createDelay } from '@/game/core/Delay'
+import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
+
+import { Entity } from '../../core/Entity'
+import { HitBox } from '../HitBox'
 import { Mover } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
-import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
-import { createDelay } from '@/game/core/Delay'
 
 export class MrBaggie extends Cpu {
   private stairsPositions: number[] = []
@@ -29,12 +31,15 @@ export class MrBaggie extends Cpu {
     const level = this.level!
     const gridSize = level.walkGrid.size
     level.walkGrid.grid.forEach((pixel, idx) => {
-      let x = idx % gridSize
-      let y = (idx / gridSize) | 0
-      if (!this.stairsPositions.includes(x)) {
-        if (pixel === 1 && y < gridSize - 1 && level.walkGrid.grid[x + (y + 1) * gridSize] === 1) {
-          this.stairsPositions.push(x)
-        }
+      const x = idx % gridSize
+      const y = Math.trunc(idx / gridSize)
+      if (
+        !this.stairsPositions.includes(x) &&
+        pixel === 1 &&
+        y < gridSize - 1 &&
+        level.walkGrid.grid[x + (y + 1) * gridSize] === 1
+      ) {
+        this.stairsPositions.push(x)
       }
     })
     // remove every odd x position (ingredients fall there)
@@ -63,13 +68,14 @@ export class MrBaggie extends Cpu {
     const isXOnStairs = this.stairsPositions.includes(roundedX)
 
     switch (this.state.value) {
-      case 'walk':
+      case 'walk': {
         const mover = this.entity.getComponent(CpuMover)
         if (!mover.isClimbing() && isXOnStairs && this.attackCoolDown.update(dt)) {
           this.state.value = 'prepare_attack'
           this.attackCoolDown.reset()
         }
         break
+      }
     }
   }
 
@@ -80,7 +86,7 @@ export class MrBaggie extends Cpu {
       const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
 
       const moverInner = this.entity.getComponent(Mover)
-      const bulletSize = { width: 17, height: 11 }
+      const bulletSize = { width: 17, height: 4 }
       const bulletOffset = -bulletSize.width / 2
       if (moverInner.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
       else if (moverInner.currentDirection.value === 'right') bulletPos.x += bulletOffset
@@ -91,7 +97,7 @@ export class MrBaggie extends Cpu {
         bulletMovie,
         new LevelComponent(this.level!),
         new Bullet('player_speed'),
-        new HitBox(0, bulletSize.height, bulletSize.width, bulletSize.height)
+        new HitBox(0, 10, bulletSize.width, bulletSize.height)
       )
 
       createDelay(bullet, 10, () => {
@@ -102,7 +108,7 @@ export class MrBaggie extends Cpu {
         })
       })
 
-      bullet.position.set(bulletPos.x, bulletPos.y - bulletSize.height - 4)
+      bullet.position.set(bulletPos.x, bulletPos.y - bulletSize.height - 8)
 
       //createDelay(this.entity, 0.3, () => {
       this.level?.containers.floorFront.addEntity(bullet)
