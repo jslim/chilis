@@ -4,13 +4,22 @@ import { Mover } from '../Mover'
 import { CoolDown } from '../../core/CoolDown'
 import { Input } from '@/game/components/input/Input'
 import { Player } from './Player'
+import { Point } from 'pixi.js'
 
 export class PlayerPacManMover extends Mover {
+  public slowDownCoolDown: CoolDown | undefined = undefined
+
   private queuedDirection: MoveDirection = ''
   private readonly queuedDirectionCooldown = new CoolDown(0.5)
 
+  private normalSpeed = new Point()
+  private slowSpeed = new Point()
+
   override onStart() {
     super.onStart()
+
+    this.normalSpeed.copyFrom(this.speed)
+    this.slowSpeed = new Point(0.5, 0.5)
 
     this.subscribe(this.entity.getComponent(Player).onReset, () => {
       this.queuedDirection = ''
@@ -19,6 +28,17 @@ export class PlayerPacManMover extends Mover {
   }
 
   override onUpdate(dt: number) {
+    if (this.slowDownCoolDown) {
+      if (this.slowDownCoolDown.update(dt)) {
+        this.speed.copyFrom(this.normalSpeed)
+        this.slowDownCoolDown = undefined
+      } else {
+        this.speed.copyFrom(this.slowSpeed)
+      }
+    } else {
+      this.speed.copyFrom(this.normalSpeed)
+    }
+
     super.onUpdate(dt)
 
     this.queuedDirectionCooldown.update(dt)
@@ -72,5 +92,9 @@ export class PlayerPacManMover extends Mover {
         }
       }
     }
+  }
+
+  public slowDown(duration: number = 3) {
+    this.slowDownCoolDown = new CoolDown(duration)
   }
 }

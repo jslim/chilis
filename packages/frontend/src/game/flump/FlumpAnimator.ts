@@ -11,6 +11,7 @@ export class FlumpAnimator extends Component {
   protected root = new Container()
 
   protected cache = new Map<string, FlumpMovieSprite>()
+  protected useCache = false
 
   constructor(protected readonly library: FlumpLibrary) {
     super()
@@ -31,7 +32,7 @@ export class FlumpAnimator extends Component {
       return this
     }
     if (!this.currentMovie.value || this.currentMovie.value.movieName !== movieName) {
-      if (this.cache.has(movieName)) {
+      if (this.cache.has(movieName) && this.useCache) {
         //console.log("set movie [cache]", movieName);
         this.currentMovie.value = this.cache.get(movieName)!
       } else {

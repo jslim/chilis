@@ -12,7 +12,7 @@ export class Bullet extends Component {
   private readonly onHit = new Signal<Entity>()
   private level!: LevelScene
 
-  constructor(private readonly objective: 'player' | 'cpu') {
+  constructor(private readonly objective: 'player' | 'cpu' | 'player_speed') {
     super()
   }
 
@@ -27,7 +27,7 @@ export class Bullet extends Component {
 
     const hitBox = this.entity.getComponent(HitBox)
 
-    const targets = this.objective === 'player' ? [this.level.player] : this.level.cpus
+    const targets = this.objective.includes('player') ? [this.level.player] : this.level.cpus
 
     for (const target of targets) {
       const targetHitBox = target.getComponent(HitBox)
@@ -44,6 +44,11 @@ export class Bullet extends Component {
           case 'player': {
             this.level.playSound('cpu_die')
             target.getComponent(Player).onHitByBullet.emit(this)
+            break
+          }
+
+          case 'player_speed': {
+            target.getComponent(Player).onHitByGrease.emit(this)
             break
           }
         }

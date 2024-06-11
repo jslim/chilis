@@ -17,6 +17,7 @@ import { Bullet } from '@/game/components/level/Bullet'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Mover } from '../Mover'
 import { StateDebugText } from '../StateDebugText'
+import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 
 export class Player extends Component {
   public static GOD_MODE = false
@@ -26,6 +27,7 @@ export class Player extends Component {
   public readonly onReset = new Signal()
   public readonly onHitCpu = new Signal<Entity>()
   public readonly onHitByBullet = new Signal<Bullet>()
+  public readonly onHitByGrease = new Signal<Bullet>()
 
   // after player die animation ended
   public readonly onDied = new Signal()
@@ -116,6 +118,10 @@ export class Player extends Component {
     this.subscribe(this.onHitByBullet, (bullet) => {
       this.level?.screenShake(3, 0.35)
       this.reduceLife()
+      bullet.entity.destroy()
+    })
+    this.subscribe(this.onHitByGrease, (bullet) => {
+      this.entity.getComponent(PlayerPacManMover).slowDown()
       bullet.entity.destroy()
     })
   }
