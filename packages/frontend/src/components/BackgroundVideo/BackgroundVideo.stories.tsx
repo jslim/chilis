@@ -13,7 +13,13 @@ Default.args = {
   videoData: {
     poster: 'https://via.placeholder.com/1920x1080',
     src: 'https://www.w3schools.com/html/mov_bbb.mp4'
-  }
+  },
+  loop: true,
+  muted: true,
+  controls: false,
+  autoPlay: true,
+  playsInline: true,
+  fillContainer: true
 }
 
 Default.argTypes = {}

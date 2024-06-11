@@ -5,10 +5,17 @@
   position: absolute;
   display: block;
   background-color: $black;
-}
 
-.video,
-.image {
-  @include box(100%);
-  object-fit: cover;
+  .video,
+  .image {
+    @include box(100%);
+    pointer-events: none;
+  }
+
+  &.fillContainer {
+    .video,
+    .image {
+      object-fit: cover;
+    }
+  }
 }

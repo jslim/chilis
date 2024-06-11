@@ -10,6 +10,13 @@ export interface ControllerProps {
     src: string
     poster: string
   }
+  loop?: boolean
+  muted?: boolean
+  poster?: string
+  controls?: boolean
+  autoPlay?: boolean
+  playsInline?: boolean
+  fillContainer?: boolean
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
