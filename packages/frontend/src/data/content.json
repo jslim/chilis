@@ -88,7 +88,7 @@
         },
         "backgroundVideo": {
           "src": "/videos/homepage.mp4",
-          "poster": "home-background.png"
+          "poster": "home-background.jpg"
         },
         "title": "PLAY THE GAME",
         "description": "To get started, edit <code>pages/index.js</code> and save to reload.",
