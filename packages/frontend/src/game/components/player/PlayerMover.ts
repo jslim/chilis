@@ -1,13 +1,15 @@
+import { Point } from 'pixi.js'
+
 import { Input } from '@/game/components/input/Input'
+import { CoolDown } from '@/game/core/CoolDown'
+
 import { Mover } from '../Mover'
 import { Player } from './Player'
-import { CoolDown } from '@/game/core/CoolDown'
-import { Point } from 'pixi.js'
 
 export class PlayerMover extends Mover {
   public slowDownCoolDown: CoolDown | undefined = undefined
 
-  private normalSpeed = new Point()
+  private readonly normalSpeed = new Point()
   private slowSpeed = new Point()
 
   override onStart() {

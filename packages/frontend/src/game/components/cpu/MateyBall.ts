@@ -1,8 +1,9 @@
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { quintIn01 } from '@/game/utils/Ease01'
+
 import { Component } from '../../core/Entity'
 import Tween from '../../core/Tween'
 import { FRAME_RATE } from '../../game.config'
-import { quintIn01 } from '@/game/utils/Ease01'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
 
 export class MateyBall extends Component {
   //public floorPositions = [60, 80, 100, 120, 150, 180, 260];
