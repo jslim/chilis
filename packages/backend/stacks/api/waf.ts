@@ -54,7 +54,7 @@ export function WafStack({ stack, app }: StackContext) {
               customResponseBodyKey: "CountryRestrictionResponse",
               responseHeaders: [
                 {
-                  name: "X-Custom-Header",
+                  name: "X-Restriction",
                   value: "CountryRestriction",
                 },
               ],
