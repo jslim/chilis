@@ -30,7 +30,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, content, handleRef, onFullscreen }) => {
+export const View: FC<ViewProps> = ({ className, content, handleRef, isGameOver, onFullscreen }) => {
   const refs = useRefs<ViewRefs>()
   const pathname = useRouter().asPath
   const isFullscreen = localStore((state) => state.screen.isFullscreen)
@@ -49,37 +49,40 @@ export const View: FC<ViewProps> = ({ className, content, handleRef, onFullscree
         <BaseButton className={css.fullscreenWrapper} onClick={handleFullscreen}>
           {isFullscreen ? <SvgCloseFullscreen /> : <SvgFullscreen />}
         </BaseButton>
-        <ul className={css.ctas}>
-          {content.links.map(({ path, title }, index) => (
-            <Fragment key={title}>
-              <li>
-                <BaseButton className={css.link} href={path}>
-                  {title}
-                </BaseButton>
-              </li>
-              {index === 0 && routes.HOME}
-            </Fragment>
-          ))}
-        </ul>
-
-        <ul className={css.routes}>
-          <a tabIndex={0} aria-label="Skip to content" className={css.skipToContent} href="#start-of-content">
-            Skip to content
-          </a>
-          {content.routes.map(({ path, title }) => (
-            <li key={title}>
-              <BaseButton
-                className={classNames(css.link, css.hasBorder, {
-                  [css.isActive]: pathname === path
-                })}
-                href={path}
-              >
-                {title}
-              </BaseButton>
-            </li>
-          ))}
-        </ul>
-        <div className={css.gap} />
+        {!isGameOver && (
+          <>
+            <ul className={css.ctas}>
+              {content.links.map(({ path, title }, index) => (
+                <Fragment key={title}>
+                  <li>
+                    <BaseButton className={css.link} href={path}>
+                      {title}
+                    </BaseButton>
+                  </li>
+                  {index === 0 && routes.HOME}
+                </Fragment>
+              ))}
+            </ul>
+            <ul className={css.routes}>
+              <a tabIndex={0} aria-label="Skip to content" className={css.skipToContent} href="#start-of-content">
+                Skip to content
+              </a>
+              {content.routes.map(({ path, title }) => (
+                <li key={title}>
+                  <BaseButton
+                    className={classNames(css.link, css.hasBorder, {
+                      [css.isActive]: pathname === path
+                    })}
+                    href={path}
+                  >
+                    {title}
+                  </BaseButton>
+                </li>
+              ))}
+            </ul>
+            <div className={css.gap} />
+          </>
+        )}
       </div>
 
       <section aria-hidden="true" id="start-of-content"></section>

@@ -1,7 +1,7 @@
 import type { InputKey } from './Input'
-import { Input } from './Input'
 
 import { Component } from '../../core/Entity'
+import { Input } from './Input'
 
 const keyMapping = new Map<string, InputKey>([
   ['ArrowLeft', 'left'],

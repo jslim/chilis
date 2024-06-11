@@ -58,7 +58,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const { flags } = useFeatureFlags()
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const isModalOpen = localState().screen.isModalOpen
 
   const [idToken] = useLocalStorage('idToken')
 
@@ -202,7 +202,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         localState().user.setNickname(String(payload.preferred_username))
 
         if (isModalOpen && String(payload.preferred_username)) {
-          setIsModalOpen(false)
+          localState().screen.setIsModalOpen(false)
         }
       } catch (error) {
         console.log('Token not valid!', error)
@@ -214,7 +214,8 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
 
     verifyToken()
-  }, [idToken, isModalOpen])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idToken])
 
   // Fullscreen
   useEffect(() => {
@@ -256,7 +257,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
       <TopNav
         text={localStore().user.nickname ? localState().user.nickname : pageProps.content.common.topNav.logIn}
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => localState().screen.setIsModalOpen(true)}
         isDisabled={!!localState().user.nickname} // TODO: add a validation here to verify the token, so on ref the user stays logged in
       />
 
@@ -266,11 +267,14 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
           <>
             {refs.pathname.current !== routes.GAME && (
               <>
-                <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
+                {refs.pathname.current !== routes.GAME_OVER && (
+                  <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
+                )}
                 <Nav
                   content={pageProps.content.common.nav}
                   handleRef={refs.navHandle}
                   onFullscreen={handleFullscreen}
+                  isGameOver={refs.pathname.current === routes.GAME_OVER}
                 />
               </>
             )}
@@ -281,8 +285,8 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <div className={css.content}>{currentPage}</div>
 
       {isModalOpen && (
-        <BaseModal onClose={() => setIsModalOpen(false)}>
-          <LogModal {...pageProps.content.common.logModal} onClose={() => setIsModalOpen(false)} />
+        <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
+          <LogModal {...pageProps.content.common.logModal} onClose={() => localState().screen.setIsModalOpen(false)} />
         </BaseModal>
       )}
       <ScreenRotate content={pageProps.content.common.screenRotate} />

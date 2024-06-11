@@ -68,7 +68,7 @@
     },
     "screenNoScript": {
       "title": "Missing JavaScript",
-      "description": "This website requires JavaScript in order to work properly.\nPlease re-enable JavaScript in your browser settings."
+      "description": "This experience requires JavaScript."
     },
     "screenRotate": {
       "title": "Please rotate your screen",
@@ -220,6 +220,35 @@
         "hero": {
           "src": "full-leaderboard.png",
           "alt": "Full Leaderboard"
+        }
+      }
+    },
+    "gameOver": {
+      "head": {
+        "title": "Game Over",
+        "description": "Game Over Page"
+      },
+      "body": {
+        "title": "Game Over Page",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "descriptionOver": "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "backgroundVideo": {
+          "src": "",
+          "poster": "game-over-background.png"
+        },
+        "ctas": {
+          "continue": "CONTINUE",
+          "quit": "QUIT GAME",
+          "again": "PLAY AGAIN"
+        },
+        "ctasDescription": "Lorem ipsum dolor sit amet",
+        "heroWin": {
+          "src": "you-win.png",
+          "alt": "Game Over Win"
+        },
+        "heroLose": {
+          "src": "game-over.png",
+          "alt": "Game Over Lose"
         }
       }
     },
