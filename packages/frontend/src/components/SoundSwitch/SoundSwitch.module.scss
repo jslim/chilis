@@ -8,8 +8,8 @@
 }
 
 .cd {
-  position: relative;
   @include box(px(34));
+  position: relative;
 
   @include media-tablet-large {
     @include box(px(68));
