@@ -1,5 +1,4 @@
 import { use, StackContext } from "sst/constructs";
-// import { StackContext } from "sst/constructs";
 import { getWAFManagedRule } from "@/utils/waf-utils";
 import { CfnWebACL, CfnWebACLAssociation } from "aws-cdk-lib/aws-wafv2";
 

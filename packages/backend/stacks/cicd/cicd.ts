@@ -26,7 +26,7 @@ const REPO_OWNER = "Experience-Monks";
 const BRANCH = "main";
 
 export function CICD({ stack, app }: StackContext) {
-  const { isStage, isProd, isUat, isDevelopment } = detectStage(app.stage);
+  const { isStage, isProd, isUat, isDevelopment, isDevelop } = detectStage(app.stage);
 
   if (isDevelopment || !ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET]) {
     return;
@@ -113,7 +113,7 @@ export function CICD({ stack, app }: StackContext) {
         value: app.stage,
       },
       COUNTRIES_ALLOW_LIST: {
-        value: app.stage === "dev" || app.stage === "stg" ? "CA, US, UY, NL, BR" : "US",
+        value: isDevelop || isStage ? "CA, US, UY, NL, BR" : "US",
       },
     },
     buildSpec: codebuild.BuildSpec.fromObject({
