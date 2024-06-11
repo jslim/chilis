@@ -6,6 +6,18 @@
   width: 100%;
 }
 
+.media {
+  video,
+  img {
+    // @NOTE: Tweaking object-position to have the logo matching Figma
+    object-position: top 10% left 50%;
+
+    @include media-tablet {
+      object-position: center center;
+    }
+  }
+}
+
 .hero {
   @include box(100%);
   margin-top: px(80);

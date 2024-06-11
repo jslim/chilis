@@ -5,10 +5,7 @@ import classNames from 'classnames'
 
 import css from './ScreenNoScript.module.scss'
 
-import { copy } from '@/utils/copy'
-
-import SvgChilis from '@/svgs/Chilis.svg'
-import SvgDeadFace from '@/svgs/DeadFace.svg'
+import { FallbackContainer } from '@/components/FallbackContainer'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -18,15 +15,7 @@ export const View: FC<ViewProps> = ({ className, content }) => {
 
   return (
     <Component className={classNames('ScreenNoScript', css.root, className)}>
-      <div className={css.logoContainer}>
-        <SvgChilis />
-      </div>
-      <div className={css.text}>
-        <div className={css.iconWrapper}>
-          <SvgDeadFace />
-        </div>
-        <p className={css.description} {...copy.html(content.description, {}, 10)} />
-      </div>
+      <FallbackContainer title={content.description} image={content.image} />
     </Component>
   )
 }

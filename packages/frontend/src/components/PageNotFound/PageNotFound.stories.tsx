@@ -9,7 +9,7 @@ import { CmsService } from '@/services/cms'
 
 import { View } from './PageNotFound.view'
 
-export default { title: 'pages/PageNotFound.view' }
+export default { title: 'pages/PageNotFound' }
 
 export const Default: StoryFn<ViewProps> = (args) => {
   const handleReady = useCallback((pageHandle?: RefObject<PageHandle>) => {

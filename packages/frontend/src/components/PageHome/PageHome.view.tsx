@@ -44,9 +44,7 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
   }, [refs, onReady])
 
   useImperativeHandle(refs.pageHandle, () => ({
-    animateIn: () => {
-      return gsap.timeline().to(refs.root.current, { opacity: 1 }, 0)
-    },
+    animateIn: () => gsap.timeline().to(refs.root.current, { opacity: 1 }),
     animateOut: () => gsap.timeline().to(refs.root.current, { opacity: 0 })
   }))
 

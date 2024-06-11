@@ -21,6 +21,7 @@ html {
   text-size-adjust: none;
   font-size: 10px;
   text-align: center;
+  background-color: $black;
 
   &.dynamic {
     // ====================================================================
@@ -65,7 +66,7 @@ body {
 }
 
 main {
-  min-height: 100vh;
+  min-height: 100svh;
 }
 
 a {
