@@ -4,6 +4,7 @@
   display: block;
   height: 100svh;
   background-color: $sour-cream;
+  overflow: scroll;
 }
 
 .titleContainer {
@@ -42,61 +43,5 @@
     @include font-size(30, 36);
     @include font-family(Montserrat, 700);
     color: $night;
-  }
-
-  .squares {
-    position: absolute;
-
-    svg {
-      @include box(px(20));
-    }
-
-    &.leftSquareBottom {
-      top: px(10);
-      left: px(10);
-    }
-
-    &.leftSquare {
-      bottom: px(10);
-      left: px(10);
-    }
-
-    &.rightSquare {
-      top: px(30);
-      right: px(5);
-      transform: rotate(90deg);
-    }
-
-    &.rightSquareBottom {
-      bottom: px(10);
-      right: px(5);
-      transform: rotate(90deg);
-    }
-
-    @include media-tablet-large {
-      svg {
-        @include box(px(40));
-      }
-
-      &.leftSquareBottom {
-        top: px(40);
-        left: px(40);
-      }
-
-      &.leftSquare {
-        bottom: px(40);
-        left: px(40);
-      }
-
-      &.rightSquare {
-        top: px(60);
-        right: px(40);
-      }
-
-      &.rightSquareBottom {
-        bottom: px(20);
-        right: px(40);
-      }
-    }
   }
 }

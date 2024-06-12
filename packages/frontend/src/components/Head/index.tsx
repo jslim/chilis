@@ -19,9 +19,10 @@ export type HeadProps = {
   image?: string
   siteName?: string
   description?: string
+  descriptionSocial?: string
 }
 
-export const Head: FC<HeadProps> = memo(({ title, description, siteName, image }) => {
+export const Head: FC<HeadProps> = memo(({ title, description, descriptionSocial, siteName, image }) => {
   const router = useRouter()
 
   // Next.js is not including assetPrefix during build time
@@ -64,13 +65,13 @@ export const Head: FC<HeadProps> = memo(({ title, description, siteName, image }
       <meta property="og:image" content={shareImage} />
       <meta property="og:locale" content={shareLocale} />
       <meta property="og:site_name" content={siteName} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={descriptionSocial} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:image" content={shareImage} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:description" content={descriptionSocial} />
 
       {/* Other recommends */}
       <link rel="canonical" href={fullPath} />
