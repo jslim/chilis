@@ -35,7 +35,16 @@ export type CpuName =
 
 export class Cpu extends Component {
   public readonly state = new Value<
-    'walk' | 'paralyzed' | 'die' | 'spawn' | 'defeat' | 'prepare_attack' | 'attack' | 'attack_complete' | 'jump'
+    | 'walk'
+    | 'paralyzed'
+    | 'die'
+    | 'dead'
+    | 'spawn'
+    | 'defeat'
+    | 'prepare_attack'
+    | 'attack'
+    | 'attack_complete'
+    | 'jump'
   >('walk')
 
   public readonly onHitPlayer = new Signal<Entity>()
@@ -90,6 +99,9 @@ export class Cpu extends Component {
         }
 
         case 'die': {
+          if (!this.respawnAfterDied) {
+            this.state.value = 'dead'
+          }
           break
         }
 
@@ -207,11 +219,13 @@ export class Cpu extends Component {
   }
 
   public reset() {
-    const mover = this.entity.getComponent(CpuMover)
-    mover.reset()
+    if (this.state.value !== 'dead') {
+      const mover = this.entity.getComponent(CpuMover)
+      mover.reset()
 
-    this.state.value = 'spawn'
-    mover.respawn(mover.startPosition)
+      this.state.value = 'spawn'
+      mover.respawn(mover.startPosition)
+    }
   }
 
   private checkCollision() {

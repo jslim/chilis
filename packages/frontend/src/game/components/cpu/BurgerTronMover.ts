@@ -1,3 +1,4 @@
+import { HitBox } from '@/game/components/HitBox'
 import { GAME_WIDTH } from '@/game/game.config'
 import { pick } from '@/game/utils/random.utils'
 
@@ -39,8 +40,6 @@ export default class BurgerTronMover extends CpuMover {
         }
         case 'attack_complete': {
           this.flyMode = 'out'
-          console.log('out')
-
           // very hackish, but hey deadlines
           const animator = this.entity.getComponent(CpuAnimator)
           this.subscribeOnce(animator.currentMovie.value!.onEnd, () => {
@@ -48,11 +47,28 @@ export default class BurgerTronMover extends CpuMover {
           })
           break
         }
+        case 'dead': {
+          break
+        }
       }
     })
   }
 
+  override onUpdate(dt: number) {
+    super.onUpdate(dt)
+
+    const cpu = this.entity.getComponent(Cpu)
+    switch (cpu.state.value) {
+      case 'dead': {
+        this.flyAway()
+      }
+    }
+  }
+
   appear() {
+    const cpu = this.entity.getComponent(Cpu)
+    if (cpu.state.value === 'dead') return
+
     this.currentSide = pick(['left', 'right'])
     this.position.x = this.currentSide === 'left' ? LEFT_OUTSIDE_X : RIGHT_OUTSIDE_X
     this.position.y = pick(this.currentSide === 'left' ? this.leftFloorPositions : this.rightFloorPositions)
@@ -81,7 +97,6 @@ export default class BurgerTronMover extends CpuMover {
   }
 
   flyAway() {
-    console.log('fly away', this.currentSide)
     switch (this.currentSide) {
       case 'left': {
         this.position.x -= this.speed.x * 3
@@ -103,11 +118,15 @@ export default class BurgerTronMover extends CpuMover {
   }
 
   outsideScreen() {
-    this.entity.getComponent(Cpu).state.value = 'walk'
+    const cpu = this.entity.getComponent(Cpu)
+    if (cpu.state.value !== 'dead') {
+      cpu.state.value = 'walk'
+    }
   }
 
   land() {
-    this.entity.getComponent(Cpu).state.value = 'prepare_attack'
+    const cpu = this.entity.getComponent(Cpu)
+    cpu.state.value = 'prepare_attack'
     this.flyMode = 'none'
   }
 
@@ -123,11 +142,15 @@ export default class BurgerTronMover extends CpuMover {
   }
 
   override walk() {
+    const hitBox = this.entity.getComponent(HitBox)
     this.currentDirection.value = this.currentSide === 'left' ? 'right' : 'left'
+
     if (this.flyMode === 'out') {
       this.flyAway()
+      hitBox.isActive.value = false
     } else if (this.flyMode === 'in') {
       this.flyIn()
+      hitBox.isActive.value = false
     }
   }
 }
