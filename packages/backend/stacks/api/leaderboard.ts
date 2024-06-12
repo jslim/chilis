@@ -24,7 +24,7 @@ export function leaderboardApiStack({ stack, app }: StackContext) {
       // eslint-disable-next-line
       // @ts-ignore
       new PolicyStatement({
-        actions: ["dynamodb:Query"],
+        actions: ["dynamodb:Query", "dynamodb:Scan"],
         effect: Effect.ALLOW,
         resources: [`${leaderboardTable.tableArn}/index/${ALLTIME_LEADERBOARD_INDEX}`],
       }),
