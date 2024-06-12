@@ -1,67 +1,30 @@
 import type { ControllerProps } from './ScreenRotate.controller'
 
-import { type FC, useEffect, useState } from 'react'
+import { type FC } from 'react'
 import classNames from 'classnames'
 
 import css from './ScreenRotate.module.scss'
 
-import { getGameInstance } from '@/services/game'
-import { ResizeService } from '@/services/resize'
-
-import { copy } from '@/utils/copy'
-import { device } from '@/utils/detect'
-
+import useGameInstance from '@/hooks/use-game-instance'
 import { useRefs } from '@/hooks/use-refs'
 
-import SvgChilis from '@/svgs/Chilis.svg'
-import SvgRotate from '@/svgs/Rotate.svg'
+import { FallbackContainer } from '@/components/FallbackContainer'
 
-export interface ViewProps extends ControllerProps {}
+export interface ViewProps extends ControllerProps {
+  enable: boolean
+}
 
 export type ViewRefs = {
   root: HTMLDivElement
 }
 
-export const View: FC<ViewProps> = ({ className, content }) => {
+export const View: FC<ViewProps> = ({ className, content, enable }) => {
   const refs = useRefs<ViewRefs>()
-  const [enable, setEnable] = useState(process.env.STORYBOOK || (!device.desktop && device.phone && device.portrait))
-  const [paused, setPaused] = useState(false)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setEnable(device.phone && device.portrait)
-    }
-
-    ResizeService.listen(handleResize)
-
-    return () => {
-      ResizeService.dismiss(handleResize)
-    }
-  }, [])
-
-  useEffect(() => {
-    const gameInstance = getGameInstance()
-
-    if (gameInstance) {
-      if (enable && !paused) {
-        gameInstance.pause()
-        setPaused(true)
-      } else if (!enable && paused) {
-        gameInstance.resume()
-        setPaused(false)
-      }
-    }
-  }, [enable, paused])
+  useGameInstance(enable)
 
   return enable ? (
     <div className={classNames('ScreenRotate', css.root, className)} ref={refs.root}>
-      <div className={css.logoContainer}>
-        <SvgChilis />
-      </div>
-      <div className={css.iconContainer}>
-        <SvgRotate />
-      </div>
-      <p className={css.description} {...copy.html(content.description, {}, 10)} />
+      <FallbackContainer title={content.description} image={content.image} isLarge />
     </div>
   ) : null
 }

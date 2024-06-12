@@ -37,3 +37,9 @@ export type GameScore = {
   timestamp: string;
   gsiPK?: GSILeaderboard;
 };
+
+export type leaderboardRecord = {
+  nickname: string;
+  score: number;
+  rank: number | string;
+};

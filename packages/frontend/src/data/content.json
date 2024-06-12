@@ -68,11 +68,27 @@
     },
     "screenNoScript": {
       "title": "Missing JavaScript",
-      "description": "This experience requires JavaScript."
+      "description": "This experience requires Javascript",
+      "image": {
+        "src": "no-javascript-icon.png",
+        "alt": "No JavaScript"
+      }
     },
     "screenRotate": {
       "title": "Please rotate your screen",
-      "description": "Rotate your phone for better experience."
+      "description": "Rotate your phone for better experience.",
+      "image": {
+        "src": "rotate-icon.png",
+        "alt": "Rotate"
+      }
+    },
+    "screenLowBattery": {
+      "title": "Low Battery",
+      "description": "Charge battery for a better experience.",
+      "image": {
+        "src": "low-battery-icon.png",
+        "alt": "Low Battery"
+      }
     }
   },
   "pages": {
@@ -82,13 +98,9 @@
         "description": "Some landing page description"
       },
       "body": {
-        "hero": {
-          "src": "hero.png",
-          "alt": "Chilis Logo"
-        },
         "backgroundVideo": {
           "src": "/videos/homepage.mp4",
-          "poster": "home-background.png"
+          "poster": "home-background.jpg"
         },
         "title": "PLAY THE GAME",
         "description": "To get started, edit <code>pages/index.js</code> and save to reload.",
@@ -309,7 +321,6 @@
       },
       "body": {
         "title": "Your browser is not supported.",
-        "image": { "src": "noise.png", "alt": "background" },
         "hero": { "src": "browser.png", "alt": "browser" }
       }
     }

@@ -23,7 +23,9 @@ export class GameController {
   public soundChannel!: Channel
   public channels!: Channels
 
+  private isDestroyed = false
   private sceneManager!: SceneManager
+
   get gameState(): GameState {
     return this.sceneManager.root.getComponent(GameState)
   }
@@ -39,7 +41,7 @@ export class GameController {
       height: GAME_HEIGHT
     })
 
-    document.querySelector('#app')!.append(this.app.canvas)
+    document.querySelector('#app')!.append(this.canvas)
     this.app.canvas.style.imageRendering = 'pixelated'
 
     // setup scene manager
@@ -48,7 +50,7 @@ export class GameController {
   }
 
   public async preload() {
-    await this.sceneManager.preload()
+    await this.sceneManager!.preload()
   }
 
   public async start() {
@@ -77,51 +79,63 @@ export class GameController {
       sceneManager.showLevelIntro(1)
     }
     // debug key to go back to intro scene
-    if (DEBUG_KEYS)
-      window.addEventListener('keydown', ({ key }) => {
-        if (key.toLowerCase() === 'e') {
-          // eslint-disable-next-line no-alert
-          if (confirm('Next level?')) {
-            sceneManager.levelComplete(this.gameState.getValues())
+    if (DEBUG_KEYS) {
+      let debugKeyListener: (event: KeyboardEvent) => void
+      window.addEventListener(
+        'keydown',
+        (debugKeyListener = ({ key }) => {
+          if (this.isDestroyed) {
+            window.removeEventListener('keydown', debugKeyListener)
+            return
           }
-        } else if (key.toLowerCase() === 'o') {
-          let burgers = sceneManager.currentScene?.getComponent(LevelScene).burgers
-          if (burgers) {
-            // filter on non-completed burgers
-            burgers = burgers.filter((burger) => !burger.getComponent(Burger).isCompleted)
-            // sort by y, top most first
-            burgers.sort((a, b) => a.y - b.y)
 
-            // drop 3 burgers
-            for (let i = 0; i < 4 && i < burgers.length; i++) {
-              burgers[i].getComponent(Burger).state.value = 'fall'
+          if (key === 'b') this.destroy()
+
+          if (key.toLowerCase() === 'e') {
+            // eslint-disable-next-line no-alert
+            if (confirm('Next level?')) {
+              sceneManager.levelComplete(this.gameState.getValues())
+            }
+          } else if (key.toLowerCase() === 'o') {
+            let burgers = sceneManager.currentScene?.getComponent(LevelScene).burgers
+            if (burgers) {
+              // filter on non-completed burgers
+              burgers = burgers.filter((burger) => !burger.getComponent(Burger).isCompleted)
+              // sort by y, top most first
+              burgers.sort((a, b) => a.y - b.y)
+
+              // drop 3 burgers
+              for (let i = 0; i < 4 && i < burgers.length; i++) {
+                burgers[i].getComponent(Burger).state.value = 'fall'
+              }
             }
           }
-        }
 
-        // debug keys
-        if (key.toLowerCase() === 'p') {
-          sceneManager.root.timescale = sceneManager.root.timescale <= 0 ? 1 : 0
-        } // eslint-disable-next-line unicorn/prefer-switch
-        else if (key === '[') {
-          sceneManager.root.timescale = Math.max(0, sceneManager.root.timescale * 0.75)
-        } else if (key === ']') {
-          sceneManager.root.timescale *= 1.5
-        } else if (key === '1') {
-          this.gameState.lives.value += 1
-        } else if (key === '2') {
-          this.gameState.bullets.value += 1
-        } else if (key === '3') {
-          Player.GOD_MODE = !Player.GOD_MODE
-        } else if (key === 'k') {
-          //open canvas as image in new window
-          // eslint-disable-next-line unicorn/consistent-destructuring
-          this.app.canvas.toBlob((blob) => {
-            const url = URL.createObjectURL(blob!)
-            window.open(url, '_blank')
-          })
-        }
-      })
+          // debug keys
+          if (key.toLowerCase() === 'p') {
+            sceneManager.root.timescale = sceneManager.root.timescale <= 0 ? 1 : 0
+          } // eslint-disable-next-line unicorn/prefer-switch
+          else if (key === '[') {
+            sceneManager.root.timescale = Math.max(0, sceneManager.root.timescale * 0.75)
+          } else if (key === ']') {
+            sceneManager.root.timescale *= 1.5
+          } else if (key === '1') {
+            this.gameState.lives.value += 1
+          } else if (key === '2') {
+            this.gameState.bullets.value += 1
+          } else if (key === '3') {
+            Player.GOD_MODE = !Player.GOD_MODE
+          } else if (key === 'k') {
+            //open canvas as image in new window
+            // eslint-disable-next-line unicorn/consistent-destructuring
+            this.app.canvas.toBlob((blob) => {
+              const url = URL.createObjectURL(blob!)
+              window.open(url, '_blank')
+            })
+          }
+        })
+      )
+    }
   }
 
   public setHighScore(value: number) {
@@ -145,5 +159,23 @@ export class GameController {
   setChannels(channels: Channels) {
     this.channels = channels
     this.soundChannel = channels.createChannel('game')
+  }
+
+  public destroy() {
+    this.soundChannel.stopAll({ immediate: true })
+    this.soundChannel.destruct()
+
+    this.isDestroyed = true
+
+    this.sceneManager.destroy()
+    this.app.destroy()
+
+    this.app.canvas.remove()
+
+    // cleanup signals
+    this.onLevelComplete.destroy()
+    this.onGameOver.destroy()
+    this.onGameAction.destroy()
+    this.onShowGameBorder.destroy()
   }
 }

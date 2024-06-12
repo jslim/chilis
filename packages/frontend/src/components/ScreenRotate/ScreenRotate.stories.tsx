@@ -12,7 +12,8 @@ export const Default: StoryFn<ViewProps> = (args) => {
 }
 
 Default.args = {
-  content: CmsService.getPageContent('home').common.screenRotate
+  content: CmsService.getPageContent('home').common.screenRotate,
+  enable: true
 }
 
 Default.argTypes = {}

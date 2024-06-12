@@ -6,7 +6,7 @@
   :global(.swiper-pagination) {
     @include flex-center;
     position: relative;
-    margin-top: px(30);
+    margin-top: px(20);
 
     @include media-tablet-large {
       margin-top: px(30);
@@ -19,6 +19,10 @@
       border: px(10) solid transparent;
       border-image: url('~@/assets/images/dot-nav-circle.png') 10 10 stretch;
       opacity: 1;
+    }
+
+    @include media-tablet {
+      margin-top: px(30);
     }
   }
 
@@ -53,11 +57,14 @@
   }
 
   .text {
-    @include font-size(16, 20);
-    @include font-family(b, 400);
+    @include typography-title;
     max-width: px(700);
-    margin-top: px(20);
+    margin-top: px(15);
     color: $sour-cream;
+
+    @include media-tablet {
+      margin-top: px(22);
+    }
 
     @include media-tablet-large {
       @include font-size(32, 40);

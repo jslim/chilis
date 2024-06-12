@@ -79,6 +79,10 @@ export class Entity extends Container {
     return this.componentTypeCache.get(componentClass) as T
   }
 
+  public hasComponent<T extends Component>(componentClass: new (...args: never[]) => T): boolean {
+    return this.getComponent(componentClass) !== undefined
+  }
+
   public override destroy() {
     for (const [_, component] of this.components) {
       this.mapInheritance(component, false)

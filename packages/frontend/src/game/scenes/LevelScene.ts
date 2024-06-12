@@ -12,6 +12,7 @@ import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
 import { CpuMover } from '@/game/components/cpu/CpuMover'
 import { DinoCool } from '@/game/components/cpu/DinoCool'
 import { Matey } from '@/game/components/cpu/Matey'
+import { MateyBall } from '@/game/components/cpu/MateyBall'
 import { MrBaggie } from '@/game/components/cpu/MrBaggie'
 import { Piggles } from '@/game/components/cpu/Piggles'
 import { Zapp } from '@/game/components/cpu/Zapp'
@@ -227,7 +228,18 @@ export default class LevelScene extends Scene {
               this.cpus.forEach((cpu) => (cpu.getComponent(Cpu).state.value = 'defeat'))
             )
 
-            this.subscribe(playerComponent.onReset, () => this.cpus.forEach((cpu) => cpu.getComponent(Cpu).reset()))
+            this.subscribe(playerComponent.onReset, () =>
+              this.cpus.forEach((cpu) => {
+                cpu.getComponent(Cpu).reset()
+
+                // remove all matey balls
+                this.containers.mid.entities.forEach((midEntity) => {
+                  if (midEntity.hasComponent(MateyBall)) {
+                    midEntity.destroy()
+                  }
+                })
+              })
+            )
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
             const hitBox = new HitBox(-3, -9, 6, 8)
             let cpu: Cpu | undefined
@@ -286,7 +298,7 @@ export default class LevelScene extends Scene {
                 const mover = entity.getComponent(CpuMover)
                 switch (traineeId) {
                   case 1: {
-                    mover.modeCycle = ['hunt-player', 'hunt-player-slow', 'hunt-burger', 'random']
+                    mover.modeCycle = ['hunt-player', 'hunt-burger', 'random']
                     break
                   }
                   case 2: {
@@ -295,7 +307,7 @@ export default class LevelScene extends Scene {
                   }
                   case 3: {
                     {
-                      mover.modeCycle = ['hunt-burger', 'random']
+                      mover.modeCycle = ['hunt-burger']
                       // No default
                     }
                     break
@@ -334,7 +346,7 @@ export default class LevelScene extends Scene {
 
     // depth sort this.containers.burgerParts from bottom to top
     this.containers.burgerParts.children.sort((a, b) => {
-      return b.y - a.y
+      return a.y - b.y
     })
 
     for (const layer of map.layers) {

@@ -60,7 +60,11 @@ export default class SceneManager {
   levelComplete(result: GameStateValues) {
     this.gameController.onLevelComplete.emit(result)
     const nextLevelNo = result.level + 1
-    this.showLevelIntro(nextLevelNo)
+    if (nextLevelNo <= 18) {
+      this.showLevelIntro(nextLevelNo)
+    } else {
+      this.gameController.onGameOver.emit(result)
+    }
   }
 
   end(result: GameStateValues) {
@@ -95,5 +99,10 @@ export default class SceneManager {
 
   public resume() {
     this.isPlaying = true
+  }
+
+  public destroy() {
+    this.pause()
+    this.root.destroy()
   }
 }

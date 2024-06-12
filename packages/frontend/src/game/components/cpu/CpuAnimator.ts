@@ -76,7 +76,7 @@ export class CpuAnimator extends FlumpAnimator {
         case 'prepare_attack': {
           this.setMovie(`${this.animationName}_prepare_attack`).gotoAndPlay(1).once()
           currentMoviePlayback = this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
-            cpu.state.value = 'attack'
+            if (cpu.state.value === 'prepare_attack') cpu.state.value = 'attack'
           })
           break
         }
@@ -84,7 +84,7 @@ export class CpuAnimator extends FlumpAnimator {
         case 'attack': {
           this.setMovie(`${this.animationName}_attack`).gotoAndPlay(0).once()
           currentMoviePlayback = this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
-            cpu.state.value = 'attack_complete'
+            if (cpu.state.value === 'attack') cpu.state.value = 'attack_complete'
           })
           break
         }
@@ -97,7 +97,7 @@ export class CpuAnimator extends FlumpAnimator {
         case 'jump': {
           this.setMovie(`${this.animationName}_jump`).gotoAndPlay(0).once()
           currentMoviePlayback = this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
-            cpu.state.value = 'walk'
+            if (cpu.state.value === 'jump') cpu.state.value = 'walk'
           })
           break
         }

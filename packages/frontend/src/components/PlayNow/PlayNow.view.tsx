@@ -23,7 +23,7 @@ export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', url }) => {
 
   return (
     <BaseButton className={classNames('PlayNow', css.root, className)} ref={refs.root} href={url} title={text}>
-      <SvgPlay />
+      <SvgPlay className={css.svg} />
     </BaseButton>
   )
 }
