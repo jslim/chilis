@@ -10,22 +10,7 @@
 }
 
 .button {
-  @include font-size(12, 14);
-  @include font-family(Montserrat, 700);
   margin-top: px(40);
-  padding: px(8) px(24);
-  color: $white;
-  background-color: $red;
-  border: 1px solid $dark-blue;
-  border-bottom-width: thick;
-  border-radius: px(30);
-
-  &.isDisabled {
-    background-color: $gray;
-    border-color: $gray;
-    border-bottom-width: thin;
-    pointer-events: none;
-  }
 }
 
 .error {

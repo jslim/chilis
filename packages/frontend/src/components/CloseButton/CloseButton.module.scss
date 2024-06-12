@@ -1,0 +1,9 @@
+@import 'shared';
+
+.root {
+  @include box(px(16));
+
+  svg {
+    @include box(100%);
+  }
+}

@@ -27,7 +27,7 @@
     "test": []
   },
   "analytics": {
-    "gtmIds": { "prod": "GTM-0000000", "stage": "GTM-0000000", "dev": "GTM-0000000", "local": "" },
-    "gtmParams": { "prod": "", "stage": "", "dev": "", "local": "" }
+    "gaIds": { "prod": "G-9EESGK4VT5", "stage": "G-2VZFR1J3KK", "dev": "G-2VZFR1J3KK", "local": "G-2VZFR1J3KK" },
+    "gaParams": { "prod": "", "stage": "", "dev": "", "local": "" }
   }
 }

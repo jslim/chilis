@@ -3,51 +3,58 @@ import config from '@/data/config.json'
 import { print } from '@/utils/print'
 import { getRuntimeEnv } from '@/utils/runtime-env'
 
-export type GTMEvent = {
+export type GAEvent = {
   category: string
   action: string
   label: string
+  value?: number
 }
 
 class Service {
   tracking = false
 
-  gtmId: string
-  gtmParams: string
+  gaId: string
 
   constructor() {
     const env = getRuntimeEnv()
-    this.gtmId = config.analytics.gtmIds[env] || ''
-    this.gtmParams = config.analytics.gtmParams[env] || ''
+    this.gaId = config.analytics.gaIds[env] || ''
   }
 
   start = () => {
     if (typeof window !== 'undefined' && !this.tracking) {
       this.tracking = true
 
-      if (this.gtmId) {
-        window.dataLayer ||= []
+      if (this.gaId) {
         const script = document.createElement('script')
-        script.id = 'gtm-container'
+        script.id = 'ga-container'
         script.text = `
-          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl+'${this.gtmParams}';
-          f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer', '${this.gtmId}');
+          (function(){
+            var gtagScript = document.createElement('script');
+            gtagScript.async = true;
+            gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=${this.gaId}';
+            document.head.appendChild(gtagScript);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${this.gaId}');
+          })();
         `
         document.head.append(script)
-        print('Analytics', 'GTM initialized')
+        print('Analytics', 'GA initialized')
       }
     }
   }
 
-  trackGtm(payload: GTMEvent): void {
-    if (this.gtmId && this.tracking) {
-      const data = { event: 'gtm-event', payload }
-      window.dataLayer.push(data)
-      print('Analytics', `GTM: ${JSON.stringify(data)}`)
+  trackGa(payload: GAEvent): void {
+    if (this.gaId && this.tracking) {
+      const { category, action, label, value } = payload
+      window.gtag('event', action, {
+        event_category: category,
+        event_label: label,
+        value
+      })
+      print('Analytics', `GA: ${JSON.stringify(payload)}`)
     }
   }
 }

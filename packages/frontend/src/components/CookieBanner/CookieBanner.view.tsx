@@ -11,6 +11,9 @@ import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
 
+import { CloseButton } from '@/components/CloseButton'
+import { PillButton } from '@/components/PillButton'
+
 export interface ViewProps extends ControllerProps {
   cookieConsent: AppState['consent']['cookieConsent']
   setCookieConsent: AppState['consent']['setCookieConsent']
@@ -27,40 +30,19 @@ export const View: FC<ViewProps> = ({ className, content, cookieConsent, setCook
   const [settings, setSettings] = useState(false)
   const [consent, setConsent] = useState<CookieConsent>(
     cookieConsent ?? {
-      session: false,
-      persistent: false,
       necessary: true,
-      preference: false,
-      statistics: false,
-      marketing: false,
-      firstParty: false,
-      thirdParty: false
+      statistics: true
     }
   )
 
   const handleAcceptAll = useCallback(() => {
-    setCookieConsent({
-      session: true,
-      persistent: true,
-      necessary: true,
-      preference: true,
-      statistics: true,
-      marketing: true,
-      firstParty: true,
-      thirdParty: true
-    })
-  }, [setCookieConsent])
+    setCookieConsent(consent)
+  }, [consent, setCookieConsent])
 
   const handleDeclineAll = useCallback(() => {
     setCookieConsent({
-      session: false,
-      persistent: false,
       necessary: true,
-      preference: false,
-      statistics: false,
-      marketing: false,
-      firstParty: false,
-      thirdParty: false
+      statistics: false
     })
   }, [setCookieConsent])
 
@@ -69,9 +51,8 @@ export const View: FC<ViewProps> = ({ className, content, cookieConsent, setCook
   }, [])
 
   const handleSettingsClose = useCallback(() => {
-    setCookieConsent(consent)
     setSettings(false)
-  }, [setCookieConsent, consent])
+  }, [])
 
   const handleUpdate = useCallback(
     (key: keyof CookieConsent, value: boolean) => {
@@ -85,42 +66,30 @@ export const View: FC<ViewProps> = ({ className, content, cookieConsent, setCook
       <p className={css.description} {...copy.html(content.description)} />
 
       <div className={css.buttonContainer}>
-        <button onClick={handleAcceptAll}>
+        <PillButton onClick={handleAcceptAll}>
           <span {...copy.html(content.ctas.accept)} />
-        </button>
+        </PillButton>
 
-        <button onClick={handleDeclineAll}>
+        <PillButton onClick={handleDeclineAll}>
           <span {...copy.html(content.ctas.reject)} />
-        </button>
-        <button onClick={handleSettingsOpen}>
+        </PillButton>
+
+        <PillButton onClick={handleSettingsOpen}>
           <span {...copy.html(content.ctas.settings)} />
-        </button>
+        </PillButton>
       </div>
 
       {settings && (
         <div className={css.cookieSettings}>
-          <button className={css.cookieSettingsClose} onClick={handleSettingsClose}>
-            <span {...copy.html(content.ctas.close)} />
-          </button>
+          <CloseButton className={css.cookieSettingsClose} onClick={handleSettingsClose} />
 
           <div className={css.cookieSettingsContent}>
             <p className={css.cookieSettingsDescription} {...copy.html(content.settings)} />
 
-            <ul>
+            <ul className={css.cookieSettingsList}>
               <li>
                 <input type="checkbox" id="cookie-necessary" checked={consent?.necessary} readOnly />
                 <label htmlFor="cookie-necessary" {...copy.html(content.purpose.necessary)} />
-              </li>
-              <li>
-                <input
-                  type="checkbox"
-                  id="cookie-preference"
-                  checked={consent?.preference}
-                  onChange={(e) => {
-                    handleUpdate('preference', e.target.checked)
-                  }}
-                />
-                <label htmlFor="cookie-preference" {...copy.html(content.purpose.preference)} />
               </li>
               <li>
                 <input
@@ -132,17 +101,6 @@ export const View: FC<ViewProps> = ({ className, content, cookieConsent, setCook
                   }}
                 />
                 <label htmlFor="cookie-statistics" {...copy.html(content.purpose.statistics)} />
-              </li>
-              <li>
-                <input
-                  type="checkbox"
-                  id="cookie-marketing"
-                  checked={consent?.marketing}
-                  onChange={(e) => {
-                    handleUpdate('marketing', e.target.checked)
-                  }}
-                />
-                <label htmlFor="cookie-marketing" {...copy.html(content.purpose.marketing)} />
               </li>
             </ul>
           </div>

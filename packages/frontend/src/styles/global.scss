@@ -46,6 +46,7 @@ html {
 }
 
 body {
+  @include font-body;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -57,7 +58,6 @@ body {
 *,
 *::before,
 *::after {
-  @include font-body;
   box-sizing: inherit;
 
   .mobile & {

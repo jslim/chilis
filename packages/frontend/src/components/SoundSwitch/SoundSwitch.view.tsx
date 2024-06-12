@@ -10,6 +10,7 @@ import css from './SoundSwitch.module.scss'
 import { getGameInstance } from '@/services/game'
 
 import { detect } from '@/utils/detect'
+import { print } from '@/utils/print'
 
 import { useRefs } from '@/hooks/use-refs'
 
@@ -57,7 +58,7 @@ export const View: FC<ViewProps> = ({ className }) => {
   }, [isDesktop, refs.cd, refs.cdAnimation, refs.note, refs.noteAnimation])
 
   useEffect(() => {
-    console.log('channelsInstance:', channelsInstance?.getPlayingSounds())
+    print('sound', `channelsInstance: ${channelsInstance?.getPlayingSounds().join(',')}`)
 
     if (channelsInstance) {
       if (switchOn) {
@@ -76,8 +77,6 @@ export const View: FC<ViewProps> = ({ className }) => {
         channelsInstance.mute()
       }
     }
-
-    console.log(channelsInstance)
   }, [switchOn, refs.cdAnimation, refs.noteAnimation, channelsInstance])
 
   return (

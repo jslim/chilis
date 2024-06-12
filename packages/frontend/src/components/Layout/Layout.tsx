@@ -36,7 +36,7 @@ import { TopNav } from '@/components/TopNav'
 import { GAME_SOUNDS_BASE_URL } from '@/game/game.config'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
-// const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
+const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
 const AppAdmin = dynamic(() => import('@/components/AppAdmin').then((m) => m.AppAdmin), { ssr: false })
 
 export type LayoutRefs = {
@@ -290,11 +290,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         </BaseModal>
       )}
 
+      <CookieBanner content={pageProps.content.common.cookieBanner} />
+
       <ScreenRotate content={pageProps.content.common.screenRotate} />
       <ScreenNoScript content={pageProps.content.common.screenNoScript} />
       <ScreenLowBattery content={pageProps.content.common.screenLowBattery} />
-
-      {/* <CookieBanner content={pageProps.content.common.cookieBanner} /> */}
 
       <AppAdmin />
     </div>

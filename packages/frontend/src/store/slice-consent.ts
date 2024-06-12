@@ -5,13 +5,7 @@ import { CookieService } from '@/services/cookie'
 
 export type CookieConsent = {
   necessary: boolean
-  persistent: boolean
-  preference: boolean
   statistics: boolean
-  firstParty: boolean
-  thirdParty: boolean
-  marketing: boolean
-  session: boolean
 }
 
 export type ConsentSliceState = {

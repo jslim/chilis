@@ -136,3 +136,12 @@
     @include font-size(64, 53);
   }
 }
+
+@mixin typography-montserrat-body($weight: 500) {
+  @include font-family($font-montserrat, $weight);
+  @include font-size(12, 14);
+
+  @include media-tablet {
+    @include font-size(16, 18);
+  }
+}

@@ -52,15 +52,20 @@
 .modal {
   .container {
     @include flex-center;
-    @include box(px(300), px(180));
+    width: px(300);
+    min-height: px(120);
     position: absolute;
     flex-direction: column;
     background-color: $sour-cream;
-    border-radius: px(40);
+    border-radius: px(20);
+    padding: px(20);
     overflow: hidden;
 
+    .description {
+      @include typography-montserrat-body;
+    }
+
     .close {
-      @include box(px(12));
       position: absolute;
       top: px(20);
       right: px(30);
@@ -68,29 +73,14 @@
 
     .buttonContainer {
       @include flex-center;
-      gap: px(20);
+      gap: px(10);
       margin-top: px(20);
     }
 
     .goBack,
-    .skip {
-      @include font-size(12, 14);
-      @include font-family(Montserrat, 700);
-      display: inline-flex;
-      padding: px(8) px(24);
-      border-radius: px(26);
-      border-bottom-width: thick;
-      color: $white;
-    }
-
-    .goBack {
-      background-color: $red;
-      border: 1px solid $dark-blue;
-    }
-
-    .skip {
-      background-color: $dark-blue;
-      border: 1px solid $white;
+    .stay {
+      white-space: nowrap;
+      border-bottom-width: 1px;
     }
   }
 }
