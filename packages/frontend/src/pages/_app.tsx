@@ -5,7 +5,6 @@ import type { AppProps } from 'next/app'
 import type { PageProps } from '@/data/types'
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { gsap } from 'gsap'
 
 import '@/styles/global.scss'
@@ -13,8 +12,8 @@ import '@/styles/global.scss'
 import { localStore } from '@/store'
 
 import { AnalyticsService } from '@/services/analytics'
-import { AWSRumService } from '@/services/aws-rum'
 
+import { fontVariables } from '@/utils/fonts'
 import { setBodyClasses } from '@/utils/set-body-classes'
 
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
@@ -29,8 +28,6 @@ initGsap()
 
 // This default export is required in a new `pages/_app.js` file.
 const App: FC<AppProps<PageProps>> = (props) => {
-  const router = useRouter()
-
   const { flags } = useFeatureFlags()
 
   const cookieConsent = localStore(({ consent }) => consent.cookieConsent)
@@ -38,11 +35,9 @@ const App: FC<AppProps<PageProps>> = (props) => {
   useEffect(() => {
     history.scrollRestoration = 'manual'
 
-    // Initialize AWS RUM
-    AWSRumService.start()
-
     // Body class names
     setBodyClasses()
+    document.body.classList.add(fontVariables)
 
     // Fix https://github.com/vercel/next.js/issues/17464
     document.querySelectorAll<HTMLElement>('head > link[rel="stylesheet"]').forEach((node) => {
@@ -64,19 +59,8 @@ const App: FC<AppProps<PageProps>> = (props) => {
   useEffect(() => {
     if (cookieConsent?.statistics) {
       AnalyticsService.start()
-      AWSRumService.allowCookies()
     }
   }, [cookieConsent])
-
-  useEffect(() => {
-    const handleRouteChange = (pathname: string) => {
-      AWSRumService.recordPageView(pathname)
-    }
-    router.events.on('routeChangeComplete', handleRouteChange)
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange)
-    }
-  }, [router])
 
   useEffect(() => {
     if (flags.dynamicResponsiveness) document.documentElement.classList.add('dynamic')

@@ -103,3 +103,11 @@ $ease5: cubic-bezier(0.9, 0, 0.1, 1);
 $ease6: cubic-bezier(0.54, 0, 1, 0.44);
 $ease7: cubic-bezier(0.66, 0, 0.34, 1);
 $ease8: cubic-bezier(0.64, 0, 0.78, 0);
+
+// ====================================================================
+// Fonts
+// ====================================================================
+
+$font-work-sans: #{var(--font-work-sans)};
+$font-pix-gamer: 'PixGamer';
+$generic-fonts: system-ui, 'helvetica', 'arial', sans-serif;

@@ -1,18 +1,18 @@
 import type { StoryFn } from '@storybook/react'
-import type { ViewProps } from './ScreenRotate.view'
+import type { ViewProps } from './ScreenLowBattery.view'
 
 import { CmsService } from '@/services/cms'
 
-import { View } from './ScreenRotate.view'
+import { View } from './ScreenLowBattery.view'
 
-export default { title: 'components/ScreenRotate' }
+export default { title: 'components/ScreenLowBattery' }
 
 export const Default: StoryFn<ViewProps> = (args) => {
   return <View {...args} />
 }
 
 Default.args = {
-  content: CmsService.getPageContent('home').common.screenRotate,
+  content: CmsService.getPageContent('home').common.screenLowBattery,
   enable: true
 }
 

@@ -4,16 +4,17 @@
   display: block;
   position: relative;
 
+  :global(#app) {
+    position: relative;
+    height: calc(100svh - 4rem);
+    aspect-ratio: 1 / 1;
+  }
+
   &.hasBorder {
     canvas {
       border: px(10) solid transparent;
       border-image: url('~@/assets/images/frame.png') 40;
     }
-  }
-
-  :global(#app) {
-    position: relative;
-    height: calc(100vh - 4rem);
   }
 
   .background {

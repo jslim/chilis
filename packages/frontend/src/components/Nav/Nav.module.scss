@@ -36,8 +36,8 @@
     width: 100%;
 
     .fullscreenWrapper {
-      margin-right: px(8);
       @include box(px(34));
+      margin-right: px(8);
 
       @include media-tablet-large {
         @include box(px(60));

@@ -9,7 +9,7 @@ export function initGsap() {
 
   gsap.registerPlugin(CustomEase, ScrollToPlugin)
 
-  gsap.defaults({ ease: 'none', duration: 1 })
+  gsap.defaults({ ease: 'none', duration: 0.667 })
 
   favouriteEases.forEach((ease) => {
     CustomEase.create(ease.name, ease.ease)

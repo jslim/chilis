@@ -1,9 +1,9 @@
-import type { ControllerProps } from './ScreenRotate.controller'
+import type { ControllerProps } from './ScreenLowBattery.controller'
 
 import { type FC } from 'react'
 import classNames from 'classnames'
 
-import css from './ScreenRotate.module.scss'
+import css from './ScreenLowBattery.module.scss'
 
 import useGameInstance from '@/hooks/use-game-instance'
 import { useRefs } from '@/hooks/use-refs'
@@ -23,10 +23,10 @@ export const View: FC<ViewProps> = ({ className, content, enable }) => {
   useGameInstance(enable)
 
   return enable ? (
-    <div className={classNames('ScreenRotate', css.root, className)} ref={refs.root}>
-      <FallbackContainer title={content.description} image={content.image} isLarge />
+    <div className={classNames('ScreenLowBattery', css.root, className)} ref={refs.root}>
+      <FallbackContainer title={content.description} image={content.image} />
     </div>
   ) : null
 }
 
-View.displayName = 'ScreenRotate_View'
+View.displayName = 'ScreenLowBattery_View'
