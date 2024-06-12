@@ -8,6 +8,7 @@ export interface ControllerProps {
   className?: string
   slides: {
     image: { src: string; alt: string }
+    title: string
     text: string
   }[]
 }
