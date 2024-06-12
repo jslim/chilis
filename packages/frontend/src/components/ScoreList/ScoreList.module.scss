@@ -32,6 +32,10 @@
     overflow: hidden;
     color: $white;
 
+    &.isCurrentPlayer {
+      color: $sunrise;
+    }
+
     @include media-tablet-large {
       @include font-size(32, 40);
     }

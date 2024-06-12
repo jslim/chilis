@@ -49,7 +49,7 @@ export const Controller: FC<ControllerProps> = memo((props) => {
         setArrayOfPlayers(response.leaderboard)
       }
 
-      if (response && response.user && response.user.nickname) {
+      if (response && response.user) {
         setCurrentPlayer(response.user)
       }
     }
