@@ -20,7 +20,7 @@ export type ViewRefs = {
 
 // View (pure and testable component, receives props exclusively from the controller)
 export const View = forwardRef<HTMLElement, ViewProps>(
-  ({ className, href: h, link: l, subject, children, gtmEvent, disabled, onClick, ...props }, ref) => {
+  ({ className, href: h, link: l, subject, children, gaEvent, disabled, onClick, ...props }, ref) => {
     const refs = useRefs<ViewRefs>({ root: ref })
 
     const href = h || l
@@ -47,9 +47,9 @@ export const View = forwardRef<HTMLElement, ViewProps>(
     const handleClick = useCallback(
       (e: MouseEvent<HTMLElement>) => {
         onClick?.(e)
-        if (gtmEvent) AnalyticsService.trackGtm(gtmEvent)
+        if (gaEvent) AnalyticsService.trackGa(gaEvent)
       },
-      [gtmEvent, onClick]
+      [gaEvent, onClick]
     )
 
     useEffect(() => {
