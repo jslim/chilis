@@ -28,7 +28,7 @@ export type ViewRefs = {
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) => {
   const refs = useRefs<ViewRefs>()
-  const actualRoute = localStore((state) => state.navigation.pathname)
+  const currentRoute = localStore((state) => state.navigation.pathname)
   const navigateBack = localStore((state) => state.navigation.navigateBack)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -49,26 +49,26 @@ export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) =>
       {isModalOpen && (
         <BaseModal className={css.modal} onClose={handleClose}>
           <div className={css.container}>
-            Are you sure?
+            ARE YOU SURE?
             <BaseButton className={css.close} onClick={handleClose}>
               <SvgClose />
             </BaseButton>
             <div className={css.buttonContainer}>
               <BaseButton className={css.goBack} onClick={handleNavigateBack}>
-                Yes GO Gack
+                YES GO BACK
               </BaseButton>
               <BaseButton className={css.skip} onClick={handleClose}>
-                No Stay Here
+                NO STAY HERE
               </BaseButton>
             </div>
           </div>
         </BaseModal>
       )}
       <div className={css.wrapper}>
-        {actualRoute !== routes.GAME ? (
-          <div className={css.logoContainer}>
+        {currentRoute !== routes.GAME ? (
+          <BaseButton className={css.logoContainer} href={routes.HOME}>
             <ChilisSvg />
-          </div>
+          </BaseButton>
         ) : (
           <BaseButton className={css.logoContainer} onClick={() => setIsModalOpen(true)}>
             <SvgBack />

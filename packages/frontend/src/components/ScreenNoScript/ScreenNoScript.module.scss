@@ -3,26 +3,5 @@
 .root {
   @include position-100(fixed);
   @include z-index(noscript);
-  @include flex-center;
-  flex-direction: column;
-  color: $sour-cream;
-  background-color: $black;
-  background-image: url('~@/assets/images/noise.png');
-
-  .description {
-    @include font-family(PixGamer, 400);
-    @include font-size(64, 57);
-    margin-top: px(15);
-  }
-
-  .logoContainer {
-    @include box(px(32), px(20));
-    @include transform-center(absolute);
-    top: unset;
-    bottom: px(20);
-  }
-
-  .iconWrapper {
-    @include box(px(60));
-  }
+  @include flex-center(column);
 }

@@ -2,21 +2,16 @@ import type { FC } from 'react'
 
 import { memo } from 'react'
 
-import { View } from './BackgroundVideo.view'
+import { View } from './FallbackContainer.view'
 
 export interface ControllerProps {
   className?: string
-  videoData: {
+  title?: string
+  image?: {
     src: string
-    poster: string
+    alt: string
   }
-  loop?: boolean
-  muted?: boolean
-  poster?: string
-  controls?: boolean
-  autoPlay?: boolean
-  playsInline?: boolean
-  fillContainer?: boolean
+  isLarge?: boolean
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
@@ -24,4 +19,4 @@ export const Controller: FC<ControllerProps> = memo((props) => {
   return <View {...props} />
 })
 
-Controller.displayName = 'BackgroundVideo_Controller'
+Controller.displayName = 'FallbackContainer_Controller'

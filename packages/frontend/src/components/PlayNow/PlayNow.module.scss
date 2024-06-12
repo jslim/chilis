@@ -7,4 +7,8 @@
   @include media-tablet-large {
     @include box(px(420), px(34));
   }
+
+  .svg {
+    shape-rendering: crispEdges;
+  }
 }

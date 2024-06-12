@@ -18,7 +18,6 @@ import { routes } from '@/data/routes'
 import { localState, localStore } from '@/store'
 
 import { getScrollTop } from '@/utils/basic-functions'
-import { fontVariables } from '@/utils/fonts'
 
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useLocalStorage } from '@/hooks/use-local-storage'
@@ -29,6 +28,7 @@ import { Head } from '@/components/Head'
 import { LogModal } from '@/components/LogModal'
 import { Nav } from '@/components/Nav'
 import { PlayNow } from '@/components/PlayNow'
+import { ScreenLowBattery } from '@/components/ScreenLowBattery'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
@@ -252,7 +252,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   }
 
   return (
-    <div className={classNames('Layout', css.root, fontVariables)}>
+    <div className={classNames('Layout', css.root)}>
       <Head {...pageProps.content.head} />
 
       <TopNav
@@ -289,8 +289,10 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
           <LogModal {...pageProps.content.common.logModal} onClose={() => localState().screen.setIsModalOpen(false)} />
         </BaseModal>
       )}
+
       <ScreenRotate content={pageProps.content.common.screenRotate} />
       <ScreenNoScript content={pageProps.content.common.screenNoScript} />
+      <ScreenLowBattery content={pageProps.content.common.screenLowBattery} />
 
       {/* <CookieBanner content={pageProps.content.common.cookieBanner} /> */}
 

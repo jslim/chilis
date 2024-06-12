@@ -39,12 +39,7 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
 
   return (
     <main className={classNames('PageContest', css.root)} ref={refs.root}>
-      <BackgroundVideo
-        videoData={{
-          src: content.body.backgroundVideo.src,
-          poster: content.body.backgroundVideo.poster
-        }}
-      />
+      <BackgroundVideo videoData={content.body.backgroundVideo} />
       <div className={css.container}>
         <h1 className={css.title} {...copy.html(content.body.title)} />
         <div className={css.imageContainer}>

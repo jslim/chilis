@@ -33,7 +33,35 @@ class LeaderboardRepository {
     return await this.client.query(params);
   };
 
-  public getRecordByPrefix = async (prefix: string) => {
+  /**
+   * Retrieves a record from the leaderboard based on the provided nickname.
+   * @param nickname - The nickname of the user.
+   * @returns A promise that resolves to the record data.
+   */
+  public getRecordByNickname = async (nickname: string) => {
+    const params = {
+      IndexName: ALLTIME_LEADERBOARD_INDEX,
+      FilterExpression: "#nickname = :prefix AND #gsiPK = :gsiPK",
+      ExpressionAttributeNames: {
+        "#nickname": "nickname",
+        "#gsiPK": "gsiPK",
+      },
+      ExpressionAttributeValues: {
+        ":prefix": nickname,
+        ":gsiPK": GSILeaderboard.ALL_TIME_LEADERBOARD,
+      },
+      ProjectionExpression: "nickname, score",
+    };
+
+    return await this.client.scan(params);
+  };
+
+  /**
+   * Retrieves records from the leaderboard that begin with a specified prefix.
+   * @param prefix - The prefix to search for in the nickname.
+   * @returns A promise that resolves to the records matching the prefix.
+   */
+  public getRecordBeginsWith = async (prefix: string) => {
     const params = {
       FilterExpression: "begins_with(#nickname, :prefix)",
       ExpressionAttributeNames: {
@@ -48,8 +76,12 @@ class LeaderboardRepository {
     return await this.client.scan(params);
   };
 
-  public batchWrite = async (deleteRequest: WriteRequest[]) => {
-    await this.client.batchWrite(deleteRequest);
+  /**
+   * Performs a batch write operation to items.
+   * @param request - An array of WriteRequest objects.
+   */
+  public batchWrite = async (request: WriteRequest[]) => {
+    await this.client.batchWrite(request);
   };
 }
 

@@ -2,9 +2,6 @@
 
 @import 'vars';
 
-$font-work-sans: #{var(--font-work-sans)};
-$generic-fonts: system-ui, 'helvetica', 'arial', sans-serif;
-
 /// Check if two scss values are safe to add, subtract, or multiply.
 /// @example scss Input
 ///  @if is-compatible($font-size, $line-height) {
@@ -124,9 +121,18 @@ $generic-fonts: system-ui, 'helvetica', 'arial', sans-serif;
 }
 
 @mixin typography-cta {
-  @include font-size(16);
+  @include font-size(16, 16);
 
   @include media-tablet-large {
-    @include font-size(22);
+    @include font-size(22, 22);
+  }
+}
+
+@mixin typography-title {
+  @include font-family($font-pix-gamer, 400);
+  @include font-size(28, 23);
+
+  @include media-tablet {
+    @include font-size(64, 53);
   }
 }

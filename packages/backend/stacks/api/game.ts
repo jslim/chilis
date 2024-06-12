@@ -1,14 +1,15 @@
-import type { StackContext } from "sst/constructs";
-import { Function, use } from "sst/constructs";
 import { ApiStack } from "@/stacks/api/api";
 import { Database } from "@/stacks/database";
-import { HttpMethod } from "aws-cdk-lib/aws-events";
+import { Function, use } from "sst/constructs";
 import { detectStage } from "@/libs/detect-stage";
+import type { StackContext } from "sst/constructs";
+import { HttpMethod } from "aws-cdk-lib/aws-events";
+import putGameModal from "@/stacks/game/models/put";
+import { ALLTIME_LEADERBOARD_INDEX } from "@/libs/config";
 import generateApiMethod from "@/utils/generate-api-method";
 import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
-import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 import { type ModelOptions } from "aws-cdk-lib/aws-apigateway";
-import putGameModal from "@/stacks/game/models/put";
+import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 
 export function gameApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
@@ -56,6 +57,13 @@ export function gameApiStack({ stack, app }: StackContext) {
         actions: ["dynamodb:UpdateItem"],
         effect: Effect.ALLOW,
         resources: [gameSessionTable.tableArn],
+      }),
+      // eslint-disable-next-line
+      // @ts-ignore
+      new PolicyStatement({
+        actions: ["dynamodb:Query", "dynamodb:Scan"],
+        effect: Effect.ALLOW,
+        resources: [`${leaderboardTable.tableArn}/index/${ALLTIME_LEADERBOARD_INDEX}`],
       }),
     ],
     environment: {

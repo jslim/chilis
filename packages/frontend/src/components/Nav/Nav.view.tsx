@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import type { ControllerProps } from './Nav.controller'
 
-import { Fragment, useCallback, useImperativeHandle } from 'react'
+import { Fragment, useCallback, useEffect, useImperativeHandle, useState } from 'react'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 import { gsap } from 'gsap'
@@ -34,6 +34,7 @@ export const View: FC<ViewProps> = ({ className, content, handleRef, isGameOver,
   const refs = useRefs<ViewRefs>()
   const pathname = useRouter().asPath
   const isFullscreen = localStore((state) => state.screen.isFullscreen)
+  const [isFullscreenSupported, setIsFullscreenSupported] = useState(false)
 
   const handleFullscreen = useCallback(() => {
     onFullscreen()
@@ -43,12 +44,18 @@ export const View: FC<ViewProps> = ({ className, content, handleRef, isGameOver,
     animateIn: () => gsap.timeline().to(refs.root.current, { duration: 0.33, opacity: 1 }, 0.33)
   }))
 
+  useEffect(() => {
+    setIsFullscreenSupported(document.fullscreenEnabled)
+  }, [])
+
   return (
     <nav className={classNames('Nav', css.root, className)} ref={refs.root}>
       <div className={css.wrapper}>
-        <BaseButton className={css.fullscreenWrapper} onClick={handleFullscreen}>
-          {isFullscreen ? <SvgCloseFullscreen /> : <SvgFullscreen />}
-        </BaseButton>
+        {isFullscreenSupported ? (
+          <BaseButton className={css.fullscreenWrapper} onClick={handleFullscreen}>
+            {isFullscreen ? <SvgCloseFullscreen /> : <SvgFullscreen />}
+          </BaseButton>
+        ) : null}
         {!isGameOver && (
           <>
             <ul className={css.ctas}>

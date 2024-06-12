@@ -8,6 +8,8 @@ import GameRepository from "@/repositories/game";
 import DynamoDBClient from "@/services/dynamodb";
 import UserService from "@/services/user";
 import UserRepository from "@/repositories/user";
+import LeaderboardService from "@/services/leaderboard";
+import LeaderboardRepository from "@/repositories/leaderboard";
 import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 
 logger.appendKeys({
@@ -17,6 +19,7 @@ logger.appendKeys({
 
 const userService = new UserService(new UserRepository(new CognitoIdentityProviderClient()));
 const gameService = new GameService(new GameRepository(new DynamoDBClient(process.env.GAMES_HISTORY_TABLE_NAME as string)));
+const leaderboardService = new LeaderboardService(new LeaderboardRepository(new DynamoDBClient(process.env.LEADERBOARD_TABLE_NAME as string)));
 
 /**
  * Lambda handler for PUT requests to save user score.
@@ -35,6 +38,7 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
     try {
       const currentNickname = event.headers?.Authorization && (await userService.getUsername(event.headers.Authorization));
 
+      // Record game score
       if (currentNickname) {
         await gameService.recordGameScore(currentNickname, { userSub, gameId, score, level });
       } else {
@@ -42,7 +46,8 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
       }
 
       logger.info("The score has been successfully recorded.");
-      return Success();
+      // Return mini leaderboard
+      return Success(await leaderboardService.getMiniBoard(currentNickname));
     } catch (error) {
       logger.error("Error recording score", { error });
       return Forbidden();

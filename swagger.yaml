@@ -111,9 +111,9 @@ paths:
             $ref: "#/definitions/ScoreRequest"
       responses:
         "200":
-          description: Score was save successfully.
+          description: Score was save successfully and return items in the leaderboard.
           schema:
-            $ref: "#/definitions/ApiResponse"
+            $ref: "#/definitions/Scores"
         "400":
           description: Bad request - invalid request parameters
         "403":

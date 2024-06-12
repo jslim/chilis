@@ -2,7 +2,7 @@
 
 .root {
   @include position-0(fixed);
-  @include box(100vw, 100vh);
+  @include box(100vw, 100svh);
   @include flex-center;
   @include z-index(modal);
   background-color: rgba($black, 0.5);

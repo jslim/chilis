@@ -15,4 +15,5 @@ export const S3_REFERER_KEY = "s3-header-referer-secret";
 export const BRINKER_ACCESS = "/brinker/api/access";
 
 // DYNAMO
+export const MAX_LEADERBOARD_RECORD = 500;
 export const ALLTIME_LEADERBOARD_INDEX = "alltime_leaderboard";

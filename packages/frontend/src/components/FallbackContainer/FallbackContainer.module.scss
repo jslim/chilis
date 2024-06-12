@@ -1,0 +1,46 @@
+@import 'shared';
+
+.root {
+  @include position-100(absolute);
+  @include flex-center(column);
+  gap: px(30);
+  color: $white;
+  background-color: $black;
+  background-image: url('~@/assets/images/noise.png');
+
+  @include media-tablet {
+    padding-bottom: px(40);
+  }
+
+  .image {
+    width: auto;
+    height: px(30);
+    object-fit: cover;
+
+    @include media-tablet {
+      height: px(60);
+    }
+
+    @at-root .isLarge#{&} {
+      height: px(130);
+    }
+  }
+
+  .title {
+    @include typography-title;
+    max-width: 80vw;
+    color: $sour-cream;
+  }
+
+  .logoContainer {
+    @include box(px(32), px(20));
+    @include transform-center(absolute);
+    top: unset;
+    bottom: px(20);
+
+    @include media-tablet {
+      @include box(px(64), px(40));
+      bottom: px(40);
+    }
+  }
+}
