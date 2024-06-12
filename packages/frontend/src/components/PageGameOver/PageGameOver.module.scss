@@ -1,0 +1,115 @@
+@import 'shared';
+
+.root {
+  position: relative;
+  opacity: 0;
+  width: 100%;
+
+  .title {
+    @include typography-h1;
+    padding-top: px(80);
+  }
+}
+
+.contentWrapper {
+  @include flex-center-vert;
+  position: relative;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100vh;
+  padding-top: px(80);
+  padding-bottom: px(90);
+
+  @include media-tablet-large {
+    padding-top: px(118);
+  }
+
+  .upperWrapper {
+    @include flex-center-vert;
+    flex-direction: column;
+    flex: 1;
+
+    .heroWrapper {
+      max-width: px(392);
+
+      .hero {
+        @include box(100%);
+        object-fit: cover;
+      }
+    }
+
+    .title {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .description {
+      @include font-size(56, 47);
+      @include font-family(PixGamer, 400);
+      max-width: px(700);
+      margin-top: px(20);
+      color: $sour-cream;
+    }
+  }
+
+  .lowerWrapper {
+    .ctasDescription {
+      @include font-family(b, 400);
+      @include font-size(32, 40);
+      margin-bottom: px(25);
+      color: $white;
+    }
+
+    .button {
+      @include font-family(Gamer, 500);
+      @include font-size(64);
+      position: relative;
+      padding: 0 px(30) px(10);
+      border: px(10) solid transparent;
+      text-align: center;
+      z-index: 0;
+
+      &:before,
+      &:after {
+        @include font-family(Gamer, 500);
+        @include font-size(64);
+      }
+
+      &::after {
+        content: attr(data-text);
+        @include position-100(absolute);
+        top: px(-7);
+        z-index: -1;
+      }
+
+      &.continue {
+        margin-right: px(20);
+        border: px(15) solid transparent;
+        border-image: url('~@/assets/images/continue-border.png') 15;
+        color: $sunrise;
+
+        &::before {
+          content: attr(data-text);
+          @include position-100(absolute);
+          top: px(-15);
+          color: $ranch;
+          z-index: -1;
+        }
+
+        &:after {
+          color: $red;
+        }
+      }
+
+      &.quit {
+        border: px(15) solid transparent;
+        border-image: url('~@/assets/images/quit-border.png') 15;
+        color: $dark-blue;
+
+        &::after {
+          color: $dark-blue-2;
+        }
+      }
+    }
+  }
+}

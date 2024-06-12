@@ -7,6 +7,9 @@ import css from './ScreenNoScript.module.scss'
 
 import { copy } from '@/utils/copy'
 
+import SvgChilis from '@/svgs/Chilis.svg'
+import SvgDeadFace from '@/svgs/DeadFace.svg'
+
 export interface ViewProps extends ControllerProps {}
 
 // View (pure and testable component, receives props exclusively from the controller)
@@ -15,8 +18,13 @@ export const View: FC<ViewProps> = ({ className, content }) => {
 
   return (
     <Component className={classNames('ScreenNoScript', css.root, className)}>
+      <div className={css.logoContainer}>
+        <SvgChilis />
+      </div>
       <div className={css.text}>
-        <h1 className={css.title} {...copy.html(content.title, {}, 10)} />
+        <div className={css.iconWrapper}>
+          <SvgDeadFace />
+        </div>
         <p className={css.description} {...copy.html(content.description, {}, 10)} />
       </div>
     </Component>

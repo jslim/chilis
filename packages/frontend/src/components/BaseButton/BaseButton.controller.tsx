@@ -28,6 +28,7 @@ export interface ControllerProps {
   onMouseEnter?: (event?: MouseEvent<HTMLElement>) => void
   onMouseLeave?: (event?: MouseEvent<HTMLElement>) => void
   'aria-label'?: string
+  'data-text'?: string
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
