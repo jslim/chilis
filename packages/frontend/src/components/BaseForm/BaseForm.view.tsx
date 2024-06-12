@@ -7,7 +7,7 @@ import css from './BaseForm.module.scss'
 
 import { useRefs } from '@/hooks/use-refs'
 
-import { BaseButton } from '@/components/BaseButton'
+import { PillButton } from '@/components/PillButton'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -31,14 +31,9 @@ export const View: FC<ViewProps> = ({
     <div className={classNames('BaseForm', css.root, className)}>
       <div className={css.form} ref={refs.root}>
         {children}
-        <BaseButton
-          className={classNames(css.button, { [css.isDisabled]: disabled })}
-          type="submit"
-          onClick={onSubmit}
-          disabled={disabled}
-        >
+        <PillButton className={css.button} type="submit" onClick={onSubmit} disabled={disabled}>
           {submitMessage}
-        </BaseButton>
+        </PillButton>
       </div>
       {hasError && <div className={css.error}>{errorMessage}</div>}
     </div>
