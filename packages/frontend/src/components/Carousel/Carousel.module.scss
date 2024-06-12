@@ -8,6 +8,10 @@
     position: relative;
     margin-top: px(30);
 
+    @include media-tablet-large {
+      margin-top: px(30);
+    }
+
     span {
       @include box(px(14));
       display: inline-block;
@@ -36,24 +40,78 @@
   @include flex-center;
   flex-direction: column;
 
+  .title {
+    @include font-size(16);
+    @include font-family(PixeloidSans, 700);
+    margin-top: px(20);
+    color: $ranch;
+
+    @include media-tablet-large {
+      @include font-size(32, 40);
+      margin-top: px(30);
+    }
+  }
+
   .text {
-    @include font-size(28, 23);
-    @include font-family(PixGamer, 400);
-    margin-top: px(22);
+    @include font-size(16, 20);
+    @include font-family(b, 400);
+    max-width: px(700);
+    margin-top: px(20);
     color: $sour-cream;
 
     @include media-tablet-large {
-      @include font-size(56, 47);
+      @include font-size(32, 40);
+      max-width: px(780);
       margin-top: px(45);
     }
   }
-}
 
-.imageContainer {
-  min-width: px(100);
+  .imageContainer {
+    min-width: px(100);
 
-  .image {
-    @include box(100%);
-    object-fit: cover;
+    .image {
+      @include box(100%);
+      object-fit: cover;
+    }
+  }
+
+  &:first-of-type {
+    .imageContainer {
+      width: px(92);
+
+      @include media-tablet-large {
+        width: px(184);
+      }
+    }
+  }
+
+  &:nth-of-type(2) {
+    .imageContainer {
+      width: px(224);
+
+      @include media-tablet-large {
+        width: px(448);
+      }
+    }
+  }
+
+  &:nth-of-type(3) {
+    .imageContainer {
+      width: px(75);
+
+      @include media-tablet-large {
+        width: px(151);
+      }
+    }
+  }
+
+  &:last-of-type {
+    .imageContainer {
+      width: px(167);
+
+      @include media-tablet-large {
+        width: px(335);
+      }
+    }
   }
 }

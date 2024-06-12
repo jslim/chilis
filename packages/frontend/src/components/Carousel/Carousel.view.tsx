@@ -43,6 +43,7 @@ export const View: FC<ViewProps> = ({ className, slides }) => {
             <div className={css.imageContainer}>
               <BaseImage className={css.image} data={getImageUrl(slide.image.src)} alt={slide.image.alt} />
             </div>
+            <p className={css.title} {...copy.html(slide.title)} />
             <p className={css.text} {...copy.html(slide.text)} />
           </SwiperSlide>
         ))}

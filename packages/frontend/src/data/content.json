@@ -164,12 +164,12 @@
       },
       "body": {
         "backgroundVideo": {
-          "src": "",
+          "src": "/videos/how_to_play.mp4",
           "poster": "burger-loop-3.png"
         },
         "title": "HOW TO PLAY",
         "hero": {
-          "src": "how-to.png",
+          "src": "how-to-play.png",
           "alt": "How to play"
         },
         "slides": [
@@ -178,28 +178,32 @@
               "src": "slide-1.png",
               "alt": "Slide 1"
             },
-            "text": "Walk over burger ingredients</br>to drop them into baskets."
+            "title": "BASIC MOVEMENT",
+            "text": "Press left and right to move, press up and down to climb ladders."
           },
           {
             "image": {
               "src": "slide-2.png",
               "alt": "Slide 2"
             },
-            "text": "Time your burger drops</br>to smash your enemies."
+            "title": "SCORING",
+            "text": "Walk over burger parts to drop them and score. Drop all the parts down to the basket to make a Big Smasher and start a score multiplier!"
           },
           {
             "image": {
               "src": "slide-3.png",
               "alt": "Slide 3"
             },
-            "text": "Collect 3 for me items</br>to obtain extra pepper. "
+            "title": "ENEMIES",
+            "text": "Avoid trainees, and watch out for the bosses! Each level you’ll have 4 salt shakers you can use to stun them."
           },
           {
             "image": {
               "src": "slide-4.png",
               "alt": "Slide 4"
             },
-            "text": "Throw pepper at your</br>enemies to stun them."
+            "title": "EXTRA BONUSES",
+            "text": "Get an extra life every 100,000 points and get a score bonus for collecting the 3 parts of the \"3 for me\" hidden on each level.<br/>Good luck and have fun!"
           }
         ]
       }

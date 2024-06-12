@@ -16,12 +16,12 @@
   @include flex-center;
   position: relative;
   flex-direction: column;
-  gap: px(40);
+  gap: px(30);
   padding-top: px(30);
 
   @include media-tablet-large {
     gap: px(65);
-    padding-top: px(180);
+    padding-top: px(110);
   }
 
   .imageContainer {
