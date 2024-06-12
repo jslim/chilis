@@ -18,9 +18,9 @@ import { useRefs } from '@/hooks/use-refs'
 import { BaseButton } from '@/components/BaseButton'
 import { BaseForm } from '@/components/BaseForm'
 import { BaseImage } from '@/components/BaseImage'
+import { CloseButton } from '@/components/CloseButton'
 
 import SvgChilis from '@/svgs/Chilis.svg'
-import SvgClose from '@/svgs/Close.svg'
 import SvgThreeSquares from '@/svgs/ThreeSquares.svg'
 import SvgTwoSquares from '@/svgs/TwoSquares.svg'
 
@@ -122,9 +122,7 @@ export const View: FC<ViewProps> = ({
 
   return (
     <div className={classNames('LogModal', css.root, className)} ref={refs.root}>
-      <BaseButton className={css.close} onClick={onClose}>
-        <SvgClose />
-      </BaseButton>
+      <CloseButton className={css.close} onClick={onClose} />
       <div className={css.top}>
         <div className={classNames(css.squares, css.leftSquare)}>
           <SvgTwoSquares />

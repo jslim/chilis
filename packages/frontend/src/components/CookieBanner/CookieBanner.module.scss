@@ -2,8 +2,9 @@
 
 @import 'shared';
 
-$cookie-banner-bg-color: #202020;
-$cookie-banner-overlay-bg-color: color.adjust($cookie-banner-bg-color, $lightness: 10%);
+$cookie-banner-bg-color: $sour-cream;
+$cookie-banner-text-color: $black;
+$cookie-banner-overlay-bg-color: color.adjust($cookie-banner-bg-color, $lightness: 5%);
 $cookie-banner-padding: px(20);
 
 .root {
@@ -16,14 +17,19 @@ $cookie-banner-padding: px(20);
   left: px(20);
   padding: $cookie-banner-padding;
   max-width: calc(100% - #{px(40)});
-  color: $white;
+  color: $cookie-banner-text-color;
   background-color: $cookie-banner-bg-color;
+  border-radius: px(20);
+  border: 1px solid $dark-blue;
+
+  * {
+    @include typography-montserrat-body(700);
+  }
 
   > .description {
-    margin-bottom: px(30);
-    font-size: px(14);
-    line-height: px(16);
-    color: $white;
+    text-align: left;
+    margin-bottom: px(15);
+    color: $cookie-banner-text-color;
 
     a {
       color: currentcolor;
@@ -32,53 +38,42 @@ $cookie-banner-padding: px(20);
 
   > .cookieSettings {
     @include position-100(absolute);
+    @include flex-center;
     padding: $cookie-banner-padding;
     background-color: $cookie-banner-overlay-bg-color;
     text-align: left;
+    border-radius: inherit;
 
     .cookieSettingsClose {
       position: absolute;
-      top: px(10);
-      right: px(10);
+      top: $cookie-banner-padding;
+      right: $cookie-banner-padding;
     }
 
     .cookieSettingsContent {
       display: flex;
+      gap: px(20);
     }
 
     .cookieSettingsDescription {
       width: 50%;
-      margin-right: px(15);
-      font-size: px(12);
-      line-height: px(13);
+    }
+
+    .cookieSettingsList {
+      display: flex;
+      flex-direction: column;
+      gap: px(5);
+
+      li {
+        display: flex;
+        gap: px(5);
+      }
     }
   }
 
   .buttonContainer {
     display: flex;
     flex-wrap: wrap;
-  }
-
-  button {
-    padding: px(10);
-    margin-bottom: px(20);
-    margin-left: px(20);
-    border: 0;
-    font-size: px(14);
-    line-height: px(16);
-    white-space: nowrap;
-    cursor: pointer;
-    color: currentcolor;
-    background-color: $black;
-
-    &:first-of-type {
-      margin-left: 0;
-    }
-  }
-
-  @include media-tablet-large {
-    button {
-      margin-bottom: 0;
-    }
+    gap: px(20);
   }
 }

@@ -30,6 +30,13 @@
         }
       ]
     },
+    "backModal": {
+      "description": "Are you sure?",
+      "ctas": {
+        "yes": "yes go back",
+        "no": "no stay here"
+      }
+    },
     "topNav": { "logIn": "LOG IN", "LogOut": "LOG OUT" },
     "logModal": {
       "title": "BURGERS FOR LIFE",
@@ -51,19 +58,17 @@
     "playNow": "PLAY NOW",
     "testAudio": "soundhelix",
     "cookieBanner": {
-      "description": "We use cookies on this website to improve your experience.",
-      "settings": "Ullamco deserunt dolore officia cillum ea culpa eu. Voluptate ex in commodo in dolor magna velit pariatur in nostrud enim tempor aliquip nisi.",
+      "description": "We use cookies on this website\nto improve your experience.",
+      "settings": "You can customize your cookie preferences and choose which types of cookies you want to allow",
       "ctas": {
-        "settings": "Cookie Settings",
-        "accept": "Accept All",
+        "settings": "Settings",
+        "accept": "Accept",
         "reject": "Reject All",
         "close": "close"
       },
       "purpose": {
         "necessary": "necessary",
-        "preference": "preference",
-        "statistics": "statistics",
-        "marketing": "marketing"
+        "statistics": "statistics"
       }
     },
     "screenNoScript": {

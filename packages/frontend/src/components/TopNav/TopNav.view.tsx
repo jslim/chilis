@@ -13,10 +13,11 @@ import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
 import { BaseModal } from '@/components/BaseModal'
+import { CloseButton } from '@/components/CloseButton'
+import { PillButton } from '@/components/PillButton'
 
 import SvgBack from '@/svgs/Back.svg'
 import ChilisSvg from '@/svgs/Chilis.svg'
-import SvgClose from '@/svgs/Close.svg'
 import SvgLoginLogout from '@/svgs/LoginLogout.svg'
 
 export interface ViewProps extends ControllerProps {}
@@ -49,17 +50,15 @@ export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) =>
       {isModalOpen && (
         <BaseModal className={css.modal} onClose={handleClose}>
           <div className={css.container}>
-            ARE YOU SURE?
-            <BaseButton className={css.close} onClick={handleClose}>
-              <SvgClose />
-            </BaseButton>
+            <p className={css.description}>ARE YOU SURE?</p>
+            <CloseButton className={css.close} onClick={handleClose} />
             <div className={css.buttonContainer}>
-              <BaseButton className={css.goBack} onClick={handleNavigateBack}>
+              <PillButton className={css.goBack} onClick={handleNavigateBack}>
                 YES GO BACK
-              </BaseButton>
-              <BaseButton className={css.skip} onClick={handleClose}>
+              </PillButton>
+              <PillButton className={css.stay} onClick={handleClose} theme="blue">
                 NO STAY HERE
-              </BaseButton>
+              </PillButton>
             </div>
           </div>
         </BaseModal>
