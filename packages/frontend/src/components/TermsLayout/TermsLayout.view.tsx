@@ -28,20 +28,9 @@ export const View: FC<ViewProps> = ({ className, content }) => {
         <h1 className={css.title} {...copy.html(content.body.title)} />
       </section>
       <section className={css.content}>
-        <div className={classNames(css.squares, css.leftSquare)}>
-          <SvgTwoSquares />
-        </div>
-        <div className={classNames(css.squares, css.leftSquareBottom)}>
-          <SvgThreeSquares />
-        </div>
-        <div className={classNames(css.squares, css.rightSquare)}>
-          <SvgTwoSquares />
-        </div>
-        <div className={classNames(css.squares, css.rightSquareBottom)}>
-          <SvgThreeSquares />
-        </div>
-
-        <div {...copy.html(content.body.content)} />
+        {content.body.blocks.map((innerBlock, index) => (
+          <div key={index} {...copy.html(innerBlock)} />
+        ))}
       </section>
     </div>
   )

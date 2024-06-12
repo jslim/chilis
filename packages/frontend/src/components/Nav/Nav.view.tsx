@@ -66,7 +66,7 @@ export const View: FC<ViewProps> = ({ className, content, handleRef, isGameOver,
                       {title}
                     </BaseButton>
                   </li>
-                  {index === 0 && routes.HOME}
+                  {index !== content.links.length - 1 && '/'}
                 </Fragment>
               ))}
             </ul>
