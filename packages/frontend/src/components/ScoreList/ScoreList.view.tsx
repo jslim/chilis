@@ -44,7 +44,9 @@ export const View: FC<ViewProps> = ({
       <ul className={css.list}>
         {displayedPlayers.map((player, index) => (
           <li className={css.item} key={index}>
-            <span className={css.player}>
+            <span
+              className={classNames(css.player, { [css.isCurrentPlayer]: player.nickname === currentPlayer?.nickname })}
+            >
               {index + 1} {truncateText(player.nickname, 9)}
             </span>
             <span className={css.score}>{player.score}</span>

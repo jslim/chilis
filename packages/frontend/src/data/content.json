@@ -144,7 +144,7 @@
       },
       "body": {
         "backgroundVideo": {
-          "src": "",
+          "src": "/videos/leaderboard.mp4",
           "poster": "burger-loop-2.png"
         },
         "title": "HI-SCORES",

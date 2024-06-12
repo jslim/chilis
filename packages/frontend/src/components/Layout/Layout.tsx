@@ -61,6 +61,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const isModalOpen = localState().screen.isModalOpen
 
   const [idToken] = useLocalStorage('idToken')
+  const [accessToken] = useLocalStorage('accessToken')
 
   //
   // Update pathname ref
@@ -200,6 +201,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         console.log('Token is valid. Payload:', payload)
         localState().user.setIsTokenValid(true)
         localState().user.setNickname(String(payload.preferred_username))
+        localState().user.setAccessToken(String(accessToken))
 
         if (isModalOpen && String(payload.preferred_username)) {
           localState().screen.setIsModalOpen(false)
