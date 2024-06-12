@@ -96,4 +96,9 @@ export default class SceneManager {
   public resume() {
     this.isPlaying = true
   }
+
+  public destroy() {
+    this.pause()
+    this.root.destroy()
+  }
 }
