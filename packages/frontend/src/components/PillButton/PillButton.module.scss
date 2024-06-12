@@ -1,0 +1,29 @@
+@import 'shared';
+
+.root {
+  @include typography-montserrat-body(700);
+  text-transform: uppercase;
+  padding: px(8) px(24);
+  color: $white;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-bottom-width: thick;
+  border-radius: px(30);
+
+  &.isDisabled {
+    background-color: $gray;
+    border-color: $gray;
+    border-bottom-width: thin;
+    pointer-events: none;
+  }
+
+  &.themeRed {
+    --border-color: #{$dark-blue};
+    --bg-color: #{$red};
+  }
+
+  &.themeBlue {
+    --border-color: #{$white};
+    --bg-color: #{$dark-blue};
+  }
+}
