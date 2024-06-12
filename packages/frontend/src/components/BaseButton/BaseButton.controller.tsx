@@ -1,5 +1,5 @@
 import type { FocusEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react'
-import type { GTMEvent } from '@/services/analytics'
+import type { GAEvent } from '@/services/analytics'
 import type { UrlObject } from 'node:url'
 
 import { forwardRef, memo } from 'react'
@@ -21,7 +21,7 @@ export interface ControllerProps {
   rel?: string
   id?: string
   type?: 'submit' | 'reset' | 'button'
-  gtmEvent?: GTMEvent
+  gaEvent?: GAEvent
   onClick?: (event?: MouseEvent<HTMLElement>) => void
   onFocus?: (event?: FocusEvent<HTMLElement>) => void
   onKeyDown?: (event?: KeyboardEvent<HTMLElement>) => void

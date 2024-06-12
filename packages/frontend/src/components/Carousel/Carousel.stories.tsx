@@ -16,6 +16,7 @@ Default.args = {
         src: 'https://via.placeholder.com/150',
         alt: 'Placeholder image'
       },
+      title: 'Slide 1',
       text: 'Slide 1'
     },
     {
@@ -23,6 +24,7 @@ Default.args = {
         src: 'https://via.placeholder.com/150',
         alt: 'Placeholder image'
       },
+      title: 'Slide 2',
       text: 'Slide 2'
     },
     {
@@ -30,6 +32,7 @@ Default.args = {
         src: 'https://via.placeholder.com/150',
         alt: 'Placeholder image'
       },
+      title: 'Slide 3',
       text: 'Slide 3'
     }
   ]
