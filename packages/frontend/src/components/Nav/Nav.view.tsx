@@ -8,8 +8,6 @@ import { gsap } from 'gsap'
 
 import css from './Nav.module.scss'
 
-import { routes } from '@/data/routes'
-
 import { localStore } from '@/store'
 
 import { useRefs } from '@/hooks/use-refs'

@@ -9,9 +9,6 @@ import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
 
-import SvgThreeSquares from '@/svgs/ThreeSquares.svg'
-import SvgTwoSquares from '@/svgs/TwoSquares.svg'
-
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
