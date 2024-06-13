@@ -16,6 +16,7 @@ export type GameSliceState = {
     isTokenValid?: boolean
     gameId?: string
     highScore?: number
+    playersList?: []
     // setters
     setAccessToken: (token: string) => void
     setIdToken: (token: string) => void
@@ -23,6 +24,7 @@ export type GameSliceState = {
     setIsTokenValid: (isTokenValid: boolean) => void
     setGameId: (gameId: string) => void
     setHighScore: (highScore: number) => void
+    setPlayersList: (playersList: []) => void
     // reset all user data
     resetUser: () => void
   }
@@ -77,6 +79,11 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
         state.user.highScore = highScore
       })
     },
+    setPlayersList: (playersList) => {
+      set((state) => {
+        state.user.playersList = playersList
+      })
+    },
     // reset all user data
     resetUser: () => {
       set((state) => {
@@ -86,6 +93,7 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
         state.user.isTokenValid = undefined
         state.user.gameId = undefined
         state.user.highScore = undefined
+        state.user.playersList = undefined
       })
     }
   },

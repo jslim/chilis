@@ -253,7 +253,7 @@
       "body": {
         "title": "Game Over Page",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "descriptionOver": "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "descriptionOver": "Womp. You didn’t beat the evil fast-food syndicate, this time. Play again to save the Big Smasher.",
         "backgroundVideo": {
           "src": "",
           "poster": "game-over-background.png"
@@ -263,7 +263,6 @@
           "quit": "QUIT GAME",
           "again": "PLAY AGAIN"
         },
-        "ctasDescription": "Lorem ipsum dolor sit amet",
         "heroWin": {
           "src": "you-win.png",
           "alt": "Game Over Win"
