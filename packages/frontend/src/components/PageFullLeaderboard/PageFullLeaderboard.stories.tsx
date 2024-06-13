@@ -5,6 +5,8 @@ import type { ViewProps } from './PageFullLeaderboard.view'
 
 import { useCallback } from 'react'
 
+import { mockArrayOfPlayers } from '@/data/mock/mock-players-data'
+
 import { CmsService } from '@/services/cms'
 
 import { View } from './PageFullLeaderboard.view'
@@ -15,7 +17,7 @@ export const Default: StoryFn<ViewProps> = (args) => {
   const handleReady = useCallback((pageHandle?: RefObject<PageHandle>) => {
     pageHandle?.current?.animateIn()
   }, [])
-  return <View {...args} onReady={handleReady} />
+  return <View {...args} onReady={handleReady} arrayOfPlayers={mockArrayOfPlayers} />
 }
 
 Default.args = {

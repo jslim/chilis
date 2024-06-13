@@ -19,9 +19,9 @@ export type FormFields = {
 }
 
 export type Player = {
-  rank: string
   nickname: string
-  score: string
+  score: number
+  rank?: number
 }
 
 export type ApiResponse = {

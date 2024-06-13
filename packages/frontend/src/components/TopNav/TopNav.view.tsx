@@ -1,6 +1,6 @@
 import type { ControllerProps } from './TopNav.controller'
 
-import { type FC, useState } from 'react'
+import { type FC, useCallback, useState } from 'react'
 import classNames from 'classnames'
 
 import css from './TopNav.module.scss'
@@ -37,10 +37,41 @@ export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) =>
     setIsModalOpen(false)
   }
 
-  const handleNavigateBack = () => {
+  const handleNavigateBack = useCallback(() => {
     setIsModalOpen(false)
     navigateBack()
-  }
+  }, [navigateBack])
+
+  const renderBackButtonSlot = useCallback(() => {
+    switch (currentRoute) {
+      // @NOTE: Back button with modal confirmation
+      case routes.GAME: {
+        return (
+          <BaseButton className={css.logoContainer} onClick={() => setIsModalOpen(true)}>
+            <SvgBack />
+          </BaseButton>
+        )
+      }
+      // @NOTE: Back button with back router navigation
+      case routes.TERMS:
+      case routes.FAQ:
+      case routes.FULL_LEADERBOARD: {
+        return (
+          <BaseButton className={css.logoContainer} onClick={handleNavigateBack}>
+            <SvgBack />
+          </BaseButton>
+        )
+      }
+      // @NOTE: Logo button pointing to home [chillis logo]
+      default: {
+        return (
+          <BaseButton className={css.logoContainer} href={routes.HOME}>
+            <ChilisSvg />
+          </BaseButton>
+        )
+      }
+    }
+  }, [currentRoute, handleNavigateBack])
 
   return (
     <nav className={classNames('TopNav', css.root, className)} ref={refs.root}>
@@ -64,15 +95,7 @@ export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) =>
         </BaseModal>
       )}
       <div className={css.wrapper}>
-        {currentRoute !== routes.GAME ? (
-          <BaseButton className={css.logoContainer} href={routes.HOME}>
-            <ChilisSvg />
-          </BaseButton>
-        ) : (
-          <BaseButton className={css.logoContainer} onClick={() => setIsModalOpen(true)}>
-            <SvgBack />
-          </BaseButton>
-        )}
+        {renderBackButtonSlot()}
 
         <BaseButton className={css.button} onClick={onClick} disabled={isDisabled}>
           {text}
