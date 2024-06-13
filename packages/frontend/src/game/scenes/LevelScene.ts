@@ -21,6 +21,7 @@ import { GamepadInput } from '@/game/components/input/GamepadInput'
 import { Input } from '@/game/components/input/Input'
 import { KeyboardInput } from '@/game/components/input/KeyboardInput'
 import { MobileInput } from '@/game/components/input/MobileInput'
+import { OnActionButtonPressed } from '@/game/components/input/OnActionButtonPressed'
 import { Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize } from '@/game/components/level/Burger'
 import { BurgerGroup } from '@/game/components/level/BurgerGroup'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
@@ -424,12 +425,11 @@ export default class LevelScene extends Scene {
     )
     labelNoEntity.position.set(labelEntity.x + labelEntity.width / 2, labelEntity.y + 5)
 
+    const gotoNext = () => this.sceneManager.levelComplete(this.gameState.getValues())
+
     const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
-      new PointerComponent('pointerdown', () => {
-        this.sceneManager.levelComplete(this.gameState.getValues())
-      })
+      new PointerComponent('pointerdown', () => gotoNext())
     )
-    buttonEntity.position.set(0, 0)
 
     screenEntity.addComponent(
       new OnStart(() => {
@@ -439,6 +439,9 @@ export default class LevelScene extends Scene {
     )
     createDelay(this.mainContainer, 1, () => {
       screenEntity.addEntity(buttonEntity)
+
+      // used delayed action to accidental action
+      screenEntity.addEntity(new Entity().addComponent(new OnActionButtonPressed(() => gotoNext())))
     })
 
     this.entity.addEntity(screenEntity)
@@ -452,16 +455,19 @@ export default class LevelScene extends Scene {
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat'))
     screenEntity.position.set(120, 120)
 
+    const gotoNext = () => {
+      this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
+      this.sceneManager.end(this.gameState.getValues())
+    }
     const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
-      new PointerComponent('pointerdown', () => {
-        this.sceneManager.end(this.gameState.getValues())
-        this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
-      })
+      new PointerComponent('pointerdown', () => gotoNext())
     )
-    buttonEntity.position.set(0, 0)
 
     createDelay(this.mainContainer, 1, () => {
       screenEntity.addEntity(buttonEntity)
+
+      // used delayed action to accidental action
+      screenEntity.addEntity(new Entity().addComponent(new OnActionButtonPressed(() => gotoNext())))
     })
 
     this.entity.addEntity(screenEntity)

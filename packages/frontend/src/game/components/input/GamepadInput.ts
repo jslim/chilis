@@ -51,10 +51,11 @@ export class GamepadInput extends Component {
 
     // action button
     const actionPressed =
-      gamepad.buttons[4]?.pressed ||
-      gamepad.buttons[5]?.pressed ||
-      gamepad.buttons[6]?.pressed ||
-      gamepad.buttons[7]?.pressed ||
+      gamepad.buttons[0]?.pressed || // x button
+      gamepad.buttons[4]?.pressed || // shoulder button
+      gamepad.buttons[5]?.pressed || // shoulder button
+      gamepad.buttons[6]?.pressed || // shoulder button
+      gamepad.buttons[7]?.pressed || // shoulder button
       false
 
     // directly write in map
