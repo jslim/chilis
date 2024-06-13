@@ -4,7 +4,10 @@
   position: relative;
   opacity: 0;
   width: 100%;
+  min-height: 100svh;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
 
   .title {
     @include typography-h1;
@@ -16,10 +19,10 @@
   @include flex-center;
   position: relative;
   flex-direction: column;
-  height: px(240);
+  min-height: px(240);
 
   @include media-tablet-large {
-    height: px(343);
+    min-height: px(343);
   }
 
   .wrapper {
@@ -27,9 +30,11 @@
     position: relative;
     flex-direction: column;
     z-index: 0;
+    padding: px(80) 0 px(40);
 
     .heroWrapper {
-      width: px(679);
+      width: min(100%, px(679));
+      padding: $side-spacing;
 
       .hero {
         @include box(100%);
@@ -49,6 +54,7 @@
       color: $sour-cream;
       text-align: center;
       margin-top: px(50);
+      padding: $side-spacing;
     }
   }
 
@@ -62,9 +68,14 @@
   background-image: url('~@/assets/images/noise.png');
   padding: px(40) px(65);
   height: auto;
+  flex: 1;
 
-  @include media-tablet-large {
-    padding: px(180) px(200);
+  @include media-tablet {
+    padding: px(100) px(65);
+  }
+
+  @include media-desktop {
+    padding: px(75) px(65);
   }
 
   .wrapper {

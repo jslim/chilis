@@ -48,6 +48,8 @@ $cookie-banner-padding: px(20);
       position: absolute;
       top: $cookie-banner-padding;
       right: $cookie-banner-padding;
+
+      @include extend-click-box;
     }
 
     .cookieSettingsContent {
@@ -66,7 +68,20 @@ $cookie-banner-padding: px(20);
 
       li {
         display: flex;
-        gap: px(5);
+        align-items: center;
+        gap: px(10);
+
+        input[type='checkbox'] {
+          position: relative;
+          width: px(20);
+          height: px(20);
+
+          @include extend-click-box;
+        }
+
+        label {
+          text-transform: capitalize;
+        }
       }
     }
   }
@@ -74,6 +89,6 @@ $cookie-banner-padding: px(20);
   .buttonContainer {
     display: flex;
     flex-wrap: wrap;
-    gap: px(20);
+    gap: px(10) px(20);
   }
 }

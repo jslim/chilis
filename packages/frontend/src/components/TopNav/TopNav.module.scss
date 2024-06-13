@@ -9,7 +9,7 @@
   width: 100%;
   justify-content: space-between;
   margin-top: px(20);
-  padding: 0 px(20);
+  padding: $side-spacing;
   height: $navbar-height-mobile;
 
   @include media-tablet-large {
