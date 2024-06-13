@@ -35,8 +35,9 @@ export class MobileInput extends Component {
     Object.assign(joystickContainer.style, {
       position: 'absolute',
       zIndex: '7',
-      bottom: '10rem',
-      left: '3.5%',
+      bottom: '50%',
+      left: 'calc(25vw - 50vh)',
+      transform: 'translate(50%, 50%)',
       width: `${Math.trunc(scaleX * 78)}px`,
       height: `${Math.trunc(scaleX * 82)}px`,
       imageRendering: 'pixelated',
@@ -74,9 +75,9 @@ export class MobileInput extends Component {
       imageRendering: 'pixelated',
       backgroundImage: 'url("/game/mobile-action-button-up.png")',
       backgroundSize: 'cover',
-      bottom: '10rem',
-      right: '3.5%',
-      transform: 'translate(0, 0)',
+      bottom: '50%',
+      right: 'calc(25vw - 25vh)',
+      transform: 'translate(50%, 50%)',
       cursor: 'pointer'
     })
     gameContainer.append(actionButton)
