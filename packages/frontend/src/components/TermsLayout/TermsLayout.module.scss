@@ -26,23 +26,78 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+  gap: px(40);
   position: relative;
-  padding: px(40) px(65);
   text-align: left;
+  padding: px(40) px(35);
+
+  @include media-tablet {
+    gap: px(45);
+    padding: px(40) px(65);
+  }
 
   @include media-tablet-large {
     padding: px(180) px(200);
   }
 
-  p {
-    @include font-size(20, 24);
-    @include font-family(Montserrat, 500);
-    color: $black;
-  }
+  .block {
+    padding-bottom: px(40);
 
-  strong {
-    @include font-size(30, 36);
-    @include font-family(Montserrat, 700);
-    color: $night;
+    @include media-tablet {
+      padding-bottom: px(60);
+    }
+
+    &:not(:last-child) {
+      border-bottom: 0.5px solid $night;
+    }
+
+    .blockTitle {
+      @include font-size(26, 32);
+      @include font-family(Montserrat, 700);
+      color: $night;
+      margin-bottom: px(25);
+      text-decoration: underline;
+
+      @include media-tablet {
+        @include font-size(30, 36);
+        margin-bottom: px(30);
+      }
+    }
+
+    .questions {
+      display: flex;
+      flex-direction: column;
+      gap: px(25);
+
+      @include media-tablet {
+        gap: px(30);
+      }
+    }
+
+    .question {
+      .questionTitle {
+        @include font-size(20, 24);
+        @include font-family(Montserrat, 700);
+        color: $night;
+        margin-bottom: px(15);
+
+        @include media-tablet {
+          @include font-size(24, 28);
+          margin-bottom: px(20);
+        }
+      }
+
+      .paragraph {
+        @include font-size(16, 20);
+        @include font-family(Montserrat, 500);
+        color: $black;
+
+        @include media-tablet {
+          @include font-size(20, 24);
+        }
+      }
+    }
   }
 }
