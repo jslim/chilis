@@ -9,7 +9,7 @@ export function initGsap() {
 
   gsap.registerPlugin(CustomEase, ScrollToPlugin)
 
-  gsap.defaults({ ease: 'none', duration: 0.667 })
+  gsap.defaults({ ease: 'none', duration: 0.334 })
 
   favouriteEases.forEach((ease) => {
     CustomEase.create(ease.name, ease.ease)
@@ -18,6 +18,4 @@ export function initGsap() {
   customEases.forEach((ease) => {
     CustomEase.create(ease.name, ease.ease)
   })
-
-  gsap.registerEffect(require('@/motion/effects/fade/fadeIn/fadeIn').default)
 }
