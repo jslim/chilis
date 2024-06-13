@@ -75,6 +75,8 @@ export class Scene extends Component {
     textField.on('pointerout', () => (textField.alpha = 1))
     this.entity.addChild(textField)
 
+    textField.scale.set(2)
+
     /*
     let textBounds = textField.getBounds();
     let graphics = new Graphics()
