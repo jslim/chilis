@@ -14,11 +14,13 @@ import { localState, localStore } from '@/store'
 import { initializeGame } from '@/services/game'
 
 import { getImageUrl } from '@/utils/basic-functions'
-import { Endpoints, fetchApi } from '@/utils/fetchApi'
+import { Endpoints, fetchApi } from '@/utils/fetch-api'
 
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseImage } from '@/components/BaseImage'
+
+import usePauseGameInstance from '@/hooks/use-pause-game-instance'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -31,10 +33,11 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const refs = useRefs<ViewRefs>()
   const [showGameBorder, setShowGameBorder] = useState<boolean>(false)
   const isModalOpen = localStore().screen.isModalOpen
-  const [isPaused, setIsPaused] = useState<boolean>(false)
   const [gameInstance, setGameInstance] = useState<GameController>()
   const { push } = useRouter()
   const accessToken = localStore().user.accessToken
+
+  usePauseGameInstance(isModalOpen)
 
   const onGameStarted = useCallback(async () => {
     if (!accessToken) return
@@ -90,21 +93,9 @@ export const View: FC<ViewProps> = ({ className, background }) => {
     }
   }, [gameInstance, onGameStarted, push])
 
-  useEffect(() => {
-    if (!gameInstance) return
-
-    if (isModalOpen && !isPaused) {
-      gameInstance.pause()
-      setIsPaused(true)
-    } else if (!isModalOpen && isPaused) {
-      gameInstance.resume()
-      setIsPaused(false)
-    }
-  }, [isModalOpen, isPaused, gameInstance])
-
   return (
     <div className={classNames('Container', css.root, className, { [css.hasBorder]: showGameBorder })} ref={refs.root}>
-      {showGameBorder && <BaseImage className={css.background} data={getImageUrl(background)} alt="" />}
+      {showGameBorder ? <BaseImage className={css.background} data={getImageUrl(background)} alt="" /> : null}
       {/* Game Container */}
       <div id="app" />
     </div>

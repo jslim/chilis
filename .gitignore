@@ -1,20 +1,44 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # dependencies
 node_modules
+.pnp
+.pnp.js
+
+# dependencies
 
 # sst
 .sst
 .build
+.next
+cdk.context.json
 
 # opennext
 .open-next
 
+# production
+build
+dist
+out
+out-*
+
 # misc
 .DS_Store
+*.pem
+.generated
+.idea
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # local env files
 .env*.local
 
-# 
+# typescript
+
+#
 *.lnk
 RECOVER_*.fla
 .idea/

@@ -69,15 +69,15 @@
       text-align: center;
       z-index: 0;
 
-      &:before,
-      &:after {
+      &::before,
+      &::after {
         @include font-family(Gamer, 500);
         @include font-size(64);
       }
 
       &::after {
-        content: attr(data-text);
         @include position-100(absolute);
+        content: attr(data-text);
         top: px(-7);
         z-index: -1;
       }
@@ -89,14 +89,14 @@
         color: $sunrise;
 
         &::before {
-          content: attr(data-text);
           @include position-100(absolute);
+          content: attr(data-text);
           top: px(-15);
           color: $ranch;
           z-index: -1;
         }
 
-        &:after {
+        &::after {
           color: $red;
         }
       }

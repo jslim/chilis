@@ -5,7 +5,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 
 import { localState } from '@/store'
 
-import { Endpoints, fetchApi } from '@/utils/fetchApi'
+import { Endpoints, fetchApi } from '@/utils/fetch-api'
 
 import { View } from './PageFullLeaderboard.view'
 
@@ -14,7 +14,7 @@ export interface ControllerProps extends PageProps<'fullLeaderboard'> {}
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
 export const Controller: FC<ControllerProps> = memo((props) => {
   const [arrayOfPlayers, setArrayOfPlayers] = useState<ApiResponse['data']>([])
-  //  const [loading, setLoading] = useState<boolean>(true) TODO: in case we need to show a loading spinner
+  // const [loading, setLoading] = useState<boolean>(true) TODO: in case we need to show a loading spinner
   // const [error, setError] = useState<string | null>(null) TODO: in case we need to show an error message
   const userToken = localState().user.accessToken
 

@@ -5,7 +5,7 @@ import classNames from 'classnames'
 
 import css from './ScreenLowBattery.module.scss'
 
-import useGameInstance from '@/hooks/use-game-instance'
+import usePauseGameInstance from '@/hooks/use-pause-game-instance'
 import { useRefs } from '@/hooks/use-refs'
 
 import { FallbackContainer } from '@/components/FallbackContainer'
@@ -20,7 +20,7 @@ export type ViewRefs = {
 
 export const View: FC<ViewProps> = ({ className, content, enable }) => {
   const refs = useRefs<ViewRefs>()
-  useGameInstance(enable)
+  usePauseGameInstance(enable)
 
   return enable ? (
     <div className={classNames('ScreenLowBattery', css.root, className)} ref={refs.root}>
