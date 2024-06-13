@@ -7,7 +7,6 @@ import type LevelScene from '@/game/scenes/LevelScene'
 
 import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Player } from '@/game/components/player/Player'
-import { createDelay } from '@/game/core/Delay'
 import { sortByDistanceTo } from '@/game/utils/array.utils'
 import { clamp01, lerp, lerpColor } from '@/game/utils/math.utils'
 
@@ -121,9 +120,7 @@ export class Cpu extends Component {
 
         case 'attack_complete': {
           this.attackCoolDown.reset()
-          if (this.autoCompleteAttack) {
-            createDelay(this.entity, 0.1, () => (this.state.value = 'walk'))
-          }
+          this.state.value = 'walk'
           break
         }
       }
