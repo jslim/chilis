@@ -2,12 +2,12 @@ import { Point } from 'pixi.js'
 
 import { Bullet } from '@/game/components/level/Bullet'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { getOppositeDirection } from '@/game/components/Mover'
 
 import { createDelay } from '../../core/Delay'
 import { Entity } from '../../core/Entity'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
-import { getOppositeDirection } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 
@@ -30,8 +30,6 @@ export class Piggles extends Cpu {
     this.subscribe(this.state.onChanged, (state) => {
       switch (state) {
         case 'attack': {
-          this.isAttackDemonstration = false
-
           this.level!.screenShake(4, 0.3)
           const playerHitBoxRect = this.entity
 
@@ -52,11 +50,12 @@ export class Piggles extends Cpu {
 
           createDelay(this.entity, 0.3, () => {
             this.level?.containers.mid.addEntity(bullet)
-            createDelay(
-              this.entity,
-              0.3,
-              () => (mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value))
-            )
+            createDelay(this.entity, 0.3, () => {
+              if (!this.isAttackDemonstration) {
+                mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
+              }
+              this.isAttackDemonstration = false
+            })
           })
 
           break
