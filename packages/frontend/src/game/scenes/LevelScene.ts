@@ -456,7 +456,7 @@ export default class LevelScene extends Scene {
 
     const gotoNext = () => {
       this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
-      this.sceneManager.end(this.gameState.getValues())
+      this.sceneManager.gameOver(this.gameState.getValues())
     }
     const buttonEntity = new Entity().addComponent(new SimpleButton('button_next', () => gotoNext()))
     buttonEntity.position.set(0, 12)

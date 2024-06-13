@@ -16,6 +16,7 @@ import SceneManager from './scenes/SceneManager'
 export class GameController {
   public onLevelComplete = new Signal<GameStateValues>()
   public onGameOver = new Signal<GameStateValues>()
+  public onGameEnd = new Signal<GameStateValues>()
   public onGameAction = new Signal<GameAction>()
   public onShowGameBorder = new Signal<boolean>()
 

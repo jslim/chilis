@@ -16,6 +16,7 @@ export const assetsManifest = {
         [`button_next`]: `${GAME_ASSETS_BASE_URL}button-next.png`,
         [`button_skip`]: `${GAME_ASSETS_BASE_URL}button-skip.png`,
         [`button_start`]: `${GAME_ASSETS_BASE_URL}button-start.png`,
+        [`screen_end`]: `${GAME_ASSETS_BASE_URL}screen-end.png`,
         [`flump/atlas`]: `${GAME_ASSETS_BASE_URL}game/atlas0.png`,
         [`flump/json`]: `${GAME_ASSETS_BASE_URL}game/library.json`
       }

@@ -74,10 +74,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
       game.onShowGameBorder.subscribe(setShowGameBorder)
       game.onGameOver.subscribe(() => push(routes.GAME_OVER))
-      game.onLevelComplete.subscribe((data) => {
-        if (data.level === 18) {
-          push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
-        }
+      game.onGameEnd.subscribe(() => {
+        push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
       })
     }
 
