@@ -1,7 +1,7 @@
 import type { GameController } from '@/game/GameController'
 import type { ControllerProps } from './Container.controller'
 
-import { type FC, useEffect, useState } from 'react'
+import { type FC, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 
@@ -9,11 +9,12 @@ import css from './Container.module.scss'
 
 import { routes } from '@/data/routes'
 
-import { localStore } from '@/store'
+import { localState, localStore } from '@/store'
 
 import { initializeGame } from '@/services/game'
 
 import { getImageUrl } from '@/utils/basic-functions'
+import { Endpoints, fetchApi } from '@/utils/fetchApi'
 
 import { useRefs } from '@/hooks/use-refs'
 
@@ -33,11 +34,44 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const [isPaused, setIsPaused] = useState<boolean>(false)
   const [gameInstance, setGameInstance] = useState<GameController>()
   const { push } = useRouter()
+  const accessToken = localStore().user.accessToken
+
+  const onGameStarted = useCallback(async () => {
+    if (!accessToken) return
+    try {
+      const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.GAME}`, undefined, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const apiResponse = response as { gameId: number }
+
+      console.log('Game started:', apiResponse)
+
+      if (!apiResponse.gameId) {
+        console.error('Submission failed:', apiResponse)
+      } else {
+        localState().user.setGameId(String(apiResponse.gameId))
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }, [accessToken])
 
   useEffect(() => {
     const initGame = async () => {
       const game = await initializeGame()
       setGameInstance(game)
+
+      game.onGameAction.subscribe((data) => {
+        if (data.a === 'start') {
+          onGameStarted()
+        }
+      })
+
       game.onShowGameBorder.subscribe(setShowGameBorder)
       game.onGameOver.subscribe(() => push(routes.GAME_OVER))
       game.onLevelComplete.subscribe((data) => {
@@ -47,12 +81,10 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       })
     }
 
-    initGame()
-
-    return () => {
-      // TODO: clean up game instance
+    if (!gameInstance) {
+      initGame()
     }
-  }, [push])
+  }, [gameInstance, onGameStarted, push])
 
   useEffect(() => {
     if (!gameInstance) return

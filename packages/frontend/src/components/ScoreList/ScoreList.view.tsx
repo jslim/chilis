@@ -54,12 +54,12 @@ export const View: FC<ViewProps> = ({
         ))}
       </ul>
 
-      {currentPlayer && (
+      {currentPlayer?.nickname && (
         <div className={css.currentPlayer}>
           <h3 className={css.rankTitle}>{currentRankText}</h3>
           <div className={classNames(css.item, css.current)}>
             <span className={css.player}>
-              {currentPlayer.rank} {truncateText(currentPlayer.nickname, 9)}
+              {Number(currentPlayer.rank) > 500 ? '???' : currentPlayer.rank} {truncateText(currentPlayer.nickname, 9)}
             </span>
             <span className={css.score}>{currentPlayer.score}</span>
           </div>
