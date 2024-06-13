@@ -69,6 +69,12 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       game.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
           onGameStarted()
+          game.setHighScore(localState().user.highScore ?? 0)
+        }
+
+        if (data.a === 'complete' && data.s) {
+          game.setHighScore(data.s)
+          localState().user.setHighScore(data.s)
         }
       })
 

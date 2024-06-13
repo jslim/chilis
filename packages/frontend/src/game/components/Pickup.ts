@@ -40,7 +40,7 @@ export class Pickup extends Component {
   }
 
   override destroy() {
-    this.entity.getComponent(LevelComponent)?.level.playSound('pickup_disappears')
+    this.entity?.getComponent(LevelComponent)?.level?.playSound('pickup_disappears')
     super.destroy()
   }
 }
