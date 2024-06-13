@@ -5,7 +5,6 @@ import type { TiledLayerPath, TiledWalkGrid } from '@/game/utils/tiles.utils'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
-import { PointerComponent } from '@/game/button/PointerComponent'
 import { BurgerTron } from '@/game/components/cpu/BurgerTron'
 import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
 import { Cpu } from '@/game/components/cpu/Cpu'
@@ -35,6 +34,7 @@ import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 import { GameUI } from '@/game/components/ui/GameUI'
 import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
 import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
+import { SimpleButton } from '@/game/display/SimpleButton'
 import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
@@ -427,9 +427,8 @@ export default class LevelScene extends Scene {
 
     const gotoNext = () => this.sceneManager.levelComplete(this.gameState.getValues())
 
-    const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
-      new PointerComponent('pointerdown', () => gotoNext())
-    )
+    const buttonEntity = new Entity().addComponent(new SimpleButton('button_next', () => gotoNext()))
+    buttonEntity.position.set(0, 12)
 
     screenEntity.addComponent(
       new OnStart(() => {
@@ -459,9 +458,8 @@ export default class LevelScene extends Scene {
       this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
       this.sceneManager.end(this.gameState.getValues())
     }
-    const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
-      new PointerComponent('pointerdown', () => gotoNext())
-    )
+    const buttonEntity = new Entity().addComponent(new SimpleButton('button_next', () => gotoNext()))
+    buttonEntity.position.set(0, 12)
 
     createDelay(this.mainContainer, 1, () => {
       screenEntity.addEntity(buttonEntity)
@@ -580,23 +578,22 @@ export default class LevelScene extends Scene {
   }
 
   private showKeyBoardControls() {
-    // pause after 1 frame
-    createDelay(this.entity, 1 / 30, () => this.sceneManager.pause())
-
     const panelSprite = this.flumpLibrary.createSprite('controls')
     const panelEntity = new Entity(panelSprite)
-    panelEntity.x = GAME_WIDTH / 2
-    panelEntity.y = GAME_HEIGHT / 2
+    panelEntity.position.set(GAME_WIDTH / 2, GAME_HEIGHT / 2)
+
+    const buttonEntity = new Entity().addComponent(
+      new SimpleButton('button_start', () => {
+        this.sceneManager.resume()
+        panelEntity.destroy()
+      })
+    )
+    buttonEntity.position.set(0, 42)
+    panelEntity.addEntity(buttonEntity)
 
     createDelay(this.entity, 1 / 30, () => {
-      this.entity.addEntity(
-        panelEntity.addComponent(
-          new PointerComponent('pointerdown', () => {
-            this.sceneManager.resume()
-            panelEntity.destroy()
-          })
-        )
-      )
+      this.entity.addEntity(panelEntity)
+      createDelay(this.entity, 1 / 10, () => this.sceneManager.pause())
     })
   }
 }

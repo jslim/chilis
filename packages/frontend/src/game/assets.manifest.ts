@@ -13,6 +13,9 @@ export const assetsManifest = {
         [`pix_gamer_numbers`]: `${GAME_ASSETS_BASE_URL}pix-gamer-numbers.png`,
         [`background`]: `${GAME_ASSETS_BASE_URL}background.png`,
         [`player_pepper`]: `${GAME_ASSETS_BASE_URL}player-pepper.png`,
+        [`button_next`]: `${GAME_ASSETS_BASE_URL}button-next.png`,
+        [`button_skip`]: `${GAME_ASSETS_BASE_URL}button-skip.png`,
+        [`button_start`]: `${GAME_ASSETS_BASE_URL}button-start.png`,
         [`flump/atlas`]: `${GAME_ASSETS_BASE_URL}game/atlas0.png`,
         [`flump/json`]: `${GAME_ASSETS_BASE_URL}game/library.json`
       }
