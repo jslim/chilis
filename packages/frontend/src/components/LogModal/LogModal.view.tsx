@@ -23,8 +23,6 @@ import { BaseImage } from '@/components/BaseImage'
 import { CloseButton } from '@/components/CloseButton'
 
 import SvgChilis from '@/svgs/Chilis.svg'
-import SvgThreeSquares from '@/svgs/ThreeSquares.svg'
-import SvgTwoSquares from '@/svgs/TwoSquares.svg'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -124,86 +122,85 @@ export const View: FC<ViewProps> = ({
 
   return (
     <div className={classNames('LogModal', css.root, className)} ref={refs.root}>
-      <CloseButton className={css.close} onClick={onClose} />
-      <div className={css.top}>
-        <div className={classNames(css.squares, css.leftSquare)}>
-          <SvgTwoSquares />
-        </div>
-        <div className={classNames(css.squares, css.rightSquare)}>
-          <SvgThreeSquares />
-        </div>
+      <div className={css.wrapper}>
+        <CloseButton className={css.close} onClick={onClose} />
+        <div className={css.top}>
+          <div className={css.logoContainer}>
+            <SvgChilis />
+          </div>
 
-        <div className={css.logoContainer}>
-          <SvgChilis />
-        </div>
-
-        {!localStore().user.isTokenValid ? (
-          <>
-            <div className={css.title} {...copy.html(title)} />
-            <div className={css.description} {...copy.html(description)} />
-            <BaseForm
-              onSubmit={handleLoginSubmit}
-              submitMessage={cta}
-              errorMessage={errorMessage}
-              hasError={hasError}
-              disabled={phoneValue === '' || passwordValue === ''}
-            >
-              <div className={css.fieldsContainer}>
-                <input
-                  type="text"
-                  id="phone"
-                  name="phone"
-                  placeholder={phone}
-                  onChange={(e) => setPhoneValue(e.target.value)}
-                  required
-                />
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder={password}
-                  onChange={(e) => setPasswordValue(e.target.value)}
-                  required
-                />
-              </div>
-            </BaseForm>
-
-            <div className={css.forgotPassword}>
-              <BaseButton href={routes.HOME}>{forgotPassword}</BaseButton>
-            </div>
-          </>
-        ) : (
-          hasLogged &&
-          !preferredNickname && (
+          {!localStore().user.isTokenValid ? (
             <>
-              <div className={css.title} {...copy.html(nicknameTitle)} />
-              <div className={css.description} {...copy.html(nicknameDescription)} />
-              <BaseForm onSubmit={handleNicknameSubmit} submitMessage={nicknameCta} errorMessage={errorMessageNickname}>
+              <div className={css.title} {...copy.html(title)} />
+              <div className={css.description} {...copy.html(description)} />
+              <BaseForm
+                onSubmit={handleLoginSubmit}
+                submitMessage={cta}
+                errorMessage={errorMessage}
+                hasError={hasError}
+                disabled={phoneValue === '' || passwordValue === ''}
+              >
                 <div className={css.fieldsContainer}>
                   <input
                     type="text"
-                    id="nickname"
-                    name="nickname"
-                    placeholder={nickname}
-                    onChange={(e) => setNicknameValue(e.target.value)}
+                    id="phone"
+                    name="phone"
+                    placeholder={phone}
+                    onChange={(e) => setPhoneValue(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder={password}
+                    onChange={(e) => setPasswordValue(e.target.value)}
                     required
                   />
                 </div>
               </BaseForm>
-            </>
-          )
-        )}
-      </div>
-      <div className={css.bottom}>
-        <div className={css.chillieContainer}>
-          <BaseImage className={css.chillie} data={getImageUrl(decoration)} />
-        </div>
 
-        <div className={css.skipContainer}>
-          <p className={css.label} {...copy.html(skipLabel)} />
-          <BaseButton className={css.skipButton} onClick={onClose}>
-            {skip}
-          </BaseButton>
+              <div className={css.forgotPassword}>
+                <BaseButton href={routes.HOME}>{forgotPassword}</BaseButton>
+              </div>
+            </>
+          ) : (
+            hasLogged &&
+            !preferredNickname && (
+              <>
+                <div className={css.title} {...copy.html(nicknameTitle)} />
+                <div className={css.description} {...copy.html(nicknameDescription)} />
+                <BaseForm
+                  onSubmit={handleNicknameSubmit}
+                  submitMessage={nicknameCta}
+                  errorMessage={errorMessageNickname}
+                >
+                  <div className={css.fieldsContainer}>
+                    <input
+                      type="text"
+                      id="nickname"
+                      name="nickname"
+                      placeholder={nickname}
+                      onChange={(e) => setNicknameValue(e.target.value)}
+                      required
+                    />
+                  </div>
+                </BaseForm>
+              </>
+            )
+          )}
+        </div>
+        <div className={css.bottom}>
+          <div className={css.chillieContainer}>
+            <BaseImage className={css.chillie} data={getImageUrl(decoration)} />
+          </div>
+
+          <div className={css.skipContainer}>
+            <p className={css.label} {...copy.html(skipLabel)} />
+            <BaseButton className={css.skipButton} onClick={onClose}>
+              {skip}
+            </BaseButton>
+          </div>
         </div>
       </div>
     </div>

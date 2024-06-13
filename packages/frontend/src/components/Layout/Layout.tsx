@@ -255,6 +255,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <Head {...pageProps.content.head} />
 
       <TopNav
+        content={pageProps.content.common.topNav}
         text={localStore().user.nickname ? localState().user.nickname : pageProps.content.common.topNav.logIn}
         onClick={() => localState().screen.setIsModalOpen(true)}
         isDisabled={!!localState().user.nickname} // TODO: add a validation here to verify the token, so on ref the user stays logged in

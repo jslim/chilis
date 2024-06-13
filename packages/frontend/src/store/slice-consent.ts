@@ -4,7 +4,7 @@ import type { StateCreator } from 'zustand'
 import { CookieService } from '@/services/cookie'
 
 export type CookieConsent = {
-  necessary: boolean
+  // necessary: boolean
   statistics: boolean
 }
 

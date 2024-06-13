@@ -14,7 +14,7 @@
 
   .playButton {
     @include z-index(pages);
-    position: absolute;
+    position: fixed;
     left: 50%;
     bottom: px(100);
     transform: translateX(-50%);

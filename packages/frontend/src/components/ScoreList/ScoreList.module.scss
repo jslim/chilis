@@ -34,7 +34,8 @@
 }
 
 .item {
-  @include flex-center-vert;
+  display: flex;
+  align-items: baseline;
   justify-content: space-between;
   gap: px(10);
   margin-right: px(25);

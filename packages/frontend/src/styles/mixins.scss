@@ -263,8 +263,8 @@
 
 @mixin discreet-scrollbar() {
   --scrollbar-width: 10px;
-  --scrollbar-color: rgba(255, 255, 255, 0.4);
-  --scrollbar-color-hover: rgba(255, 255, 255, 0.4);
+  --scrollbar-color: rgba(0, 0, 0, 0.4);
+  --scrollbar-color-hover: rgba(0, 0, 0, 0.4);
   --scrollbar-track-color: transparent;
 
   &::-webkit-scrollbar {
@@ -299,4 +299,12 @@
   -webkit-text-stroke-width: $size;
   -webkit-text-stroke-color: $color;
   color: transparent;
+}
+
+@mixin extend-click-box($px: 20) {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: px(-$px);
+  }
 }
