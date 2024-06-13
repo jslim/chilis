@@ -12,11 +12,5 @@ export class IntroScene extends Scene {
 
   private async gotoLevel(level: number) {
     this.sceneManager.showLevelIntro(level)
-
-    try {
-      //this.sceneManager.app.renderer.canvas.parentElement?.requestFullscreen();
-    } catch {
-      console.log("Please don't buy an iphone")
-    }
   }
 }

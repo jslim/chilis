@@ -2,6 +2,8 @@ import type { FlumpLibrary } from './FlumpLibrary'
 
 import { Container } from 'pixi.js'
 
+import { GAME_LOGS } from '@/game/game.config'
+
 import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
 import { FlumpMovieSprite } from './FlumpMovieSprite'
@@ -28,16 +30,14 @@ export class FlumpAnimator extends Component {
 
   public setMovie(movieName: string) {
     if (!this.library.hasMovie(movieName)) {
-      console.warn(`Movie ${movieName} not found, skipped`)
+      if (GAME_LOGS) console.warn(`Movie ${movieName} not found, skipped`)
       return this
     }
     if (!this.currentMovie.value || this.currentMovie.value.movieName !== movieName) {
       if (this.cache.has(movieName) && this.useCache) {
-        //console.log("set movie [cache]", movieName);
         this.currentMovie.value = this.cache.get(movieName)!
       } else {
         this.cache.set(movieName, new FlumpMovieSprite(this.library, movieName))
-        //console.log("set movie [new]", movieName, this.cache.get(movieName));
         this.currentMovie.value = this.cache.get(movieName)!
       }
     }

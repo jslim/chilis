@@ -106,7 +106,6 @@ export default class LevelScene extends Scene {
     } else {
       this.sceneManager.frameRate = FRAME_RATE_HARDEST
     }
-    console.log('frame rate', this.sceneManager.frameRate)
 
     this.entity.addChild(new Sprite(Assets.get('background')))
 

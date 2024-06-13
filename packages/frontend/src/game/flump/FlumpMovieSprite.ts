@@ -131,12 +131,10 @@ export class FlumpMovieSprite extends Container {
     }
     this.setFrame(this.currentFrame)
 
-    if (this.movieName.includes('panel')) console.log('update')
     this.movieData.layers.forEach((layer, idx) => {
       const movieSprite = this.movieLayers[idx]
       if (movieSprite) {
         movieSprite.update()
-        console.log('update', idx, movieSprite.movieName)
       }
     })
   }

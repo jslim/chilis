@@ -1,3 +1,5 @@
+import { GAME_LOGS } from '@/game/game.config'
+
 import { Component } from '../../core/Entity'
 import { Input } from './Input'
 
@@ -9,13 +11,14 @@ export class GamepadInput extends Component {
   }
 
   onGamepadConnected(event: GamepadEvent) {
-    console.log(
-      `Gamepad connected at index ${event.gamepad.index}: ${event.gamepad.id}. ${event.gamepad.buttons.length} buttons, ${event.gamepad.axes.length} axes.`
-    )
+    if (GAME_LOGS)
+      console.log(
+        `Gamepad connected at index ${event.gamepad.index}: ${event.gamepad.id}. ${event.gamepad.buttons.length} buttons, ${event.gamepad.axes.length} axes.`
+      )
   }
 
   onGamepadDisconnected(event: GamepadEvent) {
-    console.log(`Gamepad disconnected from index ${event.gamepad.index}: ${event.gamepad.id}`)
+    if (GAME_LOGS) console.log(`Gamepad disconnected from index ${event.gamepad.index}: ${event.gamepad.id}`)
   }
 
   override onUpdate(dt: number) {

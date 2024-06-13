@@ -20,8 +20,9 @@ export const GAME_SOUNDS_BASE_URL = IS_ARCADE_BUILD ? './sounds/' : '/sounds/'
 
 /* DEBUG */
 
-export const DEBUG_KEYS = false //!IS_PRODUCTION_BUILD
-export const DEBUG_SCENES_FROM_URL = false //!IS_PRODUCTION_BUILD
+export const GAME_LOGS = !IS_PRODUCTION_BUILD
+export const DEBUG_KEYS = !IS_PRODUCTION_BUILD
+export const DEBUG_SCENES_FROM_URL = !IS_PRODUCTION_BUILD
 
 export const DRAW_DEBUG_GRID = false
 export const DRAW_CPU_DEBUG = false

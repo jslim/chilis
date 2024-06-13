@@ -77,7 +77,6 @@ export class GameController {
         }
       }
     } else {
-      console.log('Starting intro scene')
       sceneManager.showLevelIntro(1)
     }
     // debug key to go back to intro scene
