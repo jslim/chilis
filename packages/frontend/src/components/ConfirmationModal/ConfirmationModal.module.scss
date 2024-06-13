@@ -1,0 +1,39 @@
+@import 'shared';
+
+.root {
+  @include flex-center;
+
+  .container {
+    @include flex-center;
+    position: absolute;
+    flex-direction: column;
+    background-color: $sour-cream;
+    border-radius: px(20);
+    padding: px(20);
+    overflow: hidden;
+
+    .description {
+      @include typography-montserrat-body;
+    }
+
+    .close {
+      position: absolute;
+      top: px(20);
+      right: px(30);
+
+      @include extend-click-box;
+    }
+
+    .buttonContainer {
+      @include flex-center;
+      gap: px(10);
+      margin-top: px(20);
+    }
+
+    .goBack,
+    .stay {
+      white-space: nowrap;
+      border-bottom-width: 1px;
+    }
+  }
+}

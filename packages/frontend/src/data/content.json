@@ -31,20 +31,23 @@
         }
       ]
     },
-    "backModal": {
-      "description": "Are you sure?",
-      "ctas": {
-        "yes": "yes go back",
-        "no": "no stay here"
+    "topNav": {
+      "logIn": "LOG IN",
+      "LogOut": "LOG OUT",
+      "backModal": {
+        "description": "Are you sure?",
+        "ctas": {
+          "confirm": "yes go back",
+          "deny": "no stay here"
+        }
       }
     },
-    "topNav": { "logIn": "LOG IN", "LogOut": "LOG OUT" },
     "logModal": {
       "title": "BURGERS FOR LIFE",
-      "description": "Login for a chance to win burgers for life lorem. Template copy m ipsum dolor sit amet, consectetur adipiscing elit, sed dadsao eiusmod tempor incididunt ut labore et dolore magna.",
+      "description": "To get added to the leaderboard and entered to win prizes, login below. If not you don’t have an account yet, click the sign up button below. Once created, come back to this page and login.",
       "cta": "LOG IN",
       "forgotPassword": "Forgot or Create your Password?",
-      "skipLabel": "Don't want to log in right now?",
+      "skipLabel": "Want to just play without getting on the leaderboard?",
       "skip": "SKIP",
       "phone": "PHONE",
       "password": "PASSWORD",

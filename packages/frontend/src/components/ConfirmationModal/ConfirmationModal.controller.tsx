@@ -3,14 +3,14 @@ import type { CommonContent } from '@/services/cms'
 
 import { memo } from 'react'
 
-import { View } from './TopNav.view'
+import { View } from './ConfirmationModal.view'
 
 export interface ControllerProps {
   className?: string
-  text?: string
-  isDisabled?: boolean
-  onClick?: () => void
-  content: CommonContent['topNav']
+  show: boolean
+  handleClose: () => void
+  handleNavigateBack: () => void
+  content: CommonContent['topNav']['backModal']
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
@@ -18,4 +18,4 @@ export const Controller: FC<ControllerProps> = memo((props) => {
   return <View {...props} />
 })
 
-Controller.displayName = 'TopNav_Controller'
+Controller.displayName = 'ConfirmationModal_Controller'

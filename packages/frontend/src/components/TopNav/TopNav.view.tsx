@@ -12,9 +12,7 @@ import { localStore } from '@/store'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
-import { BaseModal } from '@/components/BaseModal'
-import { CloseButton } from '@/components/CloseButton'
-import { PillButton } from '@/components/PillButton'
+import { ConfirmationModal } from '@/components/ConfirmationModal'
 
 import SvgBack from '@/svgs/Back.svg'
 import ChilisSvg from '@/svgs/Chilis.svg'
@@ -27,7 +25,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) => {
+export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisabled }) => {
   const refs = useRefs<ViewRefs>()
   const currentRoute = localStore((state) => state.navigation.pathname)
   const navigateBack = localStore((state) => state.navigation.navigateBack)
@@ -75,25 +73,14 @@ export const View: FC<ViewProps> = ({ className, text, onClick, isDisabled }) =>
 
   return (
     <nav className={classNames('TopNav', css.root, className)} ref={refs.root}>
-      {
-        // TODO: move this to it's own component
-      }
-      {isModalOpen && (
-        <BaseModal className={css.modal} onClose={handleClose}>
-          <div className={css.container}>
-            <p className={css.description}>ARE YOU SURE?</p>
-            <CloseButton className={css.close} onClick={handleClose} />
-            <div className={css.buttonContainer}>
-              <PillButton className={css.goBack} onClick={handleNavigateBack}>
-                YES GO BACK
-              </PillButton>
-              <PillButton className={css.stay} onClick={handleClose} theme="blue">
-                NO STAY HERE
-              </PillButton>
-            </div>
-          </div>
-        </BaseModal>
-      )}
+      <ConfirmationModal
+        className={css.modal}
+        show={isModalOpen}
+        handleClose={handleClose}
+        handleNavigateBack={handleNavigateBack}
+        content={content.backModal}
+      />
+
       <div className={css.wrapper}>
         {renderBackButtonSlot()}
 
