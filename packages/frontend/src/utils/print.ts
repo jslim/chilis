@@ -6,7 +6,8 @@ const colors: { [key: string]: [string, string, string, string] } = {
   default: ['#9e9e9e', '#000', '#616161', '#fff'],
   sound: ['#009688', '#000', '#00796b', '#fff'],
   webgl: ['#ff9800', '#000', '#e64a19', '#fff'],
-  error: ['#e64a19', '#000', '#ff0000', '#fff']
+  error: ['#e64a19', '#000', '#ff0000', '#fff'],
+  game: ['#ffeb3b', '#000', '#fbc02d', '#fff']
 }
 
 export const productionPrint = (label: string, ...args: string[]) => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { getGameInstance } from '@/services/game'
 
-const useGameInstance = (enable: boolean) => {
+const usePauseGameInstance = (enable: boolean) => {
   const [paused, setPaused] = useState(false)
 
   useEffect(() => {
@@ -22,4 +22,4 @@ const useGameInstance = (enable: boolean) => {
   return { paused }
 }
 
-export default useGameInstance
+export default usePauseGameInstance

@@ -1,16 +1,11 @@
 {
   "plugins": ["dependencies"],
   "rules": {
-    "package-json-properties": [
-      "error",
-      { "required": ["name", "private", "scripts", "engines", "dependencies", "browserslist"] }
-    ],
+    "package-json-properties": ["error", { "required": ["name", "private", "scripts", "engines", "browserslist"] }],
     "root-files": [
       "error",
       {
         "required": [
-          ".husky",
-          ".editorconfig",
           ".envrc",
           ".eslintignore",
           ".eslintrc.json",

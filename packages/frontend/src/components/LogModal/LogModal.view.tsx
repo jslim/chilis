@@ -6,11 +6,13 @@ import classNames from 'classnames'
 
 import css from './LogModal.module.scss'
 
+import { routes } from '@/data/routes'
+
 import { localState, localStore } from '@/store'
 
 import { getImageUrl } from '@/utils/basic-functions'
 import { copy } from '@/utils/copy'
-import { Endpoints, fetchApi } from '@/utils/fetchApi'
+import { Endpoints, fetchApi } from '@/utils/fetch-api'
 
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useRefs } from '@/hooks/use-refs'
@@ -167,7 +169,7 @@ export const View: FC<ViewProps> = ({
             </BaseForm>
 
             <div className={css.forgotPassword}>
-              <BaseButton href="/">{forgotPassword}</BaseButton>
+              <BaseButton href={routes.HOME}>{forgotPassword}</BaseButton>
             </div>
           </>
         ) : (
