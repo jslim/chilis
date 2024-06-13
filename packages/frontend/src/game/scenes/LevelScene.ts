@@ -167,7 +167,6 @@ export default class LevelScene extends Scene {
       // only process tile layers
       if (layer.type !== 'tilelayer') continue
 
-      // TODO: extras layer
       if (layer.name === 'extras') {
         // map to spawn points
         for (let i = 0; i < layer.data.length; i++) {
@@ -248,7 +247,7 @@ export default class LevelScene extends Scene {
               cpu = new Cpu(`trainee0${traineeId++}` as 'trainee01' | 'trainee02' | 'trainee03')
             } else if (id === TileId.BossCpu) {
               offsetX = 4
-              switch (levelNo) {
+              switch (getWrappedLevelNo(levelNo)) {
                 case 1: {
                   cpu = new Piggles('piggles')
                   break
