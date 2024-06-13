@@ -323,7 +323,10 @@
         "description": "Some 404 page description"
       },
       "body": {
-        "title": "404 Page"
+        "title": "Error",
+        "cta": {
+          "label": "Reboot"
+        }
       }
     },
     "usOnly": {

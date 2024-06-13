@@ -3,19 +3,42 @@
 .root {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 100svh;
   background-color: $black;
-  background-image: url('~@/assets/images/not-found.png');
+  background-image: url('~@/assets/images/not-found.jpg');
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  opacity: 0;
 
-  .title {
-    @include typography-h1;
-    visibility: hidden;
+  .logoContainer {
+    @include box(px(32), px(20));
+    position: absolute;
+    top: px(20);
+    left: px(20);
   }
-}
 
-.logoContainer {
-  @include box(px(32), px(20));
-  position: absolute;
-  top: px(20);
-  left: px(20);
+  .container {
+    margin-bottom: 15svh;
+
+    @include media-aspect-vertical {
+      margin-bottom: 35svh;
+    }
+
+    .title {
+      @include font-family('b', 400);
+      @include font-size(16);
+      color: $red;
+      text-transform: uppercase;
+      margin-bottom: px(10);
+    }
+
+    .button {
+      .svg {
+        height: px(36);
+        width: auto;
+        shape-rendering: crispEdges;
+      }
+    }
+  }
 }
