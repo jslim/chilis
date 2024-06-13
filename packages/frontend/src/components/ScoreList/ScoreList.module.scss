@@ -10,10 +10,27 @@
   }
 }
 
+.separator {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: px(50) 0;
+
+  .square {
+    @include box(px(10));
+    display: inline-block;
+    background-color: $sunrise;
+  }
+}
+
 .list {
   display: flex;
   flex-flow: column wrap;
   max-height: px(200);
+
+  &.remaining {
+    max-height: none;
+  }
 }
 
 .item {
@@ -79,5 +96,21 @@
 
   @include media-tablet-large {
     @include font-size(32);
+  }
+}
+
+.isGameOver {
+  .item {
+    @include media-tablet {
+      gap: px(40);
+    }
+  }
+
+  .score {
+    color: $white;
+
+    &.isCurrentPlayer {
+      color: $sunrise;
+    }
   }
 }

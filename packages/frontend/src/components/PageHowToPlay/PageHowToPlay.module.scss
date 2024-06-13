@@ -23,16 +23,13 @@
   @include flex-center(column);
   position: relative;
   gap: px(20);
-  padding-top: px(30);
 
   @include media-tablet {
-    padding-top: 0;
     gap: px(40);
   }
 
   @include media-tablet-large {
     gap: px(65);
-    padding-top: px(110);
   }
 
   .imageContainer {

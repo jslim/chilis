@@ -62,8 +62,7 @@ export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
           </div>
         </div>
 
-        {/* TODO: Render top 20, but then we need to render all of them  */}
-        <ScoreList className={css.list} players={arrayOfPlayers} currentRankText="" />
+        <ScoreList className={css.list} players={arrayOfPlayers} maxPlayers={20} />
       </section>
     </main>
   )

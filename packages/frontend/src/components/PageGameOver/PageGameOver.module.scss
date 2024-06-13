@@ -11,6 +11,19 @@
   }
 }
 
+.backgroundVideo {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba($black, 0.5);
+    z-index: 0;
+  }
+}
+
 .contentWrapper {
   @include flex-center-vert;
   position: relative;
@@ -44,11 +57,23 @@
     }
 
     .description {
-      @include font-size(56, 47);
+      @include font-size(36, 37);
       @include font-family(PixGamer, 400);
       max-width: px(700);
       margin-top: px(20);
       color: $sour-cream;
+
+      @include media-tablet-large {
+        @include font-size(56, 47);
+      }
+    }
+
+    .list {
+      margin-top: px(20);
+
+      @include media-tablet-large {
+        margin-top: px(70);
+      }
     }
   }
 
@@ -67,6 +92,7 @@
       padding: 0 px(30) px(10);
       border: px(10) solid transparent;
       text-align: center;
+      background-color: rgba($black, 0.2);
       z-index: 0;
 
       &::before,
@@ -104,10 +130,10 @@
       &.quit {
         border: px(15) solid transparent;
         border-image: url('~@/assets/images/quit-border.png') 15;
-        color: $dark-blue;
+        color: $white;
 
         &::after {
-          color: $dark-blue-2;
+          color: $ranch;
         }
       }
     }
