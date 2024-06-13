@@ -22,4 +22,8 @@ export class CoolDown {
   public isExpired() {
     return this.time >= this.interval
   }
+
+  public setExpired() {
+    this.time = this.interval
+  }
 }
