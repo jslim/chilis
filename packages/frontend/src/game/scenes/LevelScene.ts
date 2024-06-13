@@ -1,6 +1,7 @@
 import type { SimpleTextConfig } from '@/game/display/SimpleText'
 import type { GameAction } from '@/game/GameAction'
 import type { TiledMap } from '@/game/tiled/TiledMap'
+import type { TiledLayerPath, TiledWalkGrid } from '@/game/utils/tiles.utils'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
@@ -38,13 +39,7 @@ import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
 import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
 import { getRandom, pick } from '@/game/utils/random.utils'
-import {
-  connectionsToGrid,
-  drawGrid,
-  drawPointsAndConnections,
-  getTileConnections,
-  type TiledWalkGrid
-} from '@/game/utils/tiles.utils'
+import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '@/game/utils/tiles.utils'
 
 import { AutoDisposer } from '../components/AutoDisposer'
 import DinoCoolMover from '../components/cpu/DinoCoolMover'
@@ -60,7 +55,10 @@ import {
   FRAME_RATE,
   FRAME_RATE_HARD,
   FRAME_RATE_HARDEST,
+  GAME_HEIGHT,
+  GAME_WIDTH,
   getWrappedLevelNo,
+  IS_ARCADE_BUILD,
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { Scene } from './Scene'
@@ -371,14 +369,25 @@ export default class LevelScene extends Scene {
     }
 
     this.createBurgerGroups()
-
-    this.containers.ui.addComponent(new GameUI(this))
+    this.createGameUI()
+    this.createIntweenFloorTiles(path, map, spriteSheet)
 
     if (DRAW_DEBUG_GRID) {
       this.containers.floorFront.addChild(drawPointsAndConnections(path))
       this.containers.floorFront.addChild(drawGrid(this.walkGrid))
     }
 
+    if (isMobileOrTablet()) {
+      this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
+    } else if (!IS_ARCADE_BUILD && this.gameState.level.value === 1) {
+      const isKeyboardLikelyConnected = window.matchMedia('(pointer: fine)').matches
+      if (isKeyboardLikelyConnected) this.showKeyBoardControls()
+    }
+
+    this.emitAction({ a: 'start', l: this.gameState.level.value })
+  }
+
+  createIntweenFloorTiles(path: TiledLayerPath, map: TiledMap, spriteSheet: Texture) {
     // Add inbetween floor tiles
     path.points.forEach((point) => {
       if (Math.floor((point.x + map.tilewidth * 0.5) / (map.tilewidth * 0.5)) % 2 === 1) {
@@ -387,12 +396,10 @@ export default class LevelScene extends Scene {
         this.containers.floorFront.addChildAt(sprite, 0)
       }
     })
+  }
 
-    if (isMobileOrTablet()) {
-      this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
-    }
-
-    this.emitAction({ a: 'start', l: this.gameState.level.value })
+  createGameUI() {
+    this.containers.ui.addComponent(new GameUI(this))
   }
 
   override onUpdate(dt: number): void {
@@ -564,6 +571,27 @@ export default class LevelScene extends Scene {
 
   public emitAction(action: GameAction) {
     this.sceneManager.gameController.onGameAction.emit(action)
+  }
+
+  private showKeyBoardControls() {
+    // pause after 1 frame
+    createDelay(this.entity, 1 / 30, () => this.sceneManager.pause())
+
+    const panelSprite = this.flumpLibrary.createSprite('controls')
+    const panelEntity = new Entity(panelSprite)
+    panelEntity.x = GAME_WIDTH / 2
+    panelEntity.y = GAME_HEIGHT / 2
+
+    createDelay(this.entity, 1 / 30, () => {
+      this.entity.addEntity(
+        panelEntity.addComponent(
+          new PointerComponent('pointerdown', () => {
+            this.sceneManager.resume()
+            panelEntity.destroy()
+          })
+        )
+      )
+    })
   }
 }
 
