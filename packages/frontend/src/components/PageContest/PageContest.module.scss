@@ -22,20 +22,15 @@
   position: relative;
   flex-direction: column;
   gap: px(30);
-  padding-top: px(30);
+  padding: px(30) 0 px(60);
 
   @include media-aspect-vertical {
-    padding-top: 0;
-    padding-bottom: px(50);
-  }
-
-  @include media-tablet {
     padding-top: 0;
   }
 
   @include media-tablet-large {
     gap: px(60);
-    padding-top: px(80);
+    padding: px(80);
   }
 
   .title {
