@@ -208,10 +208,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         }
       } catch (error) {
         console.log('Token not valid!', error)
-        localState().user.setNickname('')
-        localState().user.setAccessToken('')
-        localState().user.setIdToken('')
-        localState().user.setIsTokenValid(false) // TODO: Refactor all this into one to reset the user state
+        localState().user.resetUser()
       }
     }
 

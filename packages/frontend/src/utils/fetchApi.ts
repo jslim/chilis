@@ -1,6 +1,7 @@
 export enum Endpoints {
   USER = '/user/',
-  LEADERBOARD = '/leaderboard/'
+  LEADERBOARD = '/leaderboard/',
+  GAME = '/game/'
 }
 
 export const fetchApi = async <T>(url: string, params?: string, options: RequestInit = {}): Promise<T> => {
