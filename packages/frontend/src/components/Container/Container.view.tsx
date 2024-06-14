@@ -1,7 +1,7 @@
+import type { FC } from 'react'
 import type { GameController } from '@/game/GameController'
-import type { ControllerProps } from './Container.controller'
 
-import { type FC, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 
@@ -22,19 +22,21 @@ import { useRefs } from '@/hooks/use-refs'
 
 import { BaseImage } from '@/components/BaseImage'
 
-export interface ViewProps extends ControllerProps {}
+export interface ViewProps {
+  className?: string
+  background?: string
+}
 
 export type ViewRefs = {
   root: HTMLDivElement
 }
 
-// View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ className, background }) => {
   const refs = useRefs<ViewRefs>()
   const [showGameBorder, setShowGameBorder] = useState<boolean>(false)
   const isModalOpen = localStore().screen.isModalOpen
   const accessToken = localStore().user.accessToken
-  const [gameInstance, setGameInstance] = useState<GameController | null>(null)
+  const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
   const [gameId, setGameId] = useLocalStorage('gameId')
 
@@ -100,45 +102,52 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   useEffect(() => {
     const initGame = async () => {
-      const game = await initializeGame()
-      setGameInstance(game)
+      const newGameInstance = await initializeGame()
 
-      game.onGameAction.subscribe((data) => {
+      newGameInstance.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
           onGameStarted()
-          game.setHighScore(localState().user.highScore ?? 0)
+          newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
 
         if (data.a === 'complete' && data.s) {
-          game.setHighScore(data.s)
+          newGameInstance.setHighScore(data.s)
           localState().user.setHighScore(data.s)
         }
       })
 
-      game.onShowGameBorder.subscribe(setShowGameBorder)
-      game.onGameOver.subscribe((data) => {
-        console.log(data, 'game over')
+      newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
+      newGameInstance.onGameOver.subscribe((data) => {
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
       })
-      game.onGameEnd.subscribe((data) => {
+      newGameInstance.onGameEnd.subscribe((data) => {
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
       })
+
+      gameInstance.current = newGameInstance
     }
 
-    if (!gameInstance) {
+    if (!gameInstance.current) {
       initGame()
     }
 
     return () => {
-      //  gameInstance?.destroy()
+      if (gameInstance.current) {
+        console.log('Cleaning up game instance', gameInstance.current)
+        gameInstance.current.destroy()
+        gameInstance.current = null
+      }
     }
-  }, [gameInstance, onGameStarted, onGameUpdate, push])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className={classNames('Container', css.root, className, { [css.hasBorder]: showGameBorder })} ref={refs.root}>
-      {showGameBorder ? <BaseImage className={css.background} data={getImageUrl(background)} alt="" /> : null}
+      {showGameBorder && background ? (
+        <BaseImage className={css.background} data={getImageUrl(background)} alt="" />
+      ) : null}
       {/* Game Container */}
       <div id="app" />
     </div>

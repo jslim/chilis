@@ -11,7 +11,7 @@ export const isOggSupported = () => {
 }
 
 export const initializeGame = async () => {
-  if (!gameInstance) {
+  if (!gameInstance || gameInstance.isDestroyed) {
     gameInstance = new GameController()
 
     const channelsInstance = new Channels({

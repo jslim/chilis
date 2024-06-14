@@ -24,7 +24,7 @@ export class GameController {
   public soundChannel!: Channel
   public channels!: Channels
 
-  private isDestroyed = false
+  public isDestroyed = false
   private sceneManager!: SceneManager
 
   get gameState(): GameState {
