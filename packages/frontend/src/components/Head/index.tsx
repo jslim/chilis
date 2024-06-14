@@ -31,7 +31,9 @@ export const Head: FC<HeadProps> = memo(({ title, description, descriptionSocial
       ? fixSlashes(`/${assetPrefix}/${router.asPath.split('?')[0].split('#')[0]}`)
       : router.asPath
 
-  const fullPath = fixSlashes(`${config.websiteUrl}/${fixedAsPath}`, true).split('?')[0].split('#')[0]
+  const fullPath = fixSlashes(`${process.env.NEXT_PUBLIC_WEBSITE_SITE_URL}/${fixedAsPath}`, true)
+    .split('?')[0]
+    .split('#')[0]
 
   const shareImage = `${config.websiteUrl}${image}`
   const shareLocale = 'en_US'
