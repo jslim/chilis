@@ -1,3 +1,5 @@
+import { GAME_LOGS } from '@/game/game.config'
+
 import { Component } from '../../core/Entity'
 import { Input } from './Input'
 
@@ -9,13 +11,14 @@ export class GamepadInput extends Component {
   }
 
   onGamepadConnected(event: GamepadEvent) {
-    console.log(
-      `Gamepad connected at index ${event.gamepad.index}: ${event.gamepad.id}. ${event.gamepad.buttons.length} buttons, ${event.gamepad.axes.length} axes.`
-    )
+    if (GAME_LOGS)
+      console.log(
+        `Gamepad connected at index ${event.gamepad.index}: ${event.gamepad.id}. ${event.gamepad.buttons.length} buttons, ${event.gamepad.axes.length} axes.`
+      )
   }
 
   onGamepadDisconnected(event: GamepadEvent) {
-    console.log(`Gamepad disconnected from index ${event.gamepad.index}: ${event.gamepad.id}`)
+    if (GAME_LOGS) console.log(`Gamepad disconnected from index ${event.gamepad.index}: ${event.gamepad.id}`)
   }
 
   override onUpdate(dt: number) {
@@ -51,10 +54,11 @@ export class GamepadInput extends Component {
 
     // action button
     const actionPressed =
-      gamepad.buttons[4]?.pressed ||
-      gamepad.buttons[5]?.pressed ||
-      gamepad.buttons[6]?.pressed ||
-      gamepad.buttons[7]?.pressed ||
+      gamepad.buttons[0]?.pressed || // x button
+      gamepad.buttons[4]?.pressed || // shoulder button
+      gamepad.buttons[5]?.pressed || // shoulder button
+      gamepad.buttons[6]?.pressed || // shoulder button
+      gamepad.buttons[7]?.pressed || // shoulder button
       false
 
     // directly write in map

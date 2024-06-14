@@ -9,7 +9,7 @@
   width: 100%;
   justify-content: space-between;
   margin-top: px(20);
-  padding: 0 px(20);
+  padding: $side-spacing;
   height: $navbar-height-mobile;
 
   @include media-tablet-large {
@@ -43,44 +43,6 @@
       @include media-tablet-large {
         @include box(px(51));
       }
-    }
-  }
-}
-
-// @TODO: we may need to move this to its own component
-
-.modal {
-  .container {
-    @include flex-center;
-    width: px(300);
-    min-height: px(120);
-    position: absolute;
-    flex-direction: column;
-    background-color: $sour-cream;
-    border-radius: px(20);
-    padding: px(20);
-    overflow: hidden;
-
-    .description {
-      @include typography-montserrat-body;
-    }
-
-    .close {
-      position: absolute;
-      top: px(20);
-      right: px(30);
-    }
-
-    .buttonContainer {
-      @include flex-center;
-      gap: px(10);
-      margin-top: px(20);
-    }
-
-    .goBack,
-    .stay {
-      white-space: nowrap;
-      border-bottom-width: 1px;
     }
   }
 }

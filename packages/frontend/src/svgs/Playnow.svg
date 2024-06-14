@@ -10,7 +10,7 @@
         <path d="m334 0v4h8v4h4v4h4v4h4v8h4v20h-4v8h-4v4h-4v4h-4v4h-8v4h-4v-68h4z" fill="#ED1C24" />
     </g>
     <g clip-path="url(#b)">
-       <path d="M128 0H332V68H128V0Z" fill="#ED1C24" />
+        <path d="M128 0H332V68H128V0Z" fill="#ED1C24" />
         <path d="M330 0H130V68H330V0Z" fill="#ED1C24" />
         <path d="m330 68h-200v4h200v-4z" fill="#141020" />
     </g>
@@ -34,7 +34,7 @@
             <rect transform="translate(330)" width="28" height="72" fill="#fff" />
         </clipPath>
         <clipPath id="b">
-            <rect transform="translate(130)" width="200" height="72" fill="#fff" />
+            <rect transform="translate(120)" width="220" height="72" fill="#fff" />
         </clipPath>
         <clipPath id="a">
             <rect transform="translate(102)" width="28" height="72" fill="#fff" />

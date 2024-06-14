@@ -8,14 +8,18 @@
   flex-direction: column;
   align-items: center;
 
-  .title {
-    @include typography-h1;
-    visibility: hidden;
-    position: absolute;
+  @include media-aspect-vertical {
+    justify-content: center;
   }
 
   @include media-tablet {
     justify-content: center;
+  }
+
+  .title {
+    @include typography-h1;
+    visibility: hidden;
+    position: absolute;
   }
 }
 
@@ -23,16 +27,14 @@
   @include flex-center(column);
   position: relative;
   gap: px(20);
-  padding-top: px(30);
+  width: 100%;
 
   @include media-tablet {
-    padding-top: 0;
     gap: px(40);
   }
 
   @include media-tablet-large {
     gap: px(65);
-    padding-top: px(110);
   }
 
   .imageContainer {
@@ -45,5 +47,9 @@
     .image {
       @include box(100%);
     }
+  }
+
+  .carousel {
+    width: 100%;
   }
 }

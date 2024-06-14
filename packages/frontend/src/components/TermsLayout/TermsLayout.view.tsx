@@ -9,9 +9,6 @@ import { copy } from '@/utils/copy'
 
 import { useRefs } from '@/hooks/use-refs'
 
-import SvgThreeSquares from '@/svgs/ThreeSquares.svg'
-import SvgTwoSquares from '@/svgs/TwoSquares.svg'
-
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -28,20 +25,22 @@ export const View: FC<ViewProps> = ({ className, content }) => {
         <h1 className={css.title} {...copy.html(content.body.title)} />
       </section>
       <section className={css.content}>
-        <div className={classNames(css.squares, css.leftSquare)}>
-          <SvgTwoSquares />
-        </div>
-        <div className={classNames(css.squares, css.leftSquareBottom)}>
-          <SvgThreeSquares />
-        </div>
-        <div className={classNames(css.squares, css.rightSquare)}>
-          <SvgTwoSquares />
-        </div>
-        <div className={classNames(css.squares, css.rightSquareBottom)}>
-          <SvgThreeSquares />
-        </div>
+        {content.body.blocks.map((innerBlock, bIndex) => (
+          <div className={css.block} key={`b-${bIndex}`}>
+            {innerBlock.title ? <h2 className={css.blockTitle} {...copy.html(innerBlock.title)} /> : null}
 
-        <div {...copy.html(content.body.content)} />
+            <div className={css.questions}>
+              {innerBlock.questions.map((question, qIndex) => (
+                <div className={css.question} key={`q-${qIndex}`}>
+                  {question.title ? <h3 className={css.questionTitle} {...copy.html(question.title)} /> : null}
+                  {question.paragraphs.map((paragraph, pIndex) => (
+                    <p className={css.paragraph} key={`p-${pIndex}`} {...copy.html(paragraph)} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </section>
     </div>
   )

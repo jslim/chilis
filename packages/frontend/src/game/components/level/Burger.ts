@@ -1,6 +1,7 @@
 /* eslint-disable no-labels */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-direct-mutation-state */
+import type { PlayingSound } from '@mediamonks/channels'
 import type { SoundName } from '@/game/assets.manifest'
 import type LevelScene from '@/game/scenes/LevelScene'
 import type { Entity } from '../../core/Entity'
@@ -10,6 +11,7 @@ import { Rectangle, Sprite, Texture } from 'pixi.js'
 
 // eslint-disable-next-line import/no-cycle
 import { Cpu } from '@/game/components/cpu/Cpu'
+import { CoolDown } from '@/game/core/CoolDown'
 import { getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { TileId } from '@/game/tiled/TileId'
 import { pick } from '@/game/utils/random.utils'
@@ -67,6 +69,9 @@ export class Burger extends Component {
   private level!: LevelScene
   private readonly fallSpeed: number = 3
 
+  private walkSoundLoop?: PlayingSound
+  private readonly soundCoolDown = new CoolDown(0.1)
+
   private readonly targetPlateRect: Rectangle | undefined = undefined
 
   private readonly fallStats = {
@@ -81,6 +86,7 @@ export class Burger extends Component {
     private readonly tileId: number
   ) {
     super()
+    this.soundCoolDown.setExpired()
   }
 
   get isIdle() {
@@ -96,6 +102,8 @@ export class Burger extends Component {
 
     this.level = this.entity.getComponent(LevelComponent).level
     //const sprite = get(this.spriteSheetLarge, this.tileId);
+
+    this.walkSoundLoop = this.level.playSound('walk_over_burger_loop', true, 0)
 
     if (DRAW_STATE_DEBUG) {
       this.entity.addComponent(new StateDebugText(this.state as Value, [10, 7], this.entity.color))
@@ -220,6 +228,12 @@ export class Burger extends Component {
         break
       }
     }
+
+    if (!this.soundCoolDown.update(dt)) {
+      this.walkSoundLoop?.setVolume(1)
+    } else {
+      this.walkSoundLoop?.setVolume(0)
+    }
   }
 
   public isCurrentState(state: (typeof this.state)['value']) {
@@ -246,6 +260,11 @@ export class Burger extends Component {
           const prevSliceSpriteY = sliceSprite.y
           sliceSprite.y += 1
           sliceSprite.y = Math.min(sliceSprite.y, MAX_Y_DOWN)
+
+          if (prevSliceSpriteY !== sliceSprite.y) {
+            this.soundCoolDown.reset()
+          }
+
           if (prevSliceSpriteY !== sliceSprite.y && sliceSprite.y === MAX_Y_DOWN) {
             this.onSlice.emit()
           }

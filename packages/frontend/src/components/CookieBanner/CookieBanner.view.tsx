@@ -30,7 +30,7 @@ export const View: FC<ViewProps> = ({ className, content, cookieConsent, setCook
   const [settings, setSettings] = useState(false)
   const [consent, setConsent] = useState<CookieConsent>(
     cookieConsent ?? {
-      necessary: true,
+      // necessary: true,
       statistics: true
     }
   )
@@ -41,7 +41,7 @@ export const View: FC<ViewProps> = ({ className, content, cookieConsent, setCook
 
   const handleDeclineAll = useCallback(() => {
     setCookieConsent({
-      necessary: true,
+      // necessary: true,
       statistics: false
     })
   }, [setCookieConsent])
@@ -87,10 +87,10 @@ export const View: FC<ViewProps> = ({ className, content, cookieConsent, setCook
             <p className={css.cookieSettingsDescription} {...copy.html(content.settings)} />
 
             <ul className={css.cookieSettingsList}>
-              <li>
+              {/* <li>
                 <input type="checkbox" id="cookie-necessary" checked={consent?.necessary} readOnly />
                 <label htmlFor="cookie-necessary" {...copy.html(content.purpose.necessary)} />
-              </li>
+              </li> */}
               <li>
                 <input
                   type="checkbox"

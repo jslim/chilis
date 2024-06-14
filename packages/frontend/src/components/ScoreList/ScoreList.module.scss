@@ -5,8 +5,21 @@
   flex-direction: column;
   gap: px(15);
 
-  @include media-tablet-large {
-    gap: px(40);
+  @include media-tablet {
+    gap: px(30);
+  }
+}
+
+.separator {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: px(50) 0;
+
+  .square {
+    @include box(px(10));
+    display: inline-block;
+    background-color: $sunrise;
   }
 }
 
@@ -14,10 +27,15 @@
   display: flex;
   flex-flow: column wrap;
   max-height: px(200);
+
+  &.remaining {
+    max-height: none;
+  }
 }
 
 .item {
-  @include flex-center-vert;
+  display: flex;
+  align-items: baseline;
   justify-content: space-between;
   gap: px(10);
   margin-right: px(25);
@@ -31,6 +49,10 @@
     @include font-size(14);
     overflow: hidden;
     color: $white;
+
+    &.isCurrentPlayer {
+      color: $sunrise;
+    }
 
     @include media-tablet-large {
       @include font-size(32, 40);
@@ -75,5 +97,21 @@
 
   @include media-tablet-large {
     @include font-size(32);
+  }
+}
+
+.isGameOver {
+  .item {
+    @include media-tablet {
+      gap: px(40);
+    }
+  }
+
+  .score {
+    color: $white;
+
+    &.isCurrentPlayer {
+      color: $sunrise;
+    }
   }
 }

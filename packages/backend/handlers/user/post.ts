@@ -35,10 +35,10 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context): Pr
     const { phone, password } = parseBody(event.body);
 
     try {
-      const { loyaltyID, points } = await brinkerLogin(phone, password);
+      const { loyaltyID } = await brinkerLogin(phone, password);
       await registerUserIfNotFound(loyaltyID);
 
-      const signInResult = await signInUser(loyaltyID, points);
+      const signInResult = await signInUser(loyaltyID);
       if (!signInResult || !signInResult.AccessToken) {
         throw new Error("Failed to obtain access token");
       }
@@ -69,7 +69,7 @@ async function registerUserIfNotFound(loyaltyID: string) {
       new AdminGetUserCommand({
         UserPoolId: process.env.USER_POOL_ID,
         Username: loyaltyID,
-      })
+      }),
     );
   } catch (error: any) {
     if (error.name === "UserNotFoundException") {
@@ -85,7 +85,7 @@ async function registerUserIfNotFound(loyaltyID: string) {
                 Value: "false",
               },
             ],
-          })
+          }),
         );
       } catch (createError) {
         logger.error("Error creating new user:", { createError });
@@ -106,11 +106,10 @@ async function registerUserIfNotFound(loyaltyID: string) {
  * If the authentication is successful, it returns the authentication result which includes tokens.
  *
  * @param {string} loyaltyID - The unique identifier for the user, used as the username in Cognito.
- * @param {string} points - The answer to the custom challenge, typically user-specific data used for verification.
  * @returns {Promise<AuthenticationResult>} - The result of the authentication process, including tokens.
  * @throws {Error} - Throws an error if there is a failure in initiating the auth request or responding to the challenge.
  */
-async function signInUser(loyaltyID: string, points: string) {
+async function signInUser(loyaltyID: string) {
   try {
     const respInitCommand = await cognitoClient.send(
       new InitiateAuthCommand({
@@ -119,16 +118,16 @@ async function signInUser(loyaltyID: string, points: string) {
         AuthParameters: {
           USERNAME: loyaltyID,
         },
-      })
+      }),
     );
 
     const { AuthenticationResult } = await cognitoClient.send(
       new RespondToAuthChallengeCommand({
         ClientId: process.env.USER_CLIENT_ID,
         ChallengeName: "CUSTOM_CHALLENGE",
-        ChallengeResponses: { USERNAME: loyaltyID, ANSWER: points },
+        ChallengeResponses: { USERNAME: loyaltyID, ANSWER: loyaltyID },
         Session: respInitCommand.Session,
-      })
+      }),
     );
 
     logger.info("Authentication completed");

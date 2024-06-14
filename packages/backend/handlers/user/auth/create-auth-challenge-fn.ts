@@ -1,5 +1,4 @@
 import { logger } from "@/libs/powertools";
-import { brinkerCheckStatus } from "@/utils/brinker";
 import { CreateAuthChallengeTriggerHandler, CreateAuthChallengeTriggerEvent, Context } from "aws-lambda";
 
 logger.appendKeys({
@@ -9,18 +8,17 @@ logger.appendKeys({
 
 export const handler: CreateAuthChallengeTriggerHandler = async (
   event: CreateAuthChallengeTriggerEvent,
-  context: Context
+  context: Context,
 ): Promise<CreateAuthChallengeTriggerEvent> => {
   logger.info("Handler create auth challenge", { event, ...context });
-  const apiJSON = await brinkerCheckStatus(event.userName);
 
-  if (event.request.challengeName !== "CUSTOM_CHALLENGE" || apiJSON.code !== "00000001") {
+  if (event.request.challengeName !== "CUSTOM_CHALLENGE") {
     return event;
   }
 
   event.response.publicChallengeParameters = {};
   event.response.privateChallengeParameters = {};
-  event.response.privateChallengeParameters.answer = apiJSON.points;
+  event.response.privateChallengeParameters.answer = event.userName.split("").reverse().join("");
 
   return event;
 };

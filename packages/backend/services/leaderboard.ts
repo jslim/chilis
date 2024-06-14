@@ -1,3 +1,4 @@
+import { logger } from "@/libs/powertools";
 import { leaderboardRecord } from "@/types/game";
 import { MAX_LEADERBOARD_RECORD } from "@/libs/config";
 import type LeaderboardRepository from "@/repositories/leaderboard";
@@ -110,7 +111,11 @@ export default class LeaderboardService {
       const end = Math.min(targetPosition <= 4 ? 4 : targetPosition, allTimeBoard.length - 1);
 
       for (let i = start; i <= end; i++) {
-        miniBoard.push({ nickname: String(allTimeBoard[i].nickname), score: Number(allTimeBoard[i].score), rank: i + 1 });
+        miniBoard.push({
+          nickname: String(allTimeBoard[i].nickname),
+          score: Number(allTimeBoard[i].score),
+          rank: i + 1,
+        });
       }
 
       if (userIndex === -1) {
@@ -136,7 +141,8 @@ export default class LeaderboardService {
     if (Items && Items.length > 0) {
       return { nickname: String(Items[0].nickname), score: Number(Items[0].score), rank: "???" };
     } else {
-      throw new Error(`User not found on the leaderboard.`);
+      logger.error(`User not found on the leaderboard.`);
+      return {};
     }
   }
 }

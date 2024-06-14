@@ -4,6 +4,17 @@
   position: relative;
   opacity: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include media-aspect-vertical {
+    justify-content: center;
+  }
+
+  @include media-tablet {
+    justify-content: center;
+  }
 }
 
 .container {
@@ -11,11 +22,13 @@
   position: relative;
   flex-direction: column;
   gap: px(25);
-  padding-top: px(30);
+
+  @include media-aspect-vertical {
+    padding-bottom: px(50);
+  }
 
   @include media-tablet-large {
-    gap: px(50);
-    padding-top: px(110);
+    gap: px(40);
   }
 
   .title {

@@ -2,8 +2,10 @@
 
 .root {
   display: block;
+  width: 100%;
   height: 100svh;
   background-color: $sour-cream;
+  overflow: scroll;
 }
 
 .titleContainer {
@@ -24,78 +26,77 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+  gap: px(40);
   position: relative;
-  padding: px(40) px(65);
   text-align: left;
+  padding: px(40) px(35);
+
+  @include media-tablet {
+    gap: px(45);
+    padding: px(40) px(65);
+  }
 
   @include media-tablet-large {
     padding: px(180) px(200);
   }
 
-  p {
-    @include font-size(20, 24);
-    @include font-family(Montserrat, 500);
-    color: $black;
-  }
+  .block {
+    padding-bottom: px(40);
 
-  strong {
-    @include font-size(30, 36);
-    @include font-family(Montserrat, 700);
-    color: $night;
-  }
-
-  .squares {
-    position: absolute;
-
-    svg {
-      @include box(px(20));
+    @include media-tablet {
+      padding-bottom: px(60);
     }
 
-    &.leftSquareBottom {
-      top: px(10);
-      left: px(10);
+    &:not(:last-child) {
+      border-bottom: 0.5px solid $night;
     }
 
-    &.leftSquare {
-      bottom: px(10);
-      left: px(10);
+    .blockTitle {
+      @include font-size(26, 32);
+      @include font-family(Montserrat, 700);
+      color: $night;
+      margin-bottom: px(25);
+      text-decoration: underline;
+
+      @include media-tablet {
+        @include font-size(30, 36);
+        margin-bottom: px(30);
+      }
     }
 
-    &.rightSquare {
-      top: px(30);
-      right: px(5);
-      transform: rotate(90deg);
+    .questions {
+      display: flex;
+      flex-direction: column;
+      gap: px(25);
+
+      @include media-tablet {
+        gap: px(30);
+      }
     }
 
-    &.rightSquareBottom {
-      bottom: px(10);
-      right: px(5);
-      transform: rotate(90deg);
-    }
+    .question {
+      .questionTitle {
+        @include font-size(20, 24);
+        @include font-family(Montserrat, 700);
+        color: $night;
+        margin-bottom: px(15);
 
-    @include media-tablet-large {
-      svg {
-        @include box(px(40));
+        @include media-tablet {
+          @include font-size(24, 28);
+          margin-bottom: px(20);
+        }
       }
 
-      &.leftSquareBottom {
-        top: px(40);
-        left: px(40);
-      }
+      .paragraph {
+        @include font-size(16, 20);
+        @include font-family(Montserrat, 500);
+        color: $black;
 
-      &.leftSquare {
-        bottom: px(40);
-        left: px(40);
-      }
-
-      &.rightSquare {
-        top: px(60);
-        right: px(40);
-      }
-
-      &.rightSquareBottom {
-        bottom: px(20);
-        right: px(40);
+        @include media-tablet {
+          @include font-size(20, 24);
+        }
       }
     }
   }

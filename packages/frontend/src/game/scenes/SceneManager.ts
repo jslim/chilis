@@ -10,6 +10,7 @@ import { clamp01 } from '@/game/utils/math.utils'
 import { CoolDown } from '../core/CoolDown'
 import { Entity } from '../core/Entity'
 import { EndScene } from './EndScene'
+import { GameEndScene } from './GameEndScene'
 import { IntroScene } from './IntroScene'
 import LevelScene from './LevelScene'
 import { PreloadScene } from './PreloadScene'
@@ -63,11 +64,11 @@ export default class SceneManager {
     if (nextLevelNo <= 18) {
       this.showLevelIntro(nextLevelNo)
     } else {
-      this.gameController.onGameOver.emit(result)
+      this.goto(new GameEndScene(this))
     }
   }
 
-  end(result: GameStateValues) {
+  gameOver(result: GameStateValues) {
     this.gameController.onGameOver.emit(result)
     this.goto(new EndScene(this))
   }

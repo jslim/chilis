@@ -1,9 +1,10 @@
 {
   "common": {
     "head": {
-      "title": "{title} | Chilis Burger Time",
-      "siteName": "Chilis Burger Time",
-      "description": "{description}"
+      "title": "{title} | It’s Chili’s Big Smasher BurgerTime",
+      "siteName": "It’s Chili’s Big Smasher BurgerTime",
+      "description": "Chili’s is introducing its first video game,Chili’s Big Smasher BurgerTime. An authentic modernization of the cult-classic arcade game, art imitates life as players are challenged with saving humanity from the overpriced fast-food burgers of the evil Fast Food Syndicate. The task? Build as many Big Smasher burgers as possible to climb the leaderboard and compete to win a lifetime of Chili’s burgers!.",
+      "descriptionSocial": "Do you have what it takes to defeat the evil fast-food syndicates? Play the new and improved BurgerTime now!\nDo you have what it takes to defeat the evil Fast Food Syndicate? Play Chili’s BurgerTime now, and compete to win a lifetime of burgers!\nBuild Chili’s Big Smashers! Defeat the evil Fast Food Syndicate! Compete to win a lifetime of Chili’s burgers! Play now!"
     },
     "nav": {
       "sound": {
@@ -30,20 +31,29 @@
         }
       ]
     },
-    "backModal": {
-      "description": "Are you sure?",
-      "ctas": {
-        "yes": "yes go back",
-        "no": "no stay here"
+    "topNav": {
+      "logIn": "LOG IN",
+      "logOutModal": {
+        "description": "<strong>Are you sure?</strong></br></br>After logging out, you will lose your progress and score.",
+        "ctas": {
+          "confirm": "YES, LOG OUT",
+          "deny": "NO, STAY"
+        }
+      },
+      "backModal": {
+        "description": "<strong>Are you sure?</strong></br></br>Quitting this way won’t save your score",
+        "ctas": {
+          "confirm": "YES, QUIT",
+          "deny": "NO, STAY"
+        }
       }
     },
-    "topNav": { "logIn": "LOG IN", "LogOut": "LOG OUT" },
     "logModal": {
       "title": "BURGERS FOR LIFE",
-      "description": "Login for a chance to win burgers for life lorem. Template copy m ipsum dolor sit amet, consectetur adipiscing elit, sed dadsao eiusmod tempor incididunt ut labore et dolore magna.",
+      "description": "To get added to the leaderboard and entered to win prizes, login below. If not you don’t have an account yet, click the sign up button below. Once created, come back to this page and login.",
       "cta": "LOG IN",
       "forgotPassword": "Forgot or Create your Password?",
-      "skipLabel": "Don't want to log in right now?",
+      "skipLabel": "Want to just play without getting on the leaderboard?",
       "skip": "SKIP",
       "phone": "PHONE",
       "password": "PASSWORD",
@@ -94,7 +104,8 @@
         "src": "low-battery-icon.png",
         "alt": "Low Battery"
       }
-    }
+    },
+    "skip": "SKIP"
   },
   "pages": {
     "home": {
@@ -134,6 +145,10 @@
         "background": {
           "src": "game-background.png",
           "alt": ""
+        },
+        "backgroundVideo": {
+          "src": "/videos/opening.mp4",
+          "poster": "game-background.png"
         }
       }
     },
@@ -144,7 +159,7 @@
       },
       "body": {
         "backgroundVideo": {
-          "src": "",
+          "src": "/videos/leaderboard.mp4",
           "poster": "burger-loop-2.png"
         },
         "title": "HI-SCORES",
@@ -251,8 +266,8 @@
       },
       "body": {
         "title": "Game Over Page",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "descriptionOver": "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "description": "You completed all possible levels of BurgerTime. Check your rank on the leaderboard and see if you can beat the high score.",
+        "descriptionOver": "Womp. You didn’t beat the evil fast-food syndicate, this time. Play again to save the Big Smasher.",
         "backgroundVideo": {
           "src": "",
           "poster": "game-over-background.png"
@@ -262,7 +277,6 @@
           "quit": "QUIT GAME",
           "again": "PLAY AGAIN"
         },
-        "ctasDescription": "Lorem ipsum dolor sit amet",
         "heroWin": {
           "src": "you-win.png",
           "alt": "Game Over Win"
@@ -280,7 +294,32 @@
       },
       "body": {
         "title": "Terms Page",
-        "content": "<strong>Title</strong></br><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.</p>"
+        "blocks": [
+          {
+            "category": "copy",
+            "title": "",
+            "questions": [
+              {
+                "title": "",
+                "paragraphs": [
+                  "Chili’s is continuing to highlight its value and quality as consumers are growing frustrated with increasing fast food prices."
+                ]
+              },
+              {
+                "title": "",
+                "paragraphs": [
+                  "Chili’s is continuing to highlight its value and quality as consumers are growing frustrated with increasing fast food prices."
+                ]
+              },
+              {
+                "title": "",
+                "paragraphs": [
+                  "Chili’s is continuing to highlight its value and quality as consumers are growing frustrated with increasing fast food prices."
+                ]
+              }
+            ]
+          }
+        ]
       }
     },
     "faq": {
@@ -289,8 +328,147 @@
         "description": "FAQ page"
       },
       "body": {
-        "title": "FAQ Page",
-        "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.</p>"
+        "title": "FAQS",
+        "blocks": [
+          {
+            "category": "general",
+            "title": "General Questions",
+            "questions": [
+              {
+                "title": "Why is Chili’s introducing a Big Smasher BurgerTime video game?",
+                "paragraphs": [
+                  "Chili’s is continuing to highlight its value and quality as consumers are growing frustrated with increasing fast food prices. ",
+                  "Chili’s is committed to reaching new communities and Chili’s fans in unexpected, but authentic, ways by creating compelling experiences that these communities will seek to be a part of. "
+                ]
+              },
+              {
+                "title": "Which fast food restaurants are the villains modeled after?",
+                "paragraphs": [
+                  "The Big Smasher BurgerTime villains resemble fictitious long lost fast-food mascots of decades past. "
+                ]
+              },
+              {
+                "title": "Is there a deal/discount/promotion offered in restaurant during the competition? ",
+                "paragraphs": [
+                  "Players are welcome to try Chili’s Big Smasher by ordering a 3 For Me that comes with fries, a bottomless non-alcoholic beverage and bottomless chips and salsa all for $10.99. The $6 June Marg of the Month, the Wish You Were Here Marg, featuring Lunazul Blanco Tequila, strawberry puree, Monin Watermelon Syrup, Monin Coconut Syrup and fresh sour, will also be available. "
+                ]
+              }
+            ]
+          },
+          {
+            "category": "game",
+            "title": "Game Questions",
+            "questions": [
+              {
+                "title": "What is the basis of the game?",
+                "paragraphs": [
+                  "Chili’s Big Smasher BurgerTime is based off the original BurgerTime video game where players advanced through various levels, collecting points as they build burgers ingredient by ingredient to achieve the highest score possible while fending off villains in each level. "
+                ]
+              },
+              {
+                "title": "How similar is Chili’s BurgerTime to the original game? ",
+                "paragraphs": [
+                  "While Chili’s is maintaining the integrity of the original BurgerTime game through the look and mechanics, they are making tweaks to modernize and Chilify the game in partnership with game designers from Media.Monks to increase the intelligence of the enemies and speed up the game play. "
+                ]
+              },
+              {
+                "title": "How can I play the new Big Smasher BurgerTime game? Is it mobile friendly? ",
+                "paragraphs": [
+                  "BurgerTime is free to play online at chilisburgertime.com on desktop or mobile. An original arcade cabinet console of the Chili’s Big Smasher BurgerTime game will be available for play at the Chili’s 45th and Lamar location in Austin, TX."
+                ]
+              },
+              {
+                "title": "Will there be arcade cabinets at every Chili’s?",
+                "paragraphs": [
+                  "There will be one arcade cabinet console available for guests to play at the Chili’s located at 45th and Lamar in Austin, TX. "
+                ]
+              },
+              {
+                "title": "Why does my score say 0 if I have completed a level(s) and earned points?",
+                "paragraphs": [
+                  "Scores are only submitted to the leaderboard once all lives are lost. The maximum amount of levels you can play is 18 (the 6 levels, 3 times, that get increasingly more difficult). If you manage to complete all 18 levels in a row and still have lives left, your score will be submitted upon winning."
+                ]
+              },
+              {
+                "title": "How many times can I play?",
+                "paragraphs": [
+                  "Players will have unlimited play during the competition period of June 25 – July 14 with their registered account. They can continue to play the game after the competition ends."
+                ]
+              },
+              {
+                "title": "How long will the game be available?",
+                "paragraphs": [
+                  "The competition will run from June 25 to July 14, but Big Smasher BurgerTime will be available through June 2025."
+                ]
+              },
+              {
+                "title": "Is BurgerTime appropriate for all ages?",
+                "paragraphs": [
+                  "BurgerTime is recommended for players eight years and older based on ESRP ratings, with E for Everyone."
+                ]
+              }
+            ]
+          },
+          {
+            "category": "competition",
+            "title": "Competition / Prize Questions",
+            "questions": [
+              {
+                "title": "What are the competition details? How do I win?",
+                "paragraphs": [
+                  "If you are located in the US, visit chilisburgertime.com to login or sign up with your My Chili’s Rewards account and play to get your highest score on the leaderboard. The player with the top score at the end of the competition will receive a lifetime supply of burgers and an arcade cabinet version of the game. Second and Third place winners will each receive an arcade cabinet of the game. If you are in the top three after July 14th, we will contact you about your prize. Player’s scores in restaurant at the 45th and Lamar location in Austin, TX will not count toward the competition."
+                ]
+              },
+              {
+                "title": "How long is the competition open?",
+                "paragraphs": ["The competition is open from 9:00 AM ET on 6/25/24; ends 11:59:59 PM ET on 7/14/24."]
+              },
+              {
+                "title": "How do I register for the competition?",
+                "paragraphs": [
+                  "Players can register at chilisburgertime.com to begin playing on June 25. Users will be required to login or signup for a My Chili’s Rewards account to save progress, see leaderboard scores and be eligible for prizes."
+                ]
+              },
+              {
+                "title": "I live outside of the US, can I still participate?",
+                "paragraphs": [
+                  "You can still play the game, but for the competition and prizing purposes anyone outside of the US is not eligible. Once the competition is complete, we will open registration for the leaderboard globally."
+                ]
+              },
+              {
+                "title": "With the grand prize of burgers for life can you get a free burger every day?",
+                "paragraphs": [
+                  "The grand prize will be awarded in Chili’s gift cards and will be the equivalent of free burgers for 40-years equivalent to a $20 Chili’s gift card per month."
+                ]
+              },
+              {
+                "title": "Are there other prizes beyond the grand prize, second and third place?",
+                "paragraphs": [
+                  "The first 250 users who gather the 3 For Me bonus within the BurgerTime game will receive a Chili’s gift card to enjoy a 3 For Me meal on Chili’s."
+                ]
+              },
+              {
+                "title": "How will the game be scored, and the winner determined?",
+                "paragraphs": [
+                  "Chili’s version of BurgerTime will keep the original scoring mechanics of the game with additional chances for higher score potential like a bonus for completing each Big Smasher and collecting 3 For Me items along the way. The winner will be determined by the highest score on July 14.",
+                  "Just like in the original, players who complete the six levels will be sent back to Level One, where it will increase in difficulty. The game continues in that loop, and each player has three lives per round to establish their score."
+                ]
+              },
+              {
+                "title": "What happens if there’s a tie score on the leaderboard in determining the winners?",
+                "paragraphs": [
+                  "The winner will be awarded based on time. The less time it took to get the higher score, wins."
+                ]
+              },
+              {
+                "title": "How will you compare arcade cabinet and online player winners?",
+                "paragraphs": [
+                  "The leaderboard will be for online competition players. The arcade versions of the game in-restaurant are for guests to enjoy, but scores will not be eligible for prizes."
+                ]
+              }
+            ]
+          }
+        ]
       }
     },
     "notFound": {
@@ -299,7 +477,10 @@
         "description": "Some 404 page description"
       },
       "body": {
-        "title": "404 Page"
+        "title": "Error",
+        "cta": {
+          "label": "Reboot"
+        }
       }
     },
     "usOnly": {

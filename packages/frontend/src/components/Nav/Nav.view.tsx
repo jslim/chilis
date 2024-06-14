@@ -8,8 +8,6 @@ import { gsap } from 'gsap'
 
 import css from './Nav.module.scss'
 
-import { routes } from '@/data/routes'
-
 import { localStore } from '@/store'
 
 import { useRefs } from '@/hooks/use-refs'
@@ -66,7 +64,7 @@ export const View: FC<ViewProps> = ({ className, content, handleRef, isGameOver,
                       {title}
                     </BaseButton>
                   </li>
-                  {index === 0 && routes.HOME}
+                  {index !== content.links.length - 1 && '/'}
                 </Fragment>
               ))}
             </ul>

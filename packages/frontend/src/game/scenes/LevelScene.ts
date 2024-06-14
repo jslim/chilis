@@ -1,10 +1,10 @@
 import type { SimpleTextConfig } from '@/game/display/SimpleText'
 import type { GameAction } from '@/game/GameAction'
 import type { TiledMap } from '@/game/tiled/TiledMap'
+import type { TiledLayerPath, TiledWalkGrid } from '@/game/utils/tiles.utils'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
-import { PointerComponent } from '@/game/button/PointerComponent'
 import { BurgerTron } from '@/game/components/cpu/BurgerTron'
 import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
 import { Cpu } from '@/game/components/cpu/Cpu'
@@ -12,7 +12,6 @@ import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
 import { CpuMover } from '@/game/components/cpu/CpuMover'
 import { DinoCool } from '@/game/components/cpu/DinoCool'
 import { Matey } from '@/game/components/cpu/Matey'
-import { MateyBall } from '@/game/components/cpu/MateyBall'
 import { MrBaggie } from '@/game/components/cpu/MrBaggie'
 import { Piggles } from '@/game/components/cpu/Piggles'
 import { Zapp } from '@/game/components/cpu/Zapp'
@@ -20,6 +19,8 @@ import { GamepadInput } from '@/game/components/input/GamepadInput'
 import { Input } from '@/game/components/input/Input'
 import { KeyboardInput } from '@/game/components/input/KeyboardInput'
 import { MobileInput } from '@/game/components/input/MobileInput'
+import { OnActionButtonPressed } from '@/game/components/input/OnActionButtonPressed'
+import { Bullet } from '@/game/components/level/Bullet'
 import { Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize } from '@/game/components/level/Burger'
 import { BurgerGroup } from '@/game/components/level/BurgerGroup'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
@@ -33,18 +34,13 @@ import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 import { GameUI } from '@/game/components/ui/GameUI'
 import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
 import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
+import { SimpleButton } from '@/game/display/SimpleButton'
 import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
 import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
 import { getRandom, pick } from '@/game/utils/random.utils'
-import {
-  connectionsToGrid,
-  drawGrid,
-  drawPointsAndConnections,
-  getTileConnections,
-  type TiledWalkGrid
-} from '@/game/utils/tiles.utils'
+import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '@/game/utils/tiles.utils'
 
 import { AutoDisposer } from '../components/AutoDisposer'
 import DinoCoolMover from '../components/cpu/DinoCoolMover'
@@ -60,7 +56,10 @@ import {
   FRAME_RATE,
   FRAME_RATE_HARD,
   FRAME_RATE_HARDEST,
+  GAME_HEIGHT,
+  GAME_WIDTH,
   getWrappedLevelNo,
+  IS_ARCADE_BUILD,
   POINTS_PER_GROUP_COMPLETE
 } from '../game.config'
 import { Scene } from './Scene'
@@ -107,7 +106,6 @@ export default class LevelScene extends Scene {
     } else {
       this.sceneManager.frameRate = FRAME_RATE_HARDEST
     }
-    console.log('frame rate', this.sceneManager.frameRate)
 
     this.entity.addChild(new Sprite(Assets.get('background')))
 
@@ -168,7 +166,6 @@ export default class LevelScene extends Scene {
       // only process tile layers
       if (layer.type !== 'tilelayer') continue
 
-      // TODO: extras layer
       if (layer.name === 'extras') {
         // map to spawn points
         for (let i = 0; i < layer.data.length; i++) {
@@ -234,7 +231,7 @@ export default class LevelScene extends Scene {
 
                 // remove all matey balls
                 this.containers.mid.entities.forEach((midEntity) => {
-                  if (midEntity.hasComponent(MateyBall)) {
+                  if (midEntity.hasComponent(Bullet)) {
                     midEntity.destroy()
                   }
                 })
@@ -249,7 +246,7 @@ export default class LevelScene extends Scene {
               cpu = new Cpu(`trainee0${traineeId++}` as 'trainee01' | 'trainee02' | 'trainee03')
             } else if (id === TileId.BossCpu) {
               offsetX = 4
-              switch (levelNo) {
+              switch (getWrappedLevelNo(levelNo)) {
                 case 1: {
                   cpu = new Piggles('piggles')
                   break
@@ -371,14 +368,25 @@ export default class LevelScene extends Scene {
     }
 
     this.createBurgerGroups()
-
-    this.containers.ui.addComponent(new GameUI(this))
+    this.createGameUI()
+    this.createIntweenFloorTiles(path, map, spriteSheet)
 
     if (DRAW_DEBUG_GRID) {
       this.containers.floorFront.addChild(drawPointsAndConnections(path))
       this.containers.floorFront.addChild(drawGrid(this.walkGrid))
     }
 
+    if (isMobileOrTablet()) {
+      this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
+    } else if (!IS_ARCADE_BUILD && this.gameState.level.value === 1) {
+      const isKeyboardLikelyConnected = window.matchMedia('(pointer: fine)').matches
+      if (isKeyboardLikelyConnected) this.showKeyBoardControls()
+    }
+
+    this.emitAction({ a: 'start', l: this.gameState.level.value })
+  }
+
+  createIntweenFloorTiles(path: TiledLayerPath, map: TiledMap, spriteSheet: Texture) {
     // Add inbetween floor tiles
     path.points.forEach((point) => {
       if (Math.floor((point.x + map.tilewidth * 0.5) / (map.tilewidth * 0.5)) % 2 === 1) {
@@ -387,12 +395,10 @@ export default class LevelScene extends Scene {
         this.containers.floorFront.addChildAt(sprite, 0)
       }
     })
+  }
 
-    if (isMobileOrTablet()) {
-      this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
-    }
-
-    this.emitAction({ a: 'start', l: this.gameState.level.value })
+  createGameUI() {
+    this.containers.ui.addComponent(new GameUI(this))
   }
 
   override onUpdate(dt: number): void {
@@ -417,12 +423,10 @@ export default class LevelScene extends Scene {
     )
     labelNoEntity.position.set(labelEntity.x + labelEntity.width / 2, labelEntity.y + 5)
 
-    const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_next`)).addComponent(
-      new PointerComponent('pointerdown', () => {
-        this.sceneManager.levelComplete(this.gameState.getValues())
-      })
-    )
-    buttonEntity.position.set(0, 0)
+    const gotoNext = () => this.sceneManager.levelComplete(this.gameState.getValues())
+
+    const buttonEntity = new Entity().addComponent(new SimpleButton('button_next', () => gotoNext()))
+    buttonEntity.position.set(0, 12)
 
     screenEntity.addComponent(
       new OnStart(() => {
@@ -432,6 +436,9 @@ export default class LevelScene extends Scene {
     )
     createDelay(this.mainContainer, 1, () => {
       screenEntity.addEntity(buttonEntity)
+
+      // used delayed action to accidental action
+      screenEntity.addEntity(new Entity().addComponent(new OnActionButtonPressed(() => gotoNext())))
     })
 
     this.entity.addEntity(screenEntity)
@@ -445,16 +452,18 @@ export default class LevelScene extends Scene {
     const screenEntity = new Entity().addComponent(new FlumpAnimator(this.flumpLibrary).setMovie('panel_defeat'))
     screenEntity.position.set(120, 120)
 
-    const buttonEntity = new Entity(this.flumpLibrary.createSprite(`button_defeat_next`)).addComponent(
-      new PointerComponent('pointerdown', () => {
-        this.sceneManager.end(this.gameState.getValues())
-        this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
-      })
-    )
-    buttonEntity.position.set(0, 0)
+    const gotoNext = () => {
+      this.emitAction({ a: 'game-over', l: this.gameState.level.value, s: this.gameState.score.value })
+      this.sceneManager.gameOver(this.gameState.getValues())
+    }
+    const buttonEntity = new Entity().addComponent(new SimpleButton('button_next', () => gotoNext()))
+    buttonEntity.position.set(0, 12)
 
     createDelay(this.mainContainer, 1, () => {
       screenEntity.addEntity(buttonEntity)
+
+      // used delayed action to accidental action
+      screenEntity.addEntity(new Entity().addComponent(new OnActionButtonPressed(() => gotoNext())))
     })
 
     this.entity.addEntity(screenEntity)
@@ -564,6 +573,26 @@ export default class LevelScene extends Scene {
 
   public emitAction(action: GameAction) {
     this.sceneManager.gameController.onGameAction.emit(action)
+  }
+
+  private showKeyBoardControls() {
+    const panelSprite = this.flumpLibrary.createSprite('controls')
+    const panelEntity = new Entity(panelSprite)
+    panelEntity.position.set(GAME_WIDTH / 2, GAME_HEIGHT / 2)
+
+    const buttonEntity = new Entity().addComponent(
+      new SimpleButton('button_start', () => {
+        this.sceneManager.resume()
+        panelEntity.destroy()
+      })
+    )
+    buttonEntity.position.set(0, 42)
+    panelEntity.addEntity(buttonEntity)
+
+    createDelay(this.entity, 1 / 30, () => {
+      this.entity.addEntity(panelEntity)
+      createDelay(this.entity, 1 / 10, () => this.sceneManager.pause())
+    })
   }
 }
 

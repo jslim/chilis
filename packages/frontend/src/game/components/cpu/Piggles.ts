@@ -1,18 +1,20 @@
 import { Point } from 'pixi.js'
 
+import { Bullet } from '@/game/components/level/Bullet'
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { getOppositeDirection } from '@/game/components/Mover'
+
 import { createDelay } from '../../core/Delay'
 import { Entity } from '../../core/Entity'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
-import { Bullet } from '@/game/components/level/Bullet'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
-import { getOppositeDirection } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 
 const ATTACK_RANGE = 50
 
 export class Piggles extends Cpu {
+  private isAttackDemonstration: boolean = true
   override onStart() {
     super.onStart()
 
@@ -48,13 +50,23 @@ export class Piggles extends Cpu {
 
           createDelay(this.entity, 0.3, () => {
             this.level?.containers.mid.addEntity(bullet)
-            mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
+            createDelay(this.entity, 0.3, () => {
+              if (!this.isAttackDemonstration) {
+                mover.currentDirection.value = getOppositeDirection(mover.currentDirection.value)
+              }
+              this.isAttackDemonstration = false
+            })
           })
 
           break
         }
       }
     })
+
+    this.isAttackDemonstration = true
+    this.entity.x -= 5
+    mover.currentDirection.value = 'left'
+    this.state.value = 'prepare_attack'
   }
 
   override onUpdate(dt: number) {
@@ -75,7 +87,7 @@ export class Piggles extends Cpu {
         break
       }
       case 'prepare_attack': {
-        if (Math.abs(this.entity.x - this.level!.player.x) > ATTACK_RANGE * 1.25) {
+        if (Math.abs(this.entity.x - this.level!.player.x) > ATTACK_RANGE * 1.25 && !this.isAttackDemonstration) {
           this.state.value = 'walk'
         }
       }

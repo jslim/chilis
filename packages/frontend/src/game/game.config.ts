@@ -12,13 +12,17 @@ export const FRAME_RATE_HARDEST = 34
 export const GAME_WIDTH = 240
 export const GAME_HEIGHT = 240
 
-export const GAME_ASSETS_BASE_URL = process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true' ? './game/' : '/game/'
-export const GAME_SOUNDS_BASE_URL = process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true' ? './sounds/' : '/sounds/'
+export const IS_PRODUCTION_BUILD = process.env.NODE_ENV === 'production'
+export const IS_ARCADE_BUILD = process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'true'
+
+export const GAME_ASSETS_BASE_URL = IS_ARCADE_BUILD ? './game/' : '/game/'
+export const GAME_SOUNDS_BASE_URL = IS_ARCADE_BUILD ? './sounds/' : '/sounds/'
 
 /* DEBUG */
 
-export const DEBUG_KEYS = true
-export const DEBUG_SCENES_FROM_URL = true
+export const GAME_LOGS = !IS_PRODUCTION_BUILD
+export const DEBUG_KEYS = !IS_PRODUCTION_BUILD
+export const DEBUG_SCENES_FROM_URL = !IS_PRODUCTION_BUILD
 
 export const DRAW_DEBUG_GRID = false
 export const DRAW_CPU_DEBUG = false

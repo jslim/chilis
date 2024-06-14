@@ -5,7 +5,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 
 import { localState } from '@/store'
 
-import { Endpoints, fetchApi } from '@/utils/fetchApi'
+import { Endpoints, fetchApi } from '@/utils/fetch-api'
 
 import { View } from './PageLeaderboard.view'
 
@@ -49,7 +49,7 @@ export const Controller: FC<ControllerProps> = memo((props) => {
         setArrayOfPlayers(response.leaderboard)
       }
 
-      if (response && response.user && response.user.nickname) {
+      if (response && response.user) {
         setCurrentPlayer(response.user)
       }
     }

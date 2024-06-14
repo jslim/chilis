@@ -44,7 +44,8 @@ function basicAuth(event) {
   var token = "1z2fqfo1lshbifn0djdo68bu54yr66";
   var ipWhitelist = [
     "142.189.120.194", // jacob
-    "167.62.110.180" // fran
+    "167.62.110.180", // fran
+    "190.64.145.74" // fran
   ];
 
   // varruct the Basic Auth string

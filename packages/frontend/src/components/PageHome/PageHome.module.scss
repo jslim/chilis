@@ -7,6 +7,8 @@
 }
 
 .media {
+  @include background-opacity;
+
   video,
   img {
     // @NOTE: Tweaking object-position to have the logo matching Figma

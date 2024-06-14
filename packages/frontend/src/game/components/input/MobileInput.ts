@@ -1,7 +1,8 @@
-import type { Entity } from '../../core/Entity'
-import { Component } from '../../core/Entity'
 import type LevelScene from '@/game/scenes/LevelScene'
+import type { Entity } from '../../core/Entity'
 import type { InputKey } from './Input'
+
+import { Component } from '../../core/Entity'
 import { Input } from './Input'
 
 export class MobileInput extends Component {
@@ -34,8 +35,9 @@ export class MobileInput extends Component {
     Object.assign(joystickContainer.style, {
       position: 'absolute',
       zIndex: '7',
-      bottom: '10rem',
-      left: '3.5%',
+      bottom: '50%',
+      left: 'calc(25vw - 50vh)',
+      transform: 'translate(50%, 50%)',
       width: `${Math.trunc(scaleX * 78)}px`,
       height: `${Math.trunc(scaleX * 82)}px`,
       imageRendering: 'pixelated',
@@ -73,9 +75,9 @@ export class MobileInput extends Component {
       imageRendering: 'pixelated',
       backgroundImage: 'url("/game/mobile-action-button-up.png")',
       backgroundSize: 'cover',
-      bottom: '10rem',
-      right: '3.5%',
-      transform: 'translate(0, 0)',
+      bottom: '50%',
+      right: 'calc(25vw - 25vh)',
+      transform: 'translate(50%, 50%)',
       cursor: 'pointer'
     })
     gameContainer.append(actionButton)
@@ -112,6 +114,7 @@ export class MobileInput extends Component {
     const touch = event.touches[0]
     this.startX = touch.clientX
     this.startY = touch.clientY
+    event.preventDefault()
   }
 
   private readonly onJoystickTouchMove = (event: TouchEvent) => {
@@ -146,29 +149,35 @@ export class MobileInput extends Component {
     this.joystickButton.style.left = `${50 + (clampedDx / this.joystickRadius) * 50}%`
     this.joystickButton.style.top = `${50 + (clampedDy / this.joystickRadius) * 50}%`
     this.joystickButton.style.transform = 'translate(-50%, -50%)'
+
+    event.preventDefault()
   }
 
-  private readonly onJoystickTouchEnd = () => {
+  private readonly onJoystickTouchEnd = (event: TouchEvent) => {
     this.joystickButton.style.left = '50%'
     this.joystickButton.style.top = '50%'
     this.joystickButton.style.transform = 'translate(-50%, -50%)'
     this.emitDirection(null)
+    event.preventDefault()
   }
 
-  private readonly onActionButtonTouchStart = () => {
+  private readonly onActionButtonTouchStart = (event: TouchEvent) => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-down.png")'
     const input = this.target.getComponent(Input)
     input.onDown.emit('action')
+    event.preventDefault()
   }
 
-  private readonly onActionButtonTouchEnd = () => {
+  private readonly onActionButtonTouchEnd = (event: TouchEvent) => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
     const input = this.target.getComponent(Input)
     input.onUp.emit('action')
+    event.preventDefault()
   }
 
-  private readonly onActionButtonTouchCancel = () => {
+  private readonly onActionButtonTouchCancel = (event: TouchEvent) => {
     this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
+    event.preventDefault()
   }
 
   private getDirection(dx: number, dy: number): InputKey | null {

@@ -14,11 +14,19 @@ export type GameSliceState = {
     idToken?: string
     nickname?: string
     isTokenValid?: boolean
+    gameId?: string
+    highScore?: number
+    playersList?: []
     // setters
     setAccessToken: (token: string) => void
     setIdToken: (token: string) => void
     setNickname: (nickname: string) => void
     setIsTokenValid: (isTokenValid: boolean) => void
+    setGameId: (gameId: string) => void
+    setHighScore: (highScore: number) => void
+    setPlayersList: (playersList: []) => void
+    // reset all user data
+    resetUser: () => void
   }
   screen: {
     // getters
@@ -59,6 +67,33 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
     setIsTokenValid: (isTokenValid) => {
       set((state) => {
         state.user.isTokenValid = isTokenValid
+      })
+    },
+    setGameId: (gameId) => {
+      set((state) => {
+        state.user.gameId = gameId
+      })
+    },
+    setHighScore: (highScore) => {
+      set((state) => {
+        state.user.highScore = highScore
+      })
+    },
+    setPlayersList: (playersList) => {
+      set((state) => {
+        state.user.playersList = playersList
+      })
+    },
+    // reset all user data
+    resetUser: () => {
+      set((state) => {
+        state.user.accessToken = undefined
+        state.user.idToken = undefined
+        state.user.nickname = undefined
+        state.user.isTokenValid = undefined
+        state.user.gameId = undefined
+        state.user.highScore = undefined
+        state.user.playersList = undefined
       })
     }
   },

@@ -4,6 +4,6 @@
   "private": true,
   "scripts": {
     "test": "sst bind vitest",
-    "lint:dev": "tsc --noEmit"
+    "lint-dev": "tsc --noEmit"
   }
 }

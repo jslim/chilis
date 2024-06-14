@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @import 'shared';
 
 .root {
@@ -12,8 +14,7 @@
 
   &.isDisabled {
     background-color: $gray;
-    border-color: $gray;
-    border-bottom-width: thin;
+    border-color: color.adjust($gray, $lightness: -10%);
     pointer-events: none;
   }
 

@@ -18,9 +18,10 @@ export default class GameService {
 
     try {
       const newGameID = uuidv4();
-      const createdAt = new Date(new Date()).toISOString();
+      const createdAt = new Date().toISOString();
+      const ttl = Math.floor(new Date().getTime() / 1000) + 12 * 60 * 60;
 
-      await this.repository.createNewGame({ subReference, newGameID, createdAt });
+      await this.repository.createNewGame({ subReference, newGameID, createdAt, ttl });
 
       return newGameID;
     } catch (err) {
@@ -33,7 +34,10 @@ export default class GameService {
    * @param nickname - The nickname of the user.
    * @param data - An object containing userSub, gameId, score, and level.
    */
-  public async recordGameScore(nickname: string, data: { userSub: string; gameId: string; score: number; level: number }) {
+  public async recordGameScore(
+    nickname: string,
+    data: { userSub: string; gameId: string; score: number; level: number },
+  ) {
     // TODO: Validate the score sent with the registered actions
 
     const { userSub, gameId, score, level } = data;
@@ -41,7 +45,7 @@ export default class GameService {
       gameId: gameId,
       score: score,
       level: level,
-      timestamp: new Date(new Date()).toISOString(),
+      timestamp: new Date().toISOString(),
     };
     try {
       // Save game score in userGameHistory

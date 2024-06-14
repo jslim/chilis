@@ -61,6 +61,7 @@
     max-width: px(700);
     margin-top: px(15);
     color: $sour-cream;
+    padding: $side-spacing;
 
     @include media-tablet {
       margin-top: px(22);

@@ -1,4 +1,5 @@
 import type { FC } from 'react'
+import type { CommonContent } from '@/services/cms'
 
 import { memo } from 'react'
 
@@ -9,6 +10,7 @@ export interface ControllerProps {
   text?: string
   isDisabled?: boolean
   onClick?: () => void
+  content: CommonContent['topNav']
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

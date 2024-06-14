@@ -10,9 +10,10 @@ export interface ControllerProps {
   maxPlayers?: number
   players: Player[] | undefined
   title?: string
-  currentRankText: string
+  currentRankText?: string
   fullLeaderboardText?: string
   currentPlayer?: Player
+  isGameOverScreen?: boolean
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

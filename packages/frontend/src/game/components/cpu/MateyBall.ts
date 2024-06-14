@@ -27,7 +27,6 @@ export class MateyBall extends Component {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
     this.tween.update(dt)
-    //if (this.tween) console.log(this.tween.progress);
   }
 
   private tweenToFloor(toY: number) {

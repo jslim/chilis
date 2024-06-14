@@ -36,7 +36,7 @@ class GameRepository {
           ...params,
           ExclusiveStartKey: lastEvaluatedKey,
         },
-        true
+        true,
       );
 
       if (queryResult.Count && queryResult.Count >= 1) {
@@ -55,12 +55,18 @@ class GameRepository {
    * @param data - An object containing the subReference, newGameID, createdAt, and steps of the game.
    * @returns Promise - The result of creating a new game record.
    */
-  public async createNewGame(data: { subReference: string; newGameID: string; createdAt: string }): Promise<PutItemOutput> {
+  public async createNewGame(data: {
+    subReference: string;
+    newGameID: string;
+    createdAt: string;
+    ttl: number;
+  }): Promise<PutItemOutput> {
     const record = {
       subReference: data.subReference,
       gameId: data.newGameID,
       status: GameStatus.ACTIVE,
       timestamp: data.createdAt,
+      ttl: data.ttl,
       steps: {},
     };
 
@@ -78,7 +84,11 @@ class GameRepository {
    * @param newStatus - The new status to update the game to (default: COMPLETED).
    * @returns Promise - The result of updating the game status.
    */
-  public async updateGameStatus(userSub: string, gameId: string, newStatus: GameStatus = GameStatus.COMPLETED): Promise<UpdateItemOutput> {
+  public async updateGameStatus(
+    userSub: string,
+    gameId: string,
+    newStatus: GameStatus = GameStatus.COMPLETED,
+  ): Promise<UpdateItemOutput> {
     const keys = {
       subReference: userSub,
       gameId: gameId,
@@ -110,7 +120,10 @@ class GameRepository {
    * @param gameScore - An object containing the gameId, score, level, and timestamp of the game.
    * @returns Promise - The result of saving the game score to the history table.
    */
-  public async saveGameScoreToHistory(userSub: string, gameScore: GameScore): Promise<PutItemOutput | UpdateItemOutput> {
+  public async saveGameScoreToHistory(
+    userSub: string,
+    gameScore: GameScore,
+  ): Promise<PutItemOutput | UpdateItemOutput> {
     const record = {
       subReference: userSub,
       gameScore: [gameScore],
@@ -147,12 +160,15 @@ class GameRepository {
    * @param gameScore - An object containing the gameId, score, level, and timestamp of the game.
    * @returns Promise - The result of updating the leaderboard with the new game score.
    */
-  public async updateLeaderboard(userSub: string, gameScore: GameScore): Promise<PutItemOutput | UpdateItemOutput | undefined> {
+  public async updateLeaderboard(
+    userSub: string,
+    gameScore: GameScore,
+  ): Promise<PutItemOutput | UpdateItemOutput | undefined> {
     try {
       return await this.client.save(
         { ...gameScore, subReference: userSub, gsiPK: GSILeaderboard.ALL_TIME_LEADERBOARD },
         { ConditionExpression: "attribute_not_exists(subReference)" },
-        process.env.LEADERBOARD_TABLE_NAME
+        process.env.LEADERBOARD_TABLE_NAME,
       );
     } catch (error: any) {
       if (error.name === "ConditionalCheckFailedException") {
@@ -162,7 +178,8 @@ class GameRepository {
         try {
           return await this.client.update({ subReference: userSub }, params, process.env.LEADERBOARD_TABLE_NAME);
         } catch (updateError) {
-          if (error.name !== "ConditionalCheckFailedException") throw new Error(`Error trying to update leaderboard: ${updateError}`);
+          if (error.name !== "ConditionalCheckFailedException")
+            throw new Error(`Error trying to update leaderboard: ${updateError}`);
         }
       } else {
         throw new Error(`updateLeaderboard Error: ${error}`);

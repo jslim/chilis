@@ -24,7 +24,9 @@ export function Database({ stack, app }: StackContext) {
       status: "string", // active, inactive, completed
       timestamp: "string",
       steps: "string", // StringSet <{action: enum; name: string; level: number; point: number; timestamp: string;}>
+      ttl: "number",
     },
+    timeToLiveAttribute: "ttl",
     primaryIndex: { partitionKey: "subReference", sortKey: "gameId" },
     cdk: {
       table: {

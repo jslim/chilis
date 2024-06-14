@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import type { NavHandle } from '@/components/Nav'
 import type { PageHandle, PageProps } from '@/data/types'
 
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { CognitoJwtVerifier } from 'aws-jwt-verify'
@@ -24,6 +24,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseModal } from '@/components/BaseModal'
+import { ConfirmationModal } from '@/components/ConfirmationModal'
 import { Head } from '@/components/Head'
 import { LogModal } from '@/components/LogModal'
 import { Nav } from '@/components/Nav'
@@ -59,8 +60,10 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
   const isModalOpen = localState().screen.isModalOpen
+  const nickname = localState().user.nickname
 
   const [idToken] = useLocalStorage('idToken')
+  const [accessToken] = useLocalStorage('accessToken')
 
   //
   // Update pathname ref
@@ -200,16 +203,14 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         console.log('Token is valid. Payload:', payload)
         localState().user.setIsTokenValid(true)
         localState().user.setNickname(String(payload.preferred_username))
+        localState().user.setAccessToken(String(accessToken))
 
         if (isModalOpen && String(payload.preferred_username)) {
           localState().screen.setIsModalOpen(false)
         }
       } catch (error) {
         console.log('Token not valid!', error)
-        localState().user.setNickname('')
-        localState().user.setAccessToken('')
-        localState().user.setIdToken('')
-        localState().user.setIsTokenValid(false) // TODO: Refactor all this into one to reset the user state
+        localState().user.resetUser()
       }
     }
 
@@ -251,14 +252,35 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }
 
+  // Log out
+  const handleNavigateBack = useCallback(() => {
+    localState().user.resetUser()
+    localState().screen.setIsModalOpen(false)
+    localStorage.removeItem('idToken')
+    localStorage.removeItem('accessToken')
+
+    const storedDataString = localStorage.getItem('NEXTJS-BOILERPLATE')
+    const storedData = JSON.parse(String(storedDataString))
+
+    if (storedData && storedData.accessToken && storedData.idToken) {
+      delete storedData.accessToken
+      delete storedData.idToken
+      localStorage.setItem('NEXTJS-BOILERPLATE', JSON.stringify(storedData))
+    }
+
+    if (refs.pathname.current === routes.GAME) {
+      router.push(routes.HOME)
+    }
+  }, [refs.pathname, router])
+
   return (
     <div className={classNames('Layout', css.root)}>
       <Head {...pageProps.content.head} />
 
       <TopNav
+        content={pageProps.content.common.topNav}
         text={localStore().user.nickname ? localState().user.nickname : pageProps.content.common.topNav.logIn}
         onClick={() => localState().screen.setIsModalOpen(true)}
-        isDisabled={!!localState().user.nickname} // TODO: add a validation here to verify the token, so on ref the user stays logged in
       />
 
       {refs.pathname.current !== routes.FULL_LEADERBOARD &&
@@ -284,11 +306,25 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
       <div className={css.content}>{currentPage}</div>
 
-      {isModalOpen && (
-        <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
-          <LogModal {...pageProps.content.common.logModal} onClose={() => localState().screen.setIsModalOpen(false)} />
-        </BaseModal>
-      )}
+      {isModalOpen &&
+        (!nickname ? (
+          <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
+            <LogModal
+              {...pageProps.content.common.logModal}
+              onClose={() => localState().screen.setIsModalOpen(false)}
+            />
+          </BaseModal>
+        ) : (
+          <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
+            <ConfirmationModal
+              className={css.modalLogOut}
+              show={isModalOpen}
+              handleClose={() => localState().screen.setIsModalOpen(false)}
+              content={pageProps.content.common.topNav.logOutModal}
+              handleNavigateBack={handleNavigateBack}
+            />
+          </BaseModal>
+        ))}
 
       <CookieBanner content={pageProps.content.common.cookieBanner} />
 

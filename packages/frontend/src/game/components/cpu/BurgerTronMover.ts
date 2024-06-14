@@ -61,6 +61,11 @@ export default class BurgerTronMover extends CpuMover {
     switch (cpu.state.value) {
       case 'dead': {
         this.flyAway()
+        break
+      }
+      case 'attack_complete': {
+        this.flyAway()
+        break
       }
     }
   }
