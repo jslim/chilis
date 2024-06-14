@@ -7,13 +7,13 @@ import { gsap } from 'gsap'
 
 import css from './PageGame.module.scss'
 
+import { getGameInstance } from '@/services/game'
+
 import { useRefs } from '@/hooks/use-refs'
 
 import { BackgroundVideo } from '@/components/BackgroundVideo'
 import { BaseButton } from '@/components/BaseButton'
 import { Container } from '@/components/Container'
-import { get } from 'http'
-import { getGameInstance } from '@/services/game'
 
 export interface ViewProps extends ControllerProps {}
 
