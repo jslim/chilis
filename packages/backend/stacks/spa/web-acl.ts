@@ -6,9 +6,13 @@ import { detectStage } from "@/libs/detect-stage";
 import { getWAFManagedRule } from "@/utils/waf-utils";
 // import { isValidDomain } from "@/utils/domain-validator";
 
-const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")
-  ?.split(",")
-  .map((country) => country.trim()) || ["CA", "US", "UY", "NL", "BR"];
+const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")?.split(",").map((country) => country.trim()) || [
+  "CA",
+  "US",
+  "UY",
+  "NL",
+  "BR",
+];
 
 export function WebACL({ stack, app }: StackContext) {
   const { isDevelopment, isProd } = detectStage(app.stage);
@@ -19,33 +23,25 @@ export function WebACL({ stack, app }: StackContext) {
 
   // const enableCustomDomain = isValidDomain(String(process.env.BASE_DOMAIN));
 
-  const allowedIpSet = new CfnIPSet(
-    stack,
-    `${app.stage}-cloudfront-allowed-ip-address`,
-    {
-      name: `${app.stage}-cloudfront-allowed-ip-address`,
-      scope: "CLOUDFRONT",
-      description: "Allowed IP CIDRS",
-      addresses: [
-        "192.0.2.0/24", // Example IP address range
-      ],
-      ipAddressVersion: "IPV4",
-    }
-  );
+  const allowedIpSet = new CfnIPSet(stack, `${app.stage}-cloudfront-allowed-ip-address`, {
+    name: `${app.stage}-cloudfront-allowed-ip-address`,
+    scope: "CLOUDFRONT",
+    description: "Allowed IP CIDRS",
+    addresses: [
+      "192.0.2.0/24", // Example IP address range
+    ],
+    ipAddressVersion: "IPV4",
+  });
 
-  const blockedIpset = new CfnIPSet(
-    stack,
-    `${app.stage}-cloudfront-blocked-ip-address`,
-    {
-      name: `${app.stage}-cloudfront-blocked-ip-address`,
-      scope: "CLOUDFRONT",
-      description: "Blocked IP CIDRS",
-      addresses: [
-        "192.0.2.0/24", // Example IP address range
-      ],
-      ipAddressVersion: "IPV4",
-    }
-  );
+  const blockedIpset = new CfnIPSet(stack, `${app.stage}-cloudfront-blocked-ip-address`, {
+    name: `${app.stage}-cloudfront-blocked-ip-address`,
+    scope: "CLOUDFRONT",
+    description: "Blocked IP CIDRS",
+    addresses: [
+      "192.0.2.0/24", // Example IP address range
+    ],
+    ipAddressVersion: "IPV4",
+  });
 
   const webACL = new CfnWebACL(stack, `${app.stage}-web-acl`, {
     scope: "CLOUDFRONT", // or CLOUDFRONT
@@ -151,31 +147,31 @@ export function WebACL({ stack, app }: StackContext) {
           sampledRequestsEnabled: true,
         },
       },
-      ...(isProd
-        ? [
-            {
-              name: `${app.stage}-allowed-ips-rule`,
-              priority: 4,
-              action: {
-                block: {},
-              },
-              statement: {
-                notStatement: {
-                  statement: {
-                    ipSetReferenceStatement: {
-                      arn: allowedIpSet.attrArn,
-                    },
-                  },
-                },
-              },
-              visibilityConfig: {
-                cloudWatchMetricsEnabled: true,
-                metricName: `${app.stage}-allowed-ips-rule`,
-                sampledRequestsEnabled: true,
-              },
-            },
-          ]
-        : []),
+      // ...(isProd
+      //   ? [
+      //       {
+      //         name: `${app.stage}-allowed-ips-rule`,
+      //         priority: 4,
+      //         action: {
+      //           block: {},
+      //         },
+      //         statement: {
+      //           notStatement: {
+      //             statement: {
+      //               ipSetReferenceStatement: {
+      //                 arn: allowedIpSet.attrArn,
+      //               },
+      //             },
+      //           },
+      //         },
+      //         visibilityConfig: {
+      //           cloudWatchMetricsEnabled: true,
+      //           metricName: `${app.stage}-allowed-ips-rule`,
+      //           sampledRequestsEnabled: true,
+      //         },
+      //       },
+      //     ]
+      //   : []),
     ],
   });
 
