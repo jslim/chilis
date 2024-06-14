@@ -130,6 +130,10 @@ export const View: FC<ViewProps> = ({ className, background }) => {
     if (!gameInstance) {
       initGame()
     }
+
+    return () => {
+      gameInstance?.destroy()
+    }
   }, [gameInstance, onGameStarted, onGameUpdate, push])
 
   return (

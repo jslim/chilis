@@ -7,6 +7,8 @@ import { gsap } from 'gsap'
 
 import css from './PageGame.module.scss'
 
+import { getGameInstance } from '@/services/game'
+
 import { useRefs } from '@/hooks/use-refs'
 
 import { BackgroundVideo } from '@/components/BackgroundVideo'
@@ -25,6 +27,15 @@ export type ViewRefs = {
 export const View: FC<ViewProps> = ({ onReady, content }) => {
   const refs = useRefs<ViewRefs>()
   const [isVideoFinished, setIsVideoFinished] = useState(false)
+  const gameInstance = getGameInstance()
+
+  useEffect(() => {
+    if (isVideoFinished) {
+      gameInstance?.resume()
+    } else {
+      gameInstance?.pause()
+    }
+  }, [gameInstance, isVideoFinished])
 
   useEffect(() => {
     gsap.set(refs.root.current, { opacity: 0 })
