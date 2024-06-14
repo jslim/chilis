@@ -5,6 +5,20 @@
   position: relative;
   width: 100%;
 
+  .videoWrapper {
+    @include z-index(intro);
+    @include position-100(absolute);
+
+    .skip {
+      @include font-size(30);
+      position: absolute;
+      left: px(30);
+      bottom: px(30);
+      color: $white;
+      z-index: 1;
+    }
+  }
+
   .title {
     @include typography-h1;
     padding-top: px(80);

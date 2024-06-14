@@ -11,9 +11,11 @@
     border-radius: px(20);
     padding: px(20);
     overflow: hidden;
+    min-height: px(300);
 
     .description {
       @include typography-montserrat-body;
+      max-width: px(300);
     }
 
     .close {

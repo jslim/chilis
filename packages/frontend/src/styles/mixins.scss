@@ -308,3 +308,13 @@
     inset: px(-$px);
   }
 }
+
+@mixin background-opacity($color: $black, $opacity: 0.1) {
+  &::after {
+    content: '';
+    @include position-100(absolute);
+    display: block;
+    background-color: rgba($color, $opacity);
+    z-index: 0;
+  }
+}

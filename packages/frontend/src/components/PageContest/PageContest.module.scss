@@ -22,7 +22,6 @@
   position: relative;
   flex-direction: column;
   gap: px(30);
-  padding: px(30) 0 px(60);
 
   @include media-aspect-vertical {
     padding-top: 0;
@@ -30,7 +29,6 @@
 
   @include media-tablet-large {
     gap: px(60);
-    padding: px(80);
   }
 
   .title {

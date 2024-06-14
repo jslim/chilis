@@ -9,7 +9,7 @@ export interface ControllerProps {
   className?: string
   show: boolean
   handleClose: () => void
-  handleNavigateBack: () => void
+  handleNavigateBack?: () => void
   content: CommonContent['topNav']['backModal']
 }
 
