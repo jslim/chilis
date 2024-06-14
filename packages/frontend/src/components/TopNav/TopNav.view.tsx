@@ -9,6 +9,7 @@ import { routes } from '@/data/routes'
 
 import { localStore } from '@/store'
 
+import usePauseGameInstance from '@/hooks/use-pause-game-instance'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
@@ -30,6 +31,8 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
   const currentRoute = localStore((state) => state.navigation.pathname)
   const navigateBack = localStore((state) => state.navigation.navigateBack)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  usePauseGameInstance(isModalOpen)
 
   const handleClose = () => {
     setIsModalOpen(false)
@@ -85,7 +88,7 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
         {renderBackButtonSlot()}
 
         <BaseButton className={css.button} onClick={onClick} disabled={isDisabled}>
-          {text}
+          {text && text}
           <div className={css.iconContainer}>
             <SvgLoginLogout />
           </div>

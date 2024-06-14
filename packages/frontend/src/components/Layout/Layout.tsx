@@ -202,10 +202,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         const payload = await verifier.verify(idToken)
         console.log('Token is valid. Payload:', payload)
         localState().user.setIsTokenValid(true)
-        localState().user.setNickname(String(payload.preferred_username))
+
+        if (payload.preferred_username) localState().user.setNickname(String(payload.preferred_username))
         localState().user.setAccessToken(String(accessToken))
 
-        if (isModalOpen && String(payload.preferred_username)) {
+        if (isModalOpen && payload.preferred_username) {
           localState().screen.setIsModalOpen(false)
         }
       } catch (error) {
@@ -307,7 +308,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <div className={css.content}>{currentPage}</div>
 
       {isModalOpen &&
-        (!nickname ? (
+        (!nickname || nickname === 'undefined' ? (
           <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
             <LogModal
               {...pageProps.content.common.logModal}

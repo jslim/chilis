@@ -165,7 +165,6 @@ export const View: FC<ViewProps> = ({
               </div>
             </>
           ) : (
-            hasLogged &&
             !preferredNickname && (
               <>
                 <div className={css.title} {...copy.html(nicknameTitle)} />
