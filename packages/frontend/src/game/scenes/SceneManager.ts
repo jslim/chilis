@@ -33,7 +33,7 @@ export default class SceneManager {
   async showLevel(levelNo: number) {
     const level = new LevelScene(this)
     this.goto(level)
-    await level.init(levelNo)
+    await level.init(levelNo, level.gameState.score.value)
   }
 
   async preload() {
