@@ -1,6 +1,4 @@
-import type { FC } from 'react'
-
-import { memo } from 'react'
+import { forwardRef, memo } from 'react'
 
 import { View } from './BackgroundVideo.view'
 
@@ -20,8 +18,11 @@ export interface ControllerProps {
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
-export const Controller: FC<ControllerProps> = memo((props) => {
-  return <View {...props} />
-})
+export const Controller = memo(
+  forwardRef<HTMLElement, ControllerProps>((props, ref) => {
+    // @ts-expect-error - forwardRef type is not compatible with ViewProps
+    return <View {...props} ref={ref} />
+  })
+)
 
 Controller.displayName = 'BackgroundVideo_Controller'

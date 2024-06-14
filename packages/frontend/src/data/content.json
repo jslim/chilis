@@ -33,12 +33,18 @@
     },
     "topNav": {
       "logIn": "LOG IN",
-      "LogOut": "LOG OUT",
-      "backModal": {
-        "description": "Are you sure?",
+      "logOutModal": {
+        "description": "<strong>Are you sure?</strong></br></br>After logging out, you will lose your progress and score.",
         "ctas": {
-          "confirm": "yes go back",
-          "deny": "no stay here"
+          "confirm": "YES, LOG OUT",
+          "deny": "NO, STAY"
+        }
+      },
+      "backModal": {
+        "description": "<strong>Are you sure?</strong></br></br>Quitting this way won’t save your score",
+        "ctas": {
+          "confirm": "YES, QUIT",
+          "deny": "NO, STAY"
         }
       }
     },
@@ -98,7 +104,8 @@
         "src": "low-battery-icon.png",
         "alt": "Low Battery"
       }
-    }
+    },
+    "skip": "SKIP"
   },
   "pages": {
     "home": {
@@ -138,6 +145,10 @@
         "background": {
           "src": "game-background.png",
           "alt": ""
+        },
+        "backgroundVideo": {
+          "src": "/videos/opening.mp4",
+          "poster": "game-background.png"
         }
       }
     },
@@ -255,7 +266,7 @@
       },
       "body": {
         "title": "Game Over Page",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "description": "You completed all possible levels of BurgerTime. Check your rank on the leaderboard and see if you can beat the high score.",
         "descriptionOver": "Womp. You didn’t beat the evil fast-food syndicate, this time. Play again to save the Big Smasher.",
         "backgroundVideo": {
           "src": "",

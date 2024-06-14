@@ -5,6 +5,8 @@ import classNames from 'classnames'
 
 import css from './ConfirmationModal.module.scss'
 
+import { copy } from '@/utils/copy'
+
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseModal } from '@/components/BaseModal'
@@ -24,7 +26,7 @@ export const View: FC<ViewProps> = ({ className, handleClose, handleNavigateBack
   return show ? (
     <BaseModal className={classNames('ConfirmationModal', css.root, className)} onClose={handleClose}>
       <div className={css.container} ref={refs.root}>
-        <p className={css.description}>{content.description}</p>
+        <p className={css.description} {...copy.html(content.description)} />
         <CloseButton className={css.close} onClick={handleClose} />
         <div className={css.buttonContainer}>
           <PillButton className={css.goBack} onClick={handleNavigateBack}>

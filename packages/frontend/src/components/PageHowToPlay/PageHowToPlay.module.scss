@@ -27,7 +27,6 @@
   @include flex-center(column);
   position: relative;
   gap: px(20);
-  padding-top: px(30);
   width: 100%;
 
   @include media-tablet {
