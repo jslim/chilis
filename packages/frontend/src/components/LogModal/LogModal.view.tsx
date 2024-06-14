@@ -22,8 +22,6 @@ import { BaseForm } from '@/components/BaseForm'
 import { BaseImage } from '@/components/BaseImage'
 import { CloseButton } from '@/components/CloseButton'
 
-import SvgChilis from '@/svgs/Chilis.svg'
-
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -33,6 +31,7 @@ export type ViewRefs = {
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({
   className,
+  logo,
   title,
   description,
   cta,
@@ -125,7 +124,7 @@ export const View: FC<ViewProps> = ({
         <CloseButton className={css.close} onClick={onClose} />
         <div className={css.top}>
           <div className={css.logoContainer}>
-            <SvgChilis />
+            <BaseImage className={css.logo} data={getImageUrl(logo.src)} alt={logo.alt} />
           </div>
 
           {!localStore().user.isTokenValid ? (

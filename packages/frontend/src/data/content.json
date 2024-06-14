@@ -46,9 +46,17 @@
           "confirm": "YES, QUIT",
           "deny": "NO, STAY"
         }
+      },
+      "logo": {
+        "src": "chilis-logo.png",
+        "alt": "Chili's Logo"
       }
     },
     "logModal": {
+      "logo": {
+        "src": "chilis-large-logo.png",
+        "alt": "Chili's Logo"
+      },
       "title": "BURGERS FOR LIFE",
       "description": "To get added to the leaderboard and entered to win prizes, login below. If not you don’t have an account yet, click the sign up button below. Once created, come back to this page and login.",
       "cta": "LOG IN",
