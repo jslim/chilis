@@ -35,7 +35,7 @@ export const Head: FC<HeadProps> = memo(({ title, description, descriptionSocial
     .split('?')[0]
     .split('#')[0]
 
-  const shareImage = `${config.websiteUrl}${image}`
+  const shareImage = `${fullPath}${image}`
   const shareLocale = 'en_US'
 
   return (
