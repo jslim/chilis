@@ -22,7 +22,7 @@ export class SimpleButton extends Component {
     })
     const overTexture = new Texture({
       source: texture.source,
-      frame: new Rectangle(0, 24, texture.width, 24)
+      frame: new Rectangle(0, 24, texture.width, 25)
     })
     const downTexture = new Texture({
       source: texture.source,

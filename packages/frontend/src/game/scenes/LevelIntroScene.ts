@@ -24,7 +24,7 @@ export class LevelIntroScene extends Scene {
     ;(async () => {
       await this.playVideo(`cutscene_level_0${this.levelNo}`, () => this.gotoNext())
       const buttonEntity = new Entity().addComponent(new SimpleButton('button_skip', () => this.gotoNext()))
-      buttonEntity.position.set(GAME_WIDTH - 29, GAME_HEIGHT - 12)
+      buttonEntity.position.set(GAME_WIDTH - 29, GAME_HEIGHT - 13)
       this.entity.addEntity(buttonEntity)
     })()
   }
