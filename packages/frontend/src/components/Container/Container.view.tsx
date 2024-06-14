@@ -34,7 +34,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const [showGameBorder, setShowGameBorder] = useState<boolean>(false)
   const isModalOpen = localStore().screen.isModalOpen
   const accessToken = localStore().user.accessToken
-  const [gameInstance, setGameInstance] = useState<GameController>()
+  const [gameInstance, setGameInstance] = useState<GameController | null>(null)
   const { push } = useRouter()
   const [gameId, setGameId] = useLocalStorage('gameId')
 

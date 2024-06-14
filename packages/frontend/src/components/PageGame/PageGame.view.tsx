@@ -30,10 +30,10 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
   const gameInstance = getGameInstance()
 
   useEffect(() => {
+    if (!gameInstance) return
+
     if (isVideoFinished) {
-      gameInstance?.resume()
-    } else {
-      gameInstance?.pause()
+      gameInstance?.start()
     }
   }, [gameInstance, isVideoFinished])
 
