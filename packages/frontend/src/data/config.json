@@ -20,7 +20,7 @@
     }
   },
   "resizeDebounceTime": 10,
-  "websiteUrl": "https://localhost:3000",
+  "websiteUrl": "https://localhost:3001",
   "dnsPrefetch": {
     "development": [],
     "production": ["https://www.google-analytics.com", "https://www.googletagmanager.com"],

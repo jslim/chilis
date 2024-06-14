@@ -17,3 +17,6 @@ export const BRINKER_ACCESS = "/brinker/api/access";
 // DYNAMO
 export const MAX_LEADERBOARD_RECORD = 500;
 export const ALLTIME_LEADERBOARD_INDEX = "alltime_leaderboard";
+
+// IoT
+export const SEND_TOPIC_PATTERN = "send/action";

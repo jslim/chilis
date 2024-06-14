@@ -15,6 +15,7 @@ import { initializeGame } from '@/services/game'
 
 import { getImageUrl } from '@/utils/basic-functions'
 
+import useMqttClient from '@/hooks/use-mqtt-client'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseImage } from '@/components/BaseImage'
@@ -33,10 +34,11 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const [isPaused, setIsPaused] = useState<boolean>(false)
   const [gameInstance, setGameInstance] = useState<GameController>()
   const { push } = useRouter()
+  const { mqttClient, isClientReady } = useMqttClient()
 
   useEffect(() => {
     const initGame = async () => {
-      const game = await initializeGame()
+      const game = await initializeGame(mqttClient)
       setGameInstance(game)
       game.onShowGameBorder.subscribe(setShowGameBorder)
       game.onGameOver.subscribe(() => push(routes.GAME_OVER))
@@ -47,12 +49,14 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       })
     }
 
-    initGame()
+    if (isClientReady || mqttClient) {
+      initGame()
+    }
 
     return () => {
       // TODO: clean up game instance
     }
-  }, [push])
+  }, [push, isClientReady, mqttClient])
 
   useEffect(() => {
     if (!gameInstance) return

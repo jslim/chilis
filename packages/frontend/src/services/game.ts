@@ -10,7 +10,7 @@ export const isOggSupported = () => {
   return !!audio.canPlayType && audio.canPlayType('audio/ogg; codecs="vorbis"') !== ''
 }
 
-export const initializeGame = async () => {
+export const initializeGame = async (mqttClient) => {
   if (!gameInstance) {
     gameInstance = new GameController()
 
@@ -24,7 +24,11 @@ export const initializeGame = async () => {
 
     gameInstance.onLevelComplete.subscribe((data) => console.log('Level complete!', data))
     gameInstance.onGameOver.subscribe((data) => console.log('Game over!', data))
-    gameInstance.onGameAction.subscribe((action) => console.log('Game action!', action))
+    gameInstance.onGameAction.subscribe((action) => {
+      const a = mqttClient.publish('send/action/1', 'publishMessage')
+      console.log(a)
+      console.log('Game action!', action)
+    })
     gameInstance.onShowGameBorder.subscribe((showBorder) => console.log('Show game border:', showBorder))
 
     await gameInstance.preload()

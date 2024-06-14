@@ -14,6 +14,7 @@ import {
   Database,
   SecretsStack,
   WafStack,
+  IoTStack,
 } from "@app/backend/stacks";
 
 import { SST_APP_NAME } from "@app/backend/libs/config";
@@ -40,6 +41,7 @@ export default {
       .stack(userApiStack)
       .stack(gameApiStack)
       .stack(leaderboardApiStack)
+      .stack(IoTStack)
       .stack(WafStack)
       /* Frontend */
       .stack(WebACL)
