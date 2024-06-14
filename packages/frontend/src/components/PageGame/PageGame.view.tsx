@@ -12,6 +12,8 @@ import { useRefs } from '@/hooks/use-refs'
 import { BackgroundVideo } from '@/components/BackgroundVideo'
 import { BaseButton } from '@/components/BaseButton'
 import { Container } from '@/components/Container'
+import { get } from 'http'
+import { getGameInstance } from '@/services/game'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -25,6 +27,15 @@ export type ViewRefs = {
 export const View: FC<ViewProps> = ({ onReady, content }) => {
   const refs = useRefs<ViewRefs>()
   const [isVideoFinished, setIsVideoFinished] = useState(false)
+  const gameInstance = getGameInstance()
+
+  useEffect(() => {
+    if (isVideoFinished) {
+      gameInstance?.resume()
+    } else {
+      gameInstance?.pause()
+    }
+  }, [gameInstance, isVideoFinished])
 
   useEffect(() => {
     gsap.set(refs.root.current, { opacity: 0 })
