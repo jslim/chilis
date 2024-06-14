@@ -28,7 +28,7 @@ export const initializeGame = async () => {
     gameInstance.onShowGameBorder.subscribe((showBorder) => console.log('Show game border:', showBorder))
 
     await gameInstance.preload()
-    await gameInstance.start()
+    // await gameInstance.start()
   }
 
   return gameInstance
