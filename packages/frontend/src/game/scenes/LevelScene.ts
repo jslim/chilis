@@ -12,7 +12,6 @@ import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
 import { CpuMover } from '@/game/components/cpu/CpuMover'
 import { DinoCool } from '@/game/components/cpu/DinoCool'
 import { Matey } from '@/game/components/cpu/Matey'
-import { MateyBall } from '@/game/components/cpu/MateyBall'
 import { MrBaggie } from '@/game/components/cpu/MrBaggie'
 import { Piggles } from '@/game/components/cpu/Piggles'
 import { Zapp } from '@/game/components/cpu/Zapp'
@@ -21,6 +20,7 @@ import { Input } from '@/game/components/input/Input'
 import { KeyboardInput } from '@/game/components/input/KeyboardInput'
 import { MobileInput } from '@/game/components/input/MobileInput'
 import { OnActionButtonPressed } from '@/game/components/input/OnActionButtonPressed'
+import { Bullet } from '@/game/components/level/Bullet'
 import { Burger, burgerHeightByTileId, burgerOverlap, BurgerTileSize } from '@/game/components/level/Burger'
 import { BurgerGroup } from '@/game/components/level/BurgerGroup'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
@@ -231,7 +231,7 @@ export default class LevelScene extends Scene {
 
                 // remove all matey balls
                 this.containers.mid.entities.forEach((midEntity) => {
-                  if (midEntity.hasComponent(MateyBall)) {
+                  if (midEntity.hasComponent(Bullet)) {
                     midEntity.destroy()
                   }
                 })

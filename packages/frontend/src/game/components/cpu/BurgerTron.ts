@@ -22,22 +22,28 @@ export class BurgerTron extends Cpu {
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1)
 
+    const shootDelays: Entity[] = []
     this.subscribe(this.state.onChanged, (state) => {
+      shootDelays.forEach((delay) => delay.destroy())
       switch (state) {
         case 'prepare_attack': {
           break
         }
 
         case 'attack': {
-          createDelay(this.entity, 0.1, () => this.shootBall(mover.currentDirection.value === 'left' ? -3 : 3))
-          createDelay(this.entity, 2, () => {
-            if (cpu.state.value === 'attack') cpu.state.value = 'attack_complete'
-          })
+          shootDelays.push(
+            createDelay(this.entity, 0.1, () => this.shootBall(mover.currentDirection.value === 'left' ? -3 : 3)),
+            createDelay(this.entity, 3, () => this.shootBall(mover.currentDirection.value === 'left' ? -3 : 3)),
+            createDelay(this.entity, 6, () => this.shootBall(mover.currentDirection.value === 'left' ? -3 : 3)),
+            createDelay(this.entity, 6.5, () => {
+              if (cpu.state.value === 'attack') cpu.state.value = 'attack_complete'
+            })
+          )
           break
         }
 
         case 'dead': {
-          break
+          this.level?.screenShake(2, 4)
         }
       }
     })

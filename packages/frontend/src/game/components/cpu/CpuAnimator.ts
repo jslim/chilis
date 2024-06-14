@@ -84,7 +84,7 @@ export class CpuAnimator extends FlumpAnimator {
         case 'attack': {
           this.setMovie(`${this.animationName}_attack`).gotoAndPlay(0).once()
           currentMoviePlayback = this.subscribeOnce(this.currentMovie.value!.onEnd, () => {
-            if (cpu.state.value === 'attack') cpu.state.value = 'attack_complete'
+            if (cpu.state.value === 'attack' && cpu.autoCompleteAttack) cpu.state.value = 'attack_complete'
           })
           break
         }

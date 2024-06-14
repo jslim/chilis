@@ -49,9 +49,9 @@ export class Cpu extends Component {
   public readonly onHitPlayer = new Signal<Entity>()
   public readonly onHitByPepper = new Signal<Bullet>()
   public readonly onHitByBurger = new Signal<Burger>()
+  public autoCompleteAttack = true
 
   protected level: LevelScene | undefined = undefined
-  protected autoCompleteAttack = true
   protected walksWhenPrepareAttack = true
   protected respawnAfterDied = true
 
@@ -119,8 +119,10 @@ export class Cpu extends Component {
         }
 
         case 'attack_complete': {
-          this.attackCoolDown.reset()
-          this.state.value = 'walk'
+          if (this.autoCompleteAttack) {
+            this.attackCoolDown.reset()
+            this.state.value = 'walk'
+          }
           break
         }
       }
