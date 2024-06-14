@@ -4,6 +4,7 @@ import { KeyboardInput } from '@/game/components/input/KeyboardInput'
 import { Component } from '@/game/core/Entity'
 
 export class OnActionButtonPressed extends Component {
+  private isPressed = false
   constructor(
     private readonly onActionButtonPressed: () => void,
     private readonly once: boolean = true
@@ -18,9 +19,10 @@ export class OnActionButtonPressed extends Component {
   override onUpdate(_dt: number) {
     super.onUpdate(_dt)
 
-    if (this.entity.getComponent(Input).isDown('action')) {
+    if (!this.isPressed && this.entity.getComponent(Input).isDown('action')) {
       this.onActionButtonPressed()
-      if (this.once) this.entity.destroy()
+      if (this.once && this.entity) this.entity.destroy()
+      this.isPressed = true
     }
   }
 }
