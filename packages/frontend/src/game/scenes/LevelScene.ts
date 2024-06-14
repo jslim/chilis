@@ -146,12 +146,12 @@ export default class LevelScene extends Scene {
     return { map, spriteSheet, spriteSheetLarge }
   }
 
-  async init(levelNo: number) {
+  async init(levelNo: number, score = 0) {
     this.levelNo = levelNo
     const { map, spriteSheet, spriteSheetLarge } = await this.preload(getWrappedLevelNo(levelNo))
 
     // store level number
-    this.gameState.setLevel(levelNo)
+    this.gameState.setLevel(levelNo, score)
 
     this.map = map
     const path = getTileConnections(map, map.layers.find((l) => l.name === 'floor')!)
