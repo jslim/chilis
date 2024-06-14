@@ -99,6 +99,8 @@ export class Mover extends Component {
 
   public respawn(spawnPosition: Point | null = null) {
     this.position.copyFrom(spawnPosition ?? this.startPosition)
+    this.prevPosition.copyFrom(this.position)
+    this.entity.position.copyFrom(this.position)
   }
 
   public isEqual(posA: number, posB: number) {
@@ -159,7 +161,6 @@ export class Mover extends Component {
   override onUpdate(dt: number) {
     super.onUpdate(dt)
 
-    this.prevPosition.copyFrom(this.entity.position)
     this.prevPosition.copyFrom(this.entity.position)
 
     this.entity.x = Math.floor(this.position.x)

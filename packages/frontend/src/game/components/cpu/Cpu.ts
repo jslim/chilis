@@ -184,8 +184,8 @@ export class Cpu extends Component {
 
       case 'die': {
         if (this.dieCoolDown.update(dt) && this.respawnAfterDied) {
-          this.state.value = 'spawn'
           this.respawn()
+          this.state.value = 'spawn'
         }
         break
       }
@@ -209,7 +209,6 @@ export class Cpu extends Component {
     const { player, cpus } = this.level!
     // find position the furthest from player
     const spawnPosition = cpus
-
       .map((cpu: Entity) => cpu.getComponent(Mover).startPosition)
       .sort(sortByDistanceTo(player))
       .pop()
