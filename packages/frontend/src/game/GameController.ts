@@ -171,7 +171,7 @@ export class GameController {
     this.sceneManager.destroy()
     this.app.destroy()
 
-    this.app.canvas.remove()
+    //this.app.canvas.remove()
 
     // cleanup signals
     this.onLevelComplete.destroy()
