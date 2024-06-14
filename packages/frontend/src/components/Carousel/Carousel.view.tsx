@@ -32,6 +32,7 @@ export const View: FC<ViewProps> = ({ className, slides }) => {
   return (
     <div className={classNames('Carousel', css.root, className)} ref={refs.root}>
       <Swiper
+      key={Math.random()}
         pagination={{
           clickable: true
         }}
@@ -39,7 +40,7 @@ export const View: FC<ViewProps> = ({ className, slides }) => {
         slidesPerView="auto"
       >
         {slides.map((slide, index) => (
-          <SwiperSlide className={css.slide} key={index}>
+          <SwiperSlide className={css.slide} key={(className ?? '') + index}>
             <div className={css.imageContainer}>
               <BaseImage className={css.image} data={getImageUrl(slide.image.src)} alt={slide.image.alt} />
             </div>

@@ -3,8 +3,8 @@
     "head": {
       "title": "{title} | It’s Chili’s Big Smasher BurgerTime",
       "siteName": "It’s Chili’s Big Smasher BurgerTime",
-      "description": "Chili’s is introducing its first video game,Chili’s Big Smasher BurgerTime. An authentic modernization of the cult-classic arcade game, art imitates life as players are challenged with saving humanity from the overpriced fast-food burgers of the evil Fast Food Syndicate. The task? Build as many Big Smasher burgers as possible to climb the leaderboard and compete to win a lifetime of Chili’s burgers!.",
-      "descriptionSocial": "Do you have what it takes to defeat the evil fast-food syndicates? Play the new and improved BurgerTime now!\nDo you have what it takes to defeat the evil Fast Food Syndicate? Play Chili’s BurgerTime now, and compete to win a lifetime of burgers!\nBuild Chili’s Big Smashers! Defeat the evil Fast Food Syndicate! Compete to win a lifetime of Chili’s burgers! Play now!"
+      "description": "Chili’s is introducing its first video game, Chili’s Big Smasher BurgerTime. An authentic modernization of the cult-classic arcade game, art imitates life as players are challenged with saving humanity from the overpriced fast-food burgers of the evil Fast-Food Syndicate. The task? Build as many Big Smasher burgers as possible to climb the leaderboard and compete to win a lifetime of Chili’s burgers!.",
+      "descriptionSocial": "Build Chili’s Big Smashers. Defeat the evil Fast-Food Syndicate. Compete for a chance to win a lifetime of Chili’s burgers!"
     },
     "nav": {
       "sound": {
@@ -50,7 +50,7 @@
     },
     "logModal": {
       "title": "BURGERS FOR LIFE",
-      "description": "To get added to the leaderboard and entered to win prizes, login below. If not you don’t have an account yet, click the sign up button below. Once created, come back to this page and login.",
+      "description": "Ready to take down the evil Fast-Food Syndicate for a chance to win a Lifetime of Burgers? Login below with your My Chili’s Rewards credentials to have your score saved, added to the leaderboard and be eligible for prizes.\n\n<strong>Don’t have a My Chili’s Rewards account?</strong>\n Click the sign up button below to join now! Once your profile has been created, come back to this page and login",
       "cta": "LOG IN",
       "forgotPassword": "Forgot or Create your Password?",
       "skipLabel": "Want to just play without getting on the leaderboard?",
@@ -178,15 +178,53 @@
       },
       "body": {
         "backgroundVideo": {
-          "src": "",
+          "src": "/videos/contest.mp4",
           "poster": "burger-loop.png"
         },
-        "title": "A WEEK OF BATTLES.",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "title": "THREE WEEKS OF BATTLES.",
+        "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit chilisburgertime.com/terms.",
         "hero": {
           "src": "a-lifetime.png",
           "alt": "A lifetime of burgers"
-        }
+        },
+        "button": {
+          "label": "LEARN MORE",
+          "href": "/terms/"
+        },
+        "slides": [
+          {
+            "image": {
+              "src": "slide-1.png",
+              "alt": "Slide 1"
+            },
+            "title": "BASIC MOVEMENT",
+            "text": "Press left and right to move, press up and down to climb ladders."
+          },
+          {
+            "image": {
+              "src": "slide-2.png",
+              "alt": "Slide 2"
+            },
+            "title": "SCORING",
+            "text": "Walk over burger parts to drop them and score. Drop all the parts down to the basket to make a Big Smasher and start a score multiplier!"
+          },
+          {
+            "image": {
+              "src": "slide-3.png",
+              "alt": "Slide 3"
+            },
+            "title": "ENEMIES",
+            "text": "Avoid trainees, and watch out for the bosses! Each level you’ll have 4 salt shakers you can use to stun them."
+          },
+          {
+            "image": {
+              "src": "slide-4.png",
+              "alt": "Slide 4"
+            },
+            "title": "EXTRA BONUSES",
+            "text": "Get an extra life every 100,000 points and get a score bonus for collecting the 3 parts of the \"3 for me\" hidden on each level.<br/>Good luck and have fun!"
+          }
+        ]
       }
     },
     "howToPlay": {

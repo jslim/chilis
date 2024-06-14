@@ -29,6 +29,7 @@
 
   @include media-tablet-large {
     gap: px(60);
+    margin-bottom: px(140);
   }
 
   .title {
@@ -64,5 +65,9 @@
       @include font-size(32, 40);
       max-width: px(1104);
     }
+  }
+
+  .carousel {
+    width: 100%;
   }
 }
