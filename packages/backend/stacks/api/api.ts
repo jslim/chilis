@@ -6,6 +6,7 @@ import { ENVS_TARGET } from "@/libs/stack-data";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 import { isValidDomain } from "@/utils/domain-validator";
 import { AuthStack } from "@/stacks";
+import { Duration } from "aws-cdk-lib";
 
 export function ApiStack({ stack, app }: StackContext) {
   let usagePlan;
@@ -40,6 +41,29 @@ export function ApiStack({ stack, app }: StackContext) {
         function: authorizerFunction,
         identitySources: [IdentitySource.header("Authorization")],
         resultsCacheTtl: `${isDevelop ? 0 : 30} seconds`,
+      },
+    },
+    cdk: {
+      restApi: {
+        deployOptions: {
+          cacheClusterEnabled: true,
+          methodOptions: {
+            "/leaderboard/GET": {
+              cachingEnabled: true,
+              // eslint-disable-next-line
+              // @ts-ignore
+              cacheTtl: Duration.seconds(10),
+              cacheDataEncrypted: true,
+            },
+            "/leaderboard/{records}/GET": {
+              cachingEnabled: true,
+              // eslint-disable-next-line
+              // @ts-ignore
+              cacheTtl: Duration.seconds(10),
+              cacheDataEncrypted: true,
+            },
+          },
+        },
       },
     },
   });

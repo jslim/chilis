@@ -39,7 +39,7 @@ export type GameScore = {
 };
 
 export type leaderboardRecord = {
-  nickname: string;
-  score: number;
-  rank: number | string;
+  nickname?: string;
+  score?: number;
+  rank?: number | string;
 };
