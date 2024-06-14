@@ -7,7 +7,7 @@ import { View } from './Carousel.view'
 export interface ControllerProps {
   className?: string
   slides: {
-    image: { src: string; alt: string }
+    image?: { src: string; alt: string }
     title: string
     text: string
   }[]

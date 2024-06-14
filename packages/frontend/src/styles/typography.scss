@@ -145,3 +145,12 @@
     @include font-size(16, 18);
   }
 }
+
+@mixin typography-04b03-body($weight: 500) {
+  @include font-family($font-04b03, $weight);
+  @include font-size(16, 20);
+
+  @include media-tablet-large {
+    @include font-size(32, 40);
+  }
+}

@@ -1,4 +1,5 @@
 @import 'shared';
+@import '../Carousel/Carousel.module.scss';
 
 .root {
   position: relative;
@@ -21,14 +22,12 @@
   @include flex-center-vert;
   position: relative;
   flex-direction: column;
-  gap: px(30);
 
   @include media-aspect-vertical {
     padding-top: 0;
   }
 
   @include media-tablet-large {
-    gap: px(60);
     margin-bottom: px(140);
   }
 
@@ -44,9 +43,11 @@
 
   .imageContainer {
     width: px(380);
+    margin-top: px(18);
 
     @include media-tablet-large {
       width: px(764);
+      margin-top: px(27);
     }
 
     .image {
@@ -69,5 +70,25 @@
 
   .carousel {
     width: 100%;
+    margin-top: px(20);
+
+    @include media-tablet-large {
+      margin-top: px(40);
+    }
+
+    .text {
+      @include media-tablet-large {
+        max-width: px(1174);
+      }
+    }
+  }
+
+  .mouse {
+    color: $gray;
+    margin-top: px(20);
+
+    a {
+      color: $white;
+    }
   }
 }

@@ -182,47 +182,27 @@
           "poster": "burger-loop.png"
         },
         "title": "THREE WEEKS OF BATTLES.",
-        "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit chilisburgertime.com/terms.",
+        "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit <a target='_blank' href='https://burgertime.chilis.com/terms'>burgertime.chilis.com/terms</a>",
         "hero": {
           "src": "a-lifetime.png",
           "alt": "A lifetime of burgers"
         },
-        "button": {
-          "label": "LEARN MORE",
-          "href": "/terms/"
-        },
-        "slides": [
+        "slides":[
           {
-            "image": {
-              "src": "slide-1.png",
-              "alt": "Slide 1"
-            },
-            "title": "BASIC MOVEMENT",
-            "text": "Press left and right to move, press up and down to climb ladders."
+            "title": "BECOME THE CHILI’S BIG SMASHER BURGERTIME CHAMPION",
+            "text": "Help save the Chili's Big Smasher and you could win a lifetime* of Chili's burgers! As in real burgers, not video game burgers. Climb atop the leaderboard by building as many Chili's Big Smashers before the evil Fast-Food syndicate smashes them forever."
           },
           {
-            "image": {
-              "src": "slide-2.png",
-              "alt": "Slide 2"
-            },
-            "title": "SCORING",
-            "text": "Walk over burger parts to drop them and score. Drop all the parts down to the basket to make a Big Smasher and start a score multiplier!"
+            "title": "1<sup>st</sup> PLACE",
+            "text": "Have what it takes to make Big Smashers and defeat the evil Fast-Food Syndicate? Climb the leaderboard to the top spot to win a Lifetime of Burgers* and an arcade cabinet of the Chili's Big Smasher BurgerTime game."
           },
           {
-            "image": {
-              "src": "slide-3.png",
-              "alt": "Slide 3"
-            },
-            "title": "ENEMIES",
-            "text": "Avoid trainees, and watch out for the bosses! Each level you’ll have 4 salt shakers you can use to stun them."
+            "title": "2<sup>nd</sup> + 3<sup>rd</sup> PLACE",
+            "text": "Defeat the evil Fast-Food Syndicate and be handsomely rewarded! Second and third place players on the leaderboard will each win an arcade cabinet of Chili's Big Smasher BurgerTime*!"
           },
           {
-            "image": {
-              "src": "slide-4.png",
-              "alt": "Slide 4"
-            },
-            "title": "EXTRA BONUSES",
-            "text": "Get an extra life every 100,000 points and get a score bonus for collecting the 3 parts of the \"3 for me\" hidden on each level.<br/>Good luck and have fun!"
+            "title": "ADDITIONAL PRIZES",
+            "text": "Build burgers and be one of the first 250 players to collect the complete Chili's 3 For Me items (chips & salsa, fries, and drink) and you will win a Chili's gift card to enjoy a 3 For Me IRL!"
           }
         ]
       }
@@ -440,9 +420,9 @@
                 ]
               },
               {
-                "title": "Is BurgerTime appropriate for all ages?",
+                "title": "Can I use my game controller to play?",
                 "paragraphs": [
-                  "BurgerTime is recommended for players eight years and older based on ESRP ratings, with E for Everyone."
+                  "Yes, you can map your  Sony’s PS5 Dual Sense Wireless Controller or Microsoft’s XBOX Wireless Controller and play the game."
                 ]
               }
             ]

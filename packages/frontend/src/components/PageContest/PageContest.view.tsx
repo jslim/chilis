@@ -47,11 +47,8 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
         <div className={css.imageContainer}>
           <BaseImage className={css.image} data={getImageUrl(content.body.hero.src)} alt={content.body.hero.alt} />
         </div>
-        <BaseButton className={css.button} {...content.body.button}>
-          {content.body.button.label}
-        </BaseButton>
 
-        <Carousel className={css.carousel} />
+        <Carousel className={css.carousel} slides={content.body.slides} />
         <p className={css.mouse} {...copy.html(content.body.mouse)} />
       </div>
     </main>
