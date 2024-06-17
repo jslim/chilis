@@ -14,7 +14,9 @@ import { copy } from '@/utils/copy'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BackgroundVideo } from '@/components/BackgroundVideo'
+import { BaseButton } from '@/components/BaseButton'
 import { BaseImage } from '@/components/BaseImage'
+import { Carousel } from '@/components/Carousel'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -45,7 +47,9 @@ export const View: FC<ViewProps> = ({ content, onReady }) => {
         <div className={css.imageContainer}>
           <BaseImage className={css.image} data={getImageUrl(content.body.hero.src)} alt={content.body.hero.alt} />
         </div>
-        <p className={css.description} {...copy.html(content.body.description)} />
+
+        <Carousel className={css.carousel} slides={content.body.slides} />
+        <p className={css.mouse} {...copy.html(content.body.mouse)} />
       </div>
     </main>
   )
