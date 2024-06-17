@@ -528,7 +528,7 @@ export default class LevelScene extends Scene {
 
     let totalGroupsCompleted = 0
     this.burgerGroups.forEach((group) => {
-      this.subscribe(group.onBurgerComplete, () => {
+      this.subscribeOnce(group.onBurgerComplete, () => {
         totalGroupsCompleted++
         if (totalGroupsCompleted === 1) {
           this.spawnPickup()

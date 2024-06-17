@@ -46,7 +46,7 @@ export const POINTS_PER_CPU: { [key in CpuName]: number } = {
   dino: 700,
   matey: 800,
   zapp: 900,
-  burgertron: 200
+  burgertron: 1000
 }
 
 export const POINTS_PER_PICKUP = 500
