@@ -36,8 +36,14 @@
   background-color: $sour-cream;
 
   .logoContainer {
-    @include box(px(80), px(50));
+    @include box(px(88), px(50));
     margin-bottom: px(30);
+
+    .logo {
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
   }
 
   .title,

@@ -11,13 +11,15 @@ import { localStore } from '@/store'
 
 import usePauseGameInstance from '@/hooks/use-pause-game-instance'
 import { useRefs } from '@/hooks/use-refs'
+import { getImageUrl } from '@/utils/basic-functions'
+
 
 import { BaseButton } from '@/components/BaseButton'
 import { ConfirmationModal } from '@/components/ConfirmationModal'
 
 import SvgBack from '@/svgs/Back.svg'
-import ChilisSvg from '@/svgs/Chilis.svg'
 import SvgLoginLogout from '@/svgs/LoginLogout.svg'
+import { BaseImage } from '@/components/BaseImage'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -67,12 +69,12 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
       default: {
         return (
           <BaseButton className={css.logoContainer} href={routes.HOME}>
-            <ChilisSvg />
+            <BaseImage className={css.logo} data={getImageUrl(content.logo.src)} alt={content.logo.alt} />
           </BaseButton>
         )
       }
     }
-  }, [currentRoute, handleNavigateBack])
+  }, [currentRoute, handleNavigateBack, content.logo.src, content.logo.alt])
 
   return (
     <nav className={classNames('TopNav', css.root, className)} ref={refs.root}>
