@@ -14,7 +14,7 @@ import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
-  const { isDeploy } = detectStage(app.stage);
+  const { isDeploy, isProd, isUat } = detectStage(app.stage);
 
   let domainName;
   let apiDomainName;
@@ -24,15 +24,16 @@ export function FrontendDistribution({ stack, app }: StackContext) {
 
   if (enableCustomDomain) {
     domainName = getWebDomain(app.stage);
+    const targetHostedzone = isProd || isUat ? process.env.BASE_DOMAIN! : domainName;
     apiDomainName = `api.${domainName}`;
 
     // Assume you have a hosted zone for your domain in Route 53
     const hostedZone = route53.HostedZone.fromLookup(stack, `${app.stage}-frontend-hostedzone`, {
-      domainName: domainName,
+      domainName: targetHostedzone,
     });
 
     certificate = new acm.DnsValidatedCertificate(stack, `${app.stage}-frontend-domain-certificate`, {
-      domainName: domainName,
+      domainName: targetHostedzone,
       hostedZone,
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
