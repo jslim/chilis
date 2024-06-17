@@ -11,7 +11,7 @@ import { Duration } from "aws-cdk-lib";
 export function ApiStack({ stack, app }: StackContext) {
   let usagePlan;
   const { auth } = use(AuthStack);
-  const { isProd, isDevelop } = detectStage(app.stage);
+  const { isDevelopment, isProd, isDevelop } = detectStage(app.stage);
 
   setDefaultFunctionProps({ stack, app });
 
@@ -25,15 +25,19 @@ export function ApiStack({ stack, app }: StackContext) {
     },
   });
 
-  let customDomain = undefined;
+  let domainName = undefined;
   const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
+  const baseDomain = process.env.BASE_DOMAIN!;
 
-  if (domainStage !== undefined && isValidDomain(String(process.env.BASE_DOMAIN))) {
-    customDomain = (isProd || domainStage === "" ? `api` : `api.${domainStage}`) + `.${process.env.BASE_DOMAIN}`;
+  if (domainStage !== undefined && isValidDomain(baseDomain)) {
+    domainName = (isProd ? `api` : `api.${app.stage}`) + `.${baseDomain}`;
   }
 
   const api = new ApiGatewayV1Api(stack, "api", {
-    customDomain,
+    customDomain: {
+      domainName,
+      hostedZone: baseDomain!,
+    },
     authorizers: {
       Authorizer: {
         name: "ApiAuthorizer",
@@ -86,7 +90,7 @@ export function ApiStack({ stack, app }: StackContext) {
   }
 
   stack.addOutputs({
-    ApiEndpoint: customDomain || api.url,
+    ApiEndpoint: domainName || api.url,
   });
 
   return { api, usagePlan, validator };

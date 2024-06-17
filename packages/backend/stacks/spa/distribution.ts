@@ -5,6 +5,7 @@ import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
+import * as targets from "aws-cdk-lib/aws-route53-targets";
 
 import { FRONTEND_NAME, S3_REFERER_KEY, S3_ORIGIN_BUCKET_NAME } from "@/libs/config";
 import { getWebDomain } from "@/libs/get-domain";
@@ -14,26 +15,28 @@ import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
-  const { isDeploy, isProd, isUat } = detectStage(app.stage);
+  const { isDeploy } = detectStage(app.stage, true);
 
   let domainName;
   let apiDomainName;
   let certificate;
+  let hostedZone;
+  let targetHostedzoneName;
 
   const enableCustomDomain = isDeploy && isValidDomain(String(process.env.BASE_DOMAIN));
 
   if (enableCustomDomain) {
     domainName = getWebDomain(app.stage);
-    const targetHostedzone = isProd || isUat ? process.env.BASE_DOMAIN! : domainName;
+    targetHostedzoneName = process.env.BASE_DOMAIN!;
     apiDomainName = `api.${domainName}`;
 
     // Assume you have a hosted zone for your domain in Route 53
-    const hostedZone = route53.HostedZone.fromLookup(stack, `${app.stage}-frontend-hostedzone`, {
-      domainName: targetHostedzone,
+    hostedZone = route53.HostedZone.fromLookup(stack, `${app.stage}-frontend-hostedzone`, {
+      domainName: targetHostedzoneName,
     });
 
     certificate = new acm.DnsValidatedCertificate(stack, `${app.stage}-frontend-domain-certificate`, {
-      domainName: targetHostedzone,
+      domainName: targetHostedzoneName,
       hostedZone,
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
@@ -71,7 +74,8 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },
-    ...(enableCustomDomain ? { customDomain: domainName, certificate } : {}),
+    dev: { deploy: true },
+    ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
