@@ -64,6 +64,10 @@
     @include media-tablet {
       margin-bottom: px(15);
     }
+
+    @include media-tablet-large {
+      @include font-size(14, 17);
+    }
   }
 
   .fieldsContainer {
@@ -77,21 +81,32 @@
 
     input,
     input::placeholder {
-      @include font-size(6, 6);
+      @include font-size(9, 13);
       @include font-family(Montserrat, 500);
       color: $night;
+
+      @include media-tablet-large {
+        @include font-size(10, 12);
+      }
     }
 
     input {
       background-color: rgba($white, 0.7);
-      padding: px(7) px(5);
+      padding: px(7) px(7);
       border-radius: px(5);
       border: 0.5px solid $night;
       min-width: px(157);
-      height: px(20);
+
+      @include media-tablet-large {
+        padding: px(12) px(9);
+      }
     }
 
     border-radius: 5px;
+
+    @include media-tablet-large {
+      border-radius: 8px;
+    }
 
     input::placeholder {
       color: $gray;

@@ -45,6 +45,7 @@ export const View: FC<ViewProps> = ({
   errorMessage,
   errorMessageNickname,
   forgotPassword,
+  forgotPasswordLink,
   skipLabel,
   skip,
   decoration,
@@ -160,7 +161,7 @@ export const View: FC<ViewProps> = ({
               </BaseForm>
 
               <div className={css.forgotPassword}>
-                <BaseButton href={routes.HOME}>{forgotPassword}</BaseButton>
+                <BaseButton href={forgotPasswordLink}>{forgotPassword}</BaseButton>
               </div>
             </>
           ) : (
