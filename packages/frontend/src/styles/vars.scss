@@ -48,8 +48,8 @@ $side-spacing: 0 px(20);
 // ====================================================================
 // Nav bar
 // ====================================================================
-$navbar-height-mobile: px(20);
-$navbar-height-desktop: px(40);
+$navbar-height-mobile: px(34);
+$navbar-height-desktop: px(68);
 
 // ====================================================================
 // Standard Eases
@@ -112,4 +112,5 @@ $ease8: cubic-bezier(0.64, 0, 0.78, 0);
 $font-work-sans: #{var(--font-work-sans)};
 $font-pix-gamer: 'PixGamer';
 $font-montserrat: 'Montserrat';
+$font-04b03: 'b';
 $generic-fonts: system-ui, 'helvetica', 'arial', sans-serif;

@@ -40,9 +40,10 @@ export const View: FC<ViewProps> = ({ className, slides }) => {
       >
         {slides.map((slide, index) => (
           <SwiperSlide className={css.slide} key={index}>
-            <div className={css.imageContainer}>
-              <BaseImage className={css.image} data={getImageUrl(slide.image.src)} alt={slide.image.alt} />
-            </div>
+            { (slide.image && slide.image.src) && <div className={css.imageContainer}>
+              <BaseImage className={css.image} data={getImageUrl(slide.image?.src ?? '')} alt={slide.image?.alt} />
+            </div>}
+
             <p className={css.title} {...copy.html(slide.title)} />
             <p className={css.text} {...copy.html(slide.text)} />
           </SwiperSlide>

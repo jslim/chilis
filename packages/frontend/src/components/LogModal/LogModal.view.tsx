@@ -6,8 +6,6 @@ import classNames from 'classnames'
 
 import css from './LogModal.module.scss'
 
-import { routes } from '@/data/routes'
-
 import { localState, localStore } from '@/store'
 
 import { getImageUrl } from '@/utils/basic-functions'
@@ -22,8 +20,6 @@ import { BaseForm } from '@/components/BaseForm'
 import { BaseImage } from '@/components/BaseImage'
 import { CloseButton } from '@/components/CloseButton'
 
-import SvgChilis from '@/svgs/Chilis.svg'
-
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -33,6 +29,7 @@ export type ViewRefs = {
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({
   className,
+  logo,
   title,
   description,
   cta,
@@ -45,6 +42,7 @@ export const View: FC<ViewProps> = ({
   errorMessage,
   errorMessageNickname,
   forgotPassword,
+  forgotPasswordLink,
   skipLabel,
   skip,
   decoration,
@@ -125,7 +123,7 @@ export const View: FC<ViewProps> = ({
         <CloseButton className={css.close} onClick={onClose} />
         <div className={css.top}>
           <div className={css.logoContainer}>
-            <SvgChilis />
+            <BaseImage className={css.logo} data={getImageUrl(logo.src)} alt={logo.alt} />
           </div>
 
           {!localStore().user.isTokenValid ? (
@@ -160,7 +158,7 @@ export const View: FC<ViewProps> = ({
               </BaseForm>
 
               <div className={css.forgotPassword}>
-                <BaseButton href={routes.HOME}>{forgotPassword}</BaseButton>
+                <BaseButton href={forgotPasswordLink}>{forgotPassword}</BaseButton>
               </div>
             </>
           ) : (
