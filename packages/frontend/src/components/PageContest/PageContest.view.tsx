@@ -14,7 +14,6 @@ import { copy } from '@/utils/copy'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BackgroundVideo } from '@/components/BackgroundVideo'
-import { BaseButton } from '@/components/BaseButton'
 import { BaseImage } from '@/components/BaseImage'
 import { Carousel } from '@/components/Carousel'
 

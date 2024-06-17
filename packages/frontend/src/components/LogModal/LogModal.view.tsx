@@ -6,8 +6,6 @@ import classNames from 'classnames'
 
 import css from './LogModal.module.scss'
 
-import { routes } from '@/data/routes'
-
 import { localState, localStore } from '@/store'
 
 import { getImageUrl } from '@/utils/basic-functions'
