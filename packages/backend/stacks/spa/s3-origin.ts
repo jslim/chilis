@@ -13,42 +13,32 @@ export function S3Origin({ stack, app }: StackContext) {
     return { originBucket: undefined };
   }
 
-  const originBucket = new Bucket(
-    stack,
-    `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`,
-    {
-      name: `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`,
-      cdk: {
-        bucket: {
-          removalPolicy: RemovalPolicy.DESTROY,
-          autoDeleteObjects: true,
-          websiteIndexDocument: "index.html",
-          websiteErrorDocument: "/404/index.html",
-          blockPublicAccess: {
-            blockPublicPolicy: false,
-            ignorePublicAcls: false,
-            restrictPublicBuckets: false,
-            blockPublicAcls: false,
-          },
-          cors: [],
+  const originBucket = new Bucket(stack, `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`, {
+    name: `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`,
+    cdk: {
+      bucket: {
+        removalPolicy: RemovalPolicy.DESTROY,
+        autoDeleteObjects: true,
+        websiteIndexDocument: "index.html",
+        websiteErrorDocument: "/404/index.html",
+        blockPublicAccess: {
+          blockPublicPolicy: false,
+          ignorePublicAcls: false,
+          restrictPublicBuckets: false,
+          blockPublicAcls: false,
         },
+        cors: [],
       },
-    }
-  );
+    },
+  });
 
-  const secretReferer = SecretValue.secretsManager(
-    `${app.stage}-${S3_REFERER_KEY}`
-  );
+  const secretReferer = SecretValue.secretsManager(`${app.stage}-${S3_REFERER_KEY}`);
 
-  const bucketPolicy = new s3.BucketPolicy(
-    stack,
-    `${app.stage}-bucket-policy`,
-    {
-      // eslint-disable-next-line
-      // @ts-ignore
-      bucket: originBucket.cdk.bucket,
-    }
-  );
+  const bucketPolicy = new s3.BucketPolicy(stack, `${app.stage}-bucket-policy`, {
+    // eslint-disable-next-line
+    // @ts-ignore
+    bucket: originBucket.cdk.bucket,
+  });
 
   bucketPolicy.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
@@ -63,7 +53,7 @@ export function S3Origin({ stack, app }: StackContext) {
           "aws:Referer": secretReferer,
         },
       },
-    })
+    }),
   );
 
   stack.addOutputs({});

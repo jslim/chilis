@@ -10,5 +10,9 @@
   "hosted-zone:account=471112671495:domainName=stg.chilis-burger-time.cloud.jam3.net:region=us-east-1": {
     "Id": "/hostedzone/Z0631057HCFUMCOYK0TC",
     "Name": "stg.chilis-burger-time.cloud.jam3.net."
+  },
+  "hosted-zone:account=471112671495:domainName=chilis-burger-time.cloud.jam3.net:region=us-east-1": {
+    "Id": "/hostedzone/Z0949481CEFC2KIQEPNM",
+    "Name": "chilis-burger-time.cloud.jam3.net."
   }
 }
