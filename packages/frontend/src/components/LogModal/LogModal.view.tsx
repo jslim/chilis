@@ -57,7 +57,7 @@ export const View: FC<ViewProps> = ({
   const [accessToken, setAccessToken] = useLocalStorage('accessToken')
   const [, setIdToken] = useLocalStorage('idToken')
   const [hasError, setHasError] = useState(false)
-  const [hasLogged, setHasLogged] = useState(false)
+
   const preferredNickname = localState().user.nickname
 
   const handleLoginSubmit = async () => {
@@ -83,7 +83,6 @@ export const View: FC<ViewProps> = ({
         localState().user.setAccessToken(String(apiResponse.AccessToken))
         localState().user.setIdToken(String(apiResponse.IdToken))
         localState().user.setIsTokenValid(true)
-        setHasLogged(true)
       }
     } catch (error) {
       console.error(error)
@@ -165,7 +164,6 @@ export const View: FC<ViewProps> = ({
               </div>
             </>
           ) : (
-            hasLogged &&
             !preferredNickname && (
               <>
                 <div className={css.title} {...copy.html(nicknameTitle)} />

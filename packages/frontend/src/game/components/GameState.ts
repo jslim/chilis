@@ -23,12 +23,12 @@ export class GameState extends Component {
     })
   }
 
-  setLevel(levelNo: number) {
+  setLevel(levelNo: number, score = 0) {
     this.level.value = levelNo
     // reset the game state
     this.lives.value = 3
     this.bullets.value = 3
-    this.score.value = 0
+    this.score.value = score
     if (levelNo === 1) {
       this.burgerCompleteCombo.value = 0
       this.pickupsCollected.value = 0
