@@ -173,9 +173,10 @@ export class Burger extends Component {
       this.fallStats.totalCpusHit++
       cpu.getComponent(Cpu).onHitByBurger.emit(this)
 
-      const points = POINTS_PER_CPU[cpu.getComponent(Cpu).name]
+      const cpuName = cpu.getComponent(Cpu).name
+      const points = POINTS_PER_CPU[cpuName]
       this.level.addScore(this.entity.position, points)
-      this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points })
+      this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points, n: cpuName })
     })
     this.subscribe(this.onHitBurger, (otherBurger) => {
       this.fallStats.burgerHit = true
