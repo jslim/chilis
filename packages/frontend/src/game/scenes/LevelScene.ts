@@ -315,7 +315,12 @@ export default class LevelScene extends Scene {
           } else if (TileId.isBurger(id)) {
             const burgerHeight = burgerHeightByTileId[id] - burgerOverlap
             entity.addComponent(
-              new HitBox(-BurgerTileSize.tilewidth / 2, -1, BurgerTileSize.tilewidth, burgerHeight),
+              new HitBox(
+                -BurgerTileSize.tilewidth / 2,
+                (-burgerHeight / 2) | 0,
+                BurgerTileSize.tilewidth,
+                burgerHeight
+              ),
               new Burger(spriteSheetLarge, id)
             )
             entity.position.x -= (BurgerTileSize.tilewidth - map.tilewidth) / 2
@@ -343,7 +348,7 @@ export default class LevelScene extends Scene {
 
     // depth sort this.containers.burgerParts from bottom to top
     this.containers.burgerParts.children.sort((a, b) => {
-      return a.y - b.y
+      return b.y - a.y
     })
 
     for (const layer of map.layers) {

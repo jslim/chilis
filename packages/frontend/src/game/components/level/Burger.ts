@@ -41,9 +41,9 @@ export const burgerHeightByTileId = {
   [TileId.Burger6]: 2,
   [TileId.Burger7]: 2,
   [TileId.Burger8]: 7,
-  [TileId.Burger9]: 7,
+  [TileId.Burger9]: 11,
   [TileId.Burger10]: 7,
-  [TileId.Burger11]: 6,
+  [TileId.Burger11]: 7,
   [TileId.Burger12]: 7
 }
 
