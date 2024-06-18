@@ -26,7 +26,6 @@ export class MobileInput extends Component {
     // get size of app
     const appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
     // compare how much this is scaled to the original size
-    const scaleX = appBounds.width / 240
 
     const gameContainer = document.body
     const joystickContainer = document.createElement('div')
