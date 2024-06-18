@@ -121,7 +121,7 @@ export abstract class Component {
   public onStart(): void {}
 
   public destroy(): void {
-    this.disposables.forEach((d) => d())
+    ;[...this.disposables].forEach((d) => d())
     this.disposables = []
     this.entity?.removeComponent(this)
   }

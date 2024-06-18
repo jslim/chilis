@@ -28,7 +28,9 @@ export class Scene extends Component {
       volume,
       pan
     })
-    this.disposables.push(() => disposable.destruct())
+    this.disposables.push(() => {
+      disposable.stop()
+    })
     return disposable
   }
 
