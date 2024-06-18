@@ -28,7 +28,7 @@ export class LevelIntroScene extends Scene {
       const buttonEntity = new Entity(new Sprite(Assets.get('button_skip'))).addComponent(
         new PointerComponent('pointerdown', () => this.gotoNext())
       )
-      buttonEntity.position.set(GAME_WIDTH - 26, GAME_HEIGHT - 13)
+      buttonEntity.position.set(Math.floor(GAME_WIDTH / 2) - 14, GAME_HEIGHT - 13)
       this.entity.addEntity(buttonEntity)
     })()
   }
