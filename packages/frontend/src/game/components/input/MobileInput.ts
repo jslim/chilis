@@ -92,7 +92,7 @@ export class MobileInput extends Component {
 
     this.joystickContainer.style.width = `${Math.trunc(scaleX * 78)}px`
     this.joystickContainer.style.height = `${Math.trunc(scaleX * 82)}px`
-    this.actionButton.style.width = `${Math.trunc(scaleX * 81)}px`
+    this.actionButton.style.width = `${Math.trunc(scaleX * 79)}px`
     this.actionButton.style.height = `${Math.trunc(scaleX * 82)}px`
   }
 
