@@ -1,8 +1,9 @@
 import type { StoryFn } from '@storybook/react'
 import type { ViewProps } from './Carousel.view'
 
-import { View } from './Carousel.view'
 import { CmsService } from '@/services/cms'
+
+import { View } from './Carousel.view'
 
 export default { title: 'components/Carousel' }
 

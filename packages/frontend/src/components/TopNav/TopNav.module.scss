@@ -46,7 +46,6 @@
     .iconContainer {
       @include box(px(34));
 
-
       @include media-tablet-large {
         @include box(px(51));
       }
