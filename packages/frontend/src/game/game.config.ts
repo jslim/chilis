@@ -17,6 +17,8 @@ export const IS_ARCADE_BUILD = process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'tru
 
 export const GAME_ASSETS_BASE_URL = IS_ARCADE_BUILD ? './game/' : '/game/'
 export const GAME_SOUNDS_BASE_URL = IS_ARCADE_BUILD ? './sounds/' : '/sounds/'
+export const GAME_SOUND_MANIFEST_BASE_URL = IS_ARCADE_BUILD ? './sounds/' : ''
+export const CHANNEL_SOUND_PATH = IS_ARCADE_BUILD ? '/' : GAME_SOUNDS_BASE_URL
 
 /* DEBUG */
 

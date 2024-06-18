@@ -1,6 +1,6 @@
 import { Channels } from '@mediamonks/channels'
 
-import { GAME_SOUNDS_BASE_URL } from '@/game/game.config'
+import { CHANNEL_SOUND_PATH } from '@/game/game.config'
 
 import { GameController } from './GameController'
 
@@ -9,7 +9,7 @@ export const initGame = async () => {
 
   // needs to be set from frontend
   const channelsInstance = new Channels({
-    soundsPath: GAME_SOUNDS_BASE_URL,
+    soundsPath: CHANNEL_SOUND_PATH,
     soundsExtension: isOggSupported() ? 'ogg' : 'mp3'
   })
   game.setChannels(channelsInstance)
