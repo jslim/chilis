@@ -3,7 +3,7 @@ import type { Channel, Channels } from '@mediamonks/channels'
 import type { GameAction } from '@/game/GameAction'
 import type { GameStateValues } from './components/GameState'
 
-import { Application } from 'pixi.js'
+import { Application, TextureSource } from 'pixi.js'
 
 import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
@@ -41,13 +41,20 @@ export class GameController {
       width: GAME_WIDTH,
       height: GAME_HEIGHT
     })
+    TextureSource.defaultOptions.scaleMode = 'nearest'
+    this.app.canvas.style.imageRendering = 'pixelated'
 
     document.querySelector('#app')!.append(this.canvas)
-    this.app.canvas.style.imageRendering = 'pixelated'
+    this.setPixelated(true)
 
     // setup scene manager
     this.sceneManager = new SceneManager(this, FRAME_RATE)
     this.sceneManager.root.addComponent(new GameState())
+  }
+
+  public setPixelated(isPixelated: boolean) {
+    if (isPixelated) this.app.renderer.resize(GAME_WIDTH, GAME_HEIGHT)
+    else this.app.renderer.resize(GAME_WIDTH * 4, GAME_HEIGHT * 4)
   }
 
   public async preload() {
