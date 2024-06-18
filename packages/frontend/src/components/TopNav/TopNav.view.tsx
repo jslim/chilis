@@ -9,17 +9,17 @@ import { routes } from '@/data/routes'
 
 import { localStore } from '@/store'
 
-import usePauseGameInstance from '@/hooks/use-pause-game-instance'
-import { useRefs } from '@/hooks/use-refs'
 import { getImageUrl } from '@/utils/basic-functions'
 
+import usePauseGameInstance from '@/hooks/use-pause-game-instance'
+import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
+import { BaseImage } from '@/components/BaseImage'
 import { ConfirmationModal } from '@/components/ConfirmationModal'
 
 import SvgBack from '@/svgs/Back.svg'
 import SvgLoginLogout from '@/svgs/LoginLogout.svg'
-import { BaseImage } from '@/components/BaseImage'
 
 export interface ViewProps extends ControllerProps {}
 
