@@ -24,7 +24,7 @@ export class MobileInput extends Component {
     super.onStart()
 
     // get size of app
-    const appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
+    // const appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
     // compare how much this is scaled to the original size
 
     const gameContainer = document.body
