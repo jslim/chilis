@@ -38,8 +38,6 @@ export class MobileInput extends Component {
       bottom: '50%',
       left: 'calc(25vw - 50vh)',
       transform: 'translate(50%, 50%)',
-      width: `${Math.trunc(scaleX * 78)}px`,
-      height: `${Math.trunc(scaleX * 82)}px`,
       imageRendering: 'pixelated',
       backgroundImage: 'url("/game/mobile-joystick-back.png")',
       backgroundSize: 'cover'
@@ -70,11 +68,11 @@ export class MobileInput extends Component {
     this.actionButton = actionButton
     Object.assign(actionButton.style, {
       position: 'absolute',
-      width: `${Math.trunc(scaleX * 78)}px`,
-      height: `${Math.trunc(scaleX * 82)}px`,
       imageRendering: 'pixelated',
-      backgroundImage: 'url("/game/mobile-action-button-up.png")',
+      backgroundRepeat: 'no-repeat',
+      backgroundImage: 'url("/game/mobile-action-button-down-0.png")',
       backgroundSize: 'cover',
+      backgroundPosition: '100% 0',
       bottom: '50%',
       right: 'calc(25vw - 25vh)',
       transform: 'translate(50%, 50%)',
@@ -94,7 +92,7 @@ export class MobileInput extends Component {
 
     this.joystickContainer.style.width = `${Math.trunc(scaleX * 78)}px`
     this.joystickContainer.style.height = `${Math.trunc(scaleX * 82)}px`
-    this.actionButton.style.width = `${Math.trunc(scaleX * 78)}px`
+    this.actionButton.style.width = `${Math.trunc(scaleX * 81)}px`
     this.actionButton.style.height = `${Math.trunc(scaleX * 82)}px`
   }
 
@@ -162,21 +160,24 @@ export class MobileInput extends Component {
   }
 
   private readonly onActionButtonTouchStart = (event: TouchEvent) => {
-    this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-down.png")'
+    //this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-down-0.png")'
+    this.actionButton.style.backgroundPositionX = '0'
     const input = this.target.getComponent(Input)
     input.onDown.emit('action')
     event.preventDefault()
   }
 
   private readonly onActionButtonTouchEnd = (event: TouchEvent) => {
-    this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
+    //this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
+    this.actionButton.style.backgroundPositionX = '100%'
     const input = this.target.getComponent(Input)
     input.onUp.emit('action')
     event.preventDefault()
   }
 
   private readonly onActionButtonTouchCancel = (event: TouchEvent) => {
-    this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
+    //this.actionButton.style.backgroundImage = 'url("/game/mobile-action-button-up.png")'
+    this.actionButton.style.backgroundPositionX = '100%'
     event.preventDefault()
   }
 
