@@ -1,6 +1,7 @@
+import { Cpu } from '@/game/components/cpu/Cpu'
+
 import { CoolDown } from '../../core/CoolDown'
 import { CpuMover } from './CpuMover'
-import { Cpu } from '@/game/components/cpu/Cpu'
 
 export default class DinoCoolMover extends CpuMover {
   private readonly platforms: { direction: 'left' | 'right'; y: number; x: number; width: number }[] = []
@@ -81,5 +82,11 @@ export default class DinoCoolMover extends CpuMover {
         this.currentPlatform = -1
       }
     }
+  }
+
+  override respawn() {
+    this.currentPlatform = -1
+    this.newPlatformCooldown.reset()
+    this.walk(0)
   }
 }
