@@ -140,7 +140,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                 {
                   header: "Content-Security-Policy-Report-Only",
                   override: true,
-                  value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
+                  value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src www.google-analytics.com ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
                 },
               ],
             },
@@ -165,7 +165,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
               },
               contentSecurityPolicy: {
                 override: true,
-                contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
+                contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src www.google-analytics.com ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
               },
             },
           }),
