@@ -154,6 +154,14 @@ export class Burger extends Component {
         }
 
         case 'fall': {
+          // test if intersects with cpus on the burger
+          for (const cpuEntity of this.level.cpus) {
+            if (this.intersectsWith(cpuEntity)) {
+              this.onHitCpu.emit(cpuEntity)
+              this.level.playSound('burger_hit_cpu')
+            }
+          }
+
           this.entity.y += 1
           this.targetY = this.findTargetY()
           this.level.playSound(pick(['burger_fall_a', 'burger_fall_b', 'burger_fall_c']) as SoundName)
