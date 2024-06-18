@@ -17,6 +17,7 @@
     "test": "npm run test --workspaces --if-present",
     "lint-ci": "npm run lint-ci --workspaces --if-present",
     "lint-dev": "npm run lint-dev --workspaces --if-present",
+    "lint-staged": "npm run lint-staged --workspaces --if-present",
     "generate": "npm run generate -w @app/frontend"
   },
   "dependencies": {
