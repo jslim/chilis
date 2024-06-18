@@ -317,7 +317,7 @@ export default class LevelScene extends Scene {
             entity.addComponent(
               new HitBox(
                 -BurgerTileSize.tilewidth / 2,
-                (-burgerHeight / 2) | 0,
+                Math.trunc(-burgerHeight / 2),
                 BurgerTileSize.tilewidth,
                 burgerHeight
               ),
