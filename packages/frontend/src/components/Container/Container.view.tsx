@@ -57,7 +57,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
       if (!apiResponse.gameId) {
         console.error('Submission failed:', apiResponse)
-      } else {
+      } else if (apiResponse.gameId) {
         console.log('Game started:', apiResponse.gameId)
         localState().user.setGameId(String(apiResponse.gameId))
         setGameId(String(apiResponse.gameId))
