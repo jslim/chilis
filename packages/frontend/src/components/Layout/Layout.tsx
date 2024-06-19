@@ -64,6 +64,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
   const [idToken] = useLocalStorage('idToken')
   const [accessToken] = useLocalStorage('accessToken')
+  const [highScore] = useLocalStorage('highScore')
 
   //
   // Update pathname ref
@@ -208,6 +209,10 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
         if (isModalOpen && payload.preferred_username) {
           localState().screen.setIsModalOpen(false)
+        }
+
+        if (highScore && Number(highScore) > 0) {
+          localState().user.setHighScore(Number(highScore))
         }
       } catch (error) {
         console.log('Token not valid!', error)
