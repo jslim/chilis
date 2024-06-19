@@ -38,7 +38,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const accessToken = localStore().user.accessToken
   const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
-  const [gameId, setGameId] = useLocalStorage('gameId')
+  const [, setGameId] = useLocalStorage('gameId')
+  const localGameId = localStore().user.gameId
 
   usePauseGameInstance(isModalOpen)
 
@@ -61,6 +62,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         console.log('Game started:', apiResponse.gameId)
         localState().user.setGameId(String(apiResponse.gameId))
         setGameId(String(apiResponse.gameId))
+      } else {
+        console.error('Submission failed:', apiResponse)
       }
     } catch (error) {
       console.error(error)
@@ -69,7 +72,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   const onGameUpdate = useCallback(
     async (score: number, level: number) => {
-      if (!gameId) return
+      if (!localGameId) return
 
       try {
         const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.GAME}`, undefined, {
@@ -79,7 +82,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
             Authorization: `Bearer ${accessToken}`
           },
           body: JSON.stringify({
-            gameId,
+            gameId: localGameId,
             score,
             level
           })
@@ -97,7 +100,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         console.error(error)
       }
     },
-    [accessToken, gameId]
+    [accessToken, localGameId]
   )
 
   useEffect(() => {
@@ -143,7 +146,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [onGameStarted])
 
   return (
     <div className={classNames('Container', css.root, className, { [css.hasBorder]: showGameBorder })} ref={refs.root}>
