@@ -1,6 +1,6 @@
 import { Channels } from '@mediamonks/channels'
 
-import { GAME_SOUNDS_BASE_URL } from '@/game/game.config'
+import { CHANNEL_SOUND_PATH } from '@/game/game.config'
 
 let channelsInstance: Channels | null = null
 
@@ -8,7 +8,7 @@ export const initChannels = () => {
   if (!channelsInstance && typeof window !== 'undefined') {
     const soundsExtension = isOggSupported() ? 'ogg' : 'mp3'
     channelsInstance = new Channels({
-      soundsPath: GAME_SOUNDS_BASE_URL,
+      soundsPath: CHANNEL_SOUND_PATH,
       soundsExtension
     })
 

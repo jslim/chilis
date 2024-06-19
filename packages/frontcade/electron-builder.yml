@@ -9,3 +9,4 @@ files:
       - app
 publish: null
 electronVersion: "30.0.9"
+compression: store
