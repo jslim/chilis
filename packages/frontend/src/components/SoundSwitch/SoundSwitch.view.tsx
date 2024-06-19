@@ -62,8 +62,7 @@ export const View: FC<ViewProps> = ({ className }) => {
   }, [])
 
   useEffect(() => {
-    console.log(channelsInstance?.getSounds())
-    console.log('sound', `channelsInstance: ${channelsInstance?.getSounds().join(',')}`)
+    console.log('sound', `channelsInstance: ${channelsInstance?.getSounds()}`)
 
     if (channelsInstance) {
       if (switchOn) {
