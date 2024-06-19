@@ -48,7 +48,7 @@
     }
 
     .description {
-      @include font-size(24, 20);
+      @include font-size(20, 24);
       @include font-family(Montserrat, 500);
       max-width: px(700);
       color: $sour-cream;
