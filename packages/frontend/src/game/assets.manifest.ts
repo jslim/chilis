@@ -25,7 +25,6 @@ export const assetsManifest = {
 }
 
 export const soundManifest = {
-  [`vs_level_start`]: `Chilis_Burger Time_VS Screen_V01`,
   [`game_music`]: `Chilis_Burger Time_Gameplay_V02`,
   [`game_start`]: `Chilis_SFX_16_Level Intro Jingle`,
   [`walk_over_burger_loop`]: `Chilis_SFX_02_Walks Over Burger [loop]`,
