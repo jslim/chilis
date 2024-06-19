@@ -4,6 +4,7 @@
 import type { Bullet } from '@/game/components/level/Bullet'
 import type { Burger } from '@/game/components/level/Burger'
 import type LevelScene from '@/game/scenes/LevelScene'
+import type { Point } from 'pixi.js'
 
 import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Player } from '@/game/components/player/Player'
@@ -14,7 +15,7 @@ import { CoolDown } from '../../core/CoolDown'
 import { Component, Entity } from '../../core/Entity'
 import { Signal } from '../../core/Signal'
 import { Value } from '../../core/Value'
-import { DRAW_STATE_DEBUG } from '../../game.config'
+import { DRAW_STATE_DEBUG, GAME_HEIGHT, GAME_WIDTH } from '../../game.config'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
 import { Mover } from '../Mover'
@@ -151,20 +152,17 @@ export class Cpu extends Component {
         if (this.walksWhenPrepareAttack) {
           mover.walk(dt)
           this.checkCollision()
-          this.entity.scale.x = mover.directionX > 0 ? 1 : -1
         }
         break
       }
       case 'walk': {
         mover.walk(dt)
         this.checkCollision()
-        this.entity.scale.x = mover.directionX > 0 ? 1 : -1
         break
       }
 
       case 'jump': {
         this.checkCollision()
-        this.entity.scale.x = mover.directionX > 0 ? 1 : -1
         break
       }
 
@@ -191,8 +189,6 @@ export class Cpu extends Component {
       }
 
       case 'spawn': {
-        // lerp tint from black to original color using this.spawnProcess
-
         if (this.spawnProcess < 1) {
           this.spawnProcess += 0.03
         } else {
@@ -208,7 +204,9 @@ export class Cpu extends Component {
   respawn() {
     const { player, cpus } = this.level!
     // find position the furthest from player
+    const isInScreen = (pos: Point) => pos.x > 0 && pos.x < GAME_WIDTH && pos.y > 0 && pos.y < GAME_HEIGHT
     const spawnPosition = cpus
+      .filter((cpu: Entity) => isInScreen(cpu.getComponent(Mover).startPosition))
       .map((cpu: Entity) => cpu.getComponent(Mover).startPosition)
       .sort(sortByDistanceTo(player))
       .pop()

@@ -1,19 +1,20 @@
 /* eslint-disable unicorn/consistent-destructuring */
 
-import type { Entity } from '../../core/Entity'
 import type { RandomFunction } from '@/game/utils/random.utils'
-import { getRandom, pick } from '@/game/utils/random.utils'
+import type { Entity } from '../../core/Entity'
 
 import { Graphics } from 'pixi.js'
+
+// eslint-disable-next-line import/no-cycle
+import { Burger } from '@/game/components/level/Burger'
+import { sortByDistanceTo } from '@/game/utils/array.utils'
+import { getMoveDirections } from '@/game/utils/grid.utils'
+import { getRandom, pick } from '@/game/utils/random.utils'
 
 import { CoolDown } from '../../core/CoolDown'
 import { Value } from '../../core/Value'
 import { DRAW_CPU_DEBUG } from '../../game.config'
-import { sortByDistanceTo } from '@/game/utils/array.utils'
-import { getMoveDirections } from '@/game/utils/grid.utils'
 import { HitBox } from '../HitBox'
-// eslint-disable-next-line import/no-cycle
-import { Burger } from '@/game/components/level/Burger'
 import { Mover } from '../Mover'
 
 const modes = ['random', 'hunt-player', 'hunt-player-slow', 'hunt-burger', 'hunt-cpu', 'stairs'] as const
@@ -178,23 +179,14 @@ export class CpuMover extends Mover {
           break
         }
       }
-      /*
-      if (this.cpuId === 1) {
-        targetX += playerMover.directionX * 8;
-        targetY += playerMover.directionY * 8;
+
+      if (DRAW_CPU_DEBUG) {
+        this.debugGraphics
+          .clear()
+          .moveTo(cpuX - this.position.x, cpuY - this.position.y)
+          .lineTo(targetX - this.position.x, targetY - this.position.y)
+          .stroke({ width: 1, color: this.entity.color })
       }
-      if (this.cpuId === 2) {
-        targetX += playerMover.directionX * 32 * (distance < 64 ? -1 : 1);
-        //targetY += playerMover.directionY * 32 * (distance < 64 ? -1 : 1);
-      }
-*/
-      //if (this.targetX !== 0) {
-      this.debugGraphics
-        .clear()
-        .moveTo(cpuX - this.position.x, cpuY - this.position.y)
-        .lineTo(targetX - this.position.x, targetY - this.position.y)
-        .stroke({ width: 1, color: this.entity.color })
-      // }
 
       // move in new direction
 
