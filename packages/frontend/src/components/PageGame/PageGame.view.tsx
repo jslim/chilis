@@ -31,7 +31,7 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
   const [isVideoFinished, setIsVideoFinished] = useState(false)
   const gameInstance = getGameInstance()
 
-  const hasContextInit = localStore().navigation.isContextInitialized
+  const isMuted = localStore().screen.isMuted
 
   useEffect(() => {
     if (!gameInstance) return
@@ -72,7 +72,7 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
             videoData={content.body.backgroundVideo}
             ref={refs.videoRef}
             loop={false}
-            muted={hasContextInit !== true}
+            muted={isMuted}
           />
           <BaseButton className={css.skip} onClick={() => setIsVideoFinished(true)}>
             {content.common.skip}
