@@ -66,8 +66,10 @@ export class Player extends Component {
     if (DRAW_STATE_DEBUG) {
       this.entity.addComponent(new StateDebugText(this.state, [0, 0], this.entity.color))
     }
+    let prevLives = this.lives.value
     this.subscribe(this.lives.onChanged, (newLives) => {
-      this.state.value = newLives <= 0 ? 'die' : 'reset'
+      if (newLives < prevLives) this.state.value = newLives <= 0 ? 'die' : 'reset'
+      prevLives = newLives
     })
     this.subscribe(this.state.onChanged, (newState) => {
       switch (newState) {
