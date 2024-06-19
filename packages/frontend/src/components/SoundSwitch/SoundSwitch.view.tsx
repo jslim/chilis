@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import type { Channels } from '@mediamonks/channels'
+import type { Channels, PlayingSound } from '@mediamonks/channels'
 import type { ControllerProps } from './SoundSwitch.controller'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -34,13 +34,15 @@ export const View: FC<ViewProps> = ({ className }) => {
   const hasContextInit = localStore().navigation.isContextInitialized
 
   const [switchOn, setSwitchOn] = useState(false)
-  const [isSampleAdded, setIsSampleAdded] = useState(false)
+
+  const [mainSound, setMainSound] = useState<PlayingSound | null>(null)
 
   const path = localStore().navigation.pathname
   const isMainPages = useMemo(() => {
     return path === routes.HOME || path === routes.LEADERBOARD || path === routes.HOW_TO_PLAY || path === routes.CONTEST
   }, [path])
 
+  // Toggle sound on or off
   const handleClick = useCallback(() => {
     setSwitchOn((prev) => !prev)
 
@@ -49,39 +51,48 @@ export const View: FC<ViewProps> = ({ className }) => {
     }
   }, [hasContextInit])
 
+  // Initialize channels instance
   useEffect(() => {
+    let instance: Channels | null = null
+
     const initializeChannels = async () => {
-      const instance = getChannels()
+      instance = getChannels()
       setChannelsInstance(instance)
       console.log(instance?.audioContext.state)
       setSwitchOn(instance?.audioContext.state === 'running')
     }
     initializeChannels()
+
+    return () => {
+      if (instance) {
+        instance.stopAll()
+      }
+    }
   }, [])
 
+  // Mute or unmute all sounds
   useEffect(() => {
     console.log('sound', `channelsInstance: ${channelsInstance?.getSounds()}`)
-
     if (channelsInstance) {
       if (switchOn) {
-        channelsInstance.unmute()
+        console.log(channelsInstance)
+        channelsInstance.setVolume(1)
         console.log('Unmuting channelsInstance', channelsInstance.getChannels())
       } else {
-        channelsInstance.mute()
-        console.log('Muting channelsInstance')
+        channelsInstance.setVolume(0)
+        console.log('Muting channelsInstance', channelsInstance.getChannels())
       }
     }
   }, [switchOn, channelsInstance])
 
+  // Add main sound when on main pages
   useEffect(() => {
     const addMainSound = async () => {
-      if (isMainPages && switchOn && channelsInstance && !isSampleAdded) {
+      if (isMainPages && switchOn && channelsInstance && mainSound) {
         try {
           channelsInstance.sampleManager.addSample({ name: MAIN_SOUND, extension: 'mp3' })
-          setIsSampleAdded(true)
-
           await loadSounds()
-          playSound(MAIN_SOUND)
+          setMainSound(channelsInstance.play(MAIN_SOUND, { loop: true }))
         } catch (error) {
           console.error('Error adding or playing sound:', error)
         }
@@ -89,14 +100,16 @@ export const View: FC<ViewProps> = ({ className }) => {
     }
 
     addMainSound()
+  }, [channelsInstance, isMainPages, switchOn, mainSound])
 
-    return () => {
-      if (channelsInstance) {
-        channelsInstance.stopAll()
-        channelsInstance.destruct()
-      }
+  // Mute main sound when not on main pages
+  useEffect(() => {
+    if (!isMainPages && mainSound) {
+      mainSound.mute()
+    } else {
+      mainSound?.unmute()
     }
-  }, [channelsInstance, isMainPages, switchOn, isSampleAdded])
+  }, [mainSound, isMainPages])
 
   return (
     <div>
