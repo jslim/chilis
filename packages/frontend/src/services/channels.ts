@@ -32,7 +32,7 @@ export async function loadSounds() {
 export function playSound(sound: string) {
   if (channelsInstance) {
     console.log(channelsInstance.getChannels(), 'playSound', sound)
-    channelsInstance.play(sound)
+    return channelsInstance.play(sound)
   }
 }
 
