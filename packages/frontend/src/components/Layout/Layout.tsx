@@ -322,6 +322,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
               show={isModalOpen}
               handleClose={() => localState().screen.setIsModalOpen(false)}
               content={pageProps.content.common.topNav.logOutModal}
+              logo={pageProps.content.common.topNav.logo}
               handleNavigateBack={handleNavigateBack}
             />
           </BaseModal>

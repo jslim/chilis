@@ -26,6 +26,10 @@
           "title": "TERMS"
         },
         {
+          "path": "https://brinker.com/privacy",
+          "title": "PRIVACY"
+        },
+        {
           "path": "/faq/",
           "title": "FAQ"
         }
@@ -34,14 +38,14 @@
     "topNav": {
       "logIn": "LOG IN",
       "logOutModal": {
-        "description": "<strong>Are you sure?</strong></br></br>After logging out, you will lose your progress and score.",
+        "description": "<strong>ARE YOU SURE?</strong></br></br>After logging out, you will lose your progress and score.",
         "ctas": {
           "confirm": "YES, LOG OUT",
           "deny": "NO, STAY"
         }
       },
       "backModal": {
-        "description": "<strong>Are you sure?</strong></br></br>Quitting this way won’t save your score",
+        "description": "<strong>ARE YOU SURE?</strong></br></br>Quitting this way won’t save your score",
         "ctas": {
           "confirm": "YES, QUIT",
           "deny": "NO, STAY"
@@ -67,8 +71,8 @@
       "phone": "PHONE",
       "password": "PASSWORD",
       "nicknameTitle": "CREATE USERNAME",
-      "nicknameDescription": "The League of Evil Lorem just Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
-      "nickname": "NICKNAME",
+      "nicknameDescription": "Create a username that will appear on the leaderboard.",
+      "nickname": "ENTER USERNAME",
       "nicknameCta": "CONFIRM",
       "errorMessage": "Invalid phone or password",
       "errorMessageNickname": "Invalid nickname",
@@ -190,13 +194,13 @@
           "src": "/videos/contest.mp4",
           "poster": "burger-loop.png"
         },
-        "title": "THREE WEEKS OF BATTLES.",
+        "title": "BUILD BURGERS.",
         "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit <a target='_blank' href='https://burgertime.chilis.com/terms'>burgertime.chilis.com/terms</a>",
         "hero": {
           "src": "a-lifetime.png",
           "alt": "A lifetime of burgers"
         },
-        "slides":[
+        "slides": [
           {
             "title": "BECOME THE CHILI’S BIG SMASHER BURGERTIME CHAMPION",
             "text": "Help save the Chili's Big Smasher and you could win a lifetime* of Chili's burgers! As in real burgers, not video game burgers. Climb atop the leaderboard by building as many Chili's Big Smashers before the evil Fast-Food syndicate smashes them forever."

@@ -4,7 +4,7 @@
   @include flex-center;
 
   .container {
-    @include flex-center;
+    @include flex-center-vert;
     position: absolute;
     flex-direction: column;
     background-color: $sour-cream;
@@ -13,9 +13,32 @@
     overflow: hidden;
     min-height: px(300);
 
+    @include media-tablet-large {
+      min-height: px(400);
+      min-width: px(400);
+    }
+
+    .logoContainer {
+      @include box(px(88), px(50));
+      margin-bottom: px(30);
+
+      .logo {
+        width: 100%;
+        height: auto;
+        image-rendering: pixelated;
+      }
+    }
+
     .description {
       @include typography-montserrat-body;
       max-width: px(300);
+      flex: 1;
+    }
+
+    strong {
+      @include font-size(42, 50);
+      @include font-family(Dirk, 800);
+      color: $red;
     }
 
     .close {
@@ -30,12 +53,12 @@
       @include flex-center;
       gap: px(10);
       margin-top: px(20);
+      flex: 1;
     }
 
     .goBack,
     .stay {
       white-space: nowrap;
-      border-bottom-width: 1px;
     }
   }
 }

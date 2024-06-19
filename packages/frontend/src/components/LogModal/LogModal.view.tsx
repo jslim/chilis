@@ -1,7 +1,7 @@
 import type { ApiResponse } from '@/data/types'
 import type { ControllerProps } from './LogModal.controller'
 
-import { type FC, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 import css from './LogModal.module.scss'
@@ -26,7 +26,6 @@ export type ViewRefs = {
   root: HTMLDivElement
 }
 
-// View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({
   className,
   logo,
@@ -55,10 +54,20 @@ export const View: FC<ViewProps> = ({
   const [accessToken, setAccessToken] = useLocalStorage('accessToken')
   const [, setIdToken] = useLocalStorage('idToken')
   const [hasError, setHasError] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const isTokenValid = localStore().user.isTokenValid
 
   const preferredNickname = localState().user.nickname
 
+  useEffect(() => {
+    if (isTokenValid && !preferredNickname) {
+      setLoading(false)
+    }
+  }, [isTokenValid, preferredNickname])
+
   const handleLoginSubmit = async () => {
+    setLoading(true)
+
     try {
       const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.USER}`, undefined, {
         method: 'POST',
@@ -85,10 +94,14 @@ export const View: FC<ViewProps> = ({
     } catch (error) {
       console.error(error)
       setHasError(true)
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleNicknameSubmit = async () => {
+    setLoading(true)
+
     try {
       const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.USER}`, undefined, {
         method: 'PATCH',
@@ -104,7 +117,7 @@ export const View: FC<ViewProps> = ({
       console.log('Nickname response:', apiResponse)
 
       if (apiResponse.message.toLowerCase().includes('success')) {
-        console.log('Nickame set successful:', apiResponse.message)
+        console.log('Nickname set successful:', apiResponse.message)
         localState().user.setNickname(nicknameValue)
         onClose()
       } else {
@@ -114,8 +127,86 @@ export const View: FC<ViewProps> = ({
     } catch (error) {
       console.error(error)
       setHasError(true)
+    } finally {
+      setLoading(false)
     }
   }
+
+  const handleNicknameChange = (value: string) => {
+    const regex = /^[\w.-]{3,10}$/u
+    if (regex.test(value)) {
+      setHasError(false)
+    } else {
+      setHasError(true)
+    }
+    setNicknameValue(value)
+  }
+
+  const renderLoginForm = () => (
+    <>
+      <div className={css.innerWrapper}>
+        <div className={css.title} {...copy.html(title)} />
+        <div className={css.description} {...copy.html(description)} />
+      </div>
+      <BaseForm
+        onSubmit={handleLoginSubmit}
+        submitMessage={cta}
+        errorMessage={errorMessage}
+        hasError={hasError}
+        disabled={phoneValue === '' || passwordValue === '' || loading}
+      >
+        <div className={css.fieldsContainer}>
+          <input
+            type="text"
+            id="phone"
+            name="phone"
+            placeholder={phone}
+            onChange={(e) => setPhoneValue(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder={password}
+            onChange={(e) => setPasswordValue(e.target.value)}
+            required
+          />
+        </div>
+      </BaseForm>
+
+      <div className={css.forgotPassword}>
+        <BaseButton href={forgotPasswordLink}>{forgotPassword}</BaseButton>
+      </div>
+    </>
+  )
+
+  const renderNicknameForm = () => (
+    <>
+      <div className={css.innerWrapper}>
+        <div className={css.title} {...copy.html(nicknameTitle)} />
+        <div className={css.description} {...copy.html(nicknameDescription)} />
+      </div>
+      <BaseForm
+        onSubmit={handleNicknameSubmit}
+        submitMessage={nicknameCta}
+        errorMessage={errorMessageNickname}
+        disabled={nicknameValue === '' || hasError || loading}
+      >
+        <div className={css.fieldsContainer}>
+          <input
+            type="text"
+            id="nickname"
+            name="nickname"
+            placeholder={nickname}
+            onChange={(e) => handleNicknameChange(e.target.value)}
+            required
+            pattern="^[a-zA-Z0-9._-]{3,10}$"
+          />
+        </div>
+      </BaseForm>
+    </>
+  )
 
   return (
     <div className={classNames('LogModal', css.root, className)} ref={refs.root}>
@@ -125,72 +216,12 @@ export const View: FC<ViewProps> = ({
           <div className={css.logoContainer}>
             <BaseImage className={css.logo} data={getImageUrl(logo.src)} alt={logo.alt} />
           </div>
-
-          {!localStore().user.isTokenValid ? (
-            <>
-              <div className={css.title} {...copy.html(title)} />
-              <div className={css.description} {...copy.html(description)} />
-              <BaseForm
-                onSubmit={handleLoginSubmit}
-                submitMessage={cta}
-                errorMessage={errorMessage}
-                hasError={hasError}
-                disabled={phoneValue === '' || passwordValue === ''}
-              >
-                <div className={css.fieldsContainer}>
-                  <input
-                    type="text"
-                    id="phone"
-                    name="phone"
-                    placeholder={phone}
-                    onChange={(e) => setPhoneValue(e.target.value)}
-                    required
-                  />
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder={password}
-                    onChange={(e) => setPasswordValue(e.target.value)}
-                    required
-                  />
-                </div>
-              </BaseForm>
-
-              <div className={css.forgotPassword}>
-                <BaseButton href={forgotPasswordLink}>{forgotPassword}</BaseButton>
-              </div>
-            </>
-          ) : (
-            !preferredNickname && (
-              <>
-                <div className={css.title} {...copy.html(nicknameTitle)} />
-                <div className={css.description} {...copy.html(nicknameDescription)} />
-                <BaseForm
-                  onSubmit={handleNicknameSubmit}
-                  submitMessage={nicknameCta}
-                  errorMessage={errorMessageNickname}
-                >
-                  <div className={css.fieldsContainer}>
-                    <input
-                      type="text"
-                      id="nickname"
-                      name="nickname"
-                      placeholder={nickname}
-                      onChange={(e) => setNicknameValue(e.target.value)}
-                      required
-                    />
-                  </div>
-                </BaseForm>
-              </>
-            )
-          )}
+          {!isTokenValid ? renderLoginForm() : !preferredNickname && renderNicknameForm()}
         </div>
         <div className={css.bottom}>
           <div className={css.chillieContainer}>
             <BaseImage className={css.chillie} data={getImageUrl(decoration)} />
           </div>
-
           <div className={css.skipContainer}>
             <p className={css.label} {...copy.html(skipLabel)} />
             <BaseButton className={css.skipButton} onClick={onClose}>
