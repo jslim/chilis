@@ -13,8 +13,6 @@ import { localState, localStore } from '@/store'
 
 import { getChannels, loadSounds, playSound } from '@/services/channels'
 
-import { print } from '@/utils/print'
-
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
