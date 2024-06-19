@@ -91,7 +91,7 @@ export const View: FC<ViewProps> = ({ className }) => {
   // Add main sound when on main pages
   useEffect(() => {
     const addMainSound = async () => {
-      if (isMainPages && channelsInstance && switchOn) {
+      if (isMainPages && channelsInstance && hasContextInit) {
         try {
           channelsInstance.sampleManager.addSample({ name: MAIN_SOUND, extension: 'mp3' })
           await loadSounds()
@@ -102,9 +102,8 @@ export const View: FC<ViewProps> = ({ className }) => {
         }
       }
     }
-
     addMainSound()
-  }, [channelsInstance, isMainPages, switchOn])
+  }, [channelsInstance, hasContextInit, isMainPages])
 
   // Mute main sound when not on main pages
   useEffect(() => {
