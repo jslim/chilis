@@ -53,7 +53,7 @@ export const View: FC<ViewProps> = ({ className }) => {
 
   useEffect(() => {
     const initializeChannels = async () => {
-      const instance = await getChannels()
+      const instance = getChannels()
       setChannelsInstance(instance)
       console.log(instance?.audioContext.state)
       setSwitchOn(instance?.audioContext.state === 'running')

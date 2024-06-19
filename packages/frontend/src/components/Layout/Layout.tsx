@@ -65,6 +65,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const [idToken] = useLocalStorage('idToken')
   const [accessToken] = useLocalStorage('accessToken')
   const [highScore] = useLocalStorage('highScore')
+  const [gameId] = useLocalStorage('gameId')
 
   //
   // Update pathname ref
@@ -213,6 +214,10 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
         if (highScore && Number(highScore) > 0) {
           localState().user.setHighScore(Number(highScore))
+        }
+
+        if (gameId) {
+          localState().user.setGameId(gameId)
         }
       } catch (error) {
         console.log('Token not valid!', error)
