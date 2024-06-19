@@ -11,7 +11,8 @@ import { routes } from '@/data/routes'
 
 import { localState, localStore } from '@/store'
 
-import { getChannels, loadSounds, playSound } from '@/services/channels'
+import { getChannels, loadSounds } from '@/services/channels'
+import { getGameInstance } from '@/services/game'
 
 import { useRefs } from '@/hooks/use-refs'
 
@@ -37,6 +38,8 @@ export const View: FC<ViewProps> = ({ className }) => {
 
   const [mainSound, setMainSound] = useState<PlayingSound | null>(null)
 
+  const gameInstance = getGameInstance()
+
   const path = localStore().navigation.pathname
   const isMainPages = useMemo(() => {
     return path === routes.HOME || path === routes.LEADERBOARD || path === routes.HOW_TO_PLAY || path === routes.CONTEST
@@ -58,7 +61,6 @@ export const View: FC<ViewProps> = ({ className }) => {
     const initializeChannels = async () => {
       instance = getChannels()
       setChannelsInstance(instance)
-      console.log(instance?.audioContext.state)
       setSwitchOn(instance?.audioContext.state === 'running')
     }
     initializeChannels()
@@ -72,23 +74,22 @@ export const View: FC<ViewProps> = ({ className }) => {
 
   // Mute or unmute all sounds
   useEffect(() => {
-    console.log('sound', `channelsInstance: ${channelsInstance?.getSounds()}`)
     if (channelsInstance) {
       if (switchOn) {
-        console.log(channelsInstance)
         channelsInstance.setVolume(1)
-        console.log('Unmuting channelsInstance', channelsInstance.getChannels())
+        gameInstance?.setMuted(false)
       } else {
         channelsInstance.setVolume(0)
+        gameInstance?.setMuted(true)
         console.log('Muting channelsInstance', channelsInstance.getChannels())
       }
     }
-  }, [switchOn, channelsInstance])
+  }, [switchOn, channelsInstance, gameInstance])
 
   // Add main sound when on main pages
   useEffect(() => {
     const addMainSound = async () => {
-      if (isMainPages && switchOn && channelsInstance && mainSound) {
+      if (isMainPages && channelsInstance && mainSound) {
         try {
           channelsInstance.sampleManager.addSample({ name: MAIN_SOUND, extension: 'mp3' })
           await loadSounds()
