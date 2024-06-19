@@ -71,7 +71,7 @@
       "phone": "PHONE",
       "password": "PASSWORD",
       "nicknameTitle": "CREATE USERNAME",
-      "nicknameDescription": "Create a username that will appear on the leaderboard.",
+      "nicknameDescription": "Create your username for the public leaderboard. Maximum 10 characters minimum 3, no spaces. Letters, numbers and special characters ._- are accepted.",
       "nickname": "ENTER USERNAME",
       "nicknameCta": "CONFIRM",
       "errorMessage": "Invalid phone or password",
@@ -278,7 +278,7 @@
       },
       "body": {
         "title": "Full Leaderboard Page",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "description": "This page previews the top 500 participants on the leaderboard. Check to see if you’ve made the list, or what score you need to achieve this ranking",
         "topLabel": "TOP 20",
         "background": {
           "src": "fullleaderboard-background.png",
