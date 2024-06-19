@@ -5,6 +5,8 @@ import type { TiledLayerPath, TiledWalkGrid } from '@/game/utils/tiles.utils'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
+import { detect } from '@/utils/detect'
+
 import { BurgerTron } from '@/game/components/cpu/BurgerTron'
 import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
 import { Cpu } from '@/game/components/cpu/Cpu'
@@ -39,7 +41,6 @@ import { SimpleButton } from '@/game/display/SimpleButton'
 import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
-import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
 import { getRandom, pick } from '@/game/utils/random.utils'
 import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '@/game/utils/tiles.utils'
 
@@ -383,7 +384,7 @@ export default class LevelScene extends Scene {
       this.containers.floorFront.addChild(drawGrid(this.walkGrid))
     }
 
-    if (isMobileOrTablet()) {
+    if (detect.device.mobile) {
       this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
     } else if (!IS_ARCADE_BUILD && this.gameState.level.value === 1) {
       const isKeyboardLikelyConnected = window.matchMedia('(pointer: fine)').matches
