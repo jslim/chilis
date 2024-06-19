@@ -72,7 +72,7 @@
       "password": "PASSWORD",
       "nicknameTitle": "CREATE USERNAME",
       "nicknameDescription": "Create your username for the public leaderboard. Maximum 10 characters minimum 3, no spaces. Letters, numbers and special characters ._- are accepted.",
-      "nickname": "NICKNAME",
+      "nickname": "ENTER USERNAME",
       "nicknameCta": "CONFIRM",
       "errorMessage": "Invalid phone or password",
       "errorMessageNickname": "Invalid nickname",
