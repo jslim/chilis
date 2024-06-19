@@ -19,10 +19,7 @@ export class LevelVsScene extends Scene {
     const gotoLevel = () => this.sceneManager.showLevel(this.levelNo)
 
     ;(async () => {
-      await this.playVideo(`vs_level_0${getWrappedLevelNo(this.levelNo)}`, () => {
-        console.log('BING')
-        gotoLevel()
-      })
+      await this.playVideo(`vs_level_0${getWrappedLevelNo(this.levelNo)}`, () => gotoLevel())
     })()
   }
 }
