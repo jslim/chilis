@@ -50,7 +50,11 @@ export function CICD({ stack, app }: StackContext) {
     },
   });
 
-  const ssmParam = StringParameter.fromStringParameterName(stack, `${app.stage}-parameter-store-base-domain`, "/prj-240137971-chilis-burger-time/base-domain");
+  const ssmParam = StringParameter.fromStringParameterName(
+    stack,
+    `${app.stage}-parameter-store-base-domain`,
+    `/prj-240137971-chilis-burger-time/base-domain-${app.stage}`,
+  );
 
   // Add a custom role (with broader permissions) that can be assumed through STS inside Authorizer Lambda (further narrowing permissions)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -65,7 +69,7 @@ export function CICD({ stack, app }: StackContext) {
       actions: ["*"],
       effect: Effect.ALLOW,
       resources: [`*`],
-    })
+    }),
   );
 
   // Add source stage to pipeline
