@@ -5,6 +5,8 @@ import type { GameStateValues } from './components/GameState'
 
 import { Application, TextureSource } from 'pixi.js'
 
+import { Value } from '@/game/core/Value'
+
 import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
@@ -14,6 +16,8 @@ import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
 
 export class GameController {
+  public isMuted: Value<boolean> = new Value<boolean>(false)
+
   public onLevelComplete = new Signal<GameStateValues>()
   public onGameOver = new Signal<GameStateValues>()
   public onGameEnd = new Signal<GameStateValues>()
@@ -154,6 +158,10 @@ export class GameController {
 
   public async showLevel(levelNo: number) {
     return this.sceneManager.showLevel(levelNo)
+  }
+
+  public setMuted(isMuted: boolean) {
+    this.isMuted.value = isMuted
   }
 
   public pause() {
