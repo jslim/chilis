@@ -38,6 +38,8 @@ export const View: FC<ViewProps> = ({ className }) => {
 
   const [mainSound, setMainSound] = useState<PlayingSound | null>(null)
 
+  const isMuted = localStore().screen.isMuted
+
   const gameInstance = getGameInstance()
 
   const path = localStore().navigation.pathname
@@ -52,7 +54,9 @@ export const View: FC<ViewProps> = ({ className }) => {
     if (!hasContextInit) {
       localState().navigation.setContextInitialized(true)
     }
-  }, [hasContextInit])
+
+    localState().screen.setIsMuted(!isMuted)
+  }, [hasContextInit, isMuted])
 
   // Initialize channels instance
   useEffect(() => {
