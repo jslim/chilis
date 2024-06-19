@@ -33,7 +33,7 @@ import { LevelComponent } from './LevelComponent'
 
 export const burgerOverlap = 1
 export const burgerHeightByTileId = {
-  [TileId.Burger1]: 6,
+  [TileId.Burger1]: 7,
   [TileId.Burger2]: 4,
   [TileId.Burger3]: 5,
   [TileId.Burger4]: 6,
