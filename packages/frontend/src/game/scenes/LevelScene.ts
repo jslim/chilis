@@ -32,6 +32,7 @@ import { Player } from '@/game/components/player/Player'
 import { PlayerAnimator } from '@/game/components/player/PlayerAnimator'
 import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 import { GameUI } from '@/game/components/ui/GameUI'
+import { PickupUI } from '@/game/components/ui/PickupUI'
 import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
 import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
 import { SimpleButton } from '@/game/display/SimpleButton'
@@ -404,6 +405,7 @@ export default class LevelScene extends Scene {
 
   createGameUI() {
     this.containers.ui.addComponent(new GameUI(this))
+    this.containers.ui.addEntity(new Entity().addComponent(new PickupUI(this)))
   }
 
   override onUpdate(dt: number): void {

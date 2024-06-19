@@ -133,6 +133,8 @@ export class GameController {
             this.gameState.bullets.value += 1
           } else if (key === '3') {
             Player.GOD_MODE = !Player.GOD_MODE
+          } else if (key === '4') {
+            this.gameState.pickupsCollected.value += 1
           } else if (key === 'k') {
             //open canvas as image in new window
             // eslint-disable-next-line unicorn/consistent-destructuring
