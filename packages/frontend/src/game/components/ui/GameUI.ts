@@ -1,11 +1,11 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable @typescript-eslint/no-shadow */
+import type LevelScene from '@/game/scenes/LevelScene'
 import type { Value } from '../../core/Value'
 import type { FlumpLibrary } from '../../flump/FlumpLibrary'
-import type LevelScene from '@/game/scenes/LevelScene'
+
+import { getGamerNumberFont } from '@/game/display/SimpleText'
 
 import { Component, Entity } from '../../core/Entity'
-import { getGamerNumberFont } from '@/game/display/SimpleText'
 import { SimpleTextDisplay } from './SimpleTextDisplay'
 
 export class GameUI extends Component {
@@ -43,15 +43,15 @@ function addPanel(
   label.position.set(4, 6)
   panel.addEntity(label)
 
-  const formatter = (value: number) => `${value}`.padStart(6, '0')
+  const formatter = (str: number) => `${str}`.padStart(6, '0')
   const text = new Entity().addComponent(
     new SimpleTextDisplay(formatter(value.value), 'left', getGamerNumberFont()).setTint(0xffc507)
   )
   text.position.set(3, 19)
   panel.addEntity(text)
 
-  return value.onChanged.subscribe((value) => {
-    text.getComponent(SimpleTextDisplay).label.text.value = formatter(value)
+  return value.onChanged.subscribe((str) => {
+    text.getComponent(SimpleTextDisplay).label.text.value = formatter(str)
   })
 }
 
@@ -71,7 +71,7 @@ function addSmallPanel(
   label.position.set(4, 8)
   panel.addEntity(label)
 
-  const formatter = (value: number) => `${value}`
+  const formatter = (str: number) => `${str}`
   const text = new Entity().addComponent(new SimpleTextDisplay(formatter(value.value), 'left', getGamerNumberFont()))
   text.position.set(3, 19 + 5)
   panel.addEntity(text)
@@ -80,7 +80,7 @@ function addSmallPanel(
   textOverlay.position.set(2, 19)
   panel.addEntity(textOverlay)
 
-  return value.onChanged.subscribe((value) => {
-    text.getComponent(SimpleTextDisplay).label.text.value = formatter(value)
+  return value.onChanged.subscribe((str) => {
+    text.getComponent(SimpleTextDisplay).label.text.value = formatter(str)
   })
 }
