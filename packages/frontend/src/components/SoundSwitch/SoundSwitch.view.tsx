@@ -35,7 +35,6 @@ export const View: FC<ViewProps> = ({ className }) => {
   const hasContextInit = localStore().navigation.isContextInitialized
 
   const [switchOn, setSwitchOn] = useState(false)
-
   const [mainSound, setMainSound] = useState<PlayingSound | null>(null)
 
   const isMuted = localStore().screen.isMuted
@@ -85,7 +84,6 @@ export const View: FC<ViewProps> = ({ className }) => {
       } else {
         channelsInstance.setVolume(0)
         gameInstance?.setMuted(true)
-        console.log('Muting channelsInstance', channelsInstance.getChannels())
       }
     }
   }, [switchOn, channelsInstance, gameInstance])
@@ -93,26 +91,28 @@ export const View: FC<ViewProps> = ({ className }) => {
   // Add main sound when on main pages
   useEffect(() => {
     const addMainSound = async () => {
-      if (isMainPages && channelsInstance && mainSound) {
+      if (isMainPages && channelsInstance && hasContextInit) {
         try {
           channelsInstance.sampleManager.addSample({ name: MAIN_SOUND, extension: 'mp3' })
           await loadSounds()
-          setMainSound(channelsInstance.play(MAIN_SOUND, { loop: true }))
+          const sound = channelsInstance.play(MAIN_SOUND, { loop: true })
+          setMainSound(sound)
         } catch (error) {
           console.error('Error adding or playing sound:', error)
         }
       }
     }
-
     addMainSound()
-  }, [channelsInstance, isMainPages, switchOn, mainSound])
+  }, [channelsInstance, hasContextInit, isMainPages])
 
   // Mute main sound when not on main pages
   useEffect(() => {
-    if (!isMainPages && mainSound) {
+    if (!mainSound) return
+
+    if (!isMainPages) {
       mainSound.mute()
     } else {
-      mainSound?.unmute()
+      mainSound.unmute()
     }
   }, [mainSound, isMainPages])
 
