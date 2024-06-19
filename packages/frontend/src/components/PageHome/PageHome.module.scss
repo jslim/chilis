@@ -7,7 +7,11 @@
 }
 
 .media {
-  @include background-opacity;
+  @include background-opacity($black, 0.25);
+
+  @include media-tablet-large {
+    @include background-opacity($black, 0.1);
+  }
 
   video,
   img {

@@ -1,15 +1,18 @@
 import type { FC } from 'react'
+import type { Channels } from '@mediamonks/channels'
 import type { ControllerProps } from './SoundSwitch.controller'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
-import gsap from 'gsap'
 
 import css from './SoundSwitch.module.scss'
 
-import { getGameInstance } from '@/services/game'
+import { routes } from '@/data/routes'
 
-import { detect } from '@/utils/detect'
+import { localState, localStore } from '@/store'
+
+import { getChannels, loadSounds, playSound } from '@/services/channels'
+
 import { print } from '@/utils/print'
 
 import { useRefs } from '@/hooks/use-refs'
@@ -23,69 +26,91 @@ export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
   root: HTMLDivElement
-  note: HTMLDivElement
-  cd: HTMLDivElement
-  cdAnimation: gsap.core.Tween
-  noteAnimation: gsap.core.Tween
 }
+
+const MAIN_SOUND = 'start-screen'
 
 export const View: FC<ViewProps> = ({ className }) => {
   const refs = useRefs<ViewRefs>()
+  const [channelsInstance, setChannelsInstance] = useState<Channels | null>(null)
+  const hasContextInit = localStore().navigation.isContextInitialized
 
-  const isDesktop = detect.device.desktop
-  const channelsInstance = getGameInstance()?.channels
-  const [switchOn, setSwitchOn] = useState(channelsInstance?.isDisposed())
+  const [switchOn, setSwitchOn] = useState(false)
+  const [isSampleAdded, setIsSampleAdded] = useState(false)
+
+  const path = localStore().navigation.pathname
+  const isMainPages = useMemo(() => {
+    return path === routes.HOME || path === routes.LEADERBOARD || path === routes.HOW_TO_PLAY || path === routes.CONTEST
+  }, [path])
 
   const handleClick = useCallback(() => {
     setSwitchOn((prev) => !prev)
+
+    if (!hasContextInit) {
+      localState().navigation.setContextInitialized(true)
+    }
+  }, [hasContextInit])
+
+  useEffect(() => {
+    const initializeChannels = async () => {
+      const instance = await getChannels()
+      setChannelsInstance(instance)
+      console.log(instance?.audioContext.state)
+      setSwitchOn(instance?.audioContext.state === 'running')
+    }
+    initializeChannels()
   }, [])
 
   useEffect(() => {
-    const cd = refs.cd.current
-    const note = refs.note.current
-
-    refs.cdAnimation.current = gsap.to(cd, { duration: 0.5, rotate: 360, repeat: -1, ease: 'linear', paused: true })
-    refs.noteAnimation.current = gsap.fromTo(
-      note,
-      { y: isDesktop ? 55 : 25 },
-      { y: 0, duration: 0.5, ease: 'linear', paused: true }
-    )
-
-    return () => {
-      refs.cdAnimation.current?.kill()
-      refs.noteAnimation.current?.kill()
-    }
-  }, [isDesktop, refs.cd, refs.cdAnimation, refs.note, refs.noteAnimation])
-
-  useEffect(() => {
-    print('sound', `channelsInstance: ${channelsInstance?.getPlayingSounds().join(',')}`)
+    print('sound', `channelsInstance: ${channelsInstance?.getSounds().join(',')}`)
 
     if (channelsInstance) {
       if (switchOn) {
-        try {
-          channelsInstance.unmute()
-        } catch (error) {
-          console.error('Failed to play sound:', error)
-        }
-
-        refs.cdAnimation.current?.play()
-        refs.noteAnimation.current?.play()
+        channelsInstance.unmute()
+        console.log('Unmuting channelsInstance', channelsInstance.getChannels())
       } else {
-        refs.cdAnimation.current?.pause()
-        refs.noteAnimation.current?.reverse()
-
         channelsInstance.mute()
+        console.log('Muting channelsInstance')
       }
     }
-  }, [switchOn, refs.cdAnimation, refs.noteAnimation, channelsInstance])
+  }, [switchOn, channelsInstance])
+
+  useEffect(() => {
+    const addMainSound = async () => {
+      if (isMainPages && switchOn && channelsInstance && !isSampleAdded) {
+        try {
+          channelsInstance.sampleManager.addSample({ name: MAIN_SOUND, extension: 'mp3' })
+          setIsSampleAdded(true)
+
+          await loadSounds()
+          playSound(MAIN_SOUND)
+        } catch (error) {
+          console.error('Error adding or playing sound:', error)
+        }
+      }
+    }
+
+    addMainSound()
+
+    return () => {
+      if (channelsInstance) {
+        channelsInstance.stopAll()
+        channelsInstance.destruct()
+      }
+    }
+  }, [channelsInstance, isMainPages, switchOn, isSampleAdded])
 
   return (
     <div>
-      <BaseButton className={classNames('SoundSwitch', css.root, className)} ref={refs.root} onClick={handleClick}>
-        <div className={css.note} ref={refs.note}>
+      <BaseButton
+        className={classNames('SoundSwitch', css.root, className, { [css.isSoundOn]: switchOn })}
+        ref={refs.root}
+        onClick={handleClick}
+      >
+        <div className={css.note}>
           <SvgNote />
         </div>
-        <div className={css.cd} ref={refs.cd}>
+        <div className={css.cd}>
           <SvgCd />
         </div>
       </BaseButton>

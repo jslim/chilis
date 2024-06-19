@@ -113,3 +113,15 @@ export const truncateText = (text: string | undefined | null, maxLength: number)
 
   return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
 }
+
+/**
+ * Adds 'https://' to the beginning of a URL if it doesn't already have 'http://' or 'https://'.
+ * @param {string} url - The URL to be prefixed.
+ * @returns {string} - The URL with 'https://' prefixed if necessary.
+ */
+export const ensureHttps = (url: string): string => {
+  if (!/^https?:\/\//iu.test(url)) {
+    return `https://${url}`
+  }
+  return url
+}

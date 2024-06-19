@@ -84,6 +84,7 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
         handleClose={handleClose}
         handleNavigateBack={handleNavigateBack}
         content={content.backModal}
+        logo={content.logo}
       />
 
       <div className={css.wrapper}>

@@ -57,14 +57,13 @@ export const View: FC<ViewProps> = ({ className, content, handleRef, isGameOver,
         {!isGameOver && (
           <>
             <ul className={css.ctas}>
-              {content.links.map(({ path, title }, index) => (
+              {content.links.map(({ path, title }) => (
                 <Fragment key={title}>
                   <li>
                     <BaseButton className={css.link} href={path}>
                       {title}
                     </BaseButton>
                   </li>
-                  {index !== content.links.length - 1 && '/'}
                 </Fragment>
               ))}
             </ul>

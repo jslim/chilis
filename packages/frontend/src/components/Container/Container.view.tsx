@@ -118,10 +118,12 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
       newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
       newGameInstance.onGameOver.subscribe((data) => {
+        localState().user.setHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
       })
       newGameInstance.onGameEnd.subscribe((data) => {
+        localState().user.setHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
       })

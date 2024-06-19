@@ -51,7 +51,7 @@
     color: $ranch;
 
     @include media-tablet-large {
-      @include font-size(32, 40);
+      @include font-size(22, 30);
       margin-top: px(30);
     }
   }
@@ -68,8 +68,7 @@
     }
 
     @include media-tablet-large {
-      @include font-size(32, 40);
-      max-width: px(1170);
+      @include font-size(22, 30);
       margin-top: px(26);
     }
   }
