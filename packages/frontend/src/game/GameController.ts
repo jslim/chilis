@@ -168,7 +168,8 @@ export class GameController {
 
   setChannels(channels: Channels) {
     this.channels = channels
-    this.soundChannel = channels.createChannel('game')
+    this.soundChannel = channels.getChannels().find((channel) => channel.name === 'game')!
+    if (!this.soundChannel) this.soundChannel = channels.createChannel('game')
   }
 
   public destroy() {
