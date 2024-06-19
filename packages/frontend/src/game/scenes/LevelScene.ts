@@ -230,12 +230,13 @@ export default class LevelScene extends Scene {
               this.cpus.forEach((cpu) => {
                 cpu.getComponent(Cpu).reset()
 
-                // remove all matey balls
-                this.containers.mid.entities.forEach((midEntity) => {
-                  if (midEntity.hasComponent(Bullet)) {
-                    midEntity.destroy()
-                  }
-                })
+                // remove all bullets
+                const removeIfHasBullet = (bullet: Entity) => {
+                  if (bullet.hasComponent(Bullet)) bullet.destroy()
+                }
+                Object.values(this.containers).forEach((cont: Entity) =>
+                  cont.entities.forEach((e) => removeIfHasBullet(e))
+                )
               })
             )
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
