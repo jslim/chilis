@@ -17,7 +17,7 @@ export class PickupUI extends Component {
 
     this.entity.position.set(GAME_WIDTH - 12, GAME_HEIGHT - 8)
 
-    const { flumpLibrary, gameState, containers } = this.level
+    const { flumpLibrary, gameState } = this.level
     const { pickupsCollected } = gameState
 
     const normalSprites: Sprite[] = []
