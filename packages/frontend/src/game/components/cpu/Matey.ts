@@ -1,14 +1,14 @@
+import { Bullet } from '@/game/components/level/Bullet'
+import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { createDelay } from '@/game/core/Delay'
 import { removeItem } from '@/game/utils/array.utils'
+import { getFloorPositionsAtX } from '@/game/utils/grid.utils'
 import { getRandom, pick } from '@/game/utils/random.utils'
 
 import { CoolDown } from '../../core/CoolDown'
 import { Entity } from '../../core/Entity'
 import { FLOOR_OFFSET } from '../../game.config'
-import { getFloorPositionsAtX } from '@/game/utils/grid.utils'
 import { HitBox } from '../HitBox'
-import { Bullet } from '@/game/components/level/Bullet'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
 import { MateyBall } from './MateyBall'
@@ -18,7 +18,8 @@ export class Matey extends Cpu {
     super.onStart()
 
     this.walksWhenPrepareAttack = false
-    this.attackCoolDown = new CoolDown(8)
+    this.attackCoolDown = new CoolDown(17)
+    this.attackCoolDown.time = 8
     this.paralyzedCoolDown.interval = 3
 
     const mover = this.entity.getComponent(CpuMover)
@@ -38,7 +39,7 @@ export class Matey extends Cpu {
 
           const shootPositions = [2, 3, 4, 5, 6, 7, 8]
           const random = getRandom(Math.trunc(Math.random() * 777))
-          const totalBalls = Math.trunc(random(4, 7))
+          const totalBalls = Math.trunc(random(4, 5))
           for (let i = 0; i < totalBalls; i++) {
             const shootPos = pick(shootPositions, random)
             removeItem(shootPositions, shootPos)
@@ -58,7 +59,7 @@ export class Matey extends Cpu {
     const mover = this.entity.getComponent(CpuMover)
     switch (this.state.value) {
       case 'walk': {
-        if (!mover.isClimbing() && this.attackCoolDown.update(dt)) {
+        if (this.attackCoolDown.update(dt) && !mover.isClimbing()) {
           this.state.value = 'prepare_attack'
           this.attackCoolDown.reset()
         }
@@ -73,8 +74,9 @@ export class Matey extends Cpu {
       const ballSize = { width: 16, height: 16 }
 
       let floorPositions = getFloorPositionsAtX(this.level.walkGrid, x)
-      floorPositions.push(240 + ballSize.height)
-      floorPositions = floorPositions.map((y) => y - FLOOR_OFFSET)
+      floorPositions.unshift(-ballSize.height)
+      floorPositions.push(220)
+      floorPositions = floorPositions.map((y) => y - FLOOR_OFFSET - ballSize.height)
 
       const ball = new Entity(this.level.flumpLibrary!.createSprite('matey_ball')).addComponent(
         new LevelComponent(this.level),
@@ -84,7 +86,7 @@ export class Matey extends Cpu {
       )
 
       ball.position.x = x
-      ball.position.y = 0
+      ball.position.y = floorPositions[0]
 
       this.level.containers.mid.addEntity(ball)
     }
