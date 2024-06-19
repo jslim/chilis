@@ -33,6 +33,7 @@ export class PreloadScene extends Scene {
 
     // preload assets = 0-50%
     await Assets.loadBundle(['game'], (p) => this.drawProgress(p * 0.5))
+
     // preload sounds = 50-100%
     await this.sceneManager.gameController.channels.loadSounds((p) => this.drawProgress(0.5 + p * 0.5))
 
