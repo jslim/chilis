@@ -243,8 +243,13 @@
               "src": "slide-1.png",
               "alt": "Slide 1"
             },
+            "imageMobile": {
+              "src": "slide-1-mobile.png",
+              "alt": "Slide 1"
+            },
             "title": "BASIC MOVEMENT",
-            "text": "Press left and right to move, press up and down to climb ladders."
+            "text": "Press left and right to move, press up and down to climb ladders.",
+            "textMobile": "Use the joystick to move and climb ladders. Press the button to throw pepper."
           },
           {
             "image": {
