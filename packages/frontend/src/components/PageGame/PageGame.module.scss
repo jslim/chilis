@@ -1,7 +1,11 @@
 @import 'shared';
 
 .root {
-  @include flex-center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
   position: relative;
   width: 100%;
   overflow: hidden;
@@ -24,5 +28,15 @@
   .title {
     @include typography-h1;
     padding-top: px(80);
+  }
+
+  .copywrite {
+    @include typography-paragraph;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    background-color: $black;
+    color: $gray;
+    z-index: 1;
   }
 }

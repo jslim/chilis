@@ -80,6 +80,10 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
         </div>
       )}
       <Container background={content.body.background.src} />
+
+      <div className={css.copywrite}>
+        © G-MODE Corporation / The BURGERTIME is a registered trademark of G-MODE Corporation.
+      </div>
     </main>
   )
 }
