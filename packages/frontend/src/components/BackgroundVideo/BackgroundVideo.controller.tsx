@@ -9,7 +9,7 @@ export interface ControllerProps {
     poster: string
   }
   loop?: boolean
-  muted?: boolean
+  muted?: boolean | null
   poster?: string
   controls?: boolean
   autoPlay?: boolean
