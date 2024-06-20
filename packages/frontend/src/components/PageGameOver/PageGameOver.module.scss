@@ -69,6 +69,8 @@
   }
 
   .lowerWrapper {
+    @include flex-center-vert;
+
     .ctasDescription {
       @include font-family(b, 400);
       @include font-size(32, 40);
@@ -77,10 +79,12 @@
     }
 
     .button {
+      @include flex-center;
       @include font-family(Gamer, 500);
       @include font-size(64);
       position: relative;
-      padding: 0 px(30) px(10);
+      height: px(70);
+      padding: 0 px(10) px(15);
       border: px(10) solid transparent;
       text-align: center;
       background-color: rgba($black, 0.2);
@@ -95,20 +99,19 @@
       &::after {
         @include position-100(absolute);
         content: attr(data-text);
-        top: px(-7);
+        top: px(-16);
         z-index: -1;
       }
 
       &.continue {
         margin-right: px(20);
-        border: px(15) solid transparent;
-        border-image: url('~@/assets/images/continue-border.png') 15;
+        border-image: url('~@/assets/images/continue-border.png') 12;
         color: $sunrise;
 
         &::before {
           @include position-100(absolute);
           content: attr(data-text);
-          top: px(-15);
+          top: px(-22);
           color: $ranch;
           z-index: -1;
         }
@@ -119,13 +122,16 @@
       }
 
       &.quit {
-        border: px(15) solid transparent;
-        border-image: url('~@/assets/images/quit-border.png') 15;
+        border-image: url('~@/assets/images/quit-border.png') 12;
         color: $white;
 
         &::after {
           color: $ranch;
         }
+      }
+
+      &:hover {
+        transform: translateY(px(8));
       }
     }
   }

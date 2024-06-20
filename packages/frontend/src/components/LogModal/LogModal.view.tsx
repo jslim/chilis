@@ -81,8 +81,6 @@ export const View: FC<ViewProps> = ({
 
       const apiResponse = response as ApiResponse
 
-      console.log('Login response:', apiResponse)
-
       if (!apiResponse.IdToken || !apiResponse.AccessToken) {
         console.error('Login failed:', apiResponse.message)
         setHasError(true)
@@ -115,8 +113,6 @@ export const View: FC<ViewProps> = ({
       })
 
       const apiResponse = response as ApiResponse
-
-      console.log('Nickname response:', apiResponse)
 
       if (apiResponse.message.toLowerCase().includes('success')) {
         console.log('Nickname set successful:', apiResponse.message)
