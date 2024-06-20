@@ -7,5 +7,6 @@ export const routes = {
   FAQ: '/faq/',
   TERMS: '/terms/',
   FULL_LEADERBOARD: '/full-leaderboard/',
-  GAME_OVER: '/game-over/'
+  GAME_OVER: '/game-over/',
+  UNSUPPORTED: '/unsupported/'
 }
