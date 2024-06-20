@@ -3,7 +3,9 @@ import type { Channel, Channels } from '@mediamonks/channels'
 import type { GameAction } from '@/game/GameAction'
 import type { GameStateValues } from './components/GameState'
 
-import { Application } from 'pixi.js'
+import { Application, TextureSource } from 'pixi.js'
+
+import { Value } from '@/game/core/Value'
 
 import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
@@ -14,6 +16,8 @@ import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
 
 export class GameController {
+  public isMuted: Value<boolean> = new Value<boolean>(false)
+
   public onLevelComplete = new Signal<GameStateValues>()
   public onGameOver = new Signal<GameStateValues>()
   public onGameEnd = new Signal<GameStateValues>()
@@ -24,7 +28,7 @@ export class GameController {
   public soundChannel!: Channel
   public channels!: Channels
 
-  private isDestroyed = false
+  public isDestroyed = false
   private sceneManager!: SceneManager
 
   get gameState(): GameState {
@@ -41,13 +45,20 @@ export class GameController {
       width: GAME_WIDTH,
       height: GAME_HEIGHT
     })
+    TextureSource.defaultOptions.scaleMode = 'nearest'
+    this.app.canvas.style.imageRendering = 'pixelated'
 
     document.querySelector('#app')!.append(this.canvas)
-    this.app.canvas.style.imageRendering = 'pixelated'
+    this.setPixelated(true)
 
     // setup scene manager
     this.sceneManager = new SceneManager(this, FRAME_RATE)
     this.sceneManager.root.addComponent(new GameState())
+  }
+
+  public setPixelated(isPixelated: boolean) {
+    if (isPixelated) this.app.renderer.resize(GAME_WIDTH, GAME_HEIGHT)
+    else this.app.renderer.resize(GAME_WIDTH * 4, GAME_HEIGHT * 4)
   }
 
   public async preload() {
@@ -126,6 +137,8 @@ export class GameController {
             this.gameState.bullets.value += 1
           } else if (key === '3') {
             Player.GOD_MODE = !Player.GOD_MODE
+          } else if (key === '4') {
+            this.gameState.pickupsCollected.value += 1
           } else if (key === 'k') {
             //open canvas as image in new window
             // eslint-disable-next-line unicorn/consistent-destructuring
@@ -147,6 +160,10 @@ export class GameController {
     return this.sceneManager.showLevel(levelNo)
   }
 
+  public setMuted(isMuted: boolean) {
+    this.isMuted.value = isMuted
+  }
+
   public pause() {
     this.sceneManager.pause()
     this.onGameAction.emit({ a: 'pause', l: this.gameState.level.value })
@@ -159,7 +176,8 @@ export class GameController {
 
   setChannels(channels: Channels) {
     this.channels = channels
-    this.soundChannel = channels.createChannel('game')
+    this.soundChannel = channels.getChannels().find((channel) => channel.name === 'game')!
+    if (!this.soundChannel) this.soundChannel = channels.createChannel('game')
   }
 
   public destroy() {

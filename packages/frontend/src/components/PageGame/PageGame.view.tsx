@@ -7,6 +7,8 @@ import { gsap } from 'gsap'
 
 import css from './PageGame.module.scss'
 
+import { localStore } from '@/store'
+
 import { getGameInstance } from '@/services/game'
 
 import { useRefs } from '@/hooks/use-refs'
@@ -28,6 +30,8 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
   const refs = useRefs<ViewRefs>()
   const [isVideoFinished, setIsVideoFinished] = useState(false)
   const gameInstance = getGameInstance()
+
+  const isMuted = localStore().screen.isMuted
 
   useEffect(() => {
     if (!gameInstance) return
@@ -68,6 +72,7 @@ export const View: FC<ViewProps> = ({ onReady, content }) => {
             videoData={content.body.backgroundVideo}
             ref={refs.videoRef}
             loop={false}
+            muted={isMuted}
           />
           <BaseButton className={css.skip} onClick={() => setIsVideoFinished(true)}>
             {content.common.skip}

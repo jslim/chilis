@@ -3,6 +3,7 @@ import type { GameController } from '@/game/GameController'
 import type { Scene } from './Scene'
 import type { Application } from 'pixi.js'
 
+import { GAME_WIDTH } from '@/game/game.config'
 import { LevelIntroScene } from '@/game/scenes/LevelIntroScene'
 import { LevelVsScene } from '@/game/scenes/LevelVsScene'
 import { clamp01 } from '@/game/utils/math.utils'
@@ -31,12 +32,14 @@ export default class SceneManager {
   }
 
   async showLevel(levelNo: number) {
+    this.gameController.setPixelated(true)
     const level = new LevelScene(this)
     this.goto(level)
-    await level.init(levelNo)
+    await level.init(levelNo, level.gameState.score.value)
   }
 
   async preload() {
+    this.gameController.setPixelated(true)
     const preloader = new PreloadScene(this)
     this.goto(preloader)
     await preloader.preload()
@@ -44,6 +47,7 @@ export default class SceneManager {
 
   showLevelIntro(levelNo: number) {
     if (levelNo <= 7) {
+      this.gameController.setPixelated(false)
       this.goto(new LevelIntroScene(this, levelNo))
     } else {
       this.showLevelVsScene(levelNo)
@@ -51,6 +55,7 @@ export default class SceneManager {
   }
 
   showLevelVsScene(levelNo: number) {
+    this.gameController.setPixelated(true)
     this.goto(new LevelVsScene(this, levelNo))
   }
 
@@ -64,6 +69,7 @@ export default class SceneManager {
     if (nextLevelNo <= 18) {
       this.showLevelIntro(nextLevelNo)
     } else {
+      this.gameController.setPixelated(true)
       this.goto(new GameEndScene(this))
     }
   }
@@ -77,6 +83,7 @@ export default class SceneManager {
     this.currentScene?.destroy()
     this.currentScene = new Entity().addComponent(scene)
     this.root.addEntity(this.currentScene)
+    this.root.scale.set(this.app.renderer.width / GAME_WIDTH)
   }
 
   public run() {

@@ -33,7 +33,7 @@ import { LevelComponent } from './LevelComponent'
 
 export const burgerOverlap = 1
 export const burgerHeightByTileId = {
-  [TileId.Burger1]: 6,
+  [TileId.Burger1]: 7,
   [TileId.Burger2]: 4,
   [TileId.Burger3]: 5,
   [TileId.Burger4]: 6,
@@ -41,9 +41,9 @@ export const burgerHeightByTileId = {
   [TileId.Burger6]: 2,
   [TileId.Burger7]: 2,
   [TileId.Burger8]: 7,
-  [TileId.Burger9]: 7,
+  [TileId.Burger9]: 11,
   [TileId.Burger10]: 7,
-  [TileId.Burger11]: 6,
+  [TileId.Burger11]: 7,
   [TileId.Burger12]: 7
 }
 
@@ -154,6 +154,14 @@ export class Burger extends Component {
         }
 
         case 'fall': {
+          // test if intersects with cpus on the burger
+          for (const cpuEntity of this.level.cpus) {
+            if (this.intersectsWith(cpuEntity)) {
+              this.onHitCpu.emit(cpuEntity)
+              this.level.playSound('burger_hit_cpu')
+            }
+          }
+
           this.entity.y += 1
           this.targetY = this.findTargetY()
           this.level.playSound(pick(['burger_fall_a', 'burger_fall_b', 'burger_fall_c']) as SoundName)
@@ -173,9 +181,10 @@ export class Burger extends Component {
       this.fallStats.totalCpusHit++
       cpu.getComponent(Cpu).onHitByBurger.emit(this)
 
-      const points = POINTS_PER_CPU[cpu.getComponent(Cpu).name]
+      const cpuName = cpu.getComponent(Cpu).name
+      const points = POINTS_PER_CPU[cpuName]
       this.level.addScore(this.entity.position, points)
-      this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points })
+      this.level.emitAction({ a: 'kill-enemy', l: this.level.gameState.level.value, p: points, n: cpuName })
     })
     this.subscribe(this.onHitBurger, (otherBurger) => {
       this.fallStats.burgerHit = true

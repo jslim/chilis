@@ -1,4 +1,5 @@
 @import 'shared';
+@import '../Carousel/Carousel.module';
 
 .root {
   position: relative;
@@ -7,6 +8,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: scroll;
+  height: calc(100svh + 10rem);
+
+  @include media-tablet {
+    height: auto;
+    overflow-y: hidden;
+  }
 
   @include media-aspect-vertical {
     justify-content: center;
@@ -17,35 +25,46 @@
   }
 }
 
+.backgroundVideo {
+  height: 100svh;
+
+  @include media-tablet-large {
+    height: auto;
+  }
+}
+
 .container {
   @include flex-center-vert;
   position: relative;
   flex-direction: column;
-  gap: px(30);
+  min-height: 100svh;
 
   @include media-aspect-vertical {
     padding-top: 0;
   }
 
   @include media-tablet-large {
-    gap: px(60);
+    min-height: unset;
+    margin-bottom: px(140);
   }
 
   .title {
     @include font-family(PixeloidSans, 700);
-    @include font-size(23, 32, -0.04);
+    @include font-size(13, 32, -0.04);
     color: $sunrise;
 
     @include media-tablet-large {
-      @include font-size(42);
+      @include font-size(23, 32, -0.04);
     }
   }
 
   .imageContainer {
-    width: px(380);
+    width: px(300);
+    margin-top: px(18);
 
     @include media-tablet-large {
       width: px(764);
+      margin-top: px(27);
     }
 
     .image {
@@ -63,6 +82,36 @@
     @include media-tablet-large {
       @include font-size(32, 40);
       max-width: px(1104);
+    }
+  }
+
+  .carousel {
+    width: 100%;
+    margin-top: px(20);
+
+    @include media-tablet-large {
+      margin-top: px(40);
+    }
+
+    .text {
+      @include media-tablet-large {
+        max-width: px(1174);
+      }
+    }
+  }
+
+  .mouse {
+    @include font-size(10, 12);
+    color: $gray;
+    margin-top: px(10);
+
+    @include media-tablet-large {
+      @include font-size(16, 20);
+      margin-top: px(20);
+    }
+
+    a {
+      color: $white;
     }
   }
 }

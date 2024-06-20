@@ -10,6 +10,7 @@ export type NavigationSliceState = {
     hasNavigated: boolean
     scrollHistory: { pathname: string; value: number }[]
     isNavigatingBack: boolean
+    isContextInitialized: boolean
     navigateTo: (href: string) => void
     navigateBack: () => void
     // setters
@@ -17,6 +18,7 @@ export type NavigationSliceState = {
     setHasNavigated: (hasNavigated: boolean) => void
     setScrollHistory: (scrollHistory: { pathname: string; value: number }[]) => void
     setIsNavigatingBack: (isNavigatingBack: boolean) => void
+    setContextInitialized: (isContextInitialized: boolean) => void
     setNavigateTo: (navigateTo: (href: string) => void) => void
     setNavigateBack: (navigateBack: () => void) => void
   }
@@ -28,6 +30,7 @@ export const NavigationSlice: StateCreator<AppState, Mutators, [], NavigationSli
     hasNavigated: false,
     scrollHistory: [],
     isNavigatingBack: false,
+    isContextInitialized: false,
     navigateTo: noop,
     navigateBack: noop,
 
@@ -41,6 +44,9 @@ export const NavigationSlice: StateCreator<AppState, Mutators, [], NavigationSli
       set((state) => {
         state.navigation.hasNavigated = hasNavigated
       })
+      set((state) => {
+        state.navigation.isContextInitialized = hasNavigated
+      })
     },
 
     setScrollHistory: (scrollHistory) => {
@@ -52,6 +58,12 @@ export const NavigationSlice: StateCreator<AppState, Mutators, [], NavigationSli
     setIsNavigatingBack: (isNavigatingBack) => {
       set((state) => {
         state.navigation.isNavigatingBack = isNavigatingBack
+      })
+    },
+
+    setContextInitialized: (isContextInitialized) => {
+      set((state) => {
+        state.navigation.isContextInitialized = isContextInitialized
       })
     },
 

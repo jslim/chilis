@@ -16,7 +16,6 @@ export class BurgerGroup extends Component {
     public plate: Entity
   ) {
     super()
-    this.isCompleted = false
     for (const entity of burgers) {
       const burger = entity.getComponent(Burger)
       this.subscribeOnce(burger.onComplete, () => {
@@ -39,10 +38,10 @@ export class BurgerGroup extends Component {
 
         const burgerCompleteEntity = new Entity().addComponent(burgerCompleteAnimator)
         burgerCompleteEntity.position.copyFrom(plate.position)
-        burgerCompleteEntity.y -= 19
+        burgerCompleteEntity.y -= 18
         burgerCompleteEntity.x += 3
 
-        this.level.containers.front.addEntity(burgerCompleteEntity)
+        this.level.containers.burgerParts.addEntity(burgerCompleteEntity)
       }
     })
   }

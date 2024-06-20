@@ -11,6 +11,7 @@ export interface ControllerProps {
   handleClose: () => void
   handleNavigateBack?: () => void
   content: CommonContent['topNav']['backModal']
+  logo: CommonContent['topNav']['logo']
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

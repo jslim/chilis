@@ -1,0 +1,8 @@
+// TODO:
+// Check the status of the gameSession, if ACTIVE register payload if not trow error.
+// Validar cada Payload and if level or score not concuerdan change status to invalid
+// Encript payload
+
+// IoT desconeccion call the game inactive
+
+// Cache especifc endpoint "leaderboard"

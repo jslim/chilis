@@ -45,19 +45,19 @@
   flex-direction: column;
 
   .title {
-    @include font-size(16);
     @include font-family(PixeloidSans, 700);
+    @include font-size(16);
     margin-top: px(20);
     color: $ranch;
 
     @include media-tablet-large {
-      @include font-size(32, 40);
+      @include font-size(22, 30);
       margin-top: px(30);
     }
   }
 
   .text {
-    @include typography-title;
+    @include typography-04b03-body;
     max-width: px(700);
     margin-top: px(15);
     color: $sour-cream;
@@ -68,9 +68,8 @@
     }
 
     @include media-tablet-large {
-      @include font-size(32, 40);
-      max-width: px(780);
-      margin-top: px(45);
+      @include font-size(22, 30);
+      margin-top: px(26);
     }
   }
 

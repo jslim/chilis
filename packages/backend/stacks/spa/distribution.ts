@@ -5,6 +5,7 @@ import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
+import * as targets from "aws-cdk-lib/aws-route53-targets";
 
 import { FRONTEND_NAME, S3_REFERER_KEY, S3_ORIGIN_BUCKET_NAME } from "@/libs/config";
 import { getWebDomain } from "@/libs/get-domain";
@@ -14,25 +15,28 @@ import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
-  const { isDeploy } = detectStage(app.stage);
+  const { isDeploy } = detectStage(app.stage, true);
 
   let domainName;
   let apiDomainName;
   let certificate;
+  let hostedZone;
+  let targetHostedzoneName;
 
   const enableCustomDomain = isDeploy && isValidDomain(String(process.env.BASE_DOMAIN));
 
   if (enableCustomDomain) {
     domainName = getWebDomain(app.stage);
+    targetHostedzoneName = process.env.BASE_DOMAIN!;
     apiDomainName = `api.${domainName}`;
 
     // Assume you have a hosted zone for your domain in Route 53
-    const hostedZone = route53.HostedZone.fromLookup(stack, `${app.stage}-frontend-hostedzone`, {
-      domainName: domainName,
+    hostedZone = route53.HostedZone.fromLookup(stack, `${app.stage}-frontend-hostedzone`, {
+      domainName: targetHostedzoneName,
     });
 
     certificate = new acm.DnsValidatedCertificate(stack, `${app.stage}-frontend-domain-certificate`, {
-      domainName: domainName,
+      domainName: targetHostedzoneName,
       hostedZone,
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
@@ -64,12 +68,14 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     buildOutput: "out",
     buildCommand: "npm run build:next",
     environment: {
+      NEXT_PUBLIC_WEBSITE_SITE_URL: domainName ?? "",
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
       NEXT_PUBLIC_API_URL: api.customDomainUrl ?? api.url,
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },
-    ...(enableCustomDomain ? { customDomain: domainName, certificate } : {}),
+    dev: { deploy: true },
+    ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
@@ -134,7 +140,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                 {
                   header: "Content-Security-Policy-Report-Only",
                   override: true,
-                  value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
+                  value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src www.google-analytics.com ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
                 },
               ],
             },
@@ -159,7 +165,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
               },
               contentSecurityPolicy: {
                 override: true,
-                contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
+                contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src www.google-analytics.com ${apiDomainName} 'self' data: blob: https://cognito-idp.us-east-1.amazonaws.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
               },
             },
           }),

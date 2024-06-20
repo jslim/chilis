@@ -2,9 +2,22 @@
 
 .root {
   @include flex-center-vert;
-  position: relative;
+  position: fixed;
   flex-direction: column;
   gap: px(15);
+  position: relative;
+
+  .cd,
+  .note {
+    opacity: 0.6;
+  }
+
+  &.isSoundOn {
+    .cd,
+    .note {
+      opacity: 1;
+    }
+  }
 }
 
 .cd {
@@ -17,12 +30,10 @@
 }
 
 .note {
-  position: absolute;
-  top: px(-42);
+  position: relative;
   width: px(16);
 
   @include media-tablet-large {
-    top: px(-50);
     width: px(28);
   }
 }

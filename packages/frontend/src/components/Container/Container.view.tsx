@@ -1,7 +1,7 @@
+import type { FC } from 'react'
 import type { GameController } from '@/game/GameController'
-import type { ControllerProps } from './Container.controller'
 
-import { type FC, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 
@@ -24,21 +24,24 @@ import { mqtt5 } from 'aws-iot-device-sdk-v2'
 
 import { BaseImage } from '@/components/BaseImage'
 
-export interface ViewProps extends ControllerProps {}
+export interface ViewProps {
+  className?: string
+  background?: string
+}
 
 export type ViewRefs = {
   root: HTMLDivElement
 }
 
-// View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ className, background }) => {
   const refs = useRefs<ViewRefs>()
   const [showGameBorder, setShowGameBorder] = useState<boolean>(false)
   const isModalOpen = localStore().screen.isModalOpen
   const accessToken = localStore().user.accessToken
-  const [gameInstance, setGameInstance] = useState<GameController | null>(null)
+  const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
-  const [gameId, setGameId] = useLocalStorage('gameId')
+  const [, setGameId] = useLocalStorage('gameId')
+  const localGameId = localStore().user.gameId
 
   usePauseGameInstance(isModalOpen)
 
@@ -57,10 +60,12 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
       if (!apiResponse.gameId) {
         console.error('Submission failed:', apiResponse)
-      } else {
+      } else if (apiResponse.gameId) {
         console.log('Game started:', apiResponse.gameId)
         localState().user.setGameId(String(apiResponse.gameId))
         setGameId(String(apiResponse.gameId))
+      } else {
+        console.error('Submission failed:', apiResponse)
       }
     } catch (error) {
       console.error(error)
@@ -69,7 +74,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   const onGameUpdate = useCallback(
     async (score: number, level: number) => {
-      if (!gameId) return
+      if (!localGameId) return
 
       try {
         const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.GAME}`, undefined, {
@@ -79,7 +84,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
             Authorization: `Bearer ${accessToken}`
           },
           body: JSON.stringify({
-            gameId,
+            gameId: localGameId,
             score,
             level
           })
@@ -97,11 +102,13 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         console.error(error)
       }
     },
-    [accessToken, gameId]
+    [accessToken, localGameId]
   )
 
   useEffect(() => {
     const initGame = async () => {
+      const newGameInstance = await initializeGame()
+
       const mqttClient = await clientMqtt5()
       mqttClient.on('connectionSuccess', async (event: mqtt5.ConnectionSuccessEvent) => {
         mqttClient.publish({
@@ -116,19 +123,15 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         })
       })
 
-      const game = await initializeGame()
-      setGameInstance(game)
-
-      game.onGameAction.subscribe((data) => {
+      newGameInstance.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
           onGameStarted()
           mqttClient.start()
-          // Publish to clean up de action de el juego
-          game.setHighScore(localState().user.highScore ?? 0)
+          newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
 
         if (data.a === 'complete' && data.s) {
-          game.setHighScore(data.s)
+          newGameInstance.setHighScore(data.s)
           localState().user.setHighScore(data.s)
         }
 
@@ -147,38 +150,44 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         }
       })
 
-      game.onShowGameBorder.subscribe(setShowGameBorder)
-      game.onGameOver.subscribe((data) => {
-        console.log(data, 'game over')
-        if (mqttClient) {
-          mqttClient.stop()
-          mqttClient.close()
-        }
+      newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
+      newGameInstance.onGameOver.subscribe((data) => {
+        localState().user.setHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
+        mqttClient.stop()
+        mqttClient.close()
       })
-      game.onGameEnd.subscribe((data) => {
-        if (mqttClient) {
-          mqttClient.stop()
-          mqttClient.close()
-        }
+      newGameInstance.onGameEnd.subscribe((data) => {
+        localState().user.setHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
+        mqttClient.stop()
+        mqttClient.close()
       })
+
+      gameInstance.current = newGameInstance
     }
 
-    if (!gameInstance) {
+    if (!gameInstance.current) {
       initGame()
     }
 
     return () => {
-      //  gameInstance?.destroy()
+      if (gameInstance.current) {
+        console.log('Cleaning up game instance', gameInstance.current)
+        gameInstance.current.destroy()
+        gameInstance.current = null
+      }
     }
-  }, [gameInstance, onGameStarted, onGameUpdate, push])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onGameStarted])
 
   return (
     <div className={classNames('Container', css.root, className, { [css.hasBorder]: showGameBorder })} ref={refs.root}>
-      {showGameBorder ? <BaseImage className={css.background} data={getImageUrl(background)} alt="" /> : null}
+      {showGameBorder && background ? (
+        <BaseImage className={css.background} data={getImageUrl(background)} alt="" />
+      ) : null}
       {/* Game Container */}
       <div id="app" />
     </div>

@@ -27,12 +27,20 @@ export class PreloadScene extends Scene {
       })
     }
 
-    this.sceneManager.gameController.channels.sampleManager.addSamples(
-      Object.entries(soundManifest).map(([name, url]) => ({ name, fileName: url }))
-    )
+    const soundEntries = Object.entries(soundManifest)
+    if (
+      !this.sceneManager.gameController.channels.sampleManager
+        .getAllSamples()
+        .some((s) => s.name === soundEntries[0][0])
+    ) {
+      this.sceneManager.gameController.channels.sampleManager.addSamples(
+        soundEntries.map(([name, url]) => ({ name, fileName: url }))
+      )
+    }
 
     // preload assets = 0-50%
     await Assets.loadBundle(['game'], (p) => this.drawProgress(p * 0.5))
+
     // preload sounds = 50-100%
     await this.sceneManager.gameController.channels.loadSounds((p) => this.drawProgress(0.5 + p * 0.5))
 

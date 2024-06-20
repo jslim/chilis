@@ -3,8 +3,8 @@
     "head": {
       "title": "{title} | It’s Chili’s Big Smasher BurgerTime",
       "siteName": "It’s Chili’s Big Smasher BurgerTime",
-      "description": "Chili’s is introducing its first video game,Chili’s Big Smasher BurgerTime. An authentic modernization of the cult-classic arcade game, art imitates life as players are challenged with saving humanity from the overpriced fast-food burgers of the evil Fast Food Syndicate. The task? Build as many Big Smasher burgers as possible to climb the leaderboard and compete to win a lifetime of Chili’s burgers!.",
-      "descriptionSocial": "Do you have what it takes to defeat the evil fast-food syndicates? Play the new and improved BurgerTime now!\nDo you have what it takes to defeat the evil Fast Food Syndicate? Play Chili’s BurgerTime now, and compete to win a lifetime of burgers!\nBuild Chili’s Big Smashers! Defeat the evil Fast Food Syndicate! Compete to win a lifetime of Chili’s burgers! Play now!"
+      "description": "Chili’s is introducing its first video game, Chili’s Big Smasher BurgerTime. An authentic modernization of the cult-classic arcade game, art imitates life as players are challenged with saving humanity from the overpriced fast-food burgers of the evil Fast-Food Syndicate. The task? Build as many Big Smasher burgers as possible to climb the leaderboard and compete to win a lifetime of Chili’s burgers!.",
+      "descriptionSocial": "Build Chili’s Big Smashers. Defeat the evil Fast-Food Syndicate. Compete for a chance to win a lifetime of Chili’s burgers!"
     },
     "nav": {
       "sound": {
@@ -26,6 +26,10 @@
           "title": "TERMS"
         },
         {
+          "path": "https://brinker.com/privacy",
+          "title": "PRIVACY"
+        },
+        {
           "path": "/faq/",
           "title": "FAQ"
         }
@@ -34,32 +38,41 @@
     "topNav": {
       "logIn": "LOG IN",
       "logOutModal": {
-        "description": "<strong>Are you sure?</strong></br></br>After logging out, you will lose your progress and score.",
+        "description": "<strong>ARE YOU SURE?</strong></br></br>After logging out, you will lose your progress and score.",
         "ctas": {
           "confirm": "YES, LOG OUT",
           "deny": "NO, STAY"
         }
       },
       "backModal": {
-        "description": "<strong>Are you sure?</strong></br></br>Quitting this way won’t save your score",
+        "description": "<strong>ARE YOU SURE?</strong></br></br>Quitting this way won’t save your score",
         "ctas": {
           "confirm": "YES, QUIT",
           "deny": "NO, STAY"
         }
+      },
+      "logo": {
+        "src": "chilis-logo.png",
+        "alt": "Chili's Logo"
       }
     },
     "logModal": {
+      "logo": {
+        "src": "chilis-large-logo.png",
+        "alt": "Chili's Logo"
+      },
       "title": "BURGERS FOR LIFE",
-      "description": "To get added to the leaderboard and entered to win prizes, login below. If not you don’t have an account yet, click the sign up button below. Once created, come back to this page and login.",
+      "description": "Ready to take down the evil Fast-Food Syndicate for a chance to win a Lifetime of Burgers? Login below with your My Chili’s Rewards credentials to have your score saved, added to the leaderboard and be eligible for prizes.\n\n<strong>Don’t have a My Chili’s Rewards account?</strong>\n Click the sign up button below to join now! Once your profile has been created, come back to this page and login",
       "cta": "LOG IN",
-      "forgotPassword": "Forgot or Create your Password?",
+      "forgotPassword": "Sign Up or Reset Password here",
+      "forgotPasswordLink": "https://www.chilis.com/login/forgot-password",
       "skipLabel": "Want to just play without getting on the leaderboard?",
       "skip": "SKIP",
       "phone": "PHONE",
       "password": "PASSWORD",
       "nicknameTitle": "CREATE USERNAME",
-      "nicknameDescription": "The League of Evil Lorem just Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
-      "nickname": "NICKNAME",
+      "nicknameDescription": "Create your username for the public leaderboard. Maximum 10 characters minimum 3, no spaces. Letters, numbers and special characters ._- are accepted.",
+      "nickname": "ENTER USERNAME",
       "nicknameCta": "CONFIRM",
       "errorMessage": "Invalid phone or password",
       "errorMessageNickname": "Invalid nickname",
@@ -178,15 +191,33 @@
       },
       "body": {
         "backgroundVideo": {
-          "src": "",
+          "src": "/videos/contest.mp4",
           "poster": "burger-loop.png"
         },
-        "title": "A WEEK OF BATTLES.",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "title": "BUILD BURGERS.",
+        "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit <a target='_blank' href='https://burgertime.chilis.com/terms'>burgertime.chilis.com/terms</a>",
         "hero": {
           "src": "a-lifetime.png",
           "alt": "A lifetime of burgers"
-        }
+        },
+        "slides": [
+          {
+            "title": "BECOME THE CHILI’S BIG SMASHER BURGERTIME CHAMPION",
+            "text": "Help save the Chili's Big Smasher and you could win a lifetime* of Chili's burgers! As in real burgers, not video game burgers. Climb atop the leaderboard by building as many Chili's Big Smashers before the evil Fast-Food syndicate smashes them forever."
+          },
+          {
+            "title": "1<sup>st</sup> PLACE",
+            "text": "Have what it takes to make Big Smashers and defeat the evil Fast-Food Syndicate? Climb the leaderboard to the top spot to win a Lifetime of Burgers* and an arcade cabinet of the Chili's Big Smasher BurgerTime game."
+          },
+          {
+            "title": "2<sup>nd</sup> + 3<sup>rd</sup> PLACE",
+            "text": "Defeat the evil Fast-Food Syndicate and be handsomely rewarded! Second and third place players on the leaderboard will each win an arcade cabinet of Chili's Big Smasher BurgerTime*!"
+          },
+          {
+            "title": "ADDITIONAL PRIZES",
+            "text": "Build burgers and be one of the first 250 players to collect the complete Chili's 3 For Me items (chips & salsa, fries, and drink) and you will win a Chili's gift card to enjoy a 3 For Me IRL!"
+          }
+        ]
       }
     },
     "howToPlay": {
@@ -247,7 +278,7 @@
       },
       "body": {
         "title": "Full Leaderboard Page",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+        "description": "This page previews the top 500 participants on the leaderboard. Check to see if you’ve made the list, or what score you need to achieve this ranking",
         "topLabel": "TOP 20",
         "background": {
           "src": "fullleaderboard-background.png",
@@ -402,9 +433,9 @@
                 ]
               },
               {
-                "title": "Is BurgerTime appropriate for all ages?",
+                "title": "Can I use my game controller to play?",
                 "paragraphs": [
-                  "BurgerTime is recommended for players eight years and older based on ESRP ratings, with E for Everyone."
+                  "Yes, you can map your  Sony’s PS5 Dual Sense Wireless Controller or Microsoft’s XBOX Wireless Controller and play the game."
                 ]
               }
             ]

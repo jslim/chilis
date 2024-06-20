@@ -9,13 +9,16 @@ import { routes } from '@/data/routes'
 
 import { localStore } from '@/store'
 
+import { getImageUrl } from '@/utils/basic-functions'
+
+import usePauseGameInstance from '@/hooks/use-pause-game-instance'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
+import { BaseImage } from '@/components/BaseImage'
 import { ConfirmationModal } from '@/components/ConfirmationModal'
 
 import SvgBack from '@/svgs/Back.svg'
-import ChilisSvg from '@/svgs/Chilis.svg'
 import SvgLoginLogout from '@/svgs/LoginLogout.svg'
 
 export interface ViewProps extends ControllerProps {}
@@ -30,6 +33,8 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
   const currentRoute = localStore((state) => state.navigation.pathname)
   const navigateBack = localStore((state) => state.navigation.navigateBack)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  usePauseGameInstance(isModalOpen)
 
   const handleClose = () => {
     setIsModalOpen(false)
@@ -64,12 +69,12 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
       default: {
         return (
           <BaseButton className={css.logoContainer} href={routes.HOME}>
-            <ChilisSvg />
+            <BaseImage className={css.logo} data={getImageUrl(content.logo.src)} alt={content.logo.alt} />
           </BaseButton>
         )
       }
     }
-  }, [currentRoute, handleNavigateBack])
+  }, [currentRoute, handleNavigateBack, content.logo.src, content.logo.alt])
 
   return (
     <nav className={classNames('TopNav', css.root, className)} ref={refs.root}>
@@ -79,13 +84,14 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
         handleClose={handleClose}
         handleNavigateBack={handleNavigateBack}
         content={content.backModal}
+        logo={content.logo}
       />
 
       <div className={css.wrapper}>
         {renderBackButtonSlot()}
 
         <BaseButton className={css.button} onClick={onClick} disabled={isDisabled}>
-          {text}
+          {text && text}
           <div className={css.iconContainer}>
             <SvgLoginLogout />
           </div>

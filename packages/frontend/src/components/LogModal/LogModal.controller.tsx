@@ -21,6 +21,11 @@ export interface ControllerProps {
   forgotPassword: string
   skipLabel: string
   skip: string
+  logo: {
+    src: string
+    alt: string
+  }
+  forgotPasswordLink: string
   onClose: () => void
 }
 

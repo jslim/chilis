@@ -64,6 +64,8 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
   const [idToken] = useLocalStorage('idToken')
   const [accessToken] = useLocalStorage('accessToken')
+  const [highScore] = useLocalStorage('highScore')
+  const [gameId] = useLocalStorage('gameId')
 
   //
   // Update pathname ref
@@ -202,11 +204,20 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         const payload = await verifier.verify(idToken)
         console.log('Token is valid. Payload:', payload)
         localState().user.setIsTokenValid(true)
-        localState().user.setNickname(String(payload.preferred_username))
+
+        if (payload.preferred_username) localState().user.setNickname(String(payload.preferred_username))
         localState().user.setAccessToken(String(accessToken))
 
-        if (isModalOpen && String(payload.preferred_username)) {
+        if (isModalOpen && payload.preferred_username) {
           localState().screen.setIsModalOpen(false)
+        }
+
+        if (highScore && Number(highScore) > 0) {
+          localState().user.setHighScore(Number(highScore))
+        }
+
+        if (gameId) {
+          localState().user.setGameId(gameId)
         }
       } catch (error) {
         console.log('Token not valid!', error)
@@ -307,7 +318,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <div className={css.content}>{currentPage}</div>
 
       {isModalOpen &&
-        (!nickname ? (
+        (!nickname || nickname === 'undefined' ? (
           <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
             <LogModal
               {...pageProps.content.common.logModal}
@@ -321,6 +332,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
               show={isModalOpen}
               handleClose={() => localState().screen.setIsModalOpen(false)}
               content={pageProps.content.common.topNav.logOutModal}
+              logo={pageProps.content.common.topNav.logo}
               handleNavigateBack={handleNavigateBack}
             />
           </BaseModal>

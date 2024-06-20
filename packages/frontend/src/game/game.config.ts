@@ -17,6 +17,8 @@ export const IS_ARCADE_BUILD = process.env.NEXT_PUBLIC_EXECUTABLE_BUILD === 'tru
 
 export const GAME_ASSETS_BASE_URL = IS_ARCADE_BUILD ? './game/' : '/game/'
 export const GAME_SOUNDS_BASE_URL = IS_ARCADE_BUILD ? './sounds/' : '/sounds/'
+export const GAME_SOUND_MANIFEST_BASE_URL = IS_ARCADE_BUILD ? './sounds/' : ''
+export const CHANNEL_SOUND_PATH = IS_ARCADE_BUILD ? '/' : GAME_SOUNDS_BASE_URL
 
 /* DEBUG */
 
@@ -46,13 +48,13 @@ export const POINTS_PER_CPU: { [key in CpuName]: number } = {
   dino: 700,
   matey: 800,
   zapp: 900,
-  burgertron: 200
+  burgertron: 1000
 }
 
 export const POINTS_PER_PICKUP = 500
 export const POINTS_PER_3_PICKUPS = 1099
 export const POINTS_PER_TOTAL_CPUS_HIT = [0, 1000, 2000, 3000, 4000, 5000, 6000]
-export const POINTS_PER_BURGER_BOUNCE = [50, 100, 150, 200, 250, 300, 350]
+export const POINTS_PER_BURGER_BOUNCE = [50, 100, 150, 200, 250, 300, 350, 400]
 
 // converts level number to 1-6 range
 export const getWrappedLevelNo = (levelNo: number) => ((levelNo - 1) % 6) + 1

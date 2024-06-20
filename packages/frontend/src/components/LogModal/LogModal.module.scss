@@ -25,10 +25,14 @@
   height: auto;
   max-height: calc(100svh - #{px(20)});
   width: 100%;
+
+  @include media-tablet {
+    min-height: px(700);
+  }
 }
 
 .top {
-  @include flex-center-vert;
+  @include flex-center;
   flex-direction: column;
   flex: 1;
   padding-top: px(40);
@@ -36,8 +40,14 @@
   background-color: $sour-cream;
 
   .logoContainer {
-    @include box(px(80), px(50));
+    @include box(px(88), px(50));
     margin-bottom: px(30);
+
+    .logo {
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
   }
 
   .title,
@@ -64,6 +74,10 @@
     @include media-tablet {
       margin-bottom: px(15);
     }
+
+    @include media-tablet-large {
+      @include font-size(14, 17);
+    }
   }
 
   .fieldsContainer {
@@ -77,21 +91,32 @@
 
     input,
     input::placeholder {
-      @include font-size(6, 6);
+      @include font-size(9, 13);
       @include font-family(Montserrat, 500);
       color: $night;
+
+      @include media-tablet-large {
+        @include font-size(10, 12);
+      }
     }
 
     input {
       background-color: rgba($white, 0.7);
-      padding: px(7) px(5);
+      padding: px(7) px(7);
       border-radius: px(5);
       border: 0.5px solid $night;
       min-width: px(157);
-      height: px(20);
+
+      @include media-tablet-large {
+        padding: px(12) px(9);
+      }
     }
 
     border-radius: 5px;
+
+    @include media-tablet-large {
+      border-radius: 8px;
+    }
 
     input::placeholder {
       color: $gray;

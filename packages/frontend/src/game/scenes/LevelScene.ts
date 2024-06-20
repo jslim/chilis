@@ -5,6 +5,8 @@ import type { TiledLayerPath, TiledWalkGrid } from '@/game/utils/tiles.utils'
 
 import { Assets, Point, Rectangle, Sprite, Texture } from 'pixi.js'
 
+import { detect } from '@/utils/detect'
+
 import { BurgerTron } from '@/game/components/cpu/BurgerTron'
 import BurgerTronMover from '@/game/components/cpu/BurgerTronMover'
 import { Cpu } from '@/game/components/cpu/Cpu'
@@ -32,13 +34,13 @@ import { Player } from '@/game/components/player/Player'
 import { PlayerAnimator } from '@/game/components/player/PlayerAnimator'
 import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 import { GameUI } from '@/game/components/ui/GameUI'
+import { PickupUI } from '@/game/components/ui/PickupUI'
 import { ScoreAnimation } from '@/game/components/ui/ScoreAnimation'
 import { SimpleTextDisplay } from '@/game/components/ui/SimpleTextDisplay'
 import { SimpleButton } from '@/game/display/SimpleButton'
 import { get8pxNumberFont, getPixGamerNumberFont } from '@/game/display/SimpleText'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { TileId } from '@/game/tiled/TileId'
-import { isMobileOrTablet } from '@/game/utils/is-mobile-or-tablet'
 import { getRandom, pick } from '@/game/utils/random.utils'
 import { connectionsToGrid, drawGrid, drawPointsAndConnections, getTileConnections } from '@/game/utils/tiles.utils'
 
@@ -146,12 +148,12 @@ export default class LevelScene extends Scene {
     return { map, spriteSheet, spriteSheetLarge }
   }
 
-  async init(levelNo: number) {
+  async init(levelNo: number, score = 0) {
     this.levelNo = levelNo
     const { map, spriteSheet, spriteSheetLarge } = await this.preload(getWrappedLevelNo(levelNo))
 
     // store level number
-    this.gameState.setLevel(levelNo)
+    this.gameState.setLevel(levelNo, score)
 
     this.map = map
     const path = getTileConnections(map, map.layers.find((l) => l.name === 'floor')!)
@@ -229,12 +231,13 @@ export default class LevelScene extends Scene {
               this.cpus.forEach((cpu) => {
                 cpu.getComponent(Cpu).reset()
 
-                // remove all matey balls
-                this.containers.mid.entities.forEach((midEntity) => {
-                  if (midEntity.hasComponent(Bullet)) {
-                    midEntity.destroy()
-                  }
-                })
+                // remove all bullets
+                const removeIfHasBullet = (bullet: Entity) => {
+                  if (bullet.hasComponent(Bullet)) bullet.destroy()
+                }
+                Object.values(this.containers).forEach((cont: Entity) =>
+                  cont.entities.forEach((e) => removeIfHasBullet(e))
+                )
               })
             )
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
@@ -315,7 +318,12 @@ export default class LevelScene extends Scene {
           } else if (TileId.isBurger(id)) {
             const burgerHeight = burgerHeightByTileId[id] - burgerOverlap
             entity.addComponent(
-              new HitBox(-BurgerTileSize.tilewidth / 2, -1, BurgerTileSize.tilewidth, burgerHeight),
+              new HitBox(
+                -BurgerTileSize.tilewidth / 2,
+                Math.trunc(-burgerHeight / 2),
+                BurgerTileSize.tilewidth,
+                burgerHeight
+              ),
               new Burger(spriteSheetLarge, id)
             )
             entity.position.x -= (BurgerTileSize.tilewidth - map.tilewidth) / 2
@@ -343,7 +351,7 @@ export default class LevelScene extends Scene {
 
     // depth sort this.containers.burgerParts from bottom to top
     this.containers.burgerParts.children.sort((a, b) => {
-      return a.y - b.y
+      return b.y - a.y
     })
 
     for (const layer of map.layers) {
@@ -376,7 +384,7 @@ export default class LevelScene extends Scene {
       this.containers.floorFront.addChild(drawGrid(this.walkGrid))
     }
 
-    if (isMobileOrTablet()) {
+    if (detect.device.mobile) {
       this.containers.front.addEntity(new Entity().addComponent((this.mobileInput = new MobileInput(this))))
     } else if (!IS_ARCADE_BUILD && this.gameState.level.value === 1) {
       const isKeyboardLikelyConnected = window.matchMedia('(pointer: fine)').matches
@@ -399,6 +407,7 @@ export default class LevelScene extends Scene {
 
   createGameUI() {
     this.containers.ui.addComponent(new GameUI(this))
+    this.containers.ui.addEntity(new Entity().addComponent(new PickupUI(this)))
   }
 
   override onUpdate(dt: number): void {
@@ -528,7 +537,7 @@ export default class LevelScene extends Scene {
 
     let totalGroupsCompleted = 0
     this.burgerGroups.forEach((group) => {
-      this.subscribe(group.onBurgerComplete, () => {
+      this.subscribeOnce(group.onBurgerComplete, () => {
         totalGroupsCompleted++
         if (totalGroupsCompleted === 1) {
           this.spawnPickup()

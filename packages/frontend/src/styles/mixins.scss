@@ -252,7 +252,7 @@
 ///     @include z-index(modal);
 ///   }
 @mixin z-index($id) {
-  $elements: background, pages, nav, sound, modal, notification, intro, nonfunctional, noscript;
+  $elements: background, pages, nav, modal, notification, intro, sound, nonfunctional, noscript;
   z-index: list.index($elements, $id);
 }
 
@@ -312,6 +312,7 @@
 @mixin background-opacity($color: $black, $opacity: 0.1) {
   &::after {
     content: '';
+
     @include position-100(absolute);
     display: block;
     background-color: rgba($color, $opacity);

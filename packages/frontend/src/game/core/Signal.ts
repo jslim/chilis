@@ -1,3 +1,5 @@
+import { removeItem } from '@/game/utils/array.utils'
+
 export type Listener<T> = (value: T) => void
 
 export class Signal<T = void> {
@@ -11,7 +13,7 @@ export class Signal<T = void> {
 
   // Emit this signal to all subscribed listeners
   emit(value: T): void {
-    this.listeners.forEach((listener) => listener(value))
+    ;[...this.listeners].forEach((listener) => listener(value))
   }
 
   // Dispose of this signal
@@ -21,9 +23,6 @@ export class Signal<T = void> {
 
   // Unsubscribe from this signal
   private unsubscribe(listener: Listener<T>): void {
-    const index = this.listeners.indexOf(listener)
-    if (index > -1) {
-      this.listeners.splice(index, 1)
-    }
+    removeItem(this.listeners, listener)
   }
 }

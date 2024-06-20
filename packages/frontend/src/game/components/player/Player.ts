@@ -4,6 +4,11 @@ import type LevelScene from '@/game/scenes/LevelScene'
 
 import { Assets, Point, Sprite } from 'pixi.js'
 
+// eslint-disable-next-line import/no-cycle
+import { Bullet } from '@/game/components/level/Bullet'
+import { LevelComponent } from '@/game/components/level/LevelComponent'
+import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
+
 import { CoolDown } from '../../core/CoolDown'
 import { createDelay } from '../../core/Delay'
 import { Component, Entity } from '../../core/Entity'
@@ -12,12 +17,8 @@ import { Value } from '../../core/Value'
 import { DRAW_STATE_DEBUG, FRAME_RATE } from '../../game.config'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
-// eslint-disable-next-line import/no-cycle
-import { Bullet } from '@/game/components/level/Bullet'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Mover } from '../Mover'
 import { StateDebugText } from '../StateDebugText'
-import { PlayerPacManMover } from '@/game/components/player/PlayerPacManMover'
 
 export class Player extends Component {
   public static GOD_MODE = false
@@ -65,8 +66,10 @@ export class Player extends Component {
     if (DRAW_STATE_DEBUG) {
       this.entity.addComponent(new StateDebugText(this.state, [0, 0], this.entity.color))
     }
+    let prevLives = this.lives.value
     this.subscribe(this.lives.onChanged, (newLives) => {
-      this.state.value = newLives <= 0 ? 'die' : 'reset'
+      if (newLives < prevLives) this.state.value = newLives <= 0 ? 'die' : 'reset'
+      prevLives = newLives
     })
     this.subscribe(this.state.onChanged, (newState) => {
       switch (newState) {
@@ -184,16 +187,20 @@ export class Player extends Component {
     const bulletPos = new Point(playerHitBoxRect.x, playerHitBoxRect.y)
 
     const mover = this.entity.getComponent(Mover)
-    const bulletSize = { width: 20, height: 10 }
+    const bulletSize = { width: 24, height: 10 }
     const bulletOffset = 13
     if (mover.currentDirection.value === 'left') bulletPos.x -= bulletSize.width + bulletOffset
     else if (mover.currentDirection.value === 'right') bulletPos.x += bulletOffset
+
+    let hitBoxOffset = 0
+    if (mover.currentDirection.value === 'left') hitBoxOffset += bulletOffset / 2
+    else if (mover.currentDirection.value === 'right') hitBoxOffset -= bulletOffset / 2
 
     const bullet = new Entity(pepperSprite).addComponent(
       new LevelComponent(this.level!),
       new AutoDisposer(1),
       new Bullet('cpu'),
-      new HitBox(0, bulletSize.height, bulletSize.width, bulletSize.height)
+      new HitBox(hitBoxOffset, bulletSize.height, bulletSize.width, bulletSize.height)
     )
 
     bullet.position.set(bulletPos.x, bulletPos.y - bulletSize.height - 13)

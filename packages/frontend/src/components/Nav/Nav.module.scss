@@ -7,11 +7,12 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: px(40) px(20);
-  height: $navbar-height-mobile;
+  padding-bottom: px(10);
+  padding-left: px(10);
 
-  @include media-tablet-large {
-    height: $navbar-height-desktop;
+  @include media-tablet {
+    padding-bottom: px(20);
+    padding-left: px(20);
   }
 
   .skipToContent {
@@ -50,18 +51,14 @@
 
       &.routes {
         @include transform-center(absolute);
+        top: px(20);
 
-        .mainLogo {
-          width: auto;
-          height: px(20);
-
-          @include media-tablet-large {
-            height: px(32);
-          }
+        @include media-tablet-large {
+          top: px(30);
         }
       }
 
-      > li {
+      li {
         padding: 0 px(5);
 
         @include media-tablet-large {
@@ -73,6 +70,7 @@
             @include font-family(b, 400);
             @include typography-cta;
             position: relative;
+            margin-bottom: px(10);
             color: $sunrise;
             border: px(10) solid transparent;
             border-image: url('~@/assets/images/button-borders.png') 10 10 stretch;
@@ -80,11 +78,16 @@
 
             @include media-tablet-large {
               padding: px(5);
+              padding-bottom: px(2);
             }
 
             &:hover,
             &.isActive {
               color: $white;
+            }
+
+            &:hover {
+              top: px(8);
             }
 
             svg {
@@ -100,14 +103,32 @@
         justify-content: flex-start;
         color: $gray;
 
-        > .li {
-          padding: px(5) 0;
+        > li {
+          &:last-child {
+            position: absolute;
+            right: 12svh;
+          }
+
+          @include media-tablet {
+            &:last-child {
+              right: 10svh;
+            }
+          }
+
+          @include media-tablet-large {
+            &:last-child {
+              right: 12svh;
+            }
+          }
+
+          @include media-desktop {
+            &:last-child {
+              position: relative;
+              right: unset;
+            }
+          }
         }
       }
-    }
-
-    .gap {
-      flex: 1;
     }
   }
 }

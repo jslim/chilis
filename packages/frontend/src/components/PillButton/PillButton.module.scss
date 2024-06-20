@@ -11,6 +11,7 @@
   border: 1px solid var(--border-color);
   border-bottom-width: thick;
   border-radius: px(30);
+  transition: transform;
 
   &.isDisabled {
     background-color: $gray;
@@ -24,7 +25,11 @@
   }
 
   &.themeBlue {
-    --border-color: #{$white};
+    --border-color: blue;
     --bg-color: #{$dark-blue};
+  }
+
+  &:hover {
+    transform: translateY(px(3));
   }
 }

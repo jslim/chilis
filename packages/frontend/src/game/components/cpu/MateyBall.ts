@@ -19,7 +19,8 @@ export class MateyBall extends Component {
   override onStart() {
     super.onStart()
 
-    this.tween.to(this.entity.y, 0)
+    this.tween.fromTo(this.entity.y, this.entity.y - 1, 0)
+    this.tween.update(1)
 
     this.tweenToNextFloor()
   }
@@ -30,8 +31,8 @@ export class MateyBall extends Component {
   }
 
   private tweenToFloor(toY: number) {
-    // const distance = Math.abs(this.entity.y - toY);
-    const duration = 1 //distance / this.speed;
+    const distance = Math.abs(this.entity.y - toY)
+    const duration = 1 + distance / 40
 
     this.tween.to(
       toY,
@@ -49,7 +50,7 @@ export class MateyBall extends Component {
   private tweenToNextFloor() {
     const nextFloor = this.floorPositions.shift()
     if (nextFloor !== undefined) {
-      this.entity.getComponent(LevelComponent).level.screenShake(2, 3 / FRAME_RATE)
+      this.entity.getComponent(LevelComponent).level.screenShake(2, 2 / FRAME_RATE)
       this.tweenToFloor(nextFloor)
     } else {
       this.entity.destroy()

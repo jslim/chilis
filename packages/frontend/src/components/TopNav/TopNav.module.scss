@@ -24,10 +24,16 @@
   width: 100%;
 
   .logoContainer {
-    @include box(px(34));
+    @include box(px(32));
+
+    .logo {
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
 
     @include media-tablet-large {
-      @include box(px(51));
+      @include box(px(64));
     }
   }
 

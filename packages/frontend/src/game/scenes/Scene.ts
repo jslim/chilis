@@ -28,7 +28,9 @@ export class Scene extends Component {
       volume,
       pan
     })
-    this.disposables.push(() => disposable.destruct())
+    this.disposables.push(() => {
+      disposable.stop()
+    })
     return disposable
   }
 
@@ -41,24 +43,29 @@ export class Scene extends Component {
     const videoSource = videoSprite.texture.source as VideoSource
     videoSource.resource.style.imageRendering = 'pixelated'
     videoSource.resource.loop = false
-    videoSource.resource.muted = false
+    videoSource.resource.muted = this.sceneManager.gameController.isMuted.value
     videoSource.resource.playsInline = true
     videoSource.antialias = false
     videoSource.scaleMode = 'nearest'
-
-    videoSource.resource.addEventListener('ended', () => onEnd())
+    videoSource.resource.addEventListener('ended', () => {
+      onEnd()
+    })
     await videoSource.resource.play()
 
-    this.disposables.push(() =>
+    this.disposables.push(() => {
       videoSprite.destroy({
         texture: true,
         textureSource: true
       })
-    )
+    })
     this.entity.addEntity(new Entity(videoSprite))
 
+    this.subscribe(this.sceneManager.gameController.isMuted.onChanged, (isMuted) => {
+      videoSource.resource.muted = isMuted
+    })
     // connect to channels so that the volume can be controlled from outside
-    this.sceneManager.gameController.soundChannel.connectMediaElement(videoSource.resource)
+    // FIXME: this is not working
+    // this.sceneManager.gameController.soundChannel.connectMediaElement(videoSource.resource)
   }
 
   protected addButton(label: string, position: [x: number, y: number], onclick: () => void) {

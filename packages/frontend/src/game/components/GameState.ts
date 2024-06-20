@@ -10,36 +10,26 @@ export class GameState extends Component {
   public readonly lives = new Value<number>(3)
   public readonly burgerCompleteCombo = new Value<number>(0)
 
-  /*
   constructor() {
     super()
 
-    /*
-    // disabled this, highscore is provided by backend
-
-    this.highScore.value = parseInt(localStorage.getItem('highScore') || '0')
-
+    // if score > 100_000, add a life
+    let previousScore = 0
     this.subscribe(this.score.onChanged, (newScore) => {
-      if (newScore > this.highScore.value) {
-        this.highScore.value = newScore
+      if (newScore > 100_000 && previousScore <= 100_000) {
+        this.lives.value++
       }
+      previousScore = newScore
     })
+  }
 
-    this.subscribe(this.highScore.onChanged, (highScore) => {
-      try {
-        localStorage.setItem('highScore', highScore.toString())
-      } catch {}
-    })
-
-  } */
-
-  setLevel(levelNo: number) {
+  setLevel(levelNo: number, score = 0) {
     this.level.value = levelNo
     // reset the game state
-    this.lives.value = 3
     this.bullets.value = 3
-    this.score.value = 0
+    this.score.value = score
     if (levelNo === 1) {
+      this.lives.value = 3
       this.burgerCompleteCombo.value = 0
       this.pickupsCollected.value = 0
     }

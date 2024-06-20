@@ -1,7 +1,8 @@
 import { HitBox } from '@/game/components/HitBox'
 import { LevelComponent } from '@/game/components/level/LevelComponent'
-import { Component } from '@/game/core/Entity'
+import { Component, Entity } from '@/game/core/Entity'
 import { getPixGamerNumberFont } from '@/game/display/SimpleText'
+import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 import { POINTS_PER_3_PICKUPS, POINTS_PER_PICKUP } from '@/game/game.config'
 
 export class Pickup extends Component {
@@ -24,6 +25,13 @@ export class Pickup extends Component {
 
     if (!this.isPickedUp && pickupHitBox.intersects(playerHitBox)) {
       this.isPickedUp = true
+
+      // show pickup animation
+      const pickupAnimation = new FlumpAnimator(level.flumpLibrary)
+      pickupAnimation.setMovie('pickup_complete').gotoAndPlay(0).once()
+      const pickupAnimationEntity = new Entity().addComponent(pickupAnimation)
+      pickupAnimationEntity.position.copyFrom(this.entity.position)
+      level.containers.burgerParts.addEntity(pickupAnimationEntity)
 
       level.gameState.pickupsCollected.value++
 

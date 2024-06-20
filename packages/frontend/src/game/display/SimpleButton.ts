@@ -29,7 +29,7 @@ export class SimpleButton extends Component {
       frame: new Rectangle(0, 47, texture.width, 20)
     })
     const sprite = new Sprite(upTexture)
-    sprite.x -= texture.width / 2
+    sprite.x -= Math.trunc(texture.width / 2)
     sprite.y -= 10
     sprite.cursor = 'pointer'
     sprite.hitArea = new Rectangle(0, 0, texture.width, 21)
