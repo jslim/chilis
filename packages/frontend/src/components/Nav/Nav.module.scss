@@ -87,7 +87,7 @@
             }
 
             &:hover {
-              top: px(8);
+              transform: translateY(px(-8));
             }
 
             svg {

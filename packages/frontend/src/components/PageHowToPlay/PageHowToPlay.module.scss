@@ -35,6 +35,8 @@
 
   @include media-tablet-large {
     gap: px(65);
+    margin-top: px(20);
+    margin-bottom: px(140);
   }
 
   .imageContainer {
