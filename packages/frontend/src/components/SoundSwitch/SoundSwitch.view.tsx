@@ -11,9 +11,6 @@ import { localState, localStore } from '@/store'
 import { useRefs } from '@/hooks/use-refs'
 
 import { BaseButton } from '@/components/BaseButton'
-
-import SvgCd from '@/svgs/Cd.svg'
-import SvgNote from '@/svgs/Note.svg'
 import { BaseImage } from '@/components/BaseImage'
 
 import soundCDAnimated from '@/assets/images/sound-cd-animated.png'
