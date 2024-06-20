@@ -74,7 +74,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },
-    dev: { deploy: true },
+    // dev: { deploy: true },
     ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
     cdk: {
       // eslint-disable-next-line
