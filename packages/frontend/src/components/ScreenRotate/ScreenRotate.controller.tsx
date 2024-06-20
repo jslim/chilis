@@ -22,7 +22,7 @@ export const Controller: FC<ControllerProps> = memo((props) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setEnable(device.phone && device.portrait)
+      setEnable((device.phone && device.portrait) || (device.tablet && device.portrait))
     }
 
     ResizeService.listen(handleResize)
