@@ -15,7 +15,7 @@ import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
-  const { isDeploy } = detectStage(app.stage, true);
+  const { isDeploy } = detectStage(app.stage);
 
   let domainName;
   let apiDomainName;
