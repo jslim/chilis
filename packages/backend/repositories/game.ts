@@ -1,4 +1,4 @@
-import { GameScore, GameStatus, GSILeaderboard } from "@/types/game";
+import { GameScore, GameStatus, GSILeaderboard, GameSteps } from "@/types/game";
 import { PutItemOutput, UpdateItemOutput } from "@aws-sdk/client-dynamodb";
 import type DynamoDBClient from "@/services/dynamodb";
 import { generateExpression } from "@/services/dynamodb";
@@ -67,7 +67,7 @@ class GameRepository {
       status: GameStatus.ACTIVE,
       timestamp: data.createdAt,
       ttl: data.ttl,
-      steps: {},
+      steps: [],
     };
 
     try {
@@ -109,6 +109,30 @@ class GameRepository {
       return await this.client.update(keys, params, process.env.GAMES_SESSION_TABLE_NAME);
     } catch (err) {
       throw new Error(`updateGameStatus Error: ${err}`);
+    }
+  }
+
+  public async updateGameSteps(userSub: string, gameId: string, newStep: GameSteps): Promise<UpdateItemOutput> {
+    const keys = {
+      subReference: userSub,
+      gameId: gameId,
+    };
+
+    const params = {
+      UpdateExpression: "SET #steps = list_append(#steps, :newStep)",
+      ExpressionAttributeValues: {
+        ":newStep": [newStep],
+      },
+      ExpressionAttributeNames: {
+        "#steps": "steps",
+      },
+      ConditionExpression: "attribute_exists(subReference) AND attribute_exists(gameId)",
+    };
+
+    try {
+      return await this.client.update(keys, params, process.env.GAMES_SESSION_TABLE_NAME);
+    } catch (err) {
+      throw new Error(`updateGameSteps Error: ${err}`);
     }
   }
 

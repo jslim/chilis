@@ -19,6 +19,8 @@ import { Endpoints, fetchApi } from '@/utils/fetch-api'
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import usePauseGameInstance from '@/hooks/use-pause-game-instance'
 import { useRefs } from '@/hooks/use-refs'
+import clientMqtt5 from '@/services/mqtt-client'
+import { mqtt5 } from 'aws-iot-device-sdk-v2'
 
 import { BaseImage } from '@/components/BaseImage'
 
@@ -100,12 +102,28 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   useEffect(() => {
     const initGame = async () => {
+      const mqttClient = await clientMqtt5()
+      mqttClient.on('connectionSuccess', async (event: mqtt5.ConnectionSuccessEvent) => {
+        mqttClient.publish({
+          qos: mqtt5.QoS.AtMostOnce,
+          topicName: 'chili/game/action/4606ce0d-0d57-45ea-9646-61d84a3dcd8e',
+          payload: {
+            userId: '54c844d8-e001-70e3-ecd1-0d486dc47029',
+            gameId: '4606ce0d-0d57-45ea-9646-61d84a3dcd8e',
+            eventType: 'gameAction',
+            step: { a: 'start', l: 1 }
+          }
+        })
+      })
+
       const game = await initializeGame()
       setGameInstance(game)
 
       game.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
           onGameStarted()
+          mqttClient.start()
+          // Publish to clean up de action de el juego
           game.setHighScore(localState().user.highScore ?? 0)
         }
 
@@ -113,15 +131,37 @@ export const View: FC<ViewProps> = ({ className, background }) => {
           game.setHighScore(data.s)
           localState().user.setHighScore(data.s)
         }
+
+        if (data.a !== 'start') {
+          mqttClient.publish({
+            qos: mqtt5.QoS.AtMostOnce,
+            //topicName: `chili/game/action/${gameId}`,
+            topicName: 'chili/game/action/12345',
+            payload: JSON.stringify({
+              userId: '54c844d8-e001-70e3-ecd1-0d486dc47029',
+              gameId: '4606ce0d-0d57-45ea-9646-61d84a3dcd8e',
+              eventType: 'gameAction',
+              step: data
+            })
+          })
+        }
       })
 
       game.onShowGameBorder.subscribe(setShowGameBorder)
       game.onGameOver.subscribe((data) => {
         console.log(data, 'game over')
+        if (mqttClient) {
+          mqttClient.stop()
+          mqttClient.close()
+        }
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
       })
       game.onGameEnd.subscribe((data) => {
+        if (mqttClient) {
+          mqttClient.stop()
+          mqttClient.close()
+        }
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
       })

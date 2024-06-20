@@ -1,25 +1,27 @@
+import { Database } from "@/stacks/database";
 import { Function, use } from "sst/constructs";
 import type { StackContext } from "sst/constructs";
 import { CfnTopicRule } from "aws-cdk-lib/aws-iot";
-import { SEND_TOPIC_PATTERN } from "@/libs/config";
+import { TOPIC_GAME_ACTION_PATTERN } from "@/libs/config";
 import { Effect, PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 
 export function IoTStack({ stack, app }: StackContext) {
-  const sendActionFunction = new Function(stack, "send-action-handler", {
-    functionName: `${app.stage}-send-action`,
-    handler: "packages/backend/handlers/iot/send.handler",
+  const { gameSessionTable } = use(Database);
+
+  const gameActionFunction = new Function(stack, "game-action-handler", {
+    functionName: `${app.stage}-game-action`,
+    handler: "packages/backend/handlers/iot/game-action.handler",
     permissions: [
       // eslint-disable-next-line
       // @ts-ignore
-      // new PolicyStatement({
-      //   actions: ['dynamodb:Query', 'dynamodb:GetItem', 'dynamodb:UpdateItem', 'dynamodb:PutItem'],
-      //   effect: Effect.ALLOW,
-      //   resources: [gameTable.tableArn]
-      // })
+      new PolicyStatement({
+        actions: ["dynamodb:UpdateItem"],
+        effect: Effect.ALLOW,
+        resources: [gameSessionTable.tableArn],
+      }),
     ],
     environment: {
-      // CONNECTION_TABLE_NAME: connection.tableName,
-      // GAMES_TABLE_NAME: gameTable.tableName
+      GAMES_SESSION_TABLE_NAME: gameSessionTable.tableName,
     },
   });
 
@@ -55,27 +57,27 @@ export function IoTStack({ stack, app }: StackContext) {
     },
   });
 
-  const sendActionTopicRule = new CfnTopicRule(stack, "send-action-topic-rule", {
+  const gameActionTopicRule = new CfnTopicRule(stack, "game-action-topic-rule", {
     topicRulePayload: {
-      sql: `SELECT * FROM '${SEND_TOPIC_PATTERN}/+'`,
+      sql: `SELECT * FROM '${TOPIC_GAME_ACTION_PATTERN}/+'`,
       ruleDisabled: false,
       awsIotSqlVersion: "2016-03-23",
       actions: [
         {
           lambda: {
-            functionArn: sendActionFunction.functionArn,
+            functionArn: gameActionFunction.functionArn,
           },
         },
       ],
     },
   });
 
-  sendActionFunction.addPermission("IotInvokePermission", {
+  gameActionFunction.addPermission("IotInvokePermission", {
     action: "lambda:InvokeFunction",
     // eslint-disable-next-line
     // @ts-ignore
     principal: new ServicePrincipal("iot.amazonaws.com"),
-    sourceArn: sendActionTopicRule.attrArn,
+    sourceArn: gameActionTopicRule.attrArn,
   });
 
   // eslint-disable-next-line
@@ -105,6 +107,6 @@ export function IoTStack({ stack, app }: StackContext) {
 
   return {
     disconnectTopicRule,
-    sendActionTopicRule,
+    gameActionTopicRule,
   };
 }

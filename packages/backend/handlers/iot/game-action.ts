@@ -1,13 +1,41 @@
-import { ConnectionStatus } from "@/types/iot";
+import { Context } from "aws-lambda";
+import { EvenType } from "@/types/iot";
 import { logger } from "@/libs/powertools";
+import GameService from "@/services/game";
+import GameRepository from "@/repositories/game";
+import DynamoDBClient from "@/services/dynamodb";
 
 logger.appendKeys({
   namespace: "Lambda-IoT-Send",
   service: "AWS::Lambda",
 });
 
-export const handler = async (event: any) => {
-  logger.info("send from IoT Core", { event });
+const gameService = new GameService(
+  new GameRepository(new DynamoDBClient(process.env.GAMES_SESSION_TABLE_NAME as string)),
+);
+
+export const handler = async (event: any, context: Context) => {
+  logger.info("Game Action from IoT Core", { event, ...context });
+
+  console.log(event);
+  console.log(context);
+  // TODO: Add others validations
+  if (event.eventType !== EvenType.GAME_ACTION) {
+    logger.error(`Wrong action: ${event.eventType}`);
+  }
+
+  try {
+    const { userId, gameId, step } = event;
+    await gameService.recordStep(userId, gameId, step);
+  } catch (err) {
+    logger.error("Error updating table.", err as Error);
+    //       logger.info({
+    //         eventType: 'UserDisconnectionCountError',
+    //         sessionId: sessionId,
+    //         clientId: clientId,
+    //         timestamp: event.timestamp,
+    //         message: 'Error updating table'
+  }
   //   if (
   //     event.eventType === ConnectionStatus.DISCONNECTED &&
   //     event.clientId.includes('mqtt-publish-client') &&

@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import type GameRepository from "@/repositories/game";
+import { GameSteps } from "@/types/game";
 
 export default class GameService {
   constructor(private repository: GameRepository) {}
@@ -56,6 +57,18 @@ export default class GameService {
 
       // Update the leaderboard with the new game score
       await this.repository.updateLeaderboard(userSub, { ...gameScore, nickname });
+    } catch (err) {
+      throw new Error(`An error occurred while trying to record the game score. ${err}`);
+    }
+  }
+
+  /** */
+  public async recordStep(userSub: string, gameId: string, step: GameSteps) {
+    step.timestamp = new Date().toISOString();
+
+    console.log("AQ", userSub, gameId, step);
+    try {
+      await this.repository.updateGameSteps(userSub, gameId, step);
     } catch (err) {
       throw new Error(`An error occurred while trying to record the game score. ${err}`);
     }
