@@ -140,7 +140,6 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
     return () => {
       if (gameInstance.current) {
-        console.log('Cleaning up game instance', gameInstance.current)
         gameInstance.current.destroy()
         gameInstance.current = null
       }
