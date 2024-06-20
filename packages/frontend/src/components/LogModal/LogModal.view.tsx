@@ -211,7 +211,8 @@ export const View: FC<ViewProps> = ({
   return (
     <div className={classNames('LogModal', css.root, className)} ref={refs.root}>
       <div className={css.wrapper}>
-        <CloseButton className={css.close} onClick={onClose} />
+        {!isTokenValid && <CloseButton className={css.close} onClick={onClose} />}
+
         <div className={css.top}>
           <div className={css.logoContainer}>
             <BaseImage className={css.logo} data={getImageUrl(logo.src)} alt={logo.alt} />
@@ -223,10 +224,14 @@ export const View: FC<ViewProps> = ({
             <BaseImage className={css.chillie} data={getImageUrl(decoration)} />
           </div>
           <div className={css.skipContainer}>
-            <p className={css.label} {...copy.html(skipLabel)} />
-            <BaseButton className={css.skipButton} onClick={onClose}>
-              {skip}
-            </BaseButton>
+            {!isTokenValid && (
+              <>
+                <p className={css.label} {...copy.html(skipLabel)} />
+                <BaseButton className={css.skipButton} onClick={onClose}>
+                  {skip}
+                </BaseButton>
+              </>
+            )}
           </div>
         </div>
       </div>

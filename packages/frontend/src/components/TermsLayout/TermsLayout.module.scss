@@ -97,6 +97,10 @@
         @include media-tablet {
           @include font-size(20, 24);
         }
+
+        a {
+          color: blue;
+        }
       }
     }
   }
