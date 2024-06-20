@@ -128,7 +128,10 @@
     @include font-family(Montserrat, 500);
     margin-top: px(10);
     color: $gray;
-    text-decoration: underline;
+
+    a {
+      text-decoration: underline;
+    }
   }
 }
 

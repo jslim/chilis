@@ -14,6 +14,10 @@ import { BaseButton } from '@/components/BaseButton'
 
 import SvgCd from '@/svgs/Cd.svg'
 import SvgNote from '@/svgs/Note.svg'
+import { BaseImage } from '@/components/BaseImage'
+
+import soundCDAnimated from '@/assets/images/sound-cd-animated.png'
+import soundCDStatic from '@/assets/images/sound-cd-static.png'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -42,12 +46,8 @@ export const View: FC<ViewProps> = ({ className, soundState, onClick }) => {
         ref={refs.root}
         onClick={handleClick}
       >
-        <div className={css.note}>
-          <SvgNote />
-        </div>
-        <div className={css.cd}>
-          <SvgCd />
-        </div>
+        <BaseImage className={classNames(css.animatedCD, css.isAnimated)} data={soundCDAnimated} />
+        <BaseImage className={classNames(css.animatedCD, css.isStatic)} data={soundCDStatic} />
       </BaseButton>
     </div>
   )

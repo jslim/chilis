@@ -26,6 +26,8 @@ export interface ControllerProps {
     alt: string
   }
   forgotPasswordLink: string
+  createAccountLink: string
+  createAccount: string
   onClose: () => void
 }
 
