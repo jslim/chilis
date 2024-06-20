@@ -11,6 +11,7 @@ export interface ControllerProps {
     src: string
     alt: string
   }
+  site?: string
   isLarge?: boolean
 }
 

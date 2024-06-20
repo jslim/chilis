@@ -26,7 +26,8 @@
     }
   }
 
-  .title {
+  .title,
+  .button {
     @include typography-title;
     max-width: 80vw;
     color: $sour-cream;
@@ -42,5 +43,9 @@
       @include box(px(64), px(40));
       bottom: px(40);
     }
+  }
+
+  .button {
+    display: inline-block;
   }
 }
