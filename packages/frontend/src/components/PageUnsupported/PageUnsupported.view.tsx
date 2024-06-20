@@ -21,7 +21,7 @@ export const View: FC<ViewProps> = ({ content }) => {
 
   return (
     <main className={classNames('PageUnsupported', css.root)} ref={refs.root}>
-      <FallbackContainer title={content.body.title} image={content.body.hero} />
+      <FallbackContainer title={content.body.title} image={content.body.hero} site={content.body.site} />
     </main>
   )
 }
