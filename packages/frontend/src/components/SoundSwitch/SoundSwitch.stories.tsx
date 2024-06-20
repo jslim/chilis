@@ -12,8 +12,7 @@ export const Default: StoryFn<ViewProps> = (args) => {
 }
 
 Default.args = {
-  onClick: action('onClick'),
-  audioSrc: '/common/assets/sounds/'
+  onClick: action('onClick')
 }
 
 Default.argTypes = {}

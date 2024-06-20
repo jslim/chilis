@@ -22,6 +22,7 @@ import { getScrollTop } from '@/utils/basic-functions'
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useRefs } from '@/hooks/use-refs'
+import { useSound } from '@/hooks/use-sound'
 
 import { BaseModal } from '@/components/BaseModal'
 import { ConfirmationModal } from '@/components/ConfirmationModal'
@@ -33,8 +34,6 @@ import { ScreenLowBattery } from '@/components/ScreenLowBattery'
 import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
-
-import { GAME_SOUNDS_BASE_URL } from '@/game/game.config'
 
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
@@ -61,11 +60,14 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
   const isModalOpen = localState().screen.isModalOpen
   const nickname = localState().user.nickname
+  const isMutedStore = localStore().screen.isMuted
 
   const [idToken] = useLocalStorage('idToken')
   const [accessToken] = useLocalStorage('accessToken')
   const [highScore] = useLocalStorage('highScore')
   const [gameId] = useLocalStorage('gameId')
+
+  const [soundState, setSoundState] = useSound()
 
   //
   // Update pathname ref
@@ -301,7 +303,12 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
             {refs.pathname.current !== routes.GAME && (
               <>
                 {refs.pathname.current !== routes.GAME_OVER && (
-                  <PlayNow text={pageProps.content.common.playNow} className={css.playButton} url={routes.GAME} />
+                  <PlayNow
+                    text={pageProps.content.common.playNow}
+                    className={css.playButton}
+                    url={routes.GAME}
+                    onClick={() => isMutedStore === null && setSoundState(true)}
+                  />
                 )}
                 <Nav
                   content={pageProps.content.common.nav}
@@ -311,7 +318,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
                 />
               </>
             )}
-            <SoundSwitch className={css.soundSwitch} audioSrc={GAME_SOUNDS_BASE_URL} />
+            <SoundSwitch className={css.soundSwitch} soundState={soundState} onClick={setSoundState} />
           </>
         )}
 
