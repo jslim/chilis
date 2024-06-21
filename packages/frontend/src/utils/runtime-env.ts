@@ -10,7 +10,7 @@ export function getRuntimeEnv(): RuntimeEnv {
 
   if (/^(localhost|\d)/iu.test(prefix)) {
     result = 'local'
-  } else if (/^(uat|prd|prod|www|or-the-project-subdomain)/iu.test(prefix)) {
+  } else if (/^(uat|prd|prod|www|chilisburgertime)/iu.test(prefix)) {
     result = 'prod'
   } else if (/^(stag|stg)/iu.test(prefix)) {
     result = 'stage'
