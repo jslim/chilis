@@ -69,6 +69,14 @@ export const View: FC<ViewProps> = ({
     }
   }, [isTokenValid, preferredNickname])
 
+  const saveTokens = (apiResponse: ApiResponse) => {
+    setAccessToken(String(apiResponse.AccessToken))
+    setIdToken(String(apiResponse.IdToken))
+    localState().user.setAccessToken(String(apiResponse.AccessToken))
+    localState().user.setIdToken(String(apiResponse.IdToken))
+    localState().user.setIsTokenValid(true)
+  }
+
   const handleLoginSubmit = async () => {
     setLoading(true)
 
@@ -87,11 +95,7 @@ export const View: FC<ViewProps> = ({
         console.error('Login failed:', apiResponse.message)
         setHasError(true)
       } else {
-        setAccessToken(String(apiResponse.AccessToken))
-        setIdToken(String(apiResponse.IdToken))
-        localState().user.setAccessToken(String(apiResponse.AccessToken))
-        localState().user.setIdToken(String(apiResponse.IdToken))
-        localState().user.setIsTokenValid(true)
+        saveTokens(apiResponse)
       }
     } catch (error) {
       console.error(error)
@@ -116,13 +120,14 @@ export const View: FC<ViewProps> = ({
 
       const apiResponse = response as ApiResponse
 
-      if (apiResponse.message.toLowerCase().includes('success')) {
-        console.log('Nickname set successful:', apiResponse.message)
-        localState().user.setNickname(nicknameValue)
-        onClose()
-      } else {
+      if (!apiResponse.IdToken || !apiResponse.AccessToken) {
         console.error('Error while setting nickname:', apiResponse.message)
         setHasError(true)
+      } else {
+        console.log('Nickname set successful:', apiResponse.message)
+        saveTokens(apiResponse)
+        localState().user.setNickname(nicknameValue)
+        onClose()
       }
     } catch (error) {
       console.error(error)
