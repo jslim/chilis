@@ -1,4 +1,6 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
+import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
+
 import { parseBody } from "@/utils/parse";
 import { logger } from "@/libs/powertools";
 import { Success, Forbidden } from "@/libs/http-response";
@@ -10,7 +12,7 @@ import UserService from "@/services/user";
 import UserRepository from "@/repositories/user";
 import LeaderboardService from "@/services/leaderboard";
 import LeaderboardRepository from "@/repositories/leaderboard";
-import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
+import { checkCountry } from "@/libs/check-country";
 
 logger.appendKeys({
   namespace: "Lambda-PUT-Save-Score",
@@ -18,8 +20,14 @@ logger.appendKeys({
 });
 
 const userService = new UserService(new UserRepository(new CognitoIdentityProviderClient()));
-const gameService = new GameService(new GameRepository(new DynamoDBClient(process.env.GAMES_HISTORY_TABLE_NAME as string)));
-const leaderboardService = new LeaderboardService(new LeaderboardRepository(new DynamoDBClient(process.env.LEADERBOARD_TABLE_NAME as string)));
+const gameService = new GameService(
+  new GameRepository(new DynamoDBClient(process.env.GAMES_HISTORY_TABLE_NAME as string)),
+);
+const leaderboardService = new LeaderboardService(
+  new LeaderboardRepository(new DynamoDBClient(process.env.LEADERBOARD_TABLE_NAME as string)),
+);
+
+const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")?.split(",").map((country) => country.trim());
 
 /**
  * Lambda handler for PUT requests to save user score.
@@ -36,7 +44,14 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
     const userSub = event.requestContext.authorizer?.principalId;
 
     try {
-      const currentNickname = event.headers?.Authorization && (await userService.getUsername(event.headers.Authorization));
+      const country = event.headers["CloudFront-Viewer-Country"]!;
+
+      if (!checkCountry(country, COUNTRIES_ALLOW_LIST)) {
+        return Forbidden();
+      }
+
+      const currentNickname =
+        event.headers?.Authorization && (await userService.getUsername(event.headers.Authorization));
 
       // Record game score
       if (currentNickname) {

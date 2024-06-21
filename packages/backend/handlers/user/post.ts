@@ -1,9 +1,3 @@
-import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import { parseBody } from "@/utils/parse";
-import { logger } from "@/libs/powertools";
-import { brinkerLogin } from "@/utils/brinker";
-import { Success, Forbidden } from "@/libs/http-response";
-import defaultHttpHandler from "@/libs/middlewares/default-http-handler";
 import {
   CognitoIdentityProviderClient,
   AdminGetUserCommand,
@@ -11,6 +5,14 @@ import {
   InitiateAuthCommand,
   RespondToAuthChallengeCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
+import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
+
+import { parseBody } from "@/utils/parse";
+import { logger } from "@/libs/powertools";
+import { brinkerLogin } from "@/utils/brinker";
+import { Success, Forbidden } from "@/libs/http-response";
+import defaultHttpHandler from "@/libs/middlewares/default-http-handler";
+import { checkCountry } from "@/libs/check-country";
 
 logger.appendKeys({
   namespace: "Lambda-POST-User-Login",
@@ -18,6 +20,8 @@ logger.appendKeys({
 });
 
 const cognitoClient = new CognitoIdentityProviderClient();
+
+const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")?.split(",").map((country) => country.trim());
 
 /**
  * Lambda handler for processing user authentication and registration requests.
@@ -35,6 +39,12 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context): Pr
     const { phone, password } = parseBody(event.body);
 
     try {
+      const country = event.headers["CloudFront-Viewer-Country"]!;
+
+      if (!checkCountry(country, COUNTRIES_ALLOW_LIST)) {
+        return Forbidden();
+      }
+
       const { loyaltyID } = await brinkerLogin(phone, password);
       await registerUserIfNotFound(loyaltyID);
 

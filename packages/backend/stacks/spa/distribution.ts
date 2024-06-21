@@ -37,6 +37,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
 
     certificate = new acm.DnsValidatedCertificate(stack, `${app.stage}-frontend-domain-certificate`, {
       domainName: targetHostedzoneName,
+      subjectAlternativeNames: [domainName],
       hostedZone,
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });

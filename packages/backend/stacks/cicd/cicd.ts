@@ -117,7 +117,7 @@ export function CICD({ stack, app }: StackContext) {
         value: app.stage,
       },
       COUNTRIES_ALLOW_LIST: {
-        value: isDevelop || isStage ? "CA, US, UY, NL, BR" : "US",
+        value: isDevelop || isStage || isUat ? "CA, US, UY, NL, BR" : "US",
       },
     },
     buildSpec: codebuild.BuildSpec.fromObject({

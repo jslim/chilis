@@ -13,7 +13,7 @@ export function ApiStack({ stack, app }: StackContext) {
   const { auth } = use(AuthStack);
   const { isProd, isDevelop } = detectStage(app.stage);
 
-  setDefaultFunctionProps({ stack, app });
+  setDefaultFunctionProps({ stack, app }, { environment: { COUNTRIES_ALLOW_LIST: process.env.COUNTRIES_ALLOW_LIST! } });
 
   // Create Authorizer function
   const authorizerFunction = new Function(stack, "api-authorizer-fn", {
@@ -35,7 +35,7 @@ export function ApiStack({ stack, app }: StackContext) {
     domainSettings = {
       domainName,
       hostedZone: baseDomain!,
-    }
+    };
   }
 
   const api = new ApiGatewayV1Api(stack, "api", {

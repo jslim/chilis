@@ -19,7 +19,7 @@ export function userApiStack({ stack, app }: StackContext) {
   const { brinkerAccess } = use(SecretsStack);
   const brinkerAccessSecretName = `${app.stage}${BRINKER_ACCESS}`;
 
-  setDefaultFunctionProps({ stack, app });
+  setDefaultFunctionProps({ stack, app }, { environment: { COUNTRIES_ALLOW_LIST: process.env.COUNTRIES_ALLOW_LIST! } });
 
   const postUserLogin = new Function(stack, "post-user-login", {
     functionName: `${app.stage}-post-user-login`,
