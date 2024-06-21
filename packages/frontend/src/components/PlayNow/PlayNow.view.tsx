@@ -1,11 +1,9 @@
 import type { ControllerProps } from './PlayNow.controller'
 
-import { type FC, useCallback } from 'react'
+import { type FC } from 'react'
 import classNames from 'classnames'
 
 import css from './PlayNow.module.scss'
-
-import { localState, localStore } from '@/store'
 
 import { useRefs } from '@/hooks/use-refs'
 
@@ -22,18 +20,6 @@ export type ViewRefs = {
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', onClick }) => {
   const refs = useRefs<ViewRefs>()
-
-  const hasContextInit = localStore().navigation.isContextInitialized
-
-  // Toggle sound on or off
-  const handleClick = useCallback(() => {
-    if (!hasContextInit) {
-      localState().navigation.setContextInitialized(true)
-    }
-    if (onClick) {
-      onClick()
-    }
-  }, [hasContextInit, onClick])
 
   return (
     <BaseButton className={classNames('PlayNow', css.root, className)} ref={refs.root} onClick={onClick} title={text}>
