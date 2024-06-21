@@ -107,6 +107,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
     const initGame = async () => {
       const newGameInstance = await initializeGame()
 
+      newGameInstance.setMuted(localState().screen.isMuted ?? false)
       newGameInstance.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
           onGameStarted()
