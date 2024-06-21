@@ -7,8 +7,7 @@ import { View } from './PlayNow.view'
 export interface ControllerProps {
   className?: string
   text: string
-  url: string
-  onClick?: () => void
+  onClick: () => void
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

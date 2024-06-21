@@ -20,7 +20,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', url, onClick }) => {
+export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', onClick }) => {
   const refs = useRefs<ViewRefs>()
 
   const hasContextInit = localStore().navigation.isContextInitialized
@@ -36,13 +36,7 @@ export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', url, onClick
   }, [hasContextInit, onClick])
 
   return (
-    <BaseButton
-      className={classNames('PlayNow', css.root, className)}
-      ref={refs.root}
-      href={url}
-      onClick={handleClick}
-      title={text}
-    >
+    <BaseButton className={classNames('PlayNow', css.root, className)} ref={refs.root} onClick={onClick} title={text}>
       <SvgPlay className={css.svg} />
     </BaseButton>
   )

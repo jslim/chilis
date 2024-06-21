@@ -166,12 +166,12 @@ export class GameController {
 
   public pause() {
     this.sceneManager.pause()
-    this.onGameAction.emit({ a: 'pause', l: this.gameState.level.value })
+    this.onGameAction.emit({ a: 'pause', l: this.gameState?.level.value })
   }
 
   public resume() {
     this.sceneManager.resume()
-    this.onGameAction.emit({ a: 'resume', l: this.gameState.level.value })
+    this.onGameAction.emit({ a: 'resume', l: this.gameState?.level.value })
   }
 
   setChannels(channels: Channels) {

@@ -11,6 +11,7 @@ export interface ControllerProps {
   isDisabled?: boolean
   onClick?: () => void
   content: CommonContent['topNav']
+  allowSignin: boolean
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

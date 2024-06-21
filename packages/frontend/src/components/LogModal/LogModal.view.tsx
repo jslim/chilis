@@ -47,7 +47,9 @@ export const View: FC<ViewProps> = ({
   skipLabel,
   skip,
   decoration,
-  onClose
+  loginButtonTriggered,
+  onClose,
+  onSkip
 }) => {
   const refs = useRefs<ViewRefs>()
   const [phoneValue, setPhoneValue] = useState('')
@@ -223,10 +225,10 @@ export const View: FC<ViewProps> = ({
             <BaseImage className={css.chillie} data={getImageUrl(decoration)} />
           </div>
           <div className={css.skipContainer}>
-            {!isTokenValid && (
+            {!isTokenValid && !loginButtonTriggered && (
               <>
                 <p className={css.label} {...copy.html(skipLabel)} />
-                <BaseButton className={css.skipButton} onClick={onClose}>
+                <BaseButton className={css.skipButton} onClick={onSkip}>
                   {skip}
                 </BaseButton>
               </>
