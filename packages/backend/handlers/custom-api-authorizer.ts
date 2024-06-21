@@ -44,7 +44,7 @@ export const handler = async (event: APIGatewayTokenAuthorizerEvent, context: Co
     authPolicy.allowAllMethods();
     const apiPolicy = authPolicy.build();
 
-    logger.error("The request has been authorized.");
+    logger.info("The request has been authorized.");
     return {
       ...apiPolicy,
       context: payload,
