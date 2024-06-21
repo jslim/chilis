@@ -1,15 +1,16 @@
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState, type FC } from 'react'
 import type { ControllerProps } from './FallbackContainer.controller'
 
 import classNames from 'classnames'
-import css from './FallbackContainer.module.scss'
+import { BaseButton } from '@/components/BaseButton'
+import { BaseImage } from '@/components/BaseImage'
+import { useRefs } from '@/hooks/use-refs'
 import { getImageUrl } from '@/utils/basic-functions'
 import { copy } from '@/utils/copy'
-import { useRefs } from '@/hooks/use-refs'
-import { BaseImage } from '@/components/BaseImage'
-import SvgChilis from '@/svgs/Chilis.svg'
 import { detect } from '@/utils/detect'
-import { BaseButton } from '@/components/BaseButton'
+import SvgChilis from '@/svgs/Chilis.svg'
+
+import css from './FallbackContainer.module.scss'
 
 export interface ViewProps extends ControllerProps {}
 
@@ -21,6 +22,7 @@ export type ViewRefs = {
 export const View: FC<ViewProps> = ({ className, title, image, isLarge = false, site }) => {
   const refs = useRefs<ViewRefs>()
   const [browserName, setBrowserName] = useState<string | null>(null)
+  const [tooltipVisible, setTooltipVisible] = useState(false)
 
   useEffect(() => {
     // Set browser name based on OS
@@ -35,10 +37,13 @@ export const View: FC<ViewProps> = ({ className, title, image, isLarge = false, 
     if (site && navigator.clipboard) {
       navigator.clipboard.writeText(process.env.NEXT_PUBLIC_WEBSITE_SITE_URL ?? 'https://burgertime.chilis.com/').then(
         () => {
-          alert('Site URL copied to clipboard!')
+          setTooltipVisible(true)
+          setTimeout(() => {
+            setTooltipVisible(false)
+          }, 2000)
         },
-        (err) => {
-          console.error('Could not copy text: ', err)
+        (error) => {
+          console.error('Could not copy text:', error)
         }
       )
     }
@@ -59,9 +64,12 @@ export const View: FC<ViewProps> = ({ className, title, image, isLarge = false, 
       </div>
 
       {site && (
-        <BaseButton className={css.button} onClick={handleCopyToClipboard}>
-          {`${site} in ${browserName}`}
-        </BaseButton>
+        <div className={css.buttonContainer}>
+          <BaseButton className={css.button} onClick={handleCopyToClipboard}>
+            {site} {browserName && `in ${browserName}`}
+          </BaseButton>
+          {tooltipVisible && <div className={css.tooltip}>Copied to clipboard!</div>}
+        </div>
       )}
     </div>
   )

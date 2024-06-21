@@ -78,7 +78,7 @@ const App: FC<AppProps<PageProps>> = (props) => {
     if (isInSocialMediaApp) {
       router.push(routes.UNSUPPORTED)
     }
-  }, [])
+  }, [router])
 
   return props.pageProps.noLayout ? <props.Component {...props.pageProps} /> : <Layout {...props} />
 }
