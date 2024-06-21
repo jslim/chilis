@@ -611,8 +611,9 @@
         "description": "Your browser is not supported."
       },
       "body": {
-        "title": "Your browser is not supported.",
-        "hero": { "src": "browser.png", "alt": "browser" }
+        "title": "This browser is not supported. Play the full experience by accessing ",
+        "site": "burgertime.chilis.com",
+        "image": { "src": "browser.png", "alt": "browser" }
       }
     }
   }
