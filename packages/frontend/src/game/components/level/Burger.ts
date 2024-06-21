@@ -284,7 +284,7 @@ export class Burger extends Component {
 
     // if all slices are touched, drop burger down
     const sliceForgiveness = 1
-    if (this.totalSlicesTouched === this.splicedSprites.length - sliceForgiveness) {
+    if (this.totalSlicesTouched >= this.splicedSprites.length - sliceForgiveness) {
       this.onSliceCompleted.emit()
     }
   }
