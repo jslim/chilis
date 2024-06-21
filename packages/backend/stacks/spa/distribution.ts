@@ -15,7 +15,7 @@ import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
-  const { isDeploy } = detectStage(app.stage, true);
+  const { isDeploy } = detectStage(app.stage);
 
   let domainName;
   let apiDomainName;
@@ -37,6 +37,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
 
     certificate = new acm.DnsValidatedCertificate(stack, `${app.stage}-frontend-domain-certificate`, {
       domainName: targetHostedzoneName,
+      subjectAlternativeNames: [domainName],
       hostedZone,
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
@@ -74,7 +75,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },
-    dev: { deploy: true },
+    // dev: { deploy: true },
     ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
     cdk: {
       // eslint-disable-next-line

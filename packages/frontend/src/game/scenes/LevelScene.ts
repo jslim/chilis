@@ -307,7 +307,7 @@ export default class LevelScene extends Scene {
                   }
                   case 3: {
                     {
-                      mover.modeCycle = ['hunt-burger']
+                      mover.modeCycle = ['hunt-burger', 'random']
                       // No default
                     }
                     break

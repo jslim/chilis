@@ -15,8 +15,6 @@ export function WafStack({ stack, app }: StackContext) {
     return { waf: undefined };
   }
 
-  const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "US")?.split(",").map((country) => country.trim());
-
   const customResponseBody = {
     contentType: "APPLICATION_JSON",
     content: JSON.stringify({
@@ -44,38 +42,6 @@ export function WafStack({ stack, app }: StackContext) {
       getWAFManagedRule("AWSManagedRulesCommonRuleSet", 1, stage),
       getWAFManagedRule("AWSManagedRulesAnonymousIpList", 2, stage),
       getWAFManagedRule("AWSManagedRulesAmazonIpReputationList", 3, stage),
-      {
-        name: "allowSpecificCountriesRule",
-        priority: 0,
-        action: {
-          block: {
-            customResponse: {
-              responseCode: 403,
-              customResponseBodyKey: "CountryRestrictionResponse",
-              responseHeaders: [
-                {
-                  name: "X-Restriction",
-                  value: "CountryRestriction",
-                },
-              ],
-            },
-          },
-        },
-        statement: {
-          notStatement: {
-            statement: {
-              geoMatchStatement: {
-                countryCodes: COUNTRIES_ALLOW_LIST,
-              },
-            },
-          },
-        },
-        visibilityConfig: {
-          cloudWatchMetricsEnabled: true,
-          metricName: "allow-specific-countries-rule",
-          sampledRequestsEnabled: true,
-        },
-      },
     ],
   });
 

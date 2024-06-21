@@ -1,21 +1,18 @@
+import { useEffect, useImperativeHandle, useMemo } from 'react'
 import type { FC } from 'react'
-import type { PageHandle } from '@/data/types'
-import type { ControllerProps } from './PageFullLeaderboard.controller'
-
-import { useEffect, useImperativeHandle } from 'react'
 import classNames from 'classnames'
 import { gsap } from 'gsap'
 
-import css from './PageFullLeaderboard.module.scss'
-
-import { getImageUrl } from '@/utils/basic-functions'
-import { copy } from '@/utils/copy'
-
-import { useRefs } from '@/hooks/use-refs'
+import type { PageHandle } from '@/data/types'
+import type { ControllerProps } from './PageFullLeaderboard.controller'
 
 import { BaseImage } from '@/components/BaseImage'
 import { ScoreList } from '@/components/ScoreList'
+import { getImageUrl } from '@/utils/basic-functions'
+import { copy } from '@/utils/copy'
+import { useRefs } from '@/hooks/use-refs'
 
+import css from './PageFullLeaderboard.module.scss'
 import SvgYellowSquares from '@/svgs/YellowSquares.svg'
 
 export interface ViewProps extends ControllerProps {}
@@ -28,6 +25,13 @@ export type ViewRefs = {
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
   const refs = useRefs<ViewRefs>()
+  const additionalPlayers = useMemo(() => {
+    if (arrayOfPlayers && arrayOfPlayers.length <= 20) {
+      return null
+    }
+
+    return arrayOfPlayers?.slice(20)
+  }, [arrayOfPlayers])
 
   useEffect(() => {
     gsap.set(refs.root.current, { opacity: 0 })
@@ -57,12 +61,32 @@ export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
             <SvgYellowSquares />
           </div>
           <div className={css.label} {...copy.html(content.body.topLabel)} />
-          <div className={css.iconWrapper}>
+          <div className={classNames(css.iconWrapper, css.right)}>
             <SvgYellowSquares />
           </div>
         </div>
 
         <ScoreList className={css.list} players={arrayOfPlayers} maxPlayers={20} />
+        {Array.isArray(additionalPlayers) && (
+          <>
+            <div className={css.dotsContainer}>
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className={css.dot} />
+              ))}
+            </div>
+            <div className={css.customList}>
+              <ul className={css.list}>
+                {additionalPlayers.map((player, index) => (
+                  <li key={index} className={css.player}>
+                    <span className={css.position}>{player.rank}</span>
+                    <span className={css.name}>{player.nickname}</span>
+                    <span className={css.score}>{player.score}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
       </section>
     </main>
   )

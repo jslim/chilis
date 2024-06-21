@@ -11,9 +11,9 @@ import { Duration } from "aws-cdk-lib";
 export function ApiStack({ stack, app }: StackContext) {
   let usagePlan;
   const { auth } = use(AuthStack);
-  const { isDevelopment, isProd, isDevelop } = detectStage(app.stage);
+  const { isProd, isDevelop } = detectStage(app.stage);
 
-  setDefaultFunctionProps({ stack, app });
+  setDefaultFunctionProps({ stack, app }, { environment: { COUNTRIES_ALLOW_LIST: process.env.COUNTRIES_ALLOW_LIST! } });
 
   // Create Authorizer function
   const authorizerFunction = new Function(stack, "api-authorizer-fn", {
@@ -26,18 +26,20 @@ export function ApiStack({ stack, app }: StackContext) {
   });
 
   let domainName = undefined;
+  let domainSettings = undefined;
   const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
   const baseDomain = process.env.BASE_DOMAIN!;
 
   if (domainStage !== undefined && isValidDomain(baseDomain)) {
     domainName = (isProd ? `api` : `api.${app.stage}`) + `.${baseDomain}`;
+    domainSettings = {
+      domainName,
+      hostedZone: baseDomain!,
+    };
   }
 
   const api = new ApiGatewayV1Api(stack, "api", {
-    customDomain: {
-      domainName,
-      hostedZone: baseDomain!,
-    },
+    customDomain: domainSettings,
     authorizers: {
       Authorizer: {
         name: "ApiAuthorizer",

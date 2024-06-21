@@ -26,7 +26,32 @@
     }
   }
 
-  .title {
+  .buttonContainer {
+    position: relative;
+  }
+
+  .tooltip {
+    position: absolute;
+    visibility: visible;
+    bottom: px(-60);
+    left: 50%;
+    padding: px(5);
+    background-color: $ranch;
+    color: $black;
+    text-align: center;
+    border-radius: px(4);
+    z-index: 1;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .buttonContainer:hover .tooltip {
+    opacity: 1;
+  }
+
+  .title,
+  .button {
     @include typography-title;
     max-width: 80vw;
     color: $sour-cream;
@@ -42,5 +67,9 @@
       @include box(px(64), px(40));
       bottom: px(40);
     }
+  }
+
+  .button {
+    display: inline-block;
   }
 }

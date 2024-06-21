@@ -1,6 +1,6 @@
-import type { FC } from 'react'
 import type { ControllerProps } from './PlayNow.controller'
 
+import { type FC } from 'react'
 import classNames from 'classnames'
 
 import css from './PlayNow.module.scss'
@@ -18,11 +18,11 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', url }) => {
+export const View: FC<ViewProps> = ({ className, text = 'PLAY NOW', onClick }) => {
   const refs = useRefs<ViewRefs>()
 
   return (
-    <BaseButton className={classNames('PlayNow', css.root, className)} ref={refs.root} href={url} title={text}>
+    <BaseButton className={classNames('PlayNow', css.root, className)} ref={refs.root} onClick={onClick} title={text}>
       <SvgPlay className={css.svg} />
     </BaseButton>
   )

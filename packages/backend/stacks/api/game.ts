@@ -16,7 +16,7 @@ export function gameApiStack({ stack, app }: StackContext) {
   const { api, validator } = use(ApiStack);
   const { leaderboardTable, gameSessionTable, gameHistoryTable } = use(Database);
 
-  setDefaultFunctionProps({ stack, app });
+  setDefaultFunctionProps({ stack, app }, { environment: { COUNTRIES_ALLOW_LIST: process.env.COUNTRIES_ALLOW_LIST! } });
 
   const getGame = new Function(stack, "get-game", {
     functionName: `${app.stage}-get-game`,

@@ -1,6 +1,6 @@
 import type { ControllerProps } from './BackgroundVideo.controller'
 
-import { type FC, forwardRef, useEffect } from 'react'
+import { forwardRef, useEffect } from 'react'
 import classNames from 'classnames'
 
 import css from './BackgroundVideo.module.scss'
@@ -12,16 +12,7 @@ import { useRefs } from '@/hooks/use-refs'
 
 import { BaseImage } from '@/components/BaseImage'
 
-export interface ViewProps extends ControllerProps {
-  className?: string
-  videoData: { src: string; poster: string }
-  loop?: boolean
-  muted?: boolean
-  controls?: boolean
-  autoPlay?: boolean
-  playsInline?: boolean
-  fillContainer?: boolean
-}
+export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
   root: HTMLDivElement
@@ -29,7 +20,7 @@ export type ViewRefs = {
 }
 
 // Adapted to accept ref
-const View: FC<ViewProps> = forwardRef<HTMLVideoElement, ViewProps>(
+export const View = forwardRef<HTMLVideoElement, ViewProps>(
   (
     {
       className,
@@ -78,10 +69,10 @@ const View: FC<ViewProps> = forwardRef<HTMLVideoElement, ViewProps>(
           // eslint-disable-next-line jsx-a11y/media-has-caption
           <video
             className={css.video}
-            poster={getImageUrl(poster)}
+            poster={getImageUrl(poster).src}
             src={src}
             loop={loop}
-            muted={muted}
+            muted={!!muted}
             preload="auto"
             crossOrigin="anonymous"
             controls={controls}
@@ -100,5 +91,3 @@ const View: FC<ViewProps> = forwardRef<HTMLVideoElement, ViewProps>(
 )
 
 View.displayName = 'BackgroundVideo_View'
-
-export { View }

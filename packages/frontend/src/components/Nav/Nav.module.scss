@@ -10,7 +10,7 @@
   padding-bottom: px(10);
   padding-left: px(10);
 
-  @include media-tablet {
+  @include media-tablet-large {
     padding-bottom: px(20);
     padding-left: px(20);
   }
@@ -38,7 +38,7 @@
 
     .fullscreenWrapper {
       @include box(px(34));
-      margin-right: px(8);
+      margin-right: px(4);
 
       @include media-tablet-large {
         @include box(px(60));
@@ -50,18 +50,19 @@
       @include flex-center-vert;
 
       &.routes {
-        @include transform-center(absolute);
-        top: px(20);
+        @include transform-center-horiz(absolute);
+
+        height: px(30);
 
         @include media-tablet-large {
-          top: px(30);
+          height: px(60);
         }
       }
 
       li {
         padding: 0 px(5);
 
-        @include media-tablet-large {
+        @include media-tablet {
           padding: 0 px(5);
         }
 
@@ -69,6 +70,7 @@
           &.hasBorder {
             @include font-family(b, 400);
             @include typography-cta;
+            display: inline-block;
             position: relative;
             margin-bottom: px(10);
             color: $sunrise;
@@ -76,7 +78,7 @@
             border-image: url('~@/assets/images/button-borders.png') 10 10 stretch;
             white-space: nowrap;
 
-            @include media-tablet-large {
+            @include media-tablet {
               padding: px(5);
               padding-bottom: px(2);
             }
@@ -87,7 +89,7 @@
             }
 
             &:hover {
-              top: px(8);
+              transform: translateY(px(-8));
             }
 
             svg {

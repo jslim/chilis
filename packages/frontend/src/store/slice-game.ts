@@ -12,6 +12,7 @@ export type GameSliceState = {
     // getters
     accessToken?: string
     idToken?: string
+    userId?: string
     nickname?: string
     isTokenValid?: boolean
     gameId?: string
@@ -20,6 +21,7 @@ export type GameSliceState = {
     // setters
     setAccessToken: (token: string) => void
     setIdToken: (token: string) => void
+    setUserId: (userId: string) => void
     setNickname: (nickname: string) => void
     setIsTokenValid: (isTokenValid: boolean) => void
     setGameId: (gameId: string) => void
@@ -32,7 +34,7 @@ export type GameSliceState = {
     // getters
     isFullscreen: boolean
     isModalOpen: boolean
-    isMuted: boolean
+    isMuted: boolean | null
     // setters
     setIsfullscreen: (isFullscreen: boolean) => void
     setIsModalOpen: (isModalOpen: boolean) => void
@@ -59,6 +61,11 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
     setAccessToken: (token) => {
       set((state) => {
         state.user.accessToken = token
+      })
+    },
+    setUserId: (userId) => {
+      set((state) => {
+        state.user.userId = userId
       })
     },
     setNickname: (nickname) => {
@@ -103,7 +110,7 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
   screen: {
     isFullscreen: false,
     isModalOpen: false,
-    isMuted: true,
+    isMuted: null,
 
     setIsfullscreen: (flag) => {
       set((state) => {

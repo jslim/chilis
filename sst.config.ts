@@ -11,6 +11,7 @@ import {
   userApiStack,
   gameApiStack,
   leaderboardApiStack,
+  countryCodeApiStack,
   Database,
   SecretsStack,
   WafStack,
@@ -42,6 +43,7 @@ export default {
       .stack(gameApiStack)
       .stack(leaderboardApiStack)
       .stack(IoTStack)
+      .stack(countryCodeApiStack)
       .stack(WafStack)
       /* Frontend */
       .stack(WebACL)

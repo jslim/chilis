@@ -42,10 +42,14 @@ export const View: FC<ViewProps> = ({
   errorMessageNickname,
   forgotPassword,
   forgotPasswordLink,
+  createAccountLink,
+  createAccount,
   skipLabel,
   skip,
   decoration,
-  onClose
+  loginButtonTriggered,
+  onClose,
+  onSkip
 }) => {
   const refs = useRefs<ViewRefs>()
   const [phoneValue, setPhoneValue] = useState('')
@@ -65,6 +69,14 @@ export const View: FC<ViewProps> = ({
     }
   }, [isTokenValid, preferredNickname])
 
+  const saveTokens = (apiResponse: ApiResponse) => {
+    setAccessToken(String(apiResponse.AccessToken))
+    setIdToken(String(apiResponse.IdToken))
+    localState().user.setAccessToken(String(apiResponse.AccessToken))
+    localState().user.setIdToken(String(apiResponse.IdToken))
+    localState().user.setIsTokenValid(true)
+  }
+
   const handleLoginSubmit = async () => {
     setLoading(true)
 
@@ -79,17 +91,11 @@ export const View: FC<ViewProps> = ({
 
       const apiResponse = response as ApiResponse
 
-      console.log('Login response:', apiResponse)
-
       if (!apiResponse.IdToken || !apiResponse.AccessToken) {
         console.error('Login failed:', apiResponse.message)
         setHasError(true)
       } else {
-        setAccessToken(String(apiResponse.AccessToken))
-        setIdToken(String(apiResponse.IdToken))
-        localState().user.setAccessToken(String(apiResponse.AccessToken))
-        localState().user.setIdToken(String(apiResponse.IdToken))
-        localState().user.setIsTokenValid(true)
+        saveTokens(apiResponse)
       }
     } catch (error) {
       console.error(error)
@@ -114,15 +120,14 @@ export const View: FC<ViewProps> = ({
 
       const apiResponse = response as ApiResponse
 
-      console.log('Nickname response:', apiResponse)
-
-      if (apiResponse.message.toLowerCase().includes('success')) {
-        console.log('Nickname set successful:', apiResponse.message)
-        localState().user.setNickname(nicknameValue)
-        onClose()
-      } else {
+      if (!apiResponse.IdToken || !apiResponse.AccessToken) {
         console.error('Error while setting nickname:', apiResponse.message)
         setHasError(true)
+      } else {
+        console.log('Nickname set successful:', apiResponse.message)
+        saveTokens(apiResponse)
+        localState().user.setNickname(nicknameValue)
+        onClose()
       }
     } catch (error) {
       console.error(error)
@@ -176,7 +181,8 @@ export const View: FC<ViewProps> = ({
       </BaseForm>
 
       <div className={css.forgotPassword}>
-        <BaseButton href={forgotPasswordLink}>{forgotPassword}</BaseButton>
+        <BaseButton href={forgotPasswordLink}>{forgotPassword}</BaseButton> or{' '}
+        <BaseButton href={createAccountLink}>{createAccount}</BaseButton>
       </div>
     </>
   )
@@ -211,7 +217,8 @@ export const View: FC<ViewProps> = ({
   return (
     <div className={classNames('LogModal', css.root, className)} ref={refs.root}>
       <div className={css.wrapper}>
-        <CloseButton className={css.close} onClick={onClose} />
+        {!isTokenValid && <CloseButton className={css.close} onClick={onClose} />}
+
         <div className={css.top}>
           <div className={css.logoContainer}>
             <BaseImage className={css.logo} data={getImageUrl(logo.src)} alt={logo.alt} />
@@ -223,10 +230,14 @@ export const View: FC<ViewProps> = ({
             <BaseImage className={css.chillie} data={getImageUrl(decoration)} />
           </div>
           <div className={css.skipContainer}>
-            <p className={css.label} {...copy.html(skipLabel)} />
-            <BaseButton className={css.skipButton} onClick={onClose}>
-              {skip}
-            </BaseButton>
+            {!isTokenValid && !loginButtonTriggered && (
+              <>
+                <p className={css.label} {...copy.html(skipLabel)} />
+                <BaseButton className={css.skipButton} onClick={onSkip}>
+                  {skip}
+                </BaseButton>
+              </>
+            )}
           </div>
         </div>
       </div>

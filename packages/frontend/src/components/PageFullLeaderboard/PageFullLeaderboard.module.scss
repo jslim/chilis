@@ -88,9 +88,58 @@
       margin-right: px(50);
       color: $sunrise;
     }
+
+    .iconWrapper {
+      &.right {
+        transform: rotate(180deg);
+      }
+    }
   }
 
   .list {
     margin-top: px(50);
+  }
+
+  .dotsContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: px(120);
+
+    .dot {
+      @include box(px(10));
+      background-color: $sunrise;
+    }
+  }
+
+  .customList {
+    .list {
+      @include flex-center-vert;
+      flex-direction: column;
+
+      .player {
+        margin-bottom: px(5);
+      }
+
+      .name,
+      .position {
+        @include font-size(14);
+        overflow: hidden;
+        color: $white;
+
+        @include media-tablet-large {
+          @include font-size(30, 37);
+        }
+      }
+
+      .score {
+        @include font-size(28, 24);
+        @include font-family(Gamer, 500);
+        color: $sunrise;
+
+        @include media-tablet-large {
+          @include font-size(60, 37);
+        }
+      }
+    }
   }
 }

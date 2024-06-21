@@ -28,7 +28,7 @@ export type ViewRefs = {
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
-export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisabled }) => {
+export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisabled, allowSignin }) => {
   const refs = useRefs<ViewRefs>()
   const currentRoute = localStore((state) => state.navigation.pathname)
   const navigateBack = localStore((state) => state.navigation.navigateBack)
@@ -90,12 +90,14 @@ export const View: FC<ViewProps> = ({ className, content, text, onClick, isDisab
       <div className={css.wrapper}>
         {renderBackButtonSlot()}
 
-        <BaseButton className={css.button} onClick={onClick} disabled={isDisabled}>
-          {text && text}
-          <div className={css.iconContainer}>
-            <SvgLoginLogout />
-          </div>
-        </BaseButton>
+        {allowSignin && (
+          <BaseButton className={css.button} onClick={onClick} disabled={isDisabled}>
+            {text && text}
+            <div className={css.iconContainer}>
+              <SvgLoginLogout />
+            </div>
+          </BaseButton>
+        )}
       </div>
     </nav>
   )

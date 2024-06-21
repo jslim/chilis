@@ -21,6 +21,9 @@ import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { initGsap } from '@/motion/core/init'
 
 import { Layout } from '@/components/Layout/Layout'
+import { useRouter } from 'next/router'
+import { detect } from '@/utils/detect'
+import { routes } from '@/data/routes'
 
 require('focus-visible')
 
@@ -29,6 +32,7 @@ initGsap()
 // This default export is required in a new `pages/_app.js` file.
 const App: FC<AppProps<PageProps>> = (props) => {
   const { flags } = useFeatureFlags()
+  const router = useRouter()
 
   const cookieConsent = localStore(({ consent }) => consent.cookieConsent)
 
@@ -66,6 +70,15 @@ const App: FC<AppProps<PageProps>> = (props) => {
     if (flags.dynamicResponsiveness) document.documentElement.classList.add('dynamic')
     else document.documentElement.classList.remove('dynamic')
   }, [flags.dynamicResponsiveness])
+
+  // Detect if user in inApp
+  useEffect(() => {
+    const isInSocialMediaApp = detect.browser.inApp
+
+    if (isInSocialMediaApp) {
+      router.push(routes.UNSUPPORTED)
+    }
+  }, [router])
 
   return props.pageProps.noLayout ? <props.Component {...props.pageProps} /> : <Layout {...props} />
 }

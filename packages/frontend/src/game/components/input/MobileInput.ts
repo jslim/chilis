@@ -2,6 +2,8 @@ import type LevelScene from '@/game/scenes/LevelScene'
 import type { Entity } from '../../core/Entity'
 import type { InputKey } from './Input'
 
+import { detect } from '@/utils/detect'
+
 import { Component } from '../../core/Entity'
 import { Input } from './Input'
 
@@ -34,9 +36,9 @@ export class MobileInput extends Component {
     Object.assign(joystickContainer.style, {
       position: 'absolute',
       zIndex: '7',
-      bottom: '50%',
-      left: 'calc(25vw - 50vh)',
-      transform: 'translate(50%, 50%)',
+      bottom: detect.device.tablet ? '25%' : '50%',
+      left: detect.device.tablet ? '2rem' : 'calc(25vw - 50vh)',
+      transform: detect.device.tablet ? '' : 'translate(50%, 50%)',
       imageRendering: 'pixelated',
       backgroundImage: 'url("/game/mobile-joystick-back.png")',
       backgroundSize: 'cover'
@@ -72,9 +74,9 @@ export class MobileInput extends Component {
       backgroundImage: 'url("/game/mobile-action-button-down-0.png")',
       backgroundSize: 'cover',
       backgroundPosition: '100% 0',
-      bottom: '50%',
-      right: 'calc(25vw - 25vh)',
-      transform: 'translate(50%, 50%)',
+      bottom: detect.device.tablet ? '25%' : '50%',
+      right: detect.device.tablet ? '2rem' : 'calc(25vw - 25vh)',
+      transform: detect.device.tablet ? '' : 'translate(50%, 50%)',
       cursor: 'pointer'
     })
     gameContainer.append(actionButton)
@@ -87,7 +89,7 @@ export class MobileInput extends Component {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override onUpdate(_dt: number) {
     const appBounds = this.level.sceneManager.app.view.getBoundingClientRect()
-    const scaleX = appBounds.width / 240
+    const scaleX = (appBounds.width / 240) * (detect.device.tablet ? 0.5 : 1)
 
     this.joystickContainer.style.width = `${Math.trunc(scaleX * 78)}px`
     this.joystickContainer.style.height = `${Math.trunc(scaleX * 82)}px`

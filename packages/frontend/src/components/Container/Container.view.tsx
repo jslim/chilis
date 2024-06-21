@@ -3,6 +3,7 @@ import type { GameController } from '@/game/GameController'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
+import { mqtt5 } from 'aws-iot-device-sdk-v2'
 import classNames from 'classnames'
 
 import css from './Container.module.scss'
@@ -12,6 +13,7 @@ import { routes } from '@/data/routes'
 import { localState, localStore } from '@/store'
 
 import { initializeGame } from '@/services/game'
+import clientMqtt5 from '@/services/mqtt-client'
 
 import { getImageUrl } from '@/utils/basic-functions'
 import { Endpoints, fetchApi } from '@/utils/fetch-api'
@@ -19,8 +21,6 @@ import { Endpoints, fetchApi } from '@/utils/fetch-api'
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import usePauseGameInstance from '@/hooks/use-pause-game-instance'
 import { useRefs } from '@/hooks/use-refs'
-import clientMqtt5 from '@/services/mqtt-client'
-import { mqtt5 } from 'aws-iot-device-sdk-v2'
 
 import { BaseImage } from '@/components/BaseImage'
 
@@ -41,7 +41,6 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
   const [, setGameId] = useLocalStorage('gameId')
-  const localGameId = localStore().user.gameId
 
   usePauseGameInstance(isModalOpen)
 
@@ -74,6 +73,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   const onGameUpdate = useCallback(
     async (score: number, level: number) => {
+      const localGameId = localState().user.gameId
+
       if (!localGameId) return
 
       try {
@@ -102,7 +103,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         console.error(error)
       }
     },
-    [accessToken, localGameId]
+    [accessToken]
   )
 
   useEffect(() => {
@@ -110,7 +111,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       const newGameInstance = await initializeGame()
 
       const mqttClient = await clientMqtt5()
-      mqttClient.on('connectionSuccess', async (event: mqtt5.ConnectionSuccessEvent) => {
+      mqttClient.on('connectionSuccess', async () => {
         mqttClient.publish({
           qos: mqtt5.QoS.AtMostOnce,
           topicName: 'chili/game/action/4606ce0d-0d57-45ea-9646-61d84a3dcd8e',
@@ -123,6 +124,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         })
       })
 
+      newGameInstance.setMuted(!!localState().screen.isMuted)
       newGameInstance.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
           onGameStarted()
@@ -175,7 +177,6 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
     return () => {
       if (gameInstance.current) {
-        console.log('Cleaning up game instance', gameInstance.current)
         gameInstance.current.destroy()
         gameInstance.current = null
       }

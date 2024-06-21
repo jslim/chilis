@@ -6,8 +6,8 @@ import { View } from './SoundSwitch.view'
 
 export interface ControllerProps {
   className?: string
-  onClick?: () => void
-  audioSrc?: string
+  onClick: (soundState: boolean) => void
+  soundState?: boolean
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)

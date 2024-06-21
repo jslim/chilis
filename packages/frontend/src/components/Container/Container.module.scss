@@ -3,6 +3,7 @@
 .root {
   display: block;
   position: relative;
+  margin: auto 0;
 
   :global(#app) {
     position: relative;

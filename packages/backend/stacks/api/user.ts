@@ -19,7 +19,7 @@ export function userApiStack({ stack, app }: StackContext) {
   const { brinkerAccess } = use(SecretsStack);
   const brinkerAccessSecretName = `${app.stage}${BRINKER_ACCESS}`;
 
-  setDefaultFunctionProps({ stack, app });
+  setDefaultFunctionProps({ stack, app }, { environment: { COUNTRIES_ALLOW_LIST: process.env.COUNTRIES_ALLOW_LIST! } });
 
   const postUserLogin = new Function(stack, "post-user-login", {
     functionName: `${app.stage}-post-user-login`,
@@ -57,6 +57,7 @@ export function userApiStack({ stack, app }: StackContext) {
     handler: "packages/backend/handlers/user/patch.handler",
     environment: {
       USER_POOL_ID: auth.userPoolId,
+      USER_CLIENT_ID: auth.userPoolClientId,
     },
     permissions: [
       // eslint-disable-next-line
