@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { FC, useMemo } from 'react'
 import type { PageHandle } from '@/data/types'
 import type { ControllerProps } from './PageFullLeaderboard.controller'
 
@@ -28,6 +28,14 @@ export type ViewRefs = {
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
   const refs = useRefs<ViewRefs>()
+  const otherPlayers = useMemo(() => {
+    if (arrayOfPlayers && arrayOfPlayers.length <= 20) {
+      return null
+    }
+
+    const otherPlayers = arrayOfPlayers?.slice(20)
+    return otherPlayers
+  }, [])
 
   useEffect(() => {
     gsap.set(refs.root.current, { opacity: 0 })
@@ -63,6 +71,26 @@ export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
         </div>
 
         <ScoreList className={css.list} players={arrayOfPlayers} maxPlayers={20} />
+        {Array.isArray(otherPlayers) && (
+          <>
+            <div className={css.dotsContainer}>
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className={css.dot} />
+              ))}
+            </div>
+            <div className={css.customList}>
+              <ul className={css.list}>
+                {otherPlayers.map((player, index) => (
+                  <li key={index} className={css.player}>
+                    <span className={css.position}>{player.rank}</span>
+                    <span className={css.name}>{player.nickname}</span>
+                    <span className={css.score}>{player.score}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
       </section>
     </main>
   )
