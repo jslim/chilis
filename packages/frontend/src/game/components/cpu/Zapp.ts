@@ -1,14 +1,14 @@
 import { Point } from 'pixi.js'
 
 import { CpuAnimator } from '@/game/components/cpu/CpuAnimator'
+import { Bullet } from '@/game/components/level/Bullet'
+import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { FlumpAnimator } from '@/game/flump/FlumpAnimator'
 
 import { createDelay } from '../../core/Delay'
 import { Entity } from '../../core/Entity'
 import { AutoDisposer } from '../AutoDisposer'
 import { HitBox } from '../HitBox'
-import { Bullet } from '@/game/components/level/Bullet'
-import { LevelComponent } from '@/game/components/level/LevelComponent'
 import { Mover } from '../Mover'
 import { Cpu } from './Cpu'
 import { CpuMover } from './CpuMover'
@@ -25,7 +25,7 @@ export class Zapp extends Cpu {
 
     const mover = this.entity.getComponent(CpuMover)
     mover.setSpeed(1.5)
-    mover.modeCycle = ['hunt-burger']
+    mover.modeCycle = ['hunt-burger', 'random']
 
     mover.directionAccuracy = 1
 
