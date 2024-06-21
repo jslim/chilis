@@ -72,7 +72,7 @@ export default class BurgerTronMover extends CpuMover {
   }
 
   appear() {
-    const cpu = this.entity.getComponent(Cpu)
+    //const cpu = this.entity.getComponent(Cpu)
     //if (cpu.state.value === 'dead') return
 
     this.currentSide = pick(['left', 'right'])
