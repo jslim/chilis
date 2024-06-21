@@ -1,5 +1,4 @@
 import { HitBox } from '@/game/components/HitBox'
-import { createDelay } from '@/game/core/Delay'
 import { GAME_WIDTH } from '@/game/game.config'
 import { pick } from '@/game/utils/random.utils'
 
@@ -72,8 +71,8 @@ export default class BurgerTronMover extends CpuMover {
   }
 
   appear() {
-    //const cpu = this.entity.getComponent(Cpu)
-    //if (cpu.state.value === 'dead') return
+    const cpu = this.entity.getComponent(Cpu)
+    if (cpu.state.value === 'dead') return
 
     this.currentSide = pick(['left', 'right'])
     this.position.x = this.currentSide === 'left' ? LEFT_OUTSIDE_X : RIGHT_OUTSIDE_X
@@ -125,10 +124,9 @@ export default class BurgerTronMover extends CpuMover {
 
   outsideScreen() {
     const cpu = this.entity.getComponent(Cpu)
-    //if (cpu.state.value !== 'dead') {
-
-    createDelay(this.entity, 15, () => (cpu.state.value = 'walk'))
-    //}
+    if (cpu.state.value !== 'dead') {
+      cpu.state.value = 'walk'
+    }
   }
 
   land() {
