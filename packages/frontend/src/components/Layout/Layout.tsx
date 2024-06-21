@@ -1,7 +1,7 @@
 import type { FC, ReactNode, RefObject } from 'react'
 import type { AppProps } from 'next/app'
 import type { NavHandle } from '@/components/Nav'
-import type { PageHandle, PageProps } from '@/data/types'
+import type { ApiResponse, PageHandle, PageProps } from '@/data/types'
 
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
@@ -18,6 +18,7 @@ import { routes } from '@/data/routes'
 import { localState, localStore } from '@/store'
 
 import { getScrollTop } from '@/utils/basic-functions'
+import { Endpoints, fetchApi } from '@/utils/fetch-api'
 
 import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { useLocalStorage } from '@/hooks/use-local-storage'
@@ -58,6 +59,8 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const { flags } = useFeatureFlags()
 
   const [currentPage, setCurrentPage] = useState<ReactNode>(<Component key="first-page" {...pageProps} />)
+  const [playNowTriggered, setPlayNowTriggered] = useState<boolean>(false)
+  const [loginButtonTriggered, setLoginButtonTriggered] = useState<boolean>(false)
   const isModalOpen = localState().screen.isModalOpen
   const nickname = localState().user.nickname
   const isMutedStore = localStore().screen.isMuted
@@ -68,6 +71,31 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const [gameId] = useLocalStorage('gameId')
 
   const [soundState, setSoundState] = useSound()
+  const [allowSignin, setAllowSignin] = useState<boolean>(false)
+
+  const handleCountryCheck = useCallback(async () => {
+    try {
+      const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.COUNTRY_CODE}`, '', {
+        method: 'GET'
+      })
+
+      return response as ApiResponse
+    } catch (error_) {
+      console.error(error_)
+    }
+  }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await handleCountryCheck()
+
+      if (response?.message === 'Success') {
+        setAllowSignin(true)
+      }
+    }
+
+    fetchData()
+  }, [handleCountryCheck])
 
   //
   // Update pathname ref
@@ -250,6 +278,13 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [])
 
+  useEffect(() => {
+    if (nickname && playNowTriggered) {
+      router.push(routes.GAME)
+      setPlayNowTriggered(false)
+    }
+  }, [nickname, playNowTriggered, router])
+
   const handleFullscreen = () => {
     if (document.fullscreenElement) {
       if (document.exitFullscreen) {
@@ -286,6 +321,8 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     }
   }, [refs.pathname, router])
 
+  const noNickname = !nickname || nickname === 'undefined'
+
   return (
     <div className={classNames('Layout', css.root)}>
       <Head {...pageProps.content.head} />
@@ -293,7 +330,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <TopNav
         content={pageProps.content.common.topNav}
         text={localStore().user.nickname ? localState().user.nickname : pageProps.content.common.topNav.logIn}
-        onClick={() => localState().screen.setIsModalOpen(true)}
+        onClick={() => {
+          setLoginButtonTriggered(true)
+          localState().screen.setIsModalOpen(true)
+        }}
+        allowSignin={allowSignin}
       />
 
       {refs.pathname.current !== routes.FULL_LEADERBOARD &&
@@ -306,8 +347,16 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
                   <PlayNow
                     text={pageProps.content.common.playNow}
                     className={css.playButton}
-                    url={routes.GAME}
-                    onClick={() => isMutedStore === null && setSoundState(true)}
+                    onClick={() => {
+                      if (isMutedStore === null) setSoundState(true)
+
+                      if (noNickname && allowSignin) {
+                        setPlayNowTriggered(true)
+                        localState().screen.setIsModalOpen(true)
+                      } else {
+                        router.push(routes.GAME)
+                      }
+                    }}
                   />
                 )}
                 <Nav
@@ -325,11 +374,22 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       <div className={css.content}>{currentPage}</div>
 
       {isModalOpen &&
-        (!nickname || nickname === 'undefined' ? (
+        (noNickname ? (
           <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
             <LogModal
               {...pageProps.content.common.logModal}
-              onClose={() => localState().screen.setIsModalOpen(false)}
+              loginButtonTriggered={loginButtonTriggered}
+              onClose={() => {
+                if (loginButtonTriggered) setLoginButtonTriggered(false)
+                localState().screen.setIsModalOpen(false)
+              }}
+              onSkip={() => {
+                if (localState().navigation.pathname !== routes.GAME) {
+                  localState().navigation.navigateTo(routes.GAME)
+                }
+
+                localState().screen.setIsModalOpen(false)
+              }}
             />
           </BaseModal>
         ) : (

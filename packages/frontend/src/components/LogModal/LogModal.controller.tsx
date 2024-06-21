@@ -28,7 +28,9 @@ export interface ControllerProps {
   forgotPasswordLink: string
   createAccountLink: string
   createAccount: string
+  loginButtonTriggered: boolean
   onClose: () => void
+  onSkip: () => void
 }
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
