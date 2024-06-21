@@ -39,7 +39,6 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
   const [, setGameId] = useLocalStorage('gameId')
-  const localGameId = localStore().user.gameId
 
   usePauseGameInstance(isModalOpen)
 
@@ -72,6 +71,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   const onGameUpdate = useCallback(
     async (score: number, level: number) => {
+      const localGameId = localState().user.gameId
+
       if (!localGameId) return
 
       try {
@@ -100,7 +101,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         console.error(error)
       }
     },
-    [accessToken, localGameId]
+    [accessToken]
   )
 
   useEffect(() => {

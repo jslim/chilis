@@ -57,6 +57,7 @@ export function userApiStack({ stack, app }: StackContext) {
     handler: "packages/backend/handlers/user/patch.handler",
     environment: {
       USER_POOL_ID: auth.userPoolId,
+      USER_CLIENT_ID: auth.userPoolClientId,
     },
     permissions: [
       // eslint-disable-next-line
