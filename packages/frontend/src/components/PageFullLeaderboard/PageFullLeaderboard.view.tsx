@@ -57,7 +57,7 @@ export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
             <SvgYellowSquares />
           </div>
           <div className={css.label} {...copy.html(content.body.topLabel)} />
-          <div className={css.iconWrapper}>
+          <div className={classNames(css.iconWrapper, css.right)}>
             <SvgYellowSquares />
           </div>
         </div>

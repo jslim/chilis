@@ -88,6 +88,12 @@
       margin-right: px(50);
       color: $sunrise;
     }
+
+    .iconWrapper {
+      &.right {
+        transform: rotate(180deg);
+      }
+    }
   }
 
   .list {
