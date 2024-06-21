@@ -235,7 +235,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
         console.log('Token is valid. Payload:', payload)
         localState().user.setIsTokenValid(true)
 
-        if (payload.preferred_username) localState().user.setNickname(String(payload.preferred_username))
+        if (payload.preferred_username) {
+          localState().user.setUserId(String(payload.sub))
+          localState().user.setNickname(String(payload.preferred_username))
+        }
+
         localState().user.setAccessToken(String(accessToken))
 
         if (isModalOpen && payload.preferred_username) {
