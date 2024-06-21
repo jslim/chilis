@@ -19,8 +19,7 @@ export interface ControllerProps {
 
 // Controller (handles global state, router, data fetching, etc. Feeds props to the view component)
 export const Controller = memo(
-  forwardRef<HTMLElement, ControllerProps>((props, ref) => {
-    // @ts-expect-error - forwardRef type is not compatible with ViewProps
+  forwardRef<HTMLVideoElement, ControllerProps>((props, ref) => {
     return <View {...props} ref={ref} />
   })
 )
