@@ -35,7 +35,7 @@ export const View: FC<ViewProps> = ({ className, title, image, isLarge = false, 
 
   const handleCopyToClipboard = () => {
     if (site && navigator.clipboard) {
-      navigator.clipboard.writeText(process.env.NEXT_PUBLIC_WEBSITE_SITE_URL ?? 'https://burgertime.chilis.com/').then(
+      navigator.clipboard.writeText(process.env.NEXT_PUBLIC_WEBSITE_SITE_URL ?? 'https://chilisburgertime.com/').then(
         () => {
           setTooltipVisible(true)
           setTimeout(() => {
