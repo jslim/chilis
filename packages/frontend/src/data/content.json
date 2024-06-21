@@ -158,12 +158,12 @@
         "title": "Chilis Burger Time",
         "description": "Some landing page description",
         "background": {
-          "src": "game-background.png",
+          "src": "game-background.jpg",
           "alt": ""
         },
         "backgroundVideo": {
           "src": "/videos/opening.mp4",
-          "poster": "game-background.png"
+          "poster": "game-background.jpg"
         }
       }
     },
@@ -175,7 +175,7 @@
       "body": {
         "backgroundVideo": {
           "src": "/videos/leaderboard.mp4",
-          "poster": "burger-loop-2.png"
+          "poster": "burger-loop-2.jpg"
         },
         "title": "HI-SCORES",
         "hero": {
@@ -194,7 +194,7 @@
       "body": {
         "backgroundVideo": {
           "src": "/videos/contest.mp4",
-          "poster": "burger-loop.png"
+          "poster": "burger-loop.jpg"
         },
         "title": "BUILD BURGERS.",
         "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit <a target='_blank' href='https://burgertime.chilis.com/terms'>burgertime.chilis.com/terms</a>",
@@ -230,7 +230,7 @@
       "body": {
         "backgroundVideo": {
           "src": "/videos/how_to_play.mp4",
-          "poster": "burger-loop-3.png"
+          "poster": "burger-loop-3.jpg"
         },
         "title": "HOW TO PLAY",
         "hero": {
@@ -288,7 +288,7 @@
         "description": "This page previews the top 500 participants on the leaderboard. Check to see if you’ve made the list, or what score you need to achieve this ranking. <b>The leaderboard is open to US residents only for a contesting period.</b>",
         "topLabel": "TOP 20",
         "background": {
-          "src": "fullleaderboard-background.png",
+          "src": "fullleaderboard-background.jpg",
           "alt": "Leaderboard"
         },
         "hero": {
@@ -308,7 +308,7 @@
         "descriptionOver": "Womp. You didn’t beat the evil fast-food syndicate, this time. Play again to save the Big Smasher.",
         "backgroundVideo": {
           "src": "",
-          "poster": "game-over-background.png"
+          "poster": "game-over-background.jpg"
         },
         "ctas": {
           "continue": "CONTINUE",
@@ -595,7 +595,7 @@
       },
       "body": {
         "image": {
-          "src": "us-only-background.png",
+          "src": "us-only-background.jpg",
           "alt": "US Only"
         },
         "hero": {

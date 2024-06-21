@@ -1,6 +1,6 @@
 import type { ControllerProps } from './ScoreList.controller'
 
-import { type FC, useMemo } from 'react'
+import { useMemo, type FC } from 'react'
 import classNames from 'classnames'
 
 import css from './ScoreList.module.scss'
@@ -19,15 +19,6 @@ export type ViewRefs = {
   root: HTMLDivElement
 }
 
-// Componente para el separador de cuadrados
-const SquareSeparator: FC = () => (
-  <div className={css.separator}>
-    {Array.from({ length: 6 }).map((_, index) => (
-      <span key={index} className={css.square}></span>
-    ))}
-  </div>
-)
-
 // View (pure and testable component, receives props exclusively from the controller)
 export const View: FC<ViewProps> = ({
   className,
@@ -40,12 +31,7 @@ export const View: FC<ViewProps> = ({
   isGameOverScreen
 }) => {
   const refs = useRefs<ViewRefs>()
-
-  const { topPlayers, remainingPlayers } = useMemo(() => {
-    if (players.length === 0) return { topPlayers: [], remainingPlayers: [] }
-
-    return { topPlayers: players.slice(0, maxPlayers), remainingPlayers: players.slice(maxPlayers) }
-  }, [players, maxPlayers])
+  const playersToRender = useMemo(() => players.slice(0, maxPlayers), [players, maxPlayers])
 
   return (
     <div
@@ -54,7 +40,7 @@ export const View: FC<ViewProps> = ({
     >
       {title && <p>{title}</p>}
       <ul className={css.list}>
-        {topPlayers.map((player, index) => (
+        {playersToRender.map((player, index) => (
           <li className={css.item} key={index}>
             <span
               className={classNames(css.player, { [css.isCurrentPlayer]: index + 1 === Number(currentPlayer?.rank) })}
@@ -69,31 +55,6 @@ export const View: FC<ViewProps> = ({
           </li>
         ))}
       </ul>
-
-      {remainingPlayers.length > 0 && <SquareSeparator />}
-
-      {remainingPlayers.length > 0 && (
-        <ul className={classNames(css.list, css.remaining)}>
-          {remainingPlayers.map((player, index) => (
-            <li className={css.item} key={index + maxPlayers}>
-              <span
-                className={classNames(css.player, {
-                  [css.isCurrentPlayer]: index + 1 + maxPlayers === Number(currentPlayer?.rank)
-                })}
-              >
-                {index + 1 + maxPlayers} {truncateText(player.nickname, 9)}
-              </span>
-              <span
-                className={classNames(css.score, {
-                  [css.isCurrentPlayer]: index + 1 + maxPlayers === Number(currentPlayer?.rank)
-                })}
-              >
-                {player.score}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
 
       {currentPlayer?.nickname && !isGameOverScreen && (
         <div className={css.currentPlayer}>
