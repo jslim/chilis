@@ -5,13 +5,18 @@ import defaultHttpHandler from "@/libs/middlewares/default-http-handler";
 import GameService from "@/services/game";
 import GameRepository from "@/repositories/game";
 import DynamoDBClient from "@/services/dynamodb";
+import { checkCountry } from "@/libs/check-country";
 
 logger.appendKeys({
   namespace: "Lambda-GET-Game",
   service: "AWS::Lambda",
 });
 
-const gameService = new GameService(new GameRepository(new DynamoDBClient(process.env.GAMES_SESSION_TABLE_NAME as string)));
+const gameService = new GameService(
+  new GameRepository(new DynamoDBClient(process.env.GAMES_SESSION_TABLE_NAME as string)),
+);
+
+const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")?.split(",").map((country) => country.trim());
 
 /**
  * Lambda handler for GET requests to retrieve the leaderboard.
@@ -25,6 +30,12 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
     logger.info("Handler to create a new game.", { event, ...context });
 
     try {
+      const country = event.headers["CloudFront-Viewer-Country"]!;
+
+      if (!checkCountry(country, COUNTRIES_ALLOW_LIST)) {
+        return Forbidden();
+      }
+
       const userSub = event.requestContext.authorizer?.principalId;
       const newGame = await gameService.createNewGame(userSub);
 
