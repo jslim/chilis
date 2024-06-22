@@ -8,8 +8,7 @@ logger.appendKeys({
 export const checkCountry = (country: string, countryAllowList: string[]) => {
   logger.info("Country Code", { country, countryAllowList });
 
-  return true;
-  // if (countryAllowList.includes("*")) return true;
+  if (countryAllowList.includes("*")) return true;
 
-  // return countryAllowList.includes(country);
+  return countryAllowList.includes(country);
 };
