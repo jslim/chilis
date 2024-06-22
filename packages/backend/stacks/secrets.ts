@@ -85,7 +85,7 @@ export function SecretsStack({ stack, app }: StackContext) {
   // eslint-disable-next-line
   // @ts-ignore
   brinkerAccess.grantRead(invokeRotation);
-
+  
   /**
    * Rotation configuration
    *
