@@ -30,6 +30,10 @@ export default class GameService {
     }
   };
 
+  /**
+   * Checks for an active game for a user and updates the game status to INACTIVE if found.
+   * @param userId - The ID of the user.
+   */
   public checkForActiveGame = async (userId: string) => {
     try {
       const queryResult = await this.repository.getActiveGameByUser(userId);
@@ -57,8 +61,6 @@ export default class GameService {
     nickname: string,
     data: { userSub: string; gameId: string; score: number; level: number },
   ) {
-    // TODO: Validate the score sent with the registered actions
-
     const { userSub, gameId, score, level } = data;
     const gameScore = {
       gameId: gameId,
@@ -80,7 +82,12 @@ export default class GameService {
     }
   }
 
-  /** */
+  /**
+   * Records a step in the game event.
+   * @param userSub - The user's sub.
+   * @param gameId - The ID of the game.
+   * @param step - The game event step to record.
+   */
   public async recordStep(userSub: string, gameId: string, step: GameEventStep) {
     step.t = new Date().toISOString();
 
@@ -91,7 +98,13 @@ export default class GameService {
     }
   }
 
-  /** */
+  /**
+   * Retrieves the current steps for a user in a specific game.
+   * @param userId - The ID of the user.
+   * @param gameId - The ID of the game.
+   * @returns {Promise<any>} The current steps for the user in the game.
+   * @throws {Error} If an error occurs while trying to get game steps.
+   */
   public async getCurrentSteps(userId: string, gameId: string) {
     try {
       return await this.repository.getCurrentSteps(userId, gameId);

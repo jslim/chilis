@@ -1,8 +1,8 @@
-import type { CognitoIdentityCredentials } from '@aws-sdk/credential-provider-cognito-identity/dist-types/fromCognitoIdentity'
 import type { GameAction } from '@/game/GameAction'
 
-import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { iot, mqtt5 } from 'aws-iot-device-sdk-v2'
+
+import AWSCognitoCredentialsProvider from '@/services/cognito-provider'
 
 enum EvenType {
   GAME_ACTION = 'gameAction'
@@ -16,52 +16,9 @@ type GameEvent = {
   step: string
 }
 
-interface AWSCognitoCredentialOptions {
-  IdentityPoolId: string
-}
-
 /**
- * Generates a new instance of AWSCognitoCredentialsProvider with the provided options.
- * Automatically refreshes credentials at a specified interval.
+ * Manages the MQTT client connection and message handling.
  */
-class AWSCognitoCredentialsProvider {
-  private cachedCredentials?: CognitoIdentityCredentials
-
-  constructor(
-    private readonly options: AWSCognitoCredentialOptions,
-    expire_interval_in_ms?: number
-  ) {
-    this.options = options
-
-    setInterval(
-      async () => {
-        await this.refreshCredentials()
-      },
-      expire_interval_in_ms ?? 3600 * 1000
-    )
-  }
-
-  getCredentials() {
-    return {
-      aws_access_id: this.cachedCredentials?.accessKeyId ?? '',
-      aws_secret_key: this.cachedCredentials?.secretAccessKey ?? '',
-      aws_sts_token: this.cachedCredentials?.sessionToken,
-      aws_region: 'us-east-1'
-    }
-  }
-
-  async refreshCredentials() {
-    try {
-      this.cachedCredentials = await fromCognitoIdentityPool({
-        identityPoolId: this.options.IdentityPoolId,
-        clientConfig: { region: 'us-east-1' }
-      })()
-    } catch {
-      console.log('Error: Failed to obtain credentials')
-    }
-  }
-}
-
 export default class MqttClientManager {
   private static instance: MqttClientManager | null = null
 

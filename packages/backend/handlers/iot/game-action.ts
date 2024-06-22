@@ -20,6 +20,7 @@ export const handler = async (event: any, context: Context) => {
   logger.info("Game Action from IoT Core", { event, ...context });
   const now = new Date().toISOString();
 
+  // Validate that the structure of the event is correct
   if (!isValidGameEvent(event)) {
     logger.error({
       eventType: "validGameEventError",
@@ -31,8 +32,8 @@ export const handler = async (event: any, context: Context) => {
     return;
   }
 
-  // - Validar que la accion es una accion permitida (Validar que el string forme parte de el type)
   const step = JSON.parse(event.step);
+  // Validate that the step is correct
   if (!isValidGameStep(step)) {
     logger.error({
       eventType: "validGameStepError",
@@ -44,7 +45,7 @@ export const handler = async (event: any, context: Context) => {
     return;
   }
 
-  // - Validar que el rango de puntos este dentro de los minimo y maximos permitidos
+  // Validate that the points are correct
   if (!(await isValidActionPoints(event))) {
     logger.error({
       eventType: "validActionPointsError",

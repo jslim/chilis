@@ -30,7 +30,7 @@ export const isValidActionPoints = async (event: GameEvent): Promise<boolean> =>
         threeForMe.setTFM(event.userId, event.gameId);
       }
       return true;
-    } else if (step.p === 500) {
+    } else if (step.p === 500 && amountThreeForMe !== 2) {
       return true;
     }
   }
