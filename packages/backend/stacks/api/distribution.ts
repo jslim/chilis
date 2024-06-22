@@ -18,17 +18,19 @@ import { use } from "sst/constructs";
 
 import { ApiStack, WafStack } from "@/stacks";
 import { isValidDomain } from "@/utils/domain-validator";
+import { detectStage } from "@/libs/detect-stage";
 
 export function ApiDistributionStack({ stack, app }: StackContext) {
   const { api } = use(ApiStack);
   const { waf } = use(WafStack);
+  const { isProd } = detectStage(app.stage);
 
   if (!isValidDomain(process.env.BASE_DOMAIN!)) {
     throw new Error("Please set BASE_DOMAIN environment variable");
   }
 
   let targetHostedzoneName = process.env.BASE_DOMAIN!;
-  const domainName = `${app.stage}.${process.env.BASE_DOMAIN}`;
+  const domainName = (isProd ? `api` : `api.${app.stage}`) + `.${targetHostedzoneName}`;
   const apiDomainName = `api.${domainName}`;
 
   // Assume you have a hosted zone for your domain in Route 53
@@ -57,13 +59,13 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
         {
           header: "Content-Security-Policy-Report-Only",
           override: true,
-          value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src 'self' ${api.url}; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
+          value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src 'self' ${api.url} https://${apiDomainName}; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
         },
       ],
     },
     securityHeadersBehavior: {
       contentSecurityPolicy: {
-        contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${api.url} 'self'; script-src 'self'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
+        contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${api.url} https://${apiDomainName} 'self'; script-src 'self'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
         override: true,
       },
       contentTypeOptions: {
