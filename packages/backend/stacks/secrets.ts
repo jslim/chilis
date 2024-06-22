@@ -17,7 +17,7 @@ export function SecretsStack({ stack, app }: StackContext) {
       environment: {
         BRINKER_ACCESS: brinkerAccessSecretName,
       },
-    }
+    },
   );
 
   // Access secret
@@ -44,7 +44,7 @@ export function SecretsStack({ stack, app }: StackContext) {
       // eslint-disable-next-line
       // @ts-ignore
       new PolicyStatement({
-        actions: ["secretsmanager:GetSecretValue"],
+        actions: ["secretsmanager:GetSecretValue", "secretsmanager:RotateSecret"],
         effect: Effect.ALLOW,
         resources: [brinkerAccess.secretArn],
       }),
@@ -59,7 +59,8 @@ export function SecretsStack({ stack, app }: StackContext) {
    */
   const invokeRotation = new Function(stack, "invoke-brinker-token-rotation", {
     functionName: `${app.stage}-invoke-brinker-token-rotation`,
-    description: "Function that will be executed by a cron job to rotate the access token to brinker at a specific time",
+    description:
+      "Function that will be executed by a cron job to rotate the access token to brinker at a specific time",
     handler: "packages/backend/handlers/secrets/invoke-brinker-token-rotation.handler",
     permissions: [
       // eslint-disable-next-line
@@ -92,7 +93,7 @@ export function SecretsStack({ stack, app }: StackContext) {
    * Every 55 minutes
    */
   new Cron(stack, "Cron", {
-    schedule: "rate(55 minutes)",
+    schedule: "rate(2 minutes)",
     job: invokeRotation,
   });
 
