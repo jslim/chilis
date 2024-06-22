@@ -21,5 +21,11 @@ export async function getSecret(SecretId: string) {
  * @returns A promise that resolves when the instruction to rotate has been received.
  */
 export async function rotateToken(SecretId: string) {
-  return await clientSM.send(new RotateSecretCommand({ SecretId: SecretId }));
+  let smCommant;
+  try {
+    smCommant = await clientSM.send(new RotateSecretCommand({ SecretId: SecretId }));
+  } catch (error) {
+    throw new Error(`Error: ${error}`);
+  }
+  return smCommant;
 }
