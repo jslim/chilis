@@ -71,7 +71,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     environment: {
       NEXT_PUBLIC_WEBSITE_SITE_URL: domainName ?? "",
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
-      NEXT_PUBLIC_API_URL: api.customDomainUrl ?? api.url,
+      NEXT_PUBLIC_API_URL: `https://${apiDomainName}`,
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },
