@@ -113,16 +113,11 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
       if (localState().user.userId) {
         mqttClient = MqttClientManager.getInstance(String(localState().user.userId))
-        console.log('MQTT2', mqttClient)
       }
 
       newGameInstance.setMuted(!!localState().screen.isMuted)
       newGameInstance.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
-          console.log(data)
-          // onGameStarted()
-          console.log(localState().user.gameId, 'A')
-          console.log('gameId', localState().user.gameId)
           mqttClient.connect(String(localState().user.gameId))
           newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
