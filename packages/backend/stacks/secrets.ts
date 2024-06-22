@@ -44,7 +44,7 @@ export function SecretsStack({ stack, app }: StackContext) {
       // eslint-disable-next-line
       // @ts-ignore
       new PolicyStatement({
-        actions: ["secretsmanager:GetSecretValue", "secretsmanager:RotateSecret"],
+        actions: ["secretsmanager:GetSecretValue"],
         effect: Effect.ALLOW,
         resources: [brinkerAccess.secretArn],
       }),
@@ -75,6 +75,16 @@ export function SecretsStack({ stack, app }: StackContext) {
       reservedConcurrentExecutions: 50,
     }),
   });
+
+  // eslint-disable-next-line
+  // @ts-ignore
+  brinkerAccess.grantWrite(rotationLambdaFn);
+  // eslint-disable-next-line
+  // @ts-ignore
+  brinkerAccess.grantWrite(invokeRotation);
+  // eslint-disable-next-line
+  // @ts-ignore
+  brinkerAccess.grantRead(invokeRotation);
 
   /**
    * Rotation configuration
