@@ -1,9 +1,11 @@
 import { Context } from "aws-lambda";
-import { EvenType } from "@/types/iot";
 import { logger } from "@/libs/powertools";
 import GameService from "@/services/game";
 import GameRepository from "@/repositories/game";
 import DynamoDBClient from "@/services/dynamodb";
+import { isValidGameEvent } from "@/libs/game-validations/valid-game-event";
+import { isValidGameStep } from "@/libs/game-validations/valid-game-step";
+import { isValidActionPoints } from "@/libs/game-validations/valid-action-points";
 
 logger.appendKeys({
   namespace: "Lambda-IoT-Send",
@@ -16,82 +18,54 @@ const gameService = new GameService(
 
 export const handler = async (event: any, context: Context) => {
   logger.info("Game Action from IoT Core", { event, ...context });
+  const now = new Date().toISOString();
 
-  console.log(event);
-  console.log(context);
-  // TODO: Add others validations
-  if (event.eventType !== EvenType.GAME_ACTION) {
-    logger.error(`Wrong action: ${event.eventType}`);
+  if (!isValidGameEvent(event)) {
+    logger.error({
+      eventType: "validGameEventError",
+      userId: event.userId,
+      gameId: event.gameId,
+      timestamp: now,
+      message: "Wrong event format",
+    });
+    return;
+  }
+
+  // - Validar que la accion es una accion permitida (Validar que el string forme parte de el type)
+  const step = JSON.parse(event.step);
+  if (!isValidGameStep(step)) {
+    logger.error({
+      eventType: "validGameStepError",
+      userId: event.userId,
+      gameId: event.gameId,
+      timestamp: now,
+      message: "Wrong step format",
+    });
+    return;
+  }
+
+  // - Validar que el rango de puntos este dentro de los minimo y maximos permitidos
+  if (!(await isValidActionPoints(event))) {
+    logger.error({
+      eventType: "validActionPointsError",
+      userId: event.userId,
+      gameId: event.gameId,
+      timestamp: now,
+      message: "Wrong step points",
+    });
+    return;
   }
 
   try {
-    const { userId, gameId, step } = event;
+    const { userId, gameId } = event;
     await gameService.recordStep(userId, gameId, step);
-  } catch (err) {
-    logger.error("Error updating table.", err as Error);
-    //       logger.info({
-    //         eventType: 'UserDisconnectionCountError',
-    //         sessionId: sessionId,
-    //         clientId: clientId,
-    //         timestamp: event.timestamp,
-    //         message: 'Error updating table'
+  } catch (err: any) {
+    logger.error({
+      eventType: "updateGameStepsError",
+      userId: event.userId,
+      gameId: event.gameId,
+      timestamp: now,
+      message: err.message,
+    });
   }
-  //   if (
-  //     event.eventType === ConnectionStatus.DISCONNECTED &&
-  //     event.clientId.includes('mqtt-publish-client') &&
-  //     event.principalIdentifier.includes('CognitoIdentityCredentials')
-  //   ) {
-  //     const regexPattern = /mqtt-publish-client-(\d+)-(.+)$/;
-
-  //     logger.info('device disconnected from IoT Core', { event });
-
-  //     if (!event.clientId || !regexPattern.test(event.clientId)) {
-  //       logger.error('clientId was not sent');
-  //       return 'clientId was not sent';
-  //     }
-
-  //     const [, clientId, sessionId] = event.clientId.match(regexPattern);
-
-  //     if (!clientId || !sessionId) {
-  //       const recibedClientId = event.clientId;
-  //       logger.error('clientId does not match expected format:', { recibedClientId });
-  //       return 'clientId does not match expected format.';
-  //     }
-
-  //     try {
-  //       logger.info('disconnecting users and remove connected user rows');
-  //       await connectionTable.removeRow({
-  //         sessionId: sessionId,
-  //         clientId: clientId
-  //       });
-
-  //       const connectionParams = {
-  //         FilterExpression: 'sessionId = :sessionId AND connectionStatus = :connectionStatus',
-  //         ExpressionAttributeValues: { ':sessionId': sessionId, ':connectionStatus': ConnectionStatus.CONNECTED },
-  //         Select: 'COUNT'
-  //       };
-  //       const count = await connectionTable.scan(connectionParams);
-  //       gameService.updateTotalUser(sessionId, count?.Count || 0);
-
-  //       logger.info({
-  //         eventType: 'UserDisconnection',
-  //         sessionId: sessionId,
-  //         clientId: clientId,
-  //         timestamp: event.timestamp,
-  //         message: 'User Disconnected'
-  //       });
-
-  //       return 'User Disconnected';
-  //     } catch (error) {
-  //       logger.error('Error updating table.', error as Error);
-  //       logger.info({
-  //         eventType: 'UserDisconnectionCountError',
-  //         sessionId: sessionId,
-  //         clientId: clientId,
-  //         timestamp: event.timestamp,
-  //         message: 'Error updating table'
-  //       });
-  //       return 'Error updating table';
-  //     }
-  //   }
 };

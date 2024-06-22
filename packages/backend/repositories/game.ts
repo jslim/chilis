@@ -1,5 +1,5 @@
-import { GameScore, GameStatus, GSILeaderboard, GameSteps } from "@/types/game";
-import { PutItemOutput, UpdateItemOutput } from "@aws-sdk/client-dynamodb";
+import { GameScore, GameStatus, GSILeaderboard, GameEventStep } from "@/types/game";
+import { PutItemOutput, QueryOutput, UpdateItemOutput } from "@aws-sdk/client-dynamodb";
 import type DynamoDBClient from "@/services/dynamodb";
 import { generateExpression } from "@/services/dynamodb";
 
@@ -9,16 +9,16 @@ class GameRepository {
   constructor(private client: DynamoDBClient) {}
 
   /**
-   * Check if a game is active based on the provided ID.
-   * @param id - The ID of the game to check.
+   * Check if a game is active based on the provided userId.
+   * @param id - The userId of the game to check.
    * @returns Promise<boolean> - A boolean indicating if the game is active.
    */
-  public async isGameActive(id: string): Promise<boolean> {
+  public async isGameActive(userId: string): Promise<boolean> {
     const params = {
       KeyConditionExpression: "#subReferenceName = :subReferenceValue",
       FilterExpression: "#statusName = :statusValue",
       ExpressionAttributeValues: {
-        ":subReferenceValue": id,
+        ":subReferenceValue": userId,
         ":statusValue": GameStatus.ACTIVE,
       },
       ExpressionAttributeNames: {
@@ -49,6 +49,32 @@ class GameRepository {
 
     return activeGames > 0;
   }
+
+  public getActiveGameByUser = async (userId: string): Promise<QueryOutput> => {
+    const params = {
+      KeyConditionExpression: "#subReferenceName = :subReferenceValue",
+      FilterExpression: "#statusName = :statusValue",
+      ExpressionAttributeValues: {
+        ":subReferenceValue": userId,
+        ":statusValue": GameStatus.ACTIVE,
+      },
+      ExpressionAttributeNames: {
+        "#subReferenceName": "subReference",
+        "#statusName": "status",
+      },
+    };
+
+    try {
+      return await this.client.query(
+        {
+          ...params,
+        },
+        true,
+      );
+    } catch (err) {
+      throw new Error(`Error: ${err}`);
+    }
+  };
 
   /**
    * Save a new game record in the database.
@@ -112,7 +138,7 @@ class GameRepository {
     }
   }
 
-  public async updateGameSteps(userSub: string, gameId: string, newStep: GameSteps): Promise<UpdateItemOutput> {
+  public async updateGameSteps(userSub: string, gameId: string, newStep: GameEventStep): Promise<UpdateItemOutput> {
     const keys = {
       subReference: userSub,
       gameId: gameId,
@@ -209,6 +235,24 @@ class GameRepository {
         throw new Error(`updateLeaderboard Error: ${error}`);
       }
     }
+  }
+
+  public async getCurrentSteps(userId: string, gameId: string) {
+    const params = {
+      KeyConditionExpression: "#sub = :sub AND #sk = :sk",
+      ExpressionAttributeValues: {
+        ":sub": userId,
+        ":sk": gameId,
+      },
+      ExpressionAttributeNames: {
+        "#sub": "subReference",
+        "#sk": "gameId",
+      },
+      ProjectionExpression: "steps",
+      ScanIndexForward: false,
+    };
+
+    return await this.client.query(params);
   }
 }
 

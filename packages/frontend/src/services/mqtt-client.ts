@@ -1,11 +1,20 @@
-/**
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0.
- */
 import type { CognitoIdentityCredentials } from '@aws-sdk/credential-provider-cognito-identity/dist-types/fromCognitoIdentity'
+import type { GameAction } from '@/game/GameAction'
 
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { iot, mqtt5 } from 'aws-iot-device-sdk-v2'
+
+enum EvenType {
+  GAME_ACTION = 'gameAction'
+}
+
+type GameEvent = {
+  userId: string
+  gameId: string
+  clientId: string
+  eventType: string
+  step: string
+}
 
 interface AWSCognitoCredentialOptions {
   IdentityPoolId: string
@@ -53,56 +62,130 @@ class AWSCognitoCredentialsProvider {
   }
 }
 
-function createClient(provider: AWSCognitoCredentialsProvider): mqtt5.Mqtt5Client {
-  const wsConfig: iot.WebsocketSigv4Config = {
-    credentialsProvider: provider,
-    region: 'us-east-1'
+export default class MqttClientManager {
+  private static instance: MqttClientManager | null = null
+
+  public mqtt5Client: mqtt5.Mqtt5Client
+  public isConnected: boolean
+  public gameId: string = ''
+
+  private readonly userId: string
+  private readonly clientId: string
+  private readonly provider: AWSCognitoCredentialsProvider
+
+  private constructor(userId: string) {
+    this.provider = new AWSCognitoCredentialsProvider({
+      IdentityPoolId: process.env.NEXT_PUBLIC_IDENTITY_POOL_ID ?? ''
+    })
+
+    this.userId = userId
+
+    this.isConnected = false
+    this.clientId = `mqtt-client-chilis-${this.userId}`
+
+    this.mqtt5Client = this.init()
   }
 
-  const builder: iot.AwsIotMqtt5ClientConfigBuilder =
-    iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
-      process.env.NEXT_PUBLIC_IOT_ENDPOINT ?? '',
-      wsConfig
-    )
-
-  builder.withConnectProperties({
-    clientId: `mqtt-client-chilis-${Math.floor(Math.random() * 100_000 + 1)}`,
-    keepAliveIntervalSeconds: 60
-  })
-
-  const client: mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(builder.build())
-
-  client.on('error', (error) => {
-    console.log(`Error event: ${error.toString()}`)
-  })
-
-  client.on('connectionSuccess', () => {
-    console.log('Connection Success event')
-  })
-
-  client.on('connectionFailure', (eventData: mqtt5.ConnectionFailureEvent) => {
-    console.log(`Connection failure event: ${eventData.error.toString()}`)
-  })
-
-  client.on('disconnection', (eventData: mqtt5.DisconnectionEvent) => {
-    console.log(`Disconnection event: ${eventData.error.toString()}`)
-    if (eventData.disconnect !== undefined) {
-      console.log(`Disconnect packet: ${JSON.stringify(eventData.disconnect)}`)
+  public static getInstance(userId: string): MqttClientManager {
+    if (!MqttClientManager.instance) {
+      MqttClientManager.instance = new MqttClientManager(userId)
     }
-  })
 
-  client.on('stopped', () => {
-    console.log(`Stopped event.`)
-  })
+    return MqttClientManager.instance
+  }
 
-  return client
-}
+  public connect(gameId: string) {
+    this.gameId = gameId
 
-export default async function clientMqtt5() {
-  const provider = new AWSCognitoCredentialsProvider({
-    IdentityPoolId: process.env.NEXT_PUBLIC_IDENTITY_POOL_ID ?? ''
-  })
-  await provider.refreshCredentials()
+    if (this.isConnected) {
+      console.log('Connection already exists.')
+      return
+    }
 
-  return createClient(provider)
+    this.mqtt5Client.start()
+
+    this.mqtt5Client.on('connectionSuccess', async () => {
+      this.publicAction({ a: 'start', l: 1 })
+    })
+  }
+
+  public publishMessage(topic: string, msg: GameEvent) {
+    const message = {
+      qos: mqtt5.QoS.AtMostOnce,
+      topicName: topic,
+      payload: { ...msg }
+    }
+    this.mqtt5Client.publish(message)
+  }
+
+  public publicAction(step: GameAction) {
+    const msg = {
+      userId: this.userId,
+      gameId: this.gameId,
+      clientId: this.clientId,
+      eventType: EvenType.GAME_ACTION,
+      step: JSON.stringify(step)
+    }
+
+    this.publishMessage(`chili/game/action/${this.userId}`, msg)
+  }
+
+  public disconnect() {
+    if (this.isConnected) {
+      this.isConnected = false
+      this.mqtt5Client.stop()
+      this.mqtt5Client.close()
+    }
+  }
+
+  private init() {
+    const wsConfig: iot.WebsocketSigv4Config = {
+      credentialsProvider: this.provider,
+      region: 'us-east-1'
+    }
+
+    const builder: iot.AwsIotMqtt5ClientConfigBuilder =
+      iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
+        process.env.NEXT_PUBLIC_IOT_ENDPOINT ?? '',
+        wsConfig
+      )
+
+    builder.withConnectProperties({
+      clientId: this.clientId,
+      keepAliveIntervalSeconds: 60
+    })
+
+    const client: mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(builder.build())
+
+    client.on('connectionSuccess', () => {
+      this.isConnected = true
+      console.log('Connection Success event')
+    })
+
+    client.on('error', (error) => {
+      this.isConnected = false
+      if (MqttClientManager.instance) MqttClientManager.instance = null
+      console.log(`Error event: ${error.toString()}`)
+    })
+
+    client.on('connectionFailure', (eventData: mqtt5.ConnectionFailureEvent) => {
+      this.isConnected = false
+      if (MqttClientManager.instance) MqttClientManager.instance = null
+      console.log(`Connection failure event: ${eventData.error.toString()}`)
+    })
+
+    client.on('disconnection', () => {
+      this.isConnected = false
+      if (MqttClientManager.instance) MqttClientManager.instance = null
+      console.log('Event disconnected.')
+    })
+
+    client.on('stopped', () => {
+      this.isConnected = false
+      if (MqttClientManager.instance) MqttClientManager.instance = null
+      console.log('Stopped event.')
+    })
+
+    return client
+  }
 }

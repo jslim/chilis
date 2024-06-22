@@ -3,10 +3,27 @@ import { Function, use } from "sst/constructs";
 import type { StackContext } from "sst/constructs";
 import { CfnTopicRule } from "aws-cdk-lib/aws-iot";
 import { TOPIC_GAME_ACTION_PATTERN } from "@/libs/config";
+import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 import { Effect, PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 
 export function IoTStack({ stack, app }: StackContext) {
-  const { gameSessionTable } = use(Database);
+  const { gameSessionTable, threeForMeTable } = use(Database);
+
+  setDefaultFunctionProps(
+    { stack, app },
+    {
+      permissions: [
+        // eslint-disable-next-line
+        // @ts-ignore
+        new PolicyStatement({
+          actions: ["dynamodb:UpdateItem", "dynamodb:Query"],
+          effect: Effect.ALLOW,
+          resources: [gameSessionTable.tableArn],
+        }),
+      ],
+      environment: { GAMES_SESSION_TABLE_NAME: gameSessionTable.tableName },
+    },
+  );
 
   const gameActionFunction = new Function(stack, "game-action-handler", {
     functionName: `${app.stage}-game-action`,
@@ -15,46 +32,19 @@ export function IoTStack({ stack, app }: StackContext) {
       // eslint-disable-next-line
       // @ts-ignore
       new PolicyStatement({
-        actions: ["dynamodb:UpdateItem"],
+        actions: ["dynamodb:PutItem", "dynamodb:Scan"],
         effect: Effect.ALLOW,
-        resources: [gameSessionTable.tableArn],
+        resources: [threeForMeTable.tableArn],
       }),
     ],
     environment: {
-      GAMES_SESSION_TABLE_NAME: gameSessionTable.tableName,
+      THREE_FOR_ME_TABLE_NAME: threeForMeTable.tableName,
     },
   });
 
   const disconnectedFunction = new Function(stack, "disconnection-handler", {
     functionName: `${app.stage}-disconnected`,
     handler: "packages/backend/handlers/iot/disconnected.handler",
-    // permissions: [
-    //   // eslint-disable-next-line
-    //   // @ts-ignore
-    //   new PolicyStatement({
-    //     actions: [
-    //       'dynamodb:DeleteItem',
-    //       'dynamodb:Query',
-    //       'dynamodb:GetItem',
-    //       'dynamodb:UpdateItem',
-    //       'dynamodb:PutItem',
-    //       'dynamodb:Scan'
-    //     ],
-    //     effect: Effect.ALLOW,
-    //     resources: [connection.tableArn]
-    //   }),
-    //   // eslint-disable-next-line
-    //   // @ts-ignore
-    //   new PolicyStatement({
-    //     actions: ['dynamodb:Query', 'dynamodb:GetItem', 'dynamodb:UpdateItem', 'dynamodb:PutItem'],
-    //     effect: Effect.ALLOW,
-    //     resources: [gameTable.tableArn]
-    //   })
-    // ],
-    environment: {
-      // CONNECTION_TABLE_NAME: connection.tableName,
-      // GAMES_TABLE_NAME: gameTable.tableName
-    },
   });
 
   const gameActionTopicRule = new CfnTopicRule(stack, "game-action-topic-rule", {

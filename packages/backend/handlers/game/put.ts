@@ -47,7 +47,7 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
       const country = event.headers["CloudFront-Viewer-Country"]!;
 
       if (!checkCountry(country, COUNTRIES_ALLOW_LIST)) {
-        return Forbidden();
+        throw new Error("Restricted by geolocation");
       }
 
       const currentNickname =

@@ -3,7 +3,6 @@ import type { GameController } from '@/game/GameController'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import { mqtt5 } from 'aws-iot-device-sdk-v2'
 import classNames from 'classnames'
 
 import css from './Container.module.scss'
@@ -13,7 +12,7 @@ import { routes } from '@/data/routes'
 import { localState, localStore } from '@/store'
 
 import { initializeGame } from '@/services/game'
-import clientMqtt5 from '@/services/mqtt-client'
+import MqttClientManager from '@/services/mqtt-client'
 
 import { getImageUrl } from '@/utils/basic-functions'
 import { Endpoints, fetchApi } from '@/utils/fetch-api'
@@ -108,27 +107,23 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   useEffect(() => {
     const initGame = async () => {
+      let mqttClient: MqttClientManager
       const newGameInstance = await initializeGame()
+      onGameStarted()
 
-      const mqttClient = await clientMqtt5()
-      mqttClient.on('connectionSuccess', async () => {
-        mqttClient.publish({
-          qos: mqtt5.QoS.AtMostOnce,
-          topicName: 'chili/game/action/4606ce0d-0d57-45ea-9646-61d84a3dcd8e',
-          payload: {
-            userId: '54c844d8-e001-70e3-ecd1-0d486dc47029',
-            gameId: '4606ce0d-0d57-45ea-9646-61d84a3dcd8e',
-            eventType: 'gameAction',
-            step: { a: 'start', l: 1 }
-          }
-        })
-      })
+      if (localState().user.userId) {
+        mqttClient = MqttClientManager.getInstance(String(localState().user.userId))
+        console.log('MQTT2', mqttClient)
+      }
 
       newGameInstance.setMuted(!!localState().screen.isMuted)
       newGameInstance.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
-          onGameStarted()
-          mqttClient.start()
+          console.log(data)
+          // onGameStarted()
+          console.log(localState().user.gameId, 'A')
+          console.log('gameId', localState().user.gameId)
+          mqttClient.connect(String(localState().user.gameId))
           newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
 
@@ -137,19 +132,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
           localState().user.setHighScore(data.s)
         }
 
-        if (data.a !== 'start') {
-          mqttClient.publish({
-            qos: mqtt5.QoS.AtMostOnce,
-            //topicName: `chili/game/action/${gameId}`,
-            topicName: 'chili/game/action/12345',
-            payload: JSON.stringify({
-              userId: '54c844d8-e001-70e3-ecd1-0d486dc47029',
-              gameId: '4606ce0d-0d57-45ea-9646-61d84a3dcd8e',
-              eventType: 'gameAction',
-              step: data
-            })
-          })
-        }
+        if (mqttClient.isConnected) mqttClient.publicAction(data)
       })
 
       newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
@@ -157,15 +140,13 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         localState().user.setHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
-        mqttClient.stop()
-        mqttClient.close()
+        if (mqttClient.isConnected) mqttClient.disconnect()
       })
       newGameInstance.onGameEnd.subscribe((data) => {
         localState().user.setHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
-        mqttClient.stop()
-        mqttClient.close()
+        if (mqttClient.isConnected) mqttClient.disconnect()
       })
 
       gameInstance.current = newGameInstance

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import type GameRepository from "@/repositories/game";
-import { GameSteps } from "@/types/game";
+import { GameEventStep, GameStatus } from "@/types/game";
 
 export default class GameService {
   constructor(private repository: GameRepository) {}
@@ -27,6 +27,24 @@ export default class GameService {
       return newGameID;
     } catch (err) {
       throw new Error(`An error occurred while trying to create the new game. ${err}`);
+    }
+  };
+
+  public checkForActiveGame = async (userId: string) => {
+    try {
+      const queryResult = await this.repository.getActiveGameByUser(userId);
+      if (
+        queryResult &&
+        queryResult.Count &&
+        queryResult.Count > 0 &&
+        queryResult.Items &&
+        queryResult.Items.length > 0
+      ) {
+        const { subReference, gameId } = queryResult.Items[0];
+        this.repository.updateGameStatus(String(subReference), String(gameId), GameStatus.INACTIVE);
+      }
+    } catch (err) {
+      throw new Error(`An error occurred while trying to get the active game for the user. ${err}`);
     }
   };
 
@@ -63,14 +81,22 @@ export default class GameService {
   }
 
   /** */
-  public async recordStep(userSub: string, gameId: string, step: GameSteps) {
-    step.timestamp = new Date().toISOString();
+  public async recordStep(userSub: string, gameId: string, step: GameEventStep) {
+    step.t = new Date().toISOString();
 
-    console.log("AQ", userSub, gameId, step);
     try {
       await this.repository.updateGameSteps(userSub, gameId, step);
     } catch (err) {
-      throw new Error(`An error occurred while trying to record the game score. ${err}`);
+      throw new Error(`An error occurred while trying to record step. ${err}`);
+    }
+  }
+
+  /** */
+  public async getCurrentSteps(userId: string, gameId: string) {
+    try {
+      return await this.repository.getCurrentSteps(userId, gameId);
+    } catch (err) {
+      throw new Error(`An error occurred while trying to get game steps. ${err}`);
     }
   }
 }

@@ -6,13 +6,21 @@ export const isValidGameEvent = (event: GameEvent, evenType: EvenType = EvenType
     return false;
   }
 
-  const { userId, gameId, eventType, step } = event;
+  const { userId, gameId, clientId, eventType, step } = event;
+  const stepJSON = JSON.parse(step);
+  const idsExp: RegExp = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  const clientExp: RegExp =
+    /^mqtt-client-chilis-[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
-  if (typeof userId !== "string" || userId.trim() === "") {
+  if (typeof userId !== "string" || !idsExp.test(userId) || userId.trim() === "") {
     return false;
   }
 
-  if (typeof gameId !== "string" || gameId.trim() === "") {
+  if (typeof gameId !== "string" || !idsExp.test(userId) || gameId.trim() === "") {
+    return false;
+  }
+
+  if (typeof clientId !== "string" || !clientExp.test(clientId) || clientId.trim() === "") {
     return false;
   }
 
@@ -20,7 +28,7 @@ export const isValidGameEvent = (event: GameEvent, evenType: EvenType = EvenType
     return false;
   }
 
-  if (typeof step !== "object" || step === null || Object.keys(step).length === 0) {
+  if (typeof stepJSON !== "object" || stepJSON === null || Object.keys(stepJSON).length === 0) {
     return false;
   }
 
