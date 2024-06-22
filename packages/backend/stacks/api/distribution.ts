@@ -30,7 +30,7 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
   }
 
   let targetHostedzoneName = process.env.BASE_DOMAIN!;
-  const domainName = (isProd ? `api` : `api.${app.stage}`) + `.${targetHostedzoneName}`;
+  const domainName = isProd ? targetHostedzoneName : `${app.stage}.${targetHostedzoneName}`;
   const apiDomainName = `api.${domainName}`;
 
   // Assume you have a hosted zone for your domain in Route 53
