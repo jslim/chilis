@@ -76,6 +76,13 @@ export function SecretsStack({ stack, app }: StackContext) {
     }),
   });
 
+  // eslint-disable-next-line
+  // @ts-ignore
+  brinkerAccess.grantWrite(rotationLambdaFn);
+    // eslint-disable-next-line
+  // @ts-ignore
+  brinkerAccess.grantWrite(invokeRotation);
+  
   /**
    * Rotation configuration
    *
