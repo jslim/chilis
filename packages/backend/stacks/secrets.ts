@@ -76,16 +76,6 @@ export function SecretsStack({ stack, app }: StackContext) {
     }),
   });
 
-  // eslint-disable-next-line
-  // @ts-ignore
-  brinkerAccess.grantWrite(rotationLambdaFn);
-  // eslint-disable-next-line
-  // @ts-ignore
-  brinkerAccess.grantWrite(invokeRotation);
-  // eslint-disable-next-line
-  // @ts-ignore
-  brinkerAccess.grantRead(invokeRotation);
-  
   /**
    * Rotation configuration
    *
@@ -103,7 +93,7 @@ export function SecretsStack({ stack, app }: StackContext) {
    * Every 55 minutes
    */
   new Cron(stack, "Cron", {
-    schedule: "rate(2 minutes)",
+    schedule: "rate(58 minutes)",
     job: invokeRotation,
   });
 
