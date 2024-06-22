@@ -5,7 +5,6 @@ import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
-import * as targets from "aws-cdk-lib/aws-route53-targets";
 
 import { FRONTEND_NAME, S3_REFERER_KEY, S3_ORIGIN_BUCKET_NAME } from "@/libs/config";
 import { getWebDomain } from "@/libs/get-domain";
@@ -71,7 +70,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
     environment: {
       NEXT_PUBLIC_WEBSITE_SITE_URL: domainName ?? "",
       NEXT_PUBLIC_FE_REGION: app.region ?? "",
-      NEXT_PUBLIC_API_URL: `https://${apiDomainName}`,
+      NEXT_PUBLIC_API_URL: apiDomainName ? `https://${apiDomainName}` : api.url,
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
     },

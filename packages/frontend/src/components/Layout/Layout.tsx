@@ -73,6 +73,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const [soundState, setSoundState] = useSound()
   const [allowSignin, setAllowSignin] = useState<boolean>(false)
 
+  const handleResetFlags = useCallback(() => {
+    setPlayNowTriggered(false)
+    setLoginButtonTriggered(false)
+  }, [])
+
   const handleCountryCheck = useCallback(async () => {
     try {
       const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.COUNTRY_CODE}`, '', {
@@ -117,7 +122,10 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
       if (to === from) router.replace(href, '', { scroll: false }).catch(console.log)
       else router.push(href, '', { scroll: false }).catch(console.log)
     }
+
     const navigateBack = () => {
+      handleResetFlags()
+
       if (localState().navigation.hasNavigated) {
         router.back()
       } else if (window.location.hash) {
@@ -158,7 +166,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     return () => {
       router.events.off('beforeHistoryChange', onBeforeHistoryChange)
     }
-  }, [refs, router])
+  }, [refs, router, handleResetFlags])
 
   //
   // Page transitions
@@ -323,7 +331,9 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     if (refs.pathname.current === routes.GAME) {
       router.push(routes.HOME)
     }
-  }, [refs.pathname, router])
+
+    handleResetFlags()
+  }, [refs.pathname, router, handleResetFlags])
 
   const noNickname = !nickname || nickname === 'undefined'
 
@@ -379,12 +389,17 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
       {isModalOpen &&
         (noNickname ? (
-          <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
+          <BaseModal
+            onClose={() => {
+              handleResetFlags()
+              localState().screen.setIsModalOpen(false)
+            }}
+          >
             <LogModal
               {...pageProps.content.common.logModal}
               loginButtonTriggered={loginButtonTriggered}
               onClose={() => {
-                if (loginButtonTriggered) setLoginButtonTriggered(false)
+                handleResetFlags()
                 localState().screen.setIsModalOpen(false)
               }}
               onSkip={() => {
@@ -397,11 +412,19 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
             />
           </BaseModal>
         ) : (
-          <BaseModal onClose={() => localState().screen.setIsModalOpen(false)}>
+          <BaseModal
+            onClose={() => {
+              handleResetFlags()
+              localState().screen.setIsModalOpen(false)
+            }}
+          >
             <ConfirmationModal
               className={css.modalLogOut}
               show={isModalOpen}
-              handleClose={() => localState().screen.setIsModalOpen(false)}
+              handleClose={() => {
+                handleResetFlags()
+                localState().screen.setIsModalOpen(false)
+              }}
               content={pageProps.content.common.topNav.logOutModal}
               logo={pageProps.content.common.topNav.logo}
               handleNavigateBack={handleNavigateBack}
