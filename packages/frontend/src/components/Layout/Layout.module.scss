@@ -20,10 +20,6 @@
     bottom: px(90);
     transform: translateX(-50%);
 
-    @include media-tablet {
-      bottom: px(100);
-    }
-
     @include media-tablet-large {
       bottom: px(150);
     }

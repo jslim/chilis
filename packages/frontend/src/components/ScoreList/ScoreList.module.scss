@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: px(15);
 
-  @include media-tablet {
+  @include media-tablet-large {
     gap: px(30);
   }
 }
