@@ -12,7 +12,7 @@ import { PillButton } from '@/components/PillButton'
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
-  root: HTMLDivElement
+  root: HTMLFormElement
 }
 
 // View (pure and testable component, receives props exclusively from the controller)
@@ -29,12 +29,12 @@ export const View: FC<ViewProps> = ({
 
   return (
     <div className={classNames('BaseForm', css.root, className)}>
-      <div className={css.form} ref={refs.root}>
+      <form className={css.form} ref={refs.root}>
         {children}
-        <PillButton className={css.button} type="submit" onClick={onSubmit} disabled={disabled}>
+        <PillButton className={css.button} onClick={onSubmit} disabled={disabled}>
           {submitMessage}
         </PillButton>
-      </div>
+      </form>
       {hasError && <div className={css.error}>{errorMessage}</div>}
     </div>
   )
