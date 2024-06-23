@@ -2,6 +2,7 @@ import { Database } from "@/stacks/database";
 import { Function, use } from "sst/constructs";
 import type { StackContext } from "sst/constructs";
 import { CfnTopicRule } from "aws-cdk-lib/aws-iot";
+import { custom_resources } from "aws-cdk-lib";
 import { TOPIC_GAME_ACTION_PATTERN } from "@/libs/config";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
 import { Effect, PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
@@ -93,6 +94,25 @@ export function IoTStack({ stack, app }: StackContext) {
     // @ts-ignore
     principal: new ServicePrincipal("iot.amazonaws.com"),
     sourceArn: disconnectTopicRule.attrArn,
+  });
+
+  // Get IoT endpoint through "describe"
+  const getIotEndpoint = new custom_resources.AwsCustomResource(stack, "IotEndpoint", {
+    onCreate: {
+      service: "Iot",
+      action: "describeEndpoint",
+      physicalResourceId: custom_resources.PhysicalResourceId.fromResponse("endpointAddress"),
+      parameters: {
+        endpointType: "iot:Data-ATS",
+      },
+    },
+    policy: custom_resources.AwsCustomResourcePolicy.fromSdkCalls({
+      resources: custom_resources.AwsCustomResourcePolicy.ANY_RESOURCE,
+    }),
+  });
+
+  stack.addOutputs({
+    iotEndpoint: getIotEndpoint.getResponseField("endpointAddress"),
   });
 
   return {
