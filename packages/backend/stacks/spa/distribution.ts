@@ -9,7 +9,7 @@ import * as route53 from "aws-cdk-lib/aws-route53";
 import { FRONTEND_NAME, S3_REFERER_KEY, S3_ORIGIN_BUCKET_NAME } from "@/libs/config";
 import { getWebDomain } from "@/libs/get-domain";
 
-import { WebACL, S3Origin, ApiStack, AuthStack } from "@/stacks";
+import { WebACL, S3Origin, ApiStack, AuthStack, IoTStack } from "@/stacks";
 import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
@@ -62,6 +62,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
 
   const { api } = use(ApiStack);
   const { auth } = use(AuthStack);
+  const { iotEndpoint } = use(IoTStack);
 
   const web = new StaticSite(stack, `${app.stage}-${FRONTEND_NAME}-site`, {
     path: "packages/frontend",
@@ -73,6 +74,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_API_URL: apiDomainName ? `https://${apiDomainName}` : api.url,
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
+      NEXT_PUBLIC_IOT_ENDPOINT: iotEndpoint,
     },
     // dev: { deploy: true },
     ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),

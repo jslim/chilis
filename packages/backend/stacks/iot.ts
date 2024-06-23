@@ -118,5 +118,6 @@ export function IoTStack({ stack, app }: StackContext) {
   return {
     disconnectTopicRule,
     gameActionTopicRule,
+    iotEndpoint: getIotEndpoint.getResponseField("endpointAddress"),
   };
 }
