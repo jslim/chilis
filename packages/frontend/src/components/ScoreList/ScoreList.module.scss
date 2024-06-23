@@ -51,7 +51,7 @@
     color: $sunrise;
 
     @include media-tablet-large {
-      @include font-size(64, 40);
+      @include font-size(54, 30);
     }
   }
 }
@@ -67,8 +67,8 @@
     color: $sunrise;
 
     @include media-tablet-large {
-      @include font-size(32, 39);
-      margin-bottom: px(22);
+      @include font-size(22, 29);
+      margin-bottom: px(20);
     }
   }
 }
@@ -82,7 +82,7 @@
   text-decoration-style: dotted;
 
   @include media-tablet-large {
-    @include font-size(32);
+    @include font-size(22);
   }
 }
 
