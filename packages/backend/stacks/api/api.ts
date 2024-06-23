@@ -28,7 +28,7 @@ export function ApiStack({ stack, app }: StackContext) {
   const api = new ApiGatewayV1Api(stack, "api", {
     authorizers: {
       Authorizer: {
-        name: "ApiAuthorizer",
+        name: `${app.stage}-api-authorizer`,
         type: "lambda_token",
         function: authorizerFunction,
         identitySources: [IdentitySource.header("Authorization")],

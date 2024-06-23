@@ -3,7 +3,9 @@ import {
   ViewerProtocolPolicy,
   AllowedMethods,
   CachePolicy,
+  CacheHeaderBehavior,
   OriginRequestPolicy,
+  OriginRequestHeaderBehavior,
   ResponseHeadersPolicy,
   HeadersFrameOption,
   HeadersReferrerPolicy,
@@ -46,7 +48,7 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
   });
 
   // DISTRIBUTION ORIGIN
-  const apiOrigin = new HttpOrigin(`${api.restApiId}.execute-api.${app.region}.${stack.urlSuffix}`, {
+  const apiOrigin = new HttpOrigin(`${api.restApiId}.execute-api.${app.region}.amazonaws.com`, {
     originId: `${app.stage}-api-http-origin`,
     originPath: `/${api.cdk.restApi.deploymentStage.stageName}`,
   });
@@ -59,7 +61,7 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
         {
           header: "Content-Security-Policy-Report-Only",
           override: true,
-          value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src 'self' ${api.url} https://${apiDomainName}; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
+          value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${api.url} https://${apiDomainName} 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
         },
       ],
     },
@@ -97,10 +99,21 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
   const geoLocationHeadersPolicy = new OriginRequestPolicy(stack, `${app.stage}-geo-location-headers-policy`, {
     originRequestPolicyName: `${app.stage}-geo-location-headers-policy`,
     comment: "Policy to include geolocation headers",
-    headerBehavior: {
-      behavior: "whitelist",
-      headers: ["CloudFront-Viewer-City", "CloudFront-Viewer-Country", "CloudFront-Viewer-Postal-Code"],
-    },
+    headerBehavior: OriginRequestHeaderBehavior.allowList(
+      "CloudFront-Viewer-City",
+      "CloudFront-Viewer-Country",
+      "CloudFront-Viewer-Postal-Code",
+    ),
+  });
+
+  const cachePolicy = new CachePolicy(stack, `${app.stage}-api-cache-policy`, {
+    cachePolicyName: `${app.stage}-api-cache-policy`,
+    headerBehavior: CacheHeaderBehavior.allowList(
+      "Authorization",
+      "CloudFront-Viewer-City",
+      "CloudFront-Viewer-Country",
+      "CloudFront-Viewer-Postal-Code",
+    ),
   });
 
   // DISTRIBUTION
@@ -114,7 +127,7 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       responseHeadersPolicy: securityHeadersPolicy,
       allowedMethods: AllowedMethods.ALLOW_ALL,
-      cachePolicy: CachePolicy.CACHING_DISABLED,
+      cachePolicy: cachePolicy,
     },
   });
 
