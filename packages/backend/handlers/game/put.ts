@@ -50,19 +50,21 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
         throw new Error("Restricted by geolocation");
       }
 
-      const currentNickname =
-        event.headers?.Authorization && (await userService.getUsername(event.headers.Authorization));
+      const userData = await userService.getUserData(String(event.headers.Authorization));
+
+      const loyaltyId = String(userData?.Username);
+      const nickname = userData?.UserAttributes?.find((attr) => attr.Name === "preferred_username")?.Value;
 
       // Record game score
-      if (currentNickname) {
-        await gameService.recordGameScore(currentNickname, { userSub, gameId, score, level });
+      if (nickname) {
+        await gameService.recordGameScore({ userSub, loyaltyId, nickname, gameId, score, level });
       } else {
         throw new Error("Nickname not found");
       }
 
       logger.info("The score has been successfully recorded.");
       // Return mini leaderboard
-      return Success(await leaderboardService.getMiniBoard(currentNickname));
+      return Success(await leaderboardService.getMiniBoard(nickname));
     } catch (error) {
       logger.error("Error recording score", { error });
       return Forbidden();

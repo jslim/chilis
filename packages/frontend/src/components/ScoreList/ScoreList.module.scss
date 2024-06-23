@@ -10,27 +10,10 @@
   }
 }
 
-.separator {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin: px(50) 0;
-
-  .square {
-    @include box(px(10));
-    display: inline-block;
-    background-color: $sunrise;
-  }
-}
-
 .list {
   display: flex;
   flex-flow: column wrap;
   max-height: px(200);
-
-  &.remaining {
-    max-height: none;
-  }
 }
 
 .item {
@@ -101,6 +84,9 @@
 }
 
 .isGameOver {
+  .list {
+    flex-flow: column nowrap;
+  }
   .item {
     @include media-tablet {
       gap: px(40);

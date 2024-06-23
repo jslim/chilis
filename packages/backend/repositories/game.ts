@@ -222,7 +222,7 @@ class GameRepository {
       );
     } catch (error: any) {
       if (error.name === "ConditionalCheckFailedException") {
-        const allowedKeys = ["gameId", "score", "level", "timestamp", "nickname"];
+        const allowedKeys = ["gameId", "score", "level", "timestamp", "nickname", "loyaltyId"];
         const params = { ...generateExpression(gameScore, allowedKeys), ConditionExpression: `score < :score` };
 
         try {

@@ -8,6 +8,7 @@ import {
   WebACL,
   AuthStack,
   ApiStack,
+  ApiDistributionStack,
   userApiStack,
   gameApiStack,
   leaderboardApiStack,
@@ -35,16 +36,17 @@ export default {
 
     app
       /* Backend */
+      .stack(WafStack)
       .stack(Database)
       .stack(SecretsStack)
       .stack(AuthStack)
       .stack(ApiStack)
+      .stack(ApiDistributionStack)
       .stack(userApiStack)
       .stack(gameApiStack)
       .stack(leaderboardApiStack)
       .stack(IoTStack)
       .stack(countryCodeApiStack)
-      .stack(WafStack)
       /* Frontend */
       .stack(WebACL)
       .stack(S3Origin)

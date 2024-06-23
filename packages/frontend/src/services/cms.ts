@@ -5,7 +5,7 @@ import { copy } from '@/utils/copy'
 export type PageIdentifier = keyof typeof data.pages
 export type CommonContent = typeof data.common
 export type HeadContent = typeof data.common.head
-export type PageContent<T extends PageIdentifier = 'home'> = {
+export type PageContent<T extends PageIdentifier> = {
   head: HeadContent
   common: CommonContent
   body: (typeof data.pages)[T]['body']

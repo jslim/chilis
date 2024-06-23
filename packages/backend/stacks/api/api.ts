@@ -1,12 +1,12 @@
 import type { StackContext } from "sst/constructs";
 import { ApiGatewayV1Api, Function, use } from "sst/constructs";
 import { IdentitySource } from "aws-cdk-lib/aws-apigateway";
-import { detectStage } from "@/libs/detect-stage";
-import { ENVS_TARGET } from "@/libs/stack-data";
-import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
-import { isValidDomain } from "@/utils/domain-validator";
-import { AuthStack } from "@/stacks";
 import { Duration } from "aws-cdk-lib";
+
+import { detectStage } from "@/libs/detect-stage";
+import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
+
+import { AuthStack } from "@/stacks";
 
 export function ApiStack({ stack, app }: StackContext) {
   let usagePlan;
@@ -25,21 +25,7 @@ export function ApiStack({ stack, app }: StackContext) {
     },
   });
 
-  let domainName = undefined;
-  let domainSettings = undefined;
-  const domainStage = ENVS_TARGET[app.stage as keyof typeof ENVS_TARGET];
-  const baseDomain = process.env.BASE_DOMAIN!;
-
-  if (domainStage !== undefined && isValidDomain(baseDomain)) {
-    domainName = (isProd ? `api` : `api.${app.stage}`) + `.${baseDomain}`;
-    domainSettings = {
-      domainName,
-      hostedZone: baseDomain!,
-    };
-  }
-
   const api = new ApiGatewayV1Api(stack, "api", {
-    customDomain: domainSettings,
     authorizers: {
       Authorizer: {
         name: "ApiAuthorizer",
@@ -92,7 +78,7 @@ export function ApiStack({ stack, app }: StackContext) {
   }
 
   stack.addOutputs({
-    ApiEndpoint: domainName || api.url,
+    ApiEndpoint: api.url,
   });
 
   return { api, usagePlan, validator };
