@@ -38,9 +38,9 @@ export const View: FC<ViewProps> = ({ className, slides }) => {
     // If mobile, use the mobile image and the mobile text
     return isMobile
       ? slides.map((slide) => ({
-          image: slide.imageMobile,
+          image: slide.imageMobile ?? slide.image,
           title: slide.title,
-          text: slide.textMobile
+          text: slide.textMobile ?? slide.text
         }))
       : slides
   }, [isMobile, slides])

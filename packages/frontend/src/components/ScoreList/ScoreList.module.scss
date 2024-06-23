@@ -10,10 +10,13 @@
   }
 }
 
+.columns {
+  display: flex;
+}
+
 .list {
   display: flex;
-  flex-flow: column wrap;
-  max-height: px(200);
+  flex-flow: column nowrap;
 }
 
 .item {
@@ -87,6 +90,7 @@
   .list {
     flex-flow: column nowrap;
   }
+
   .item {
     @include media-tablet {
       gap: px(40);

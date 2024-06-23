@@ -19,6 +19,8 @@
   }
 
   .container {
+    @include flex-center;
+    flex-direction: column;
     margin-bottom: 15svh;
 
     @include media-aspect-vertical {

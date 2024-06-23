@@ -12,7 +12,7 @@
 }
 
 .backgroundVideo {
-  @include background-opacity;
+  @include background-opacity($black, 0.3);
 }
 
 .contentWrapper {

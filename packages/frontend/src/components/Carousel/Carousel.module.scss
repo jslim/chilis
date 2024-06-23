@@ -57,7 +57,7 @@
   }
 
   .text {
-    @include typography-04b03-body;
+    @include font-size(12, 20);
     max-width: px(700);
     margin-top: px(15);
     color: $sour-cream;

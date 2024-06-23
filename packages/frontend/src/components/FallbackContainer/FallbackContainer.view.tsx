@@ -1,16 +1,20 @@
-import { useEffect, useState, type FC } from 'react'
 import type { ControllerProps } from './FallbackContainer.controller'
 
+import { type FC, useEffect, useState } from 'react'
 import classNames from 'classnames'
-import { BaseButton } from '@/components/BaseButton'
-import { BaseImage } from '@/components/BaseImage'
-import { useRefs } from '@/hooks/use-refs'
+
+import css from './FallbackContainer.module.scss'
+
 import { getImageUrl } from '@/utils/basic-functions'
 import { copy } from '@/utils/copy'
 import { detect } from '@/utils/detect'
-import SvgChilis from '@/svgs/Chilis.svg'
 
-import css from './FallbackContainer.module.scss'
+import { useRefs } from '@/hooks/use-refs'
+
+import { BaseButton } from '@/components/BaseButton'
+import { BaseImage } from '@/components/BaseImage'
+
+import SvgChilis from '@/svgs/Chilis.svg'
 
 export interface ViewProps extends ControllerProps {}
 

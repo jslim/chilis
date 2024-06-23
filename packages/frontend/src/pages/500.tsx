@@ -6,7 +6,7 @@ import { CmsService } from '@/services/cms'
 export const getStaticProps: GetStaticProps<PageNotFoundProps> = async () => {
   return {
     props: {
-      content: CmsService.getPageContent('notFound'),
+      content: CmsService.getPageContent('notFound500'),
       noLayout: true
     }
   }

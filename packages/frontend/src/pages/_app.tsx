@@ -5,14 +5,18 @@ import type { AppProps } from 'next/app'
 import type { PageProps } from '@/data/types'
 
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { gsap } from 'gsap'
 
 import '@/styles/global.scss'
+
+import { routes } from '@/data/routes'
 
 import { localStore } from '@/store'
 
 import { AnalyticsService } from '@/services/analytics'
 
+import { detect } from '@/utils/detect'
 import { fontVariables } from '@/utils/fonts'
 import { setBodyClasses } from '@/utils/set-body-classes'
 
@@ -21,9 +25,6 @@ import { useFeatureFlags } from '@/hooks/use-feature-flags'
 import { initGsap } from '@/motion/core/init'
 
 import { Layout } from '@/components/Layout/Layout'
-import { useRouter } from 'next/router'
-import { detect } from '@/utils/detect'
-import { routes } from '@/data/routes'
 
 require('focus-visible')
 

@@ -1,18 +1,21 @@
-import { useEffect, useImperativeHandle, useMemo } from 'react'
 import type { FC } from 'react'
-import classNames from 'classnames'
-import { gsap } from 'gsap'
-
 import type { PageHandle } from '@/data/types'
 import type { ControllerProps } from './PageFullLeaderboard.controller'
 
-import { BaseImage } from '@/components/BaseImage'
-import { ScoreList } from '@/components/ScoreList'
-import { getImageUrl } from '@/utils/basic-functions'
-import { copy } from '@/utils/copy'
-import { useRefs } from '@/hooks/use-refs'
+import { useEffect, useImperativeHandle, useMemo } from 'react'
+import classNames from 'classnames'
+import { gsap } from 'gsap'
 
 import css from './PageFullLeaderboard.module.scss'
+
+import { getImageUrl } from '@/utils/basic-functions'
+import { copy } from '@/utils/copy'
+
+import { useRefs } from '@/hooks/use-refs'
+
+import { BaseImage } from '@/components/BaseImage'
+import { ScoreList } from '@/components/ScoreList'
+
 import SvgYellowSquares from '@/svgs/YellowSquares.svg'
 
 export interface ViewProps extends ControllerProps {}

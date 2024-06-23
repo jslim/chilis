@@ -1,6 +1,6 @@
 import type { ControllerProps } from './ScoreList.controller'
 
-import { useMemo, type FC } from 'react'
+import { type FC, useMemo } from 'react'
 import classNames from 'classnames'
 
 import css from './ScoreList.module.scss'
@@ -33,28 +33,49 @@ export const View: FC<ViewProps> = ({
   const refs = useRefs<ViewRefs>()
   const playersToRender = useMemo(() => players.slice(0, maxPlayers), [players, maxPlayers])
 
+  const firstColumnPlayers = playersToRender.slice(0, maxPlayers / 2)
+  const secondColumnPlayers = playersToRender.slice(maxPlayers / 2)
+
   return (
     <div
       className={classNames('ScoreList', css.root, className, { [css.isGameOver]: isGameOverScreen })}
       ref={refs.root}
     >
       {title && <p>{title}</p>}
-      <ul className={css.list}>
-        {playersToRender.map((player, index) => (
-          <li className={css.item} key={index}>
-            <span
-              className={classNames(css.player, { [css.isCurrentPlayer]: index + 1 === Number(currentPlayer?.rank) })}
-            >
-              {index + 1} {truncateText(player.nickname, 9)}
-            </span>
-            <span
-              className={classNames(css.score, { [css.isCurrentPlayer]: index + 1 === Number(currentPlayer?.rank) })}
-            >
-              {player.score}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <div className={css.columns}>
+        <ul className={css.list}>
+          {firstColumnPlayers.map((player, index) => (
+            <li className={css.item} key={index}>
+              <span
+                className={classNames(css.player, { [css.isCurrentPlayer]: index + 1 === Number(currentPlayer?.rank) })}
+              >
+                {index + 1} {truncateText(player.nickname, 9)}
+              </span>
+              <span
+                className={classNames(css.score, { [css.isCurrentPlayer]: index + 1 === Number(currentPlayer?.rank) })}
+              >
+                {player.score}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <ul className={css.list}>
+          {secondColumnPlayers.map((player, index) => (
+            <li className={css.item} key={index + 5}>
+              <span
+                className={classNames(css.player, { [css.isCurrentPlayer]: index + 6 === Number(currentPlayer?.rank) })}
+              >
+                {index + 6} {truncateText(player.nickname, 9)}
+              </span>
+              <span
+                className={classNames(css.score, { [css.isCurrentPlayer]: index + 6 === Number(currentPlayer?.rank) })}
+              >
+                {player.score}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {currentPlayer?.nickname && !isGameOverScreen && (
         <div className={css.currentPlayer}>

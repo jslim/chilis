@@ -1,9 +1,11 @@
 import type { Texture } from 'pixi.js'
+
 import { Assets, Container } from 'pixi.js'
+
+import { SimpleAnimationSpriteSheet } from '@/game/display/SimpleAnimationSpriteSheet'
 
 import { Component } from '../core/Entity'
 import { Value } from '../core/Value'
-import { SimpleAnimationSpriteSheet } from '@/game/display/SimpleAnimationSpriteSheet'
 
 export type AnimatorLibrary = Map<string, { texture: Texture; frameWidth: number }>
 

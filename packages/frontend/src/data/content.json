@@ -588,6 +588,18 @@
         }
       }
     },
+    "notFound500": {
+      "head": {
+        "title": "500",
+        "description": "Error 500"
+      },
+      "body": {
+        "title": "Error, there was a problem with the site",
+        "cta": {
+          "label": "Reboot"
+        }
+      }
+    },
     "usOnly": {
       "head": {
         "title": "US Ony Page",
