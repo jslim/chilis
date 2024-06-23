@@ -45,6 +45,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   const highScore = localState().user.highScore
 
+  console.log(localState().user.highScore)
+
   usePauseGameInstance(isModalOpen)
 
   const onGameStarted = useCallback(async () => {
@@ -134,7 +136,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
           // if(localState().user.isTokenValid){
           //   mqttClient.connect(String(localState().user.gameId))
           // }
-          console.log(highScore)
+          console.log(localState().user.highScore)
           newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
 
@@ -175,7 +177,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onGameStarted, highScore])
+  }, [onGameStarted])
 
   return (
     <div className={classNames('Container', css.root, className, { [css.hasBorder]: showGameBorder })} ref={refs.root}>
