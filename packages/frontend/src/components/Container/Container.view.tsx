@@ -37,12 +37,13 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const [showGameBorder, setShowGameBorder] = useState<boolean>(false)
   const isModalOpen = localStore().screen.isModalOpen
   const accessToken = localStore().user.accessToken
-  const highScore = localStore().user.highScore ?? 0
 
   const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
   const [, setGameId] = useLocalStorage('gameId')
   const [, setHighScore] = useLocalStorage('highScore')
+
+  const highScore = localState().user.highScore
 
   usePauseGameInstance(isModalOpen)
 
@@ -108,6 +109,15 @@ export const View: FC<ViewProps> = ({ className, background }) => {
     [accessToken]
   )
 
+  const setNewHighScore = useCallback(
+    (newScore: number) => {
+      const oldHighScore = highScore ?? 0
+      localState().user.setHighScore(newScore)
+      setHighScore(newScore > oldHighScore ? newScore.toString() : oldHighScore.toString())
+    },
+    [setHighScore]
+  )
+
   useEffect(() => {
     const initGame = async () => {
       // let mqttClient: MqttClientManager
@@ -120,13 +130,17 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
       newGameInstance.setMuted(localState().screen.isMuted)
       newGameInstance.onGameAction.subscribe((data) => {
-        if (data.a === 'start' && localState().user.isTokenValid) {
-          // mqttClient.connect(String(localState().user.gameId))
+        if (data.a === 'start') {
+          // if(localState().user.isTokenValid){
+          //   mqttClient.connect(String(localState().user.gameId))
+          // }
+          console.log(highScore)
           newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
 
         if (data.a === 'complete' && data.s) {
-          newGameInstance.setHighScore(data.s)
+          const oldHighScore = localState().user.highScore ?? 0
+          newGameInstance.setHighScore(data.s > oldHighScore ? data.s : oldHighScore)
           localState().user.setHighScore(data.s)
         }
 
@@ -135,15 +149,13 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
       newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
       newGameInstance.onGameOver.subscribe((data) => {
-        localState().user.setHighScore(data.highScore)
-        setHighScore(data.highScore > highScore ? data.highScore.toString() : highScore.toString())
+        setNewHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
         // if (localState().user.isTokenValid && mqttClient.isConnected) mqttClient.disconnect()
       })
       newGameInstance.onGameEnd.subscribe((data) => {
-        localState().user.setHighScore(data.highScore)
-        setHighScore(data.highScore > highScore ? data.highScore.toString() : highScore.toString())
+        setNewHighScore(data.highScore)
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
         // if (localState().user.isTokenValid && mqttClient.isConnected) mqttClient.disconnect()
