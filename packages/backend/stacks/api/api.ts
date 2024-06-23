@@ -44,14 +44,14 @@ export function ApiStack({ stack, app }: StackContext) {
               cachingEnabled: true,
               // eslint-disable-next-line
               // @ts-ignore
-              cacheTtl: Duration.seconds(10),
+              cacheTtl: Duration.seconds(3),
               cacheDataEncrypted: true,
             },
             "/leaderboard/{records}/GET": {
               cachingEnabled: true,
               // eslint-disable-next-line
               // @ts-ignore
-              cacheTtl: Duration.seconds(10),
+              cacheTtl: Duration.seconds(3),
               cacheDataEncrypted: true,
             },
           },
