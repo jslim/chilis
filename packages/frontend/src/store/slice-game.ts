@@ -34,7 +34,7 @@ export type GameSliceState = {
     // getters
     isFullscreen: boolean
     isModalOpen: boolean
-    isMuted: boolean | null
+    isMuted: boolean
     // setters
     setIsfullscreen: (isFullscreen: boolean) => void
     setIsModalOpen: (isModalOpen: boolean) => void
@@ -110,7 +110,7 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
   screen: {
     isFullscreen: false,
     isModalOpen: false,
-    isMuted: null,
+    isMuted: true,
 
     setIsfullscreen: (flag) => {
       set((state) => {
