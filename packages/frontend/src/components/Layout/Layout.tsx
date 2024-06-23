@@ -369,7 +369,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const noNickname = !nickname || nickname === 'undefined'
 
   return (
-    <div className={classNames('Layout', css.root)}>
+    <div
+      className={classNames('Layout', css.root, {
+        [css.scrollable]: refs.pathname.current === routes.HOW_TO_PLAY || refs.pathname.current === routes.CONTEST
+      })}
+    >
       <Head {...pageProps.content.head} />
 
       <TopNav

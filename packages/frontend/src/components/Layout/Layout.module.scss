@@ -1,6 +1,7 @@
 @import 'shared';
 
 .root {
+  position: relative;
   display: flex;
   flex-direction: column;
   background-color: $black;
@@ -14,10 +15,14 @@
 
   .playButton {
     @include z-index(pages);
-    position: fixed;
+    position: absolute;
     left: 50%;
-    bottom: px(100);
+    bottom: px(90);
     transform: translateX(-50%);
+
+    @include media-tablet {
+      bottom: px(100);
+    }
 
     @include media-tablet-large {
       bottom: px(150);
@@ -26,8 +31,12 @@
 
   .soundSwitch {
     @include z-index(sound);
-    position: absolute;
+    position: fixed;
     right: px(20);
     bottom: px(20);
+  }
+
+  &.scrollable {
+    min-height: 100svh;
   }
 }
