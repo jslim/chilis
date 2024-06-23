@@ -7,13 +7,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: px(20);
 
   @include media-aspect-vertical {
     justify-content: center;
   }
 
-  @include media-tablet {
+  @include media-tablet-large {
     justify-content: center;
+    padding-top: 0;
   }
 
   .title {
@@ -23,16 +25,18 @@
   }
 }
 
+.backgroundVideo {
+  @include position-100(absolute);
+}
+
 .container {
   @include flex-center(column);
   position: relative;
   gap: px(20);
   width: 100%;
-  padding-top: px(20);
 
   @include media-tablet {
     gap: px(40);
-    padding-top: 0;
   }
 
   @include media-tablet-large {
