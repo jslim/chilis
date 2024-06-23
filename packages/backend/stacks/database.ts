@@ -42,6 +42,7 @@ export function Database({ stack, app }: StackContext) {
       level: "number",
       timestamp: "string",
       nickname: "string",
+      loyaltyId: "string",
       gsiPK: "string",
     },
     primaryIndex: { partitionKey: "subReference" },
