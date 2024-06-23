@@ -36,9 +36,12 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const [showGameBorder, setShowGameBorder] = useState<boolean>(false)
   const isModalOpen = localStore().screen.isModalOpen
   const accessToken = localStore().user.accessToken
+  const highScore = localStore().user.highScore ?? 0
+
   const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
   const [, setGameId] = useLocalStorage('gameId')
+  const [, setHighScore] = useLocalStorage('highScore')
 
   usePauseGameInstance(isModalOpen)
 
@@ -108,7 +111,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
     const initGame = async () => {
       const newGameInstance = await initializeGame()
 
-      newGameInstance.setMuted(!!localState().screen.isMuted)
+      newGameInstance.setMuted(localState().screen.isMuted)
       newGameInstance.onGameAction.subscribe((data) => {
         if (data.a === 'start') {
           onGameStarted()
@@ -124,11 +127,13 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
       newGameInstance.onGameOver.subscribe((data) => {
         localState().user.setHighScore(data.highScore)
+        setHighScore(data.highScore > highScore ? data.highScore.toString() : highScore.toString())
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
       })
       newGameInstance.onGameEnd.subscribe((data) => {
         localState().user.setHighScore(data.highScore)
+        setHighScore(data.highScore > highScore ? data.highScore.toString() : highScore.toString())
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
       })
@@ -147,7 +152,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onGameStarted])
+  }, [onGameStarted, highScore])
 
   return (
     <div className={classNames('Container', css.root, className, { [css.hasBorder]: showGameBorder })} ref={refs.root}>

@@ -64,10 +64,11 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
   const isModalOpen = localState().screen.isModalOpen
   const nickname = localState().user.nickname
   const isMutedStore = localStore().screen.isMuted
+  const isContextInitialized = localStore().navigation.isContextInitialized
 
   const [idToken] = useLocalStorage('idToken')
   const [accessToken] = useLocalStorage('accessToken')
-  const [highScore] = useLocalStorage('highScore')
+  const [highScoreFromStorage] = useLocalStorage('highScore')
   const [gameId] = useLocalStorage('gameId')
 
   const [soundState, setSoundState] = useSound()
@@ -254,10 +255,6 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
           localState().screen.setIsModalOpen(false)
         }
 
-        if (highScore && Number(highScore) > 0) {
-          localState().user.setHighScore(Number(highScore))
-        }
-
         if (gameId) {
           localState().user.setGameId(gameId)
         }
@@ -270,6 +267,35 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     verifyToken()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idToken])
+
+  useEffect(() => {
+    if (!accessToken) return
+
+    const checkHighscore = async () => {
+      try {
+        const response = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL + Endpoints.LEADERBOARD}`, '100', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
+
+        const apiResponse = response as ApiResponse
+
+        if (apiResponse.user && apiResponse.user.score) {
+          localState().user.setHighScore(apiResponse.user.score)
+        } else {
+          localState().user.setHighScore(Number(highScoreFromStorage) || 0)
+        }
+      } catch (error) {
+        console.error(error)
+        localState().user.setHighScore(Number(highScoreFromStorage) || 0)
+      }
+    }
+
+    checkHighscore()
+  }, [accessToken, highScoreFromStorage])
 
   // Fullscreen
   useEffect(() => {
@@ -362,7 +388,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
                     text={pageProps.content.common.playNow}
                     className={css.playButton}
                     onClick={() => {
-                      if (isMutedStore === null) setSoundState(true)
+                      if (isMutedStore === true && !isContextInitialized) setSoundState(true)
 
                       if (noNickname && allowSignin) {
                         setPlayNowTriggered(true)
