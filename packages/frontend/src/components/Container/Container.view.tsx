@@ -12,6 +12,7 @@ import { routes } from '@/data/routes'
 import { localState, localStore } from '@/store'
 
 import { initializeGame } from '@/services/game'
+import MqttClientManager from '@/services/mqtt-client'
 
 import { getImageUrl } from '@/utils/basic-functions'
 import { Endpoints, fetchApi } from '@/utils/fetch-api'
@@ -109,12 +110,18 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   useEffect(() => {
     const initGame = async () => {
+      let mqttClient: MqttClientManager
       const newGameInstance = await initializeGame()
+      onGameStarted()
+
+      if (localState().user.userId) {
+        mqttClient = MqttClientManager.getInstance(String(localState().user.userId))
+      }
 
       newGameInstance.setMuted(localState().screen.isMuted)
       newGameInstance.onGameAction.subscribe((data) => {
-        if (data.a === 'start') {
-          onGameStarted()
+        if (data.a === 'start' && localState().user.isTokenValid) {
+          mqttClient.connect(String(localState().user.gameId))
           newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
 
@@ -122,6 +129,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
           newGameInstance.setHighScore(data.s)
           localState().user.setHighScore(data.s)
         }
+
+        if (localState().user.isTokenValid && mqttClient.isConnected) mqttClient.publicAction(data)
       })
 
       newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
@@ -130,12 +139,14 @@ export const View: FC<ViewProps> = ({ className, background }) => {
         setHighScore(data.highScore > highScore ? data.highScore.toString() : highScore.toString())
         onGameUpdate(data.highScore, data.level)
         push(routes.GAME_OVER)
+        if (localState().user.isTokenValid && mqttClient.isConnected) mqttClient.disconnect()
       })
       newGameInstance.onGameEnd.subscribe((data) => {
         localState().user.setHighScore(data.highScore)
         setHighScore(data.highScore > highScore ? data.highScore.toString() : highScore.toString())
         onGameUpdate(data.highScore, data.level)
         push({ pathname: routes.GAME_OVER, query: { isWinner: true } })
+        if (localState().user.isTokenValid && mqttClient.isConnected) mqttClient.disconnect()
       })
 
       gameInstance.current = newGameInstance

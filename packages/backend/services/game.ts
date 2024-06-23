@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import type GameRepository from "@/repositories/game";
+import { GameEventStep, GameStatus } from "@/types/game";
 
 export default class GameService {
   constructor(private repository: GameRepository) {}
@@ -26,6 +27,28 @@ export default class GameService {
       return newGameID;
     } catch (err) {
       throw new Error(`An error occurred while trying to create the new game. ${err}`);
+    }
+  };
+
+  /**
+   * Checks for an active game for a user and updates the game status to INACTIVE if found.
+   * @param userId - The ID of the user.
+   */
+  public checkForActiveGame = async (userId: string) => {
+    try {
+      const queryResult = await this.repository.getActiveGameByUser(userId);
+      if (
+        queryResult &&
+        queryResult.Count &&
+        queryResult.Count > 0 &&
+        queryResult.Items &&
+        queryResult.Items.length > 0
+      ) {
+        const { subReference, gameId } = queryResult.Items[0];
+        this.repository.updateGameStatus(String(subReference), String(gameId), GameStatus.INACTIVE);
+      }
+    } catch (err) {
+      throw new Error(`An error occurred while trying to get the active game for the user. ${err}`);
     }
   };
 
@@ -62,6 +85,37 @@ export default class GameService {
       await this.repository.updateLeaderboard(userSub, { ...gameScore, loyaltyId, nickname });
     } catch (err) {
       throw new Error(`An error occurred while trying to record the game score. ${err}`);
+    }
+  }
+
+  /**
+   * Records a step in the game event.
+   * @param userSub - The user's sub.
+   * @param gameId - The ID of the game.
+   * @param step - The game event step to record.
+   */
+  public async recordStep(userSub: string, gameId: string, step: GameEventStep) {
+    step.t = new Date().toISOString();
+
+    try {
+      await this.repository.updateGameSteps(userSub, gameId, step);
+    } catch (err) {
+      throw new Error(`An error occurred while trying to record step. ${err}`);
+    }
+  }
+
+  /**
+   * Retrieves the current steps for a user in a specific game.
+   * @param userId - The ID of the user.
+   * @param gameId - The ID of the game.
+   * @returns {Promise<any>} The current steps for the user in the game.
+   * @throws {Error} If an error occurs while trying to get game steps.
+   */
+  public async getCurrentSteps(userId: string, gameId: string) {
+    try {
+      return await this.repository.getCurrentSteps(userId, gameId);
+    } catch (err) {
+      throw new Error(`An error occurred while trying to get game steps. ${err}`);
     }
   }
 }

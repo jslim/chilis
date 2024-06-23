@@ -17,4 +17,5 @@ export { leaderboardApiStack } from "@/stacks/api/leaderboard";
 export { countryCodeApiStack } from "@/stacks/api/country-code";
 export { Database } from "@/stacks/database";
 export { SecretsStack } from "@/stacks/secrets";
+export { IoTStack } from "@/stacks/iot";
 export { WafStack } from "@/stacks/api/waf";

@@ -3,7 +3,7 @@ import 'swiper/css/pagination'
 
 import type { ControllerProps } from './Carousel.controller'
 
-import { type FC, useMemo, useState, useEffect } from 'react'
+import { type FC, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 // import Swiper core and required modules
 import { A11y, Pagination } from 'swiper/modules'

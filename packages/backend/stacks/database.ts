@@ -35,6 +35,20 @@ export function Database({ stack, app }: StackContext) {
     },
   });
 
+  const threeForMeTable = new DynamoDbTable(stack, "threeForMe", {
+    fields: {
+      subReference: "string", // Cognito user sub
+      gameId: "string",
+      timestamp: "string",
+    },
+    primaryIndex: { partitionKey: "subReference", sortKey: "timestamp" },
+    cdk: {
+      table: {
+        removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+      },
+    },
+  });
+
   const leaderboardTable = new DynamoDbTable(stack, "leaderboardTable", {
     fields: {
       subReference: "string",
@@ -60,5 +74,5 @@ export function Database({ stack, app }: StackContext) {
     },
   });
 
-  return { gameHistoryTable, gameSessionTable, leaderboardTable };
+  return { gameHistoryTable, gameSessionTable, leaderboardTable, threeForMeTable };
 }
