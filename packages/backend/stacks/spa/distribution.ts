@@ -103,11 +103,6 @@ export function FrontendDistribution({ stack, app }: StackContext) {
             responseHttpStatus: 200,
             responsePagePath: "/404/index.html",
           },
-          {
-            httpStatus: 500,
-            responseHttpStatus: 500,
-            responsePagePath: "/500/index.html",
-          },
         ],
         defaultBehavior: {
           origin: s3StaticOrigin,
