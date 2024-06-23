@@ -101,7 +101,6 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
         state.user.nickname = undefined
         state.user.isTokenValid = undefined
         state.user.gameId = undefined
-        state.user.highScore = undefined
         state.user.playersList = undefined
       })
     }

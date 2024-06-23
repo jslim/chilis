@@ -268,6 +268,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idToken])
 
+  // Fetch highscore
   useEffect(() => {
     if (!accessToken) return
 
@@ -285,17 +286,21 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
         if (apiResponse.user && apiResponse.user.score) {
           localState().user.setHighScore(apiResponse.user.score)
-        } else {
-          localState().user.setHighScore(Number(highScoreFromStorage) || 0)
         }
       } catch (error) {
         console.error(error)
-        localState().user.setHighScore(Number(highScoreFromStorage) || 0)
       }
     }
 
     checkHighscore()
   }, [accessToken, highScoreFromStorage])
+
+  // Set highscore from local storage
+  useEffect(() => {
+    if (highScoreFromStorage && !localState().user.highScore) {
+      localState().user.setHighScore(Number(highScoreFromStorage))
+    }
+  }, [highScoreFromStorage])
 
   // Fullscreen
   useEffect(() => {
