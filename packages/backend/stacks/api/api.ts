@@ -38,23 +38,23 @@ export function ApiStack({ stack, app }: StackContext) {
     cdk: {
       restApi: {
         deployOptions: {
-          cacheClusterEnabled: true,
-          methodOptions: {
-            "/leaderboard/GET": {
-              cachingEnabled: true,
-              // eslint-disable-next-line
-              // @ts-ignore
-              cacheTtl: Duration.seconds(3),
-              cacheDataEncrypted: true,
-            },
-            "/leaderboard/{records}/GET": {
-              cachingEnabled: true,
-              // eslint-disable-next-line
-              // @ts-ignore
-              cacheTtl: Duration.seconds(3),
-              cacheDataEncrypted: true,
-            },
-          },
+          // cacheClusterEnabled: true,
+          // methodOptions: {
+          //   "/leaderboard/GET": {
+          //     cachingEnabled: true,
+          //     // eslint-disable-next-line
+          //     // @ts-ignore
+          //     cacheTtl: Duration.seconds(3),
+          //     cacheDataEncrypted: true,
+          //   },
+          //   "/leaderboard/{records}/GET": {
+          //     cachingEnabled: true,
+          //     // eslint-disable-next-line
+          //     // @ts-ignore
+          //     cacheTtl: Duration.seconds(3),
+          //     cacheDataEncrypted: true,
+          //   },
+          // },
         },
       },
     },

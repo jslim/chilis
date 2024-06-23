@@ -108,9 +108,9 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
 
   const cachePolicy = new CachePolicy(stack, `${app.stage}-api-cache-policy`, {
     cachePolicyName: `${app.stage}-api-cache-policy`,
-    defaultTtl: Duration.seconds(10),
-    maxTtl: Duration.seconds(15),
-    minTtl: Duration.seconds(1),
+    minTtl: Duration.seconds(0),
+    defaultTtl: Duration.seconds(1),
+    maxTtl: Duration.seconds(1),
     headerBehavior: CacheHeaderBehavior.allowList(
       "Authorization",
       "CloudFront-Viewer-City",
