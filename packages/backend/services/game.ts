@@ -65,8 +65,6 @@ export default class GameService {
     score: number;
     level: number;
   }) {
-    // TODO: Validate the score sent with the registered actions
-
     const { userSub, gameId, score, level, loyaltyId, nickname } = data;
     const gameScore = {
       gameId: gameId,
@@ -77,9 +75,6 @@ export default class GameService {
     try {
       // Save game score in userGameHistory
       await this.repository.saveGameScoreToHistory(userSub, gameScore);
-
-      // Change game status to COMPLETED in gameSessionTable
-      await this.repository.updateGameStatus(userSub, gameId);
 
       // Update the leaderboard with the new game score
       await this.repository.updateLeaderboard(userSub, { ...gameScore, loyaltyId, nickname });
@@ -111,11 +106,42 @@ export default class GameService {
    * @returns {Promise<any>} The current steps for the user in the game.
    * @throws {Error} If an error occurs while trying to get game steps.
    */
-  public async getCurrentSteps(userId: string, gameId: string) {
+  public async getCurrentSteps(userId: string, gameId: string): Promise<any> {
     try {
       return await this.repository.getCurrentSteps(userId, gameId);
     } catch (err) {
       throw new Error(`An error occurred while trying to get game steps. ${err}`);
     }
+  }
+
+  /**
+   * Validates the game completion based on the steps and score provided.
+   * If the game is successfully validated, updates the game status to COMPLETED.
+   * If the game is not valid, updates the game status to INVALID.
+   * @param userSub - The user's sub.
+   * @param eventData - An object containing the gameId and score to validate.
+   * @returns A boolean indicating if the game is successfully completed.
+   */
+  public async validateGame(userSub: string, eventData: { gameId: string; score: number }): Promise<boolean> {
+    const { gameId, score } = eventData;
+
+    const queryResult = await this.getCurrentSteps(userSub, gameId);
+
+    const getStepsScore = queryResult.Items[0].steps.reduce((score: number, step: GameEventStep) => {
+      return step.hasOwnProperty("p") ? score + Number(step.p) : score;
+    }, 0);
+
+    const lastStepComplete = queryResult.Items[0].steps
+      .filter((step: GameEventStep) => step.a === "complete")
+      .map((step: GameEventStep) => step.s)
+      .pop();
+
+    if (lastStepComplete === getStepsScore && getStepsScore === score) {
+      await this.repository.updateGameStatus(userSub, gameId);
+      return true;
+    }
+
+    await this.repository.updateGameStatus(userSub, gameId, GameStatus.INVALID);
+    return false;
   }
 }

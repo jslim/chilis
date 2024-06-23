@@ -3,6 +3,12 @@ import TFMRepository from "@/repositories/three-for-me";
 import TFMService from "@/services/three-for-me";
 import GameService from "@/services/game";
 import GameRepository from "@/repositories/game";
+import {
+  POINTS_PER_GROUP_COMPLETE,
+  POINTS_PER_BURGER_BOUNCE,
+  POINTS_PER_TOTAL_CPUS_HIT,
+  POINTS_PER_CPU,
+} from "@/types/game/validation";
 import { GameEvent, GameActions, GameEventStep, GameActionsWithPoints } from "@/types/game";
 
 const gameService = new GameService(
@@ -16,27 +22,47 @@ const threeForMe = new TFMService(new TFMRepository(new DynamoDBClient(process.e
  * @returns A boolean indicating if the action points are valid
  */
 export const isValidActionPoints = async (event: GameEvent): Promise<boolean> => {
-  const step = JSON.parse(event.step);
+  const step: GameEventStep = JSON.parse(event.step);
 
   if (!GameActionsWithPoints.includes(step.a as GameActions)) {
     return true;
   }
 
-  if (GameActions.THREE_FOR_ME === step.a) {
-    const amountThreeForMe = await getCountThreeForMe(event);
+  switch (step.a) {
+    case GameActions.BURGER_COMPLETE:
+      return POINTS_PER_GROUP_COMPLETE * Number(step.c) === step.p;
 
-    if ((amountThreeForMe + 1) % 3 === 0 && step.p === 1099) {
-      if (amountThreeForMe === 2) {
-        threeForMe.setTFM(event.userId, event.gameId);
-      }
-      return true;
-    } else if (step.p === 500 && amountThreeForMe !== 2) {
-      return true;
+    case GameActions.BURGER_PART:
+      return POINTS_PER_BURGER_BOUNCE.includes(Number(step.p));
+
+    case GameActions.DROP_ENEMY:
+      return POINTS_PER_TOTAL_CPUS_HIT.includes(Number(step.p));
+
+    case GameActions.KILL_ENEMY:
+      return POINTS_PER_CPU.hasOwnProperty(String(step.n)) && POINTS_PER_CPU[step.n] === step.p;
+
+    case GameActions.THREE_FOR_ME:
+      return await handleThreeForMe(step, event);
+
+    default:
+      return false;
+  }
+};
+
+async function handleThreeForMe(step: GameEventStep, event: GameEvent): Promise<boolean> {
+  const amountThreeForMe = await getCountThreeForMe(event);
+
+  if ((amountThreeForMe + 1) % 3 === 0 && step.p === 1099) {
+    if (amountThreeForMe === 2) {
+      threeForMe.setTFM(event.userId, event.gameId);
     }
+    return true;
+  } else if (step.p === 500 && amountThreeForMe !== 2) {
+    return true;
   }
 
   return false;
-};
+}
 
 async function getCountThreeForMe(event: GameEvent): Promise<number> {
   const queryResult = await gameService.getCurrentSteps(event.userId, event.gameId);

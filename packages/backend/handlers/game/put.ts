@@ -3,7 +3,7 @@ import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-
 
 import { parseBody } from "@/utils/parse";
 import { logger } from "@/libs/powertools";
-import { Success, Forbidden } from "@/libs/http-response";
+import { Success, BadRequest, Forbidden } from "@/libs/http-response";
 import defaultHttpHandler from "@/libs/middlewares/default-http-handler";
 import GameService from "@/services/game";
 import GameRepository from "@/repositories/game";
@@ -13,6 +13,7 @@ import UserRepository from "@/repositories/user";
 import LeaderboardService from "@/services/leaderboard";
 import LeaderboardRepository from "@/repositories/leaderboard";
 import { checkCountry } from "@/libs/check-country";
+import { GameEventStep } from "@/types/game";
 
 logger.appendKeys({
   namespace: "Lambda-PUT-Save-Score",
@@ -20,6 +21,9 @@ logger.appendKeys({
 });
 
 const userService = new UserService(new UserRepository(new CognitoIdentityProviderClient()));
+const sessionService = new GameService(
+  new GameRepository(new DynamoDBClient(process.env.GAMES_SESSION_TABLE_NAME as string)),
+);
 const gameService = new GameService(
   new GameRepository(new DynamoDBClient(process.env.GAMES_HISTORY_TABLE_NAME as string)),
 );
@@ -45,13 +49,17 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
 
     try {
       const country = event.headers["CloudFront-Viewer-Country"]!;
-
       if (!checkCountry(country, COUNTRIES_ALLOW_LIST)) {
         throw new Error("Restricted by geolocation");
       }
 
-      const userData = await userService.getUserData(String(event.headers.Authorization));
+      if (!(await sessionService.validateGame(userSub, { gameId, score }))) {
+        logger.error("The game could not be validated successfully.");
+        return BadRequest("Game could not be validated.");
+      }
+      logger.info("Validated game.");
 
+      const userData = await userService.getUserData(String(event.headers.Authorization));
       const loyaltyId = String(userData?.Username);
       const nickname = userData?.UserAttributes?.find((attr) => attr.Name === "preferred_username")?.Value;
 
