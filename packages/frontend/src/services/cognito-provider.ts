@@ -6,7 +6,7 @@ interface AWSCognitoCredentialOptions {
   IdentityPoolId: string
 }
 
-const AWS_REGION = process.env.NEXT_PUBLIC_FE_REGION ?? 'us-east-1'
+const AWS_REGION = process.env.AWS_REGION ?? 'us-east-1'
 
 /**
  * Generates a new instance of AWSCognitoCredentialsProvider with the provided options.
