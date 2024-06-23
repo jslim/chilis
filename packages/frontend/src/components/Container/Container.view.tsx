@@ -41,11 +41,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   const gameInstance = useRef<GameController | null>(null)
   const { push } = useRouter()
   const [, setGameId] = useLocalStorage('gameId')
-  const [, setHighScore] = useLocalStorage('highScore')
-
-  const highScore = localState().user.highScore
-
-  console.log(localState().user.highScore)
+  const [, setHighScoreLocalStorage] = useLocalStorage('highScore')
 
   usePauseGameInstance(isModalOpen)
 
@@ -113,11 +109,11 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
   const setNewHighScore = useCallback(
     (newScore: number) => {
-      const oldHighScore = highScore ?? 0
+      const oldHighScore = localState().user.highScore ?? 0
       localState().user.setHighScore(newScore)
-      setHighScore(newScore > oldHighScore ? newScore.toString() : oldHighScore.toString())
+      setHighScoreLocalStorage(newScore > oldHighScore ? newScore.toString() : oldHighScore.toString())
     },
-    [setHighScore]
+    [setHighScoreLocalStorage]
   )
 
   useEffect(() => {
@@ -136,7 +132,6 @@ export const View: FC<ViewProps> = ({ className, background }) => {
           // if(localState().user.isTokenValid){
           //   mqttClient.connect(String(localState().user.gameId))
           // }
-          console.log(localState().user.highScore)
           newGameInstance.setHighScore(localState().user.highScore ?? 0)
         }
 

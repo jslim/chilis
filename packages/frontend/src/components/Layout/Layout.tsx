@@ -295,9 +295,9 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
     checkHighscore()
   }, [accessToken, highScoreFromStorage])
 
+  // Set highscore from local storage
   useEffect(() => {
-    if (highScoreFromStorage) {
-      console.log(highScoreFromStorage)
+    if (highScoreFromStorage && !localState().user.highScore) {
       localState().user.setHighScore(Number(highScoreFromStorage))
     }
   }, [highScoreFromStorage])

@@ -85,7 +85,6 @@ export const GameSlice: StateCreator<AppState, Mutators, [], GameSliceState> = (
     },
     setHighScore: (highScore) => {
       set((state) => {
-        console.log('Setting high score:', highScore)
         state.user.highScore = highScore
       })
     },

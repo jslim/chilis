@@ -38,7 +38,6 @@ export class PickupUI extends Component {
     }
 
     this.subscribe(pickupsCollected.onChanged, (totalCollected) => {
-      console.log('totalCollected', totalCollected)
       const normalSprite = normalSprites[(totalCollected - 1) % 3]
       this.blink(normalSprite, 3, 6 / FRAME_RATE)
 
