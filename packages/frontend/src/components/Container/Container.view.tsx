@@ -147,7 +147,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       newGameInstance.onShowGameBorder.subscribe(setShowGameBorder)
       newGameInstance.onGameOver.subscribe((data) => {
         setNewHighScore(data.highScore)
-        onGameUpdate(data.highScore, data.level)
+        onGameUpdate(data.score, data.level)
         push(routes.GAME_OVER)
         // if (localState().user.isTokenValid && mqttClient.isConnected) mqttClient.disconnect()
       })
