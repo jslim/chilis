@@ -34,6 +34,7 @@ export type GameScore = {
   score: number;
   level: number;
   nickname?: string;
+  loyaltyId?: string;
   timestamp: string;
   gsiPK?: GSILeaderboard;
 };

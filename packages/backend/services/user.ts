@@ -1,7 +1,11 @@
 import type UserRepository from "@/repositories/user";
 import { EN_PROFANITIES } from "@/libs/profanities/en";
 import { ES_PROFANITIES } from "@/libs/profanities/es";
-import { AttributeType, UpdateUserAttributesCommandOutput } from "@aws-sdk/client-cognito-identity-provider";
+import {
+  AttributeType,
+  GetUserCommandOutput,
+  UpdateUserAttributesCommandOutput,
+} from "@aws-sdk/client-cognito-identity-provider";
 
 export default class UserService {
   constructor(private repository: UserRepository) {}
@@ -14,7 +18,10 @@ export default class UserService {
    * @returns {Promise<UpdateUserAttributesCommandOutput>} The result of updating the preferred username.
    * @throws {Error} If the username is already taken, contains profanity, or an error occurs during validation.
    */
-  public updateUserPreferredUsername = async (accessToken: string, nickname: string): Promise<UpdateUserAttributesCommandOutput> => {
+  public updateUserPreferredUsername = async (
+    accessToken: string,
+    nickname: string,
+  ): Promise<UpdateUserAttributesCommandOutput> => {
     await this.validatePreferredUsername(accessToken, nickname);
 
     return this.repository.updateUserAttr({
@@ -60,6 +67,24 @@ export default class UserService {
     }
 
     return userData.UserAttributes.find((attr) => attr.Name === "preferred_username");
+  };
+
+  /**
+   * Retrieves user data associated with the provided token.
+   *
+   * @param {string} token - The JWT token used for authorization.
+   * @returns {Promise<GetUserCommandOutput | undefined>} The user data if found, undefined otherwise.
+   * @throws {Error} If user data is not found.
+   */
+  public getUserData = async (token: string): Promise<GetUserCommandOutput | undefined> => {
+    const accessToken = this.extractAccessToken(token);
+    const userData = await this.repository.getUserByToken(accessToken);
+
+    if (!userData || !userData.UserAttributes) {
+      throw new Error("User data not found");
+    }
+
+    return userData;
   };
 
   /**

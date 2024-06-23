@@ -34,13 +34,17 @@ export default class GameService {
    * @param nickname - The nickname of the user.
    * @param data - An object containing userSub, gameId, score, and level.
    */
-  public async recordGameScore(
-    nickname: string,
-    data: { userSub: string; gameId: string; score: number; level: number },
-  ) {
+  public async recordGameScore(data: {
+    userSub: string;
+    loyaltyId: string;
+    nickname: string;
+    gameId: string;
+    score: number;
+    level: number;
+  }) {
     // TODO: Validate the score sent with the registered actions
 
-    const { userSub, gameId, score, level } = data;
+    const { userSub, gameId, score, level, loyaltyId, nickname } = data;
     const gameScore = {
       gameId: gameId,
       score: score,
@@ -55,7 +59,7 @@ export default class GameService {
       await this.repository.updateGameStatus(userSub, gameId);
 
       // Update the leaderboard with the new game score
-      await this.repository.updateLeaderboard(userSub, { ...gameScore, nickname });
+      await this.repository.updateLeaderboard(userSub, { ...gameScore, loyaltyId, nickname });
     } catch (err) {
       throw new Error(`An error occurred while trying to record the game score. ${err}`);
     }

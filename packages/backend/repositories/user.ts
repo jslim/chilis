@@ -1,6 +1,7 @@
 import {
   GetUserCommand,
   ListUsersCommand,
+  GetUserCommandOutput,
   ListUsersCommandInput,
   ListUsersCommandOutput,
   CognitoIdentityProviderClient,
@@ -14,11 +15,11 @@ const repository: UserRepository | null = null;
 class UserRepository {
   constructor(private client: CognitoIdentityProviderClient) {}
 
-  public getUserByToken = async (token: string) => {
+  public getUserByToken = async (token: string): Promise<GetUserCommandOutput> => {
     return await this.client.send(
       new GetUserCommand({
         AccessToken: token,
-      })
+      }),
     );
   };
 
@@ -26,7 +27,9 @@ class UserRepository {
     return await this.client.send(new ListUsersCommand(command));
   };
 
-  public updateUserAttr = async (command: UpdateUserAttributesCommandInput): Promise<UpdateUserAttributesCommandOutput> => {
+  public updateUserAttr = async (
+    command: UpdateUserAttributesCommandInput,
+  ): Promise<UpdateUserAttributesCommandOutput> => {
     return await this.client.send(new UpdateUserAttributesCommand(command));
   };
 }
