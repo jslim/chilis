@@ -197,7 +197,7 @@
           "poster": "burger-loop.jpg"
         },
         "title": "BUILD BURGERS.",
-        "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit <a target='_blank' href='https://burgertime.chilis.com/terms'>burgertime.chilis.com/terms</a>",
+        "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit <a target='_blank' href='/terms/'>chilisburgertime.com/terms</a>",
         "hero": {
           "src": "a-lifetime.png",
           "alt": "A lifetime of burgers"
