@@ -129,7 +129,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
     async function destroyGame() {
       if (gameInstance.current) {
-        if (mqttClient.isConnected) mqttClient.disconnect()
+        if (mqttClient?.isConnected) mqttClient.disconnect()
         await gameInstance.current.destroy()
         clearGame()
       }
