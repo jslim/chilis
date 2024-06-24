@@ -38,7 +38,7 @@ export default class MqttClientManager {
     this.userId = userId
 
     this.isConnected = false
-    this.clientId = `mqtt-client-chilis-${this.userId}`
+    this.clientId = `${process.env.NEXT_PUBLIC_IOT_CLIENT_SUB_ID}-${this.userId}`
 
     this.mqtt5Client = this.init()
   }
@@ -84,7 +84,7 @@ export default class MqttClientManager {
       step: JSON.stringify(step)
     }
 
-    this.publishMessage(`chili/game/action/${this.userId}`, msg)
+    this.publishMessage(`${process.env.NEXT_PUBLIC_IOT_ACTION_TOPIC}${this.userId}`, msg)
   }
 
   public disconnect() {
@@ -98,7 +98,7 @@ export default class MqttClientManager {
   private init() {
     const wsConfig: iot.WebsocketSigv4Config = {
       credentialsProvider: this.provider,
-      region: 'us-east-1'
+      region: process.env.NEXT_PUBLIC_FE_REGION
     }
 
     const builder: iot.AwsIotMqtt5ClientConfigBuilder =

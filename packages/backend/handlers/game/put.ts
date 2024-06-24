@@ -5,15 +5,16 @@ import { parseBody } from "@/utils/parse";
 import { logger } from "@/libs/powertools";
 import { Success, BadRequest, Forbidden } from "@/libs/http-response";
 import defaultHttpHandler from "@/libs/middlewares/default-http-handler";
-import GameService from "@/services/game";
-import GameRepository from "@/repositories/game";
 import DynamoDBClient from "@/services/dynamodb";
 import UserService from "@/services/user";
 import UserRepository from "@/repositories/user";
 import LeaderboardService from "@/services/leaderboard";
 import LeaderboardRepository from "@/repositories/leaderboard";
+import GameService from "@/services/game";
+import GameRepository from "@/repositories/game";
+import GameHistoryServices from "@/services/game-history";
+import GameHistoryRepository from "@/repositories/game-history";
 import { checkCountry } from "@/libs/check-country";
-import { GameEventStep } from "@/types/game";
 
 logger.appendKeys({
   namespace: "Lambda-PUT-Save-Score",
@@ -24,8 +25,8 @@ const userService = new UserService(new UserRepository(new CognitoIdentityProvid
 const sessionService = new GameService(
   new GameRepository(new DynamoDBClient(process.env.GAMES_SESSION_TABLE_NAME as string)),
 );
-const gameService = new GameService(
-  new GameRepository(new DynamoDBClient(process.env.GAMES_HISTORY_TABLE_NAME as string)),
+const gameHistoryService = new GameHistoryServices(
+  new GameHistoryRepository(new DynamoDBClient(process.env.GAMES_HISTORY_TABLE_NAME as string)),
 );
 const leaderboardService = new LeaderboardService(
   new LeaderboardRepository(new DynamoDBClient(process.env.LEADERBOARD_TABLE_NAME as string)),
@@ -65,7 +66,7 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
 
       // Record game score
       if (nickname) {
-        await gameService.recordGameScore({ userSub, loyaltyId, nickname, gameId, score, level });
+        await gameHistoryService.recordGameScore({ userSub, loyaltyId, nickname, gameId, score, level });
       } else {
         throw new Error("Nickname not found");
       }
