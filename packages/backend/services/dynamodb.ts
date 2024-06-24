@@ -18,7 +18,15 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import type { DeleteCommandInput, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import type { AwsCredentialIdentity } from "@aws-sdk/types";
-import { DeleteCommand, DynamoDBDocument, GetCommand, PutCommand, QueryCommand, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  DeleteCommand,
+  DynamoDBDocument,
+  GetCommand,
+  PutCommand,
+  QueryCommand,
+  ScanCommand,
+  UpdateCommand,
+} from "@aws-sdk/lib-dynamodb";
 import { tracer } from "@/libs/powertools";
 
 let client: DynamoDBClient | null = null;
@@ -46,7 +54,7 @@ class DynamoDBClient {
         TableName: table,
         Item: item,
       },
-      extraParams
+      extraParams,
     );
 
     return this.dynamoDBClient.send(new PutCommand(params));
@@ -96,7 +104,7 @@ class DynamoDBClient {
         Key: key,
         ReturnValues: "ALL_NEW",
       },
-      extraParams
+      extraParams,
     ) as UpdateCommandInput;
 
     return this.dynamoDBClient.send(new UpdateCommand(params));
@@ -112,7 +120,7 @@ class DynamoDBClient {
         Key: key,
         ReturnValues: "ALL_OLD",
       },
-      extraParams
+      extraParams,
     ) as DeleteCommandInput;
 
     return this.dynamoDBClient.send(new DeleteCommand(params));
@@ -135,7 +143,11 @@ class DynamoDBClient {
     return this.dynamoDBClient.batchWrite(params);
   }
 
-  batchGet(keysToGet: Record<string, AttributeValue>[], attToGet: string[], table = this.tableName): Promise<BatchGetItemOutput> {
+  batchGet(
+    keysToGet: Record<string, AttributeValue>[],
+    attToGet: string[],
+    table = this.tableName,
+  ): Promise<BatchGetItemOutput> {
     const params: BatchGetItemInput = {
       RequestItems: {
         [table]: {

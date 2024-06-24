@@ -6,8 +6,6 @@ interface AWSCognitoCredentialOptions {
   IdentityPoolId: string
 }
 
-const AWS_REGION = process.env.AWS_REGION ?? 'us-east-1'
-
 /**
  * Generates a new instance of AWSCognitoCredentialsProvider with the provided options.
  * Automatically refreshes credentials at a specified interval.
@@ -34,7 +32,7 @@ export default class AWSCognitoCredentialsProvider {
       aws_access_id: this.cachedCredentials?.accessKeyId ?? '',
       aws_secret_key: this.cachedCredentials?.secretAccessKey ?? '',
       aws_sts_token: this.cachedCredentials?.sessionToken,
-      aws_region: AWS_REGION
+      aws_region: process.env.NEXT_PUBLIC_FE_REGION
     }
   }
 
@@ -42,7 +40,7 @@ export default class AWSCognitoCredentialsProvider {
     try {
       this.cachedCredentials = await fromCognitoIdentityPool({
         identityPoolId: this.options.IdentityPoolId,
-        clientConfig: { region: AWS_REGION }
+        clientConfig: { region: process.env.NEXT_PUBLIC_FE_REGION }
       })()
     } catch {
       console.log('Error: Failed to obtain credentials')

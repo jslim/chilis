@@ -75,6 +75,8 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_USER_POOL_ID: auth.userPoolId,
       NEXT_PUBLIC_CLIENT_ID: auth.userPoolClientId,
       NEXT_PUBLIC_IOT_ENDPOINT: iotEndpoint,
+      NEXT_PUBLIC_IOT_CLIENT_SUB_ID: "mqtt-client-chilis",
+      NEXT_PUBLIC_IOT_ACTION_TOPIC: "chili/game/action/",
     },
     // dev: { deploy: true },
     ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
