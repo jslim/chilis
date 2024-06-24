@@ -12,7 +12,7 @@ import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
-import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_LOGS, GAME_WIDTH } from './game.config'
+import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
 
@@ -185,9 +185,7 @@ export class GameController {
     this.isDestroyed = true
 
     for (const bundle of assetsManifest.bundles) {
-      Assets.unloadBundle(bundle.name).then(() => {
-        if (GAME_LOGS) console.log('Unload bundle', bundle.name)
-      })
+      await Assets.unloadBundle(bundle.name)
     }
     Assets.resolver.reset()
     Assets.cache.reset()
