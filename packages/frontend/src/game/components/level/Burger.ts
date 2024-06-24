@@ -176,6 +176,8 @@ export class Burger extends Component {
 
     this.subscribe(this.onSliceCompleted, () => {
       this.state.value = 'fall'
+
+      this.calculateCPUHitScoreAndShow()
     })
     this.subscribe(this.onHitCpu, (cpu) => {
       this.fallStats.totalCpusHit++
@@ -195,7 +197,6 @@ export class Burger extends Component {
       otherBurgerComp.state.value = 'bounce'
     })
     this.subscribe(this.onHitPlate, (_plate) => {
-      this.calculateCPUHitScoreAndShow()
       this.calculateFallEndScoreAndShow()
       this.entity.getComponent(HitBox).hasIntersection = false
       this.state.value = 'complete'
@@ -207,11 +208,9 @@ export class Burger extends Component {
       const fallThrough = !this.fallStats.burgerHit
 
       if (fallThrough) {
-        this.calculateCPUHitScoreAndShow()
         this.state.value = 'idle'
         this.state.value = 'fall'
       } else {
-        this.calculateCPUHitScoreAndShow()
         this.calculateFallEndScoreAndShow()
         this.state.value = 'idle'
       }
@@ -401,9 +400,10 @@ export class Burger extends Component {
       const pointForCpuHit = POINTS_PER_TOTAL_CPUS_HIT[this.fallStats.totalCpusHit]
       points += pointForCpuHit
       // reset
-      this.fallStats.totalCpusHit = 0
       this.level.emitAction({ a: 'drop-enemy', l: this.level.gameState.level.value, p: pointForCpuHit })
     }
+
+    this.fallStats.totalCpusHit = 0
 
     this.level.addScore(this.entity.position, points, 0xffffff, getPixGamerNumberFont())
   }
