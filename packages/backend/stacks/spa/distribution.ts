@@ -80,7 +80,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_IDENTITY_POOL_ID: auth.cognitoIdentityPoolId ?? "",
       NEXT_PUBLIC_IOT_ENDPOINT: iotEndpoint,
       NEXT_PUBLIC_IOT_CLIENT_SUB_ID: "mqtt-client-chilis",
-      NEXT_PUBLIC_IOT_ACTION_TOPIC: "chili/game/action/",
+      NEXT_PUBLIC_IOT_ACTION_TOPIC: `${app.stage}/chili/action/`,
     },
     // dev: { deploy: true },
     ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
@@ -148,7 +148,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
                 {
                   header: "Content-Security-Policy-Report-Only",
                   override: true,
-                  value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src www.google-analytics.com ${api.url} ${cognitoDomain} ${cognitoIdentityURL} wss://${iotEndpoint} 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
+                  value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src www.google-analytics.com https://${apiDomainName} 'self' data: blob: ${cognitoDomain} ${cognitoIdentityURL} wss://${iotEndpoint}; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
                 },
               ],
             },
@@ -173,7 +173,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
               },
               contentSecurityPolicy: {
                 override: true,
-                contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src wss://${iotEndpoint} www.google-analytics.com ${api.url} 'self' data: blob: ${cognitoDomain} ${cognitoIdentityURL}; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
+                contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; img-src 'self' blob: data:; connect-src www.google-analytics.com https://${apiDomainName} 'self' data: blob: ${cognitoDomain} ${cognitoIdentityURL} wss://${iotEndpoint}; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline'; worker-src 'self' blob: data; media-src 'self' data:;`,
               },
             },
           }),

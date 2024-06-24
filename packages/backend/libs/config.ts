@@ -19,4 +19,4 @@ export const MAX_LEADERBOARD_RECORD = 500;
 export const ALLTIME_LEADERBOARD_INDEX = "alltime_leaderboard";
 
 // IoT
-export const TOPIC_GAME_ACTION_PATTERN = "chili/game/action";
+export const TOPIC_GAME_ACTION_PATTERN = "chili/action";
