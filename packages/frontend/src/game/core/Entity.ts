@@ -93,7 +93,9 @@ export class Entity extends Container {
     }
 
     this.parent?.removeChild(this)
-    super.destroy()
+    super.destroy({
+      children: true
+    })
   }
 
   private mapInheritance(component: Component, add: boolean): void {

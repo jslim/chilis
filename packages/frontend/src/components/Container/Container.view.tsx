@@ -121,6 +121,17 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   )
 
   useEffect(() => {
+    const clearGame = () => {
+      gameInstance.current = null
+    }
+
+    async function destroyGame() {
+      if (gameInstance.current) {
+        await gameInstance.current.destroy()
+        clearGame()
+      }
+    }
+
     const initGame = async () => {
       let mqttClient: MqttClientManager
       const newGameInstance = await initializeGame()
@@ -170,10 +181,7 @@ export const View: FC<ViewProps> = ({ className, background }) => {
     }
 
     return () => {
-      if (gameInstance.current) {
-        gameInstance.current.destroy()
-        gameInstance.current = null
-      }
+      destroyGame()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onGameStarted])

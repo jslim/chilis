@@ -3,8 +3,9 @@ import type { Channel, Channels } from '@mediamonks/channels'
 import type { GameAction } from '@/game/GameAction'
 import type { GameStateValues } from './components/GameState'
 
-import { Application, TextureSource } from 'pixi.js'
+import { Application, Assets, TextureSource } from 'pixi.js'
 
+import { assetsManifest } from '@/game/assets.manifest'
 import { Value } from '@/game/core/Value'
 
 import { GameState } from './components/GameState'
@@ -57,8 +58,8 @@ export class GameController {
   }
 
   public setPixelated(isPixelated: boolean) {
-    if (isPixelated) this.app.renderer.resize(GAME_WIDTH, GAME_HEIGHT)
-    else this.app.renderer.resize(GAME_WIDTH * 4, GAME_HEIGHT * 4)
+    if (isPixelated) this.app.renderer?.resize(GAME_WIDTH, GAME_HEIGHT)
+    else this.app.renderer?.resize(GAME_WIDTH * 4, GAME_HEIGHT * 4)
   }
 
   public async preload() {
@@ -180,21 +181,24 @@ export class GameController {
     if (!this.soundChannel) this.soundChannel = channels.createChannel('game')
   }
 
-  public destroy() {
-    this.soundChannel.stopAll({ immediate: true })
-    this.soundChannel.destruct()
-
+  public async destroy() {
     this.isDestroyed = true
 
-    this.sceneManager.destroy()
-    this.app.destroy()
-
-    //this.app.canvas.remove()
+    for (const bundle of assetsManifest.bundles) {
+      await Assets.unloadBundle(bundle.name)
+    }
+    Assets.resolver.reset()
+    Assets.cache.reset()
 
     // cleanup signals
     this.onLevelComplete.destroy()
     this.onGameOver.destroy()
     this.onGameAction.destroy()
     this.onShowGameBorder.destroy()
+
+    this.soundChannel.stopAll({ immediate: true })
+
+    this.sceneManager.destroy()
+    this.app.destroy()
   }
 }

@@ -17,7 +17,7 @@ export class AutoDisposer extends Component {
 
     if (this.coolDown.update(dt)) {
       if (this.onBeforeDestroy) this.onBeforeDestroy()
-      this.entity.destroy()
+      this.entity?.destroy()
     }
   }
 }

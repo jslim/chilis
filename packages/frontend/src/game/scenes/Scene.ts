@@ -53,10 +53,8 @@ export class Scene extends Component {
     await videoSource.resource.play()
 
     this.disposables.push(() => {
-      videoSprite.destroy({
-        texture: true,
-        textureSource: true
-      })
+      videoSprite.destroy()
+      Assets.unload(videoUrl)
     })
     this.entity.addEntity(new Entity(videoSprite))
 
