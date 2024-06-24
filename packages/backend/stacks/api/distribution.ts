@@ -27,6 +27,9 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
   const { waf } = use(WafStack);
   const { isProd } = detectStage(app.stage);
 
+  const cognitoDomain = `cognito-idp.${app.region}.amazonaws.com`;
+  const cognitoIdentityURL = `cognito-identity.${app.region}.amazonaws.com`;
+
   if (!isValidDomain(process.env.BASE_DOMAIN!)) {
     throw new Error("Please set BASE_DOMAIN environment variable");
   }
@@ -61,13 +64,13 @@ export function ApiDistributionStack({ stack, app }: StackContext) {
         {
           header: "Content-Security-Policy-Report-Only",
           override: true,
-          value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${api.url} https://${apiDomainName} 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
+          value: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${api.url} https://${apiDomainName} ${cognitoDomain} ${cognitoIdentityURL} 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
         },
       ],
     },
     securityHeadersBehavior: {
       contentSecurityPolicy: {
-        contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${api.url} https://${apiDomainName} 'self'; script-src 'self'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
+        contentSecurityPolicy: `default-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; font-src 'self' data: 'unsafe-inline'; frame-ancestors 'self'; object-src 'none'; media-src 'self'; img-src 'self' blob: data:; connect-src ${api.url} https://${apiDomainName} ${cognitoDomain} ${cognitoIdentityURL} 'self'; script-src 'self'; style-src-elem 'self' blob: data: 'unsafe-inline'; style-src 'self' blob: data: 'unsafe-inline';`,
         override: true,
       },
       contentTypeOptions: {

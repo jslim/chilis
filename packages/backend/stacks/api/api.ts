@@ -1,7 +1,7 @@
 import type { StackContext } from "sst/constructs";
 import { ApiGatewayV1Api, Function, use } from "sst/constructs";
 import { IdentitySource } from "aws-cdk-lib/aws-apigateway";
-import { Duration } from "aws-cdk-lib";
+// import { Duration } from "aws-cdk-lib";
 
 import { detectStage } from "@/libs/detect-stage";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
