@@ -14,7 +14,7 @@ import { detectStage } from "@/libs/detect-stage";
 import { isValidDomain } from "@/utils/domain-validator";
 
 export function FrontendDistribution({ stack, app }: StackContext) {
-  const { isDeploy } = detectStage(app.stage);
+  const { isDeploy, isProd } = detectStage(app.stage);
 
   let domainName;
   let apiDomainName;
@@ -112,14 +112,18 @@ export function FrontendDistribution({ stack, app }: StackContext) {
         ],
         defaultBehavior: {
           origin: s3StaticOrigin,
-          functionAssociations: [
-            {
-              // eslint-disable-next-line
-              // @ts-ignore
-              function: basicAuthFn,
-              eventType: distribution.FunctionEventType.VIEWER_REQUEST,
-            },
-          ],
+          // eslint-disable-next-line
+          // @ts-ignore
+          functionAssociations: !isProd
+            ? [
+                {
+                  // eslint-disable-next-line
+                  // @ts-ignore
+                  function: basicAuthFn,
+                  eventType: distribution.FunctionEventType.VIEWER_REQUEST,
+                },
+              ]
+            : undefined,
           allowedMethods: distribution.AllowedMethods.ALLOW_GET_HEAD,
           cachedMethods: distribution.CachedMethods.CACHE_GET_HEAD,
           cachePolicy: new distribution.CachePolicy(stack, `${app.stage}-basic-cache-policy`, {
