@@ -1,6 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import type GameRepository from "@/repositories/game";
 import { GameEventStep, GameStatus } from "@/types/game";
+import { logger } from "@/libs/powertools";
+
+logger.appendKeys({
+  namespace: "Lambda-Game-Serivce",
+  service: "AWS::Lambda",
+});
 
 export default class GameService {
   constructor(private repository: GameRepository) {}
@@ -106,10 +112,12 @@ export default class GameService {
       .pop();
 
     if (lastStepComplete === getStepsScore && getStepsScore === score) {
+      logger.info("validateGame: ", { valid: true, gameId, userSub, score, lastStepComplete, getStepsScore });
       await this.repository.updateGameStatus(userSub, gameId);
       return true;
     }
 
+    logger.info("validateGame: ", { valid: false, gameId, userSub, score, lastStepComplete, getStepsScore });
     await this.repository.updateGameStatus(userSub, gameId, GameStatus.INVALID);
     return false;
   }
