@@ -141,10 +141,12 @@ export default class LevelScene extends Scene {
     spriteSheet: Texture
     spriteSheetLarge: Texture
   }> {
-    await Assets.loadBundle(`level${levelNo}`)
-    const map = Assets.get(`level${levelNo}/jsonMap`)
-    const spriteSheet: Texture = Assets.get(`level${levelNo}/tileset`)
-    const spriteSheetLarge: Texture = Assets.get(`level${levelNo}/tileset_large`)
+    const levelBundleId = `level${levelNo}`
+    await Assets.loadBundle(levelBundleId)
+    this.disposables.push(() => Assets.unloadBundle(levelBundleId))
+    const map = Assets.get(`${levelBundleId}/jsonMap`)
+    const spriteSheet: Texture = Assets.get(`${levelBundleId}/tileset`)
+    const spriteSheetLarge: Texture = Assets.get(`${levelBundleId}/tileset_large`)
     return { map, spriteSheet, spriteSheetLarge }
   }
 

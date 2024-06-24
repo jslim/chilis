@@ -186,15 +186,9 @@ export class GameController {
   public async destroy() {
     this.isDestroyed = true
 
-    const currentLevel = this.gameState.level.value
     for (const bundle of assetsManifest.bundles) {
       Assets.unloadBundle(bundle.name).then(() => {
         if (GAME_LOGS) console.log('Unload bundle', bundle.name)
-      })
-    }
-    for (let level = 1; level <= Math.min(currentLevel, 6); level++) {
-      Assets.unloadBundle(`level${level}`).then(() => {
-        if (GAME_LOGS) console.log('Unload level bundle', level)
       })
     }
     Assets.resolver.reset()
