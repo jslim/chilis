@@ -16,12 +16,14 @@ export class PlayerPacManMover extends Mover {
 
   private readonly normalSpeed = new Point()
   private slowSpeed = new Point()
+  private slowFrame = 0
 
   override onStart() {
     super.onStart()
 
     this.normalSpeed.copyFrom(this.speed)
-    this.slowSpeed = new Point(0.5, 0.5)
+    console.log(this.normalSpeed)
+    this.slowSpeed = this.normalSpeed.clone()
 
     this.subscribe(this.entity.getComponent(Player).onReset, () => {
       this.queuedDirection = ''
@@ -32,10 +34,13 @@ export class PlayerPacManMover extends Mover {
   override onUpdate(dt: number) {
     if (this.slowDownCoolDown) {
       if (this.slowDownCoolDown.update(dt)) {
-        this.speed.copyFrom(this.normalSpeed)
         this.slowDownCoolDown = undefined
-      } else {
-        this.speed.copyFrom(this.slowSpeed)
+        this.speed.copyFrom(this.normalSpeed)
+        return
+      }
+      this.speed.copyFrom(this.slowSpeed)
+      if (this.slowFrame++ % 2 === 0) {
+        return
       }
     } else {
       this.speed.copyFrom(this.normalSpeed)
