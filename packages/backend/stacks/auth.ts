@@ -121,7 +121,7 @@ export function AuthStack({ stack, app }: StackContext) {
     new PolicyStatement({
       actions: ["iot:Publish"],
       effect: Effect.ALLOW,
-      resources: [`arn:aws:iot:${app.region}:${app.account}:topic/chili/*`],
+      resources: [`arn:aws:iot:${app.region}:${app.account}:topic/${app.stage}/chili/*`],
     }),
   ];
 

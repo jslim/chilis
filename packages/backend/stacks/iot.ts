@@ -50,7 +50,7 @@ export function IoTStack({ stack, app }: StackContext) {
 
   const gameActionTopicRule = new CfnTopicRule(stack, "game-action-topic-rule", {
     topicRulePayload: {
-      sql: `SELECT * FROM '${TOPIC_GAME_ACTION_PATTERN}/+'`,
+      sql: `SELECT * FROM '${app.stage}/${TOPIC_GAME_ACTION_PATTERN}+'`,
       ruleDisabled: false,
       awsIotSqlVersion: "2016-03-23",
       actions: [
