@@ -121,19 +121,21 @@ export const View: FC<ViewProps> = ({ className, background }) => {
   )
 
   useEffect(() => {
+    let mqttClient: MqttClientManager
+
     const clearGame = () => {
       gameInstance.current = null
     }
 
     async function destroyGame() {
       if (gameInstance.current) {
+        if (mqttClient?.isConnected) mqttClient.disconnect()
         await gameInstance.current.destroy()
         clearGame()
       }
     }
 
     const initGame = async () => {
-      let mqttClient: MqttClientManager
       const newGameInstance = await initializeGame()
       onGameStarted()
 
