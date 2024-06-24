@@ -69,11 +69,11 @@ export const View = forwardRef<HTMLVideoElement, ViewProps>(
           // eslint-disable-next-line jsx-a11y/media-has-caption
           <video
             className={css.video}
-            poster={getImageUrl(poster).src}
+            // poster={getImageUrl(poster).src}
             src={src}
             loop={loop}
             muted={!!muted}
-            preload="auto"
+            preload="metadata"
             crossOrigin="anonymous"
             controls={controls}
             autoPlay={isLowPowerMode ? false : autoPlay}
