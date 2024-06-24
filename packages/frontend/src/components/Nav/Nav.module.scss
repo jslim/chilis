@@ -108,18 +108,18 @@
         > li {
           &:last-child {
             position: absolute;
-            right: 12svh;
+            right: px(55);
           }
 
           @include media-tablet {
             &:last-child {
-              right: 10svh;
+              right: px(65);
             }
           }
 
           @include media-tablet-large {
             &:last-child {
-              right: 12svh;
+              right: px(95);
             }
           }
 

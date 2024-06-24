@@ -3,6 +3,8 @@ import config from '@/data/config.json'
 import { print } from '@/utils/print'
 import { getRuntimeEnv } from '@/utils/runtime-env'
 
+import { GAME_LOGS } from '@/game/game.config'
+
 export type GAEvent = {
   category: string
   action: string
@@ -41,7 +43,7 @@ class Service {
           })();
         `
         document.head.append(script)
-        print('Analytics', 'GA initialized')
+        if (GAME_LOGS) print('Analytics', 'GA initialized')
       }
     }
   }
@@ -54,7 +56,7 @@ class Service {
         event_label: label,
         value
       })
-      print('Analytics', `GA: ${JSON.stringify(payload)}`)
+      if (GAME_LOGS) print('Analytics', `GA: ${JSON.stringify(payload)}`)
     }
   }
 }

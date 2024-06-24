@@ -1,6 +1,6 @@
 import { Channels } from '@mediamonks/channels'
 
-import { CHANNEL_SOUND_PATH } from '@/game/game.config'
+import { CHANNEL_SOUND_PATH, GAME_LOGS } from '@/game/game.config'
 
 let channelsInstance: Channels | null = null
 
@@ -12,7 +12,7 @@ export const initChannels = () => {
       soundsExtension
     })
 
-    console.log('initChannels', channelsInstance)
+    if (GAME_LOGS) console.log('initChannels', channelsInstance)
   }
   return channelsInstance
 }
