@@ -32,6 +32,9 @@ export const View: FC<ViewProps> = ({
 }) => {
   const refs = useRefs<ViewRefs>()
   const playersToRender = useMemo(() => players.slice(0, maxPlayers), [players, maxPlayers])
+  const midIndex = useMemo(() => {
+    return Math.ceil(maxPlayers / 2)
+  }, [maxPlayers])
 
   const firstColumnPlayers = playersToRender.slice(0, maxPlayers / 2)
   const secondColumnPlayers = playersToRender.slice(maxPlayers / 2)
@@ -49,7 +52,7 @@ export const View: FC<ViewProps> = ({
               <span
                 className={classNames(css.player, { [css.isCurrentPlayer]: index + 1 === Number(currentPlayer?.rank) })}
               >
-                {index + 1} {truncateText(player.nickname, 9)}
+                {player.rank ?? index + 1} {truncateText(player.nickname, 9)}
               </span>
               <span
                 className={classNames(css.score, { [css.isCurrentPlayer]: index + 1 === Number(currentPlayer?.rank) })}
@@ -61,11 +64,11 @@ export const View: FC<ViewProps> = ({
         </ul>
         <ul className={css.list}>
           {secondColumnPlayers.map((player, index) => (
-            <li className={css.item} key={index + 5}>
+            <li className={css.item} key={index}>
               <span
                 className={classNames(css.player, { [css.isCurrentPlayer]: index + 6 === Number(currentPlayer?.rank) })}
               >
-                {index + 6} {truncateText(player.nickname, 9)}
+                {midIndex + (index + 1)} {truncateText(player.nickname, 9)}
               </span>
               <span
                 className={classNames(css.score, { [css.isCurrentPlayer]: index + 6 === Number(currentPlayer?.rank) })}

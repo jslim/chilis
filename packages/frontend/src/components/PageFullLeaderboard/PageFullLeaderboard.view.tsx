@@ -81,8 +81,10 @@ export const View: FC<ViewProps> = ({ content, arrayOfPlayers, onReady }) => {
               <ul className={css.list}>
                 {additionalPlayers.map((player, index) => (
                   <li key={index} className={css.player}>
-                    <span className={css.position}>{player.rank}</span>
-                    <span className={css.name}>{player.nickname}</span>
+                    <span className={css.wrapper}>
+                      <span className={css.position}>{20 + (index + 1)}</span>
+                      <span className={css.name}>{player.nickname}</span>
+                    </span>
                     <span className={css.score}>{player.score}</span>
                   </li>
                 ))}

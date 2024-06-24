@@ -1,9 +1,10 @@
 import type { FlumpLibrary } from '../../flump/FlumpLibrary'
 import type { Sprite } from 'pixi.js'
 
-import { Component } from '../../core/Entity'
 import { lerp } from '@/game/utils/math.utils'
 import { getRandom } from '@/game/utils/random.utils'
+
+import { Component } from '../../core/Entity'
 
 export class Light extends Component {
   private readonly lampSprite: Sprite

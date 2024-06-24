@@ -12,6 +12,102 @@ export const mockArrayOfPlayers: Player[] = [
   {
     nickname: 'BobTables',
     score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
+  },
+  {
+    nickname: 'QA_Jake',
+    score: 217_888
+  },
+  {
+    nickname: 'Kong',
+    score: 75_000
+  },
+  {
+    nickname: 'BobTables',
+    score: 1000
   }
 ]
 

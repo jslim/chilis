@@ -1,7 +1,8 @@
 import { Assets } from 'pixi.js'
 
-import { Component } from '../../core/Entity'
 import { SimpleNumberText } from '@/game/display/SimpleNumberText'
+
+import { Component } from '../../core/Entity'
 
 export class SimpleNumberDisplay extends Component {
   public scoreText: SimpleNumberText

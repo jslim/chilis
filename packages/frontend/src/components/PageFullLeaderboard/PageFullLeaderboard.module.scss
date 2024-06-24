@@ -112,11 +112,19 @@
   }
 
   .customList {
+    @include flex-center;
+    margin-top: px(40);
+
     .list {
-      @include flex-center-vert;
+      display: flex;
       flex-direction: column;
 
       .player {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: px(10);
+
         margin-bottom: px(5);
       }
 
@@ -129,6 +137,10 @@
         @include media-tablet-large {
           @include font-size(30, 37);
         }
+      }
+
+      .position {
+        margin-right: px(15);
       }
 
       .score {
