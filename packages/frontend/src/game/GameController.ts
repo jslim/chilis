@@ -55,8 +55,6 @@ export class GameController {
     // setup scene manager
     this.sceneManager = new SceneManager(this, FRAME_RATE)
     this.sceneManager.root.addComponent(new GameState())
-
-    console.log('GameController.INIT')
   }
 
   public setPixelated(isPixelated: boolean) {
