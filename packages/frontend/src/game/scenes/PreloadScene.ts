@@ -6,6 +6,7 @@ import { assetsManifest, soundManifest } from '../assets.manifest'
 import { Scene } from './Scene'
 
 export class PreloadScene extends Scene {
+  private static hasAssetsInitialized = false
   private readonly graphics = new Graphics()
 
   override onStart() {
@@ -13,10 +14,21 @@ export class PreloadScene extends Scene {
     this.entity.addChild(this.graphics)
   }
 
+  async setAssetsInitialized() {
+    PreloadScene.hasAssetsInitialized = true
+  }
+
   async preload() {
     // init assets manager
 
-    await Assets.init({ manifest: assetsManifest })
+    if (!PreloadScene.hasAssetsInitialized) {
+      await Assets.init()
+      await this.setAssetsInitialized()
+    }
+
+    for (const bundle of assetsManifest.bundles) {
+      Assets.addBundle(bundle.name, bundle.assets)
+    }
 
     // setup level bundles
     for (let level = 1; level <= 6; level++) {
