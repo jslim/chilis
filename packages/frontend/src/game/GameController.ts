@@ -3,15 +3,16 @@ import type { Channel, Channels } from '@mediamonks/channels'
 import type { GameAction } from '@/game/GameAction'
 import type { GameStateValues } from './components/GameState'
 
-import { Application, TextureSource } from 'pixi.js'
+import { Application, Assets, TextureSource } from 'pixi.js'
 
+import { assetsManifest } from '@/game/assets.manifest'
 import { Value } from '@/game/core/Value'
 
 import { GameState } from './components/GameState'
 import { Burger } from './components/level/Burger'
 import { Player } from './components/player/Player'
 import { Signal } from './core/Signal'
-import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_WIDTH } from './game.config'
+import { DEBUG_KEYS, DEBUG_SCENES_FROM_URL, FRAME_RATE, GAME_HEIGHT, GAME_LOGS, GAME_WIDTH } from './game.config'
 import LevelScene from './scenes/LevelScene'
 import SceneManager from './scenes/SceneManager'
 
@@ -54,11 +55,13 @@ export class GameController {
     // setup scene manager
     this.sceneManager = new SceneManager(this, FRAME_RATE)
     this.sceneManager.root.addComponent(new GameState())
+
+    console.log('GameController.INIT')
   }
 
   public setPixelated(isPixelated: boolean) {
-    if (isPixelated) this.app.renderer.resize(GAME_WIDTH, GAME_HEIGHT)
-    else this.app.renderer.resize(GAME_WIDTH * 4, GAME_HEIGHT * 4)
+    if (isPixelated) this.app.renderer?.resize(GAME_WIDTH, GAME_HEIGHT)
+    else this.app.renderer?.resize(GAME_WIDTH * 4, GAME_HEIGHT * 4)
   }
 
   public async preload() {
@@ -180,21 +183,32 @@ export class GameController {
     if (!this.soundChannel) this.soundChannel = channels.createChannel('game')
   }
 
-  public destroy() {
-    this.soundChannel.stopAll({ immediate: true })
-    this.soundChannel.destruct()
-
+  public async destroy() {
     this.isDestroyed = true
 
-    this.sceneManager.destroy()
-    this.app.destroy()
-
-    //this.app.canvas.remove()
+    const currentLevel = this.gameState.level.value
+    for (const bundle of assetsManifest.bundles) {
+      Assets.unloadBundle(bundle.name).then(() => {
+        if (GAME_LOGS) console.log('Unload bundle', bundle.name)
+      })
+    }
+    for (let level = 1; level <= Math.min(currentLevel, 6); level++) {
+      Assets.unloadBundle(`level${level}`).then(() => {
+        if (GAME_LOGS) console.log('Unload level bundle', level)
+      })
+    }
+    Assets.resolver.reset()
+    Assets.cache.reset()
 
     // cleanup signals
     this.onLevelComplete.destroy()
     this.onGameOver.destroy()
     this.onGameAction.destroy()
     this.onShowGameBorder.destroy()
+
+    this.soundChannel.stopAll({ immediate: true })
+
+    this.sceneManager.destroy()
+    this.app.destroy()
   }
 }
