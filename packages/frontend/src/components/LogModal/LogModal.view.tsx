@@ -54,9 +54,9 @@ export const View: FC<ViewProps> = ({
   onSkip
 }) => {
   const refs = useRefs<ViewRefs>()
-  const [phoneValue, setPhoneValue] = useState('')
-  const [passwordValue, setPasswordValue] = useState('')
-  const [nicknameValue, setNicknameValue] = useState('')
+  const [phoneValue, setPhoneValue] = useState<string>('')
+  const [passwordValue, setPasswordValue] = useState<string>('')
+  const [nicknameValue, setNicknameValue] = useState<string>('')
   const [accessToken, setAccessToken] = useLocalStorage('accessToken')
   const [, setIdToken] = useLocalStorage('idToken')
   const [hasError, setHasError] = useState(false)
@@ -167,6 +167,8 @@ export const View: FC<ViewProps> = ({
             id="phone"
             name="phone"
             placeholder={phone}
+            autoComplete="username"
+            value={phoneValue}
             onChange={(e) => setPhoneValue(e.target.value)}
             required
           />
@@ -175,6 +177,8 @@ export const View: FC<ViewProps> = ({
             id="password"
             name="password"
             placeholder={password}
+            autoComplete="current-password"
+            value={passwordValue}
             onChange={(e) => setPasswordValue(e.target.value)}
             required
           />
@@ -206,8 +210,9 @@ export const View: FC<ViewProps> = ({
             id="nickname"
             name="nickname"
             placeholder={nickname}
+            value={nicknameValue ?? ''}
             onChange={(e) => handleNicknameChange(e.target.value)}
-            autoComplete="current-password"
+            autoComplete="off"
             required
           />
         </div>
