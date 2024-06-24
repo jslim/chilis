@@ -1,5 +1,5 @@
 import { SecretsStack } from "@/stacks";
-import { RemovalPolicy } from "aws-cdk-lib";
+import { Duration, RemovalPolicy } from "aws-cdk-lib";
 import { Function, use } from "sst/constructs";
 import { BRINKER_ACCESS } from "@/libs/config";
 import { CfnPolicy } from "aws-cdk-lib/aws-iot";
@@ -105,6 +105,8 @@ export function AuthStack({ stack, app }: StackContext) {
           custom: true,
         },
         preventUserExistenceErrors: true,
+        accessTokenValidity: Duration.days(1),
+        idTokenValidity: Duration.days(1),
       },
     },
   });
