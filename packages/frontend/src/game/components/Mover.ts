@@ -104,7 +104,7 @@ export class Mover extends Component {
   }
 
   public isEqual(posA: number, posB: number) {
-    return Math.floor(posA * 10) === Math.floor(posB * 10)
+    return Math.floor(posA * 20) === Math.floor(posB * 20)
   }
 
   public left() {
