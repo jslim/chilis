@@ -53,13 +53,6 @@ export function gameApiStack({ stack, app }: StackContext) {
       }),
       // eslint-disable-next-line
       // @ts-ignore
-      // new PolicyStatement({
-      //   actions: ["dynamodb:Query"],
-      //   effect: Effect.ALLOW,
-      //   resources: [gameHistoryTable.tableArn],
-      // }),
-      // eslint-disable-next-line
-      // @ts-ignore
       new PolicyStatement({
         actions: ["dynamodb:UpdateItem", "dynamodb:Query"],
         effect: Effect.ALLOW,
