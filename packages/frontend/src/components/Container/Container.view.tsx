@@ -23,6 +23,8 @@ import { useRefs } from '@/hooks/use-refs'
 
 import { BaseImage } from '@/components/BaseImage'
 
+import { GAME_LOGS } from '@/game/game.config'
+
 export interface ViewProps {
   className?: string
   background?: string
@@ -61,7 +63,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
       if (!apiResponse.gameId) {
         console.error('Submission failed:', apiResponse)
       } else if (apiResponse.gameId) {
-        console.log('Game started:', apiResponse.gameId)
+        if (GAME_LOGS) console.log('Game started:', apiResponse.gameId)
+
         localState().user.setGameId(String(apiResponse.gameId))
         setGameId(String(apiResponse.gameId))
       } else {
@@ -96,7 +99,8 @@ export const View: FC<ViewProps> = ({ className, background }) => {
 
         if (Array.isArray(apiResponse)) {
           localState().user.setPlayersList(apiResponse)
-          console.log('Game updated', apiResponse)
+
+          if (GAME_LOGS) console.log('Game updated', apiResponse)
         } else {
           console.error('Error updating:', apiResponse)
         }

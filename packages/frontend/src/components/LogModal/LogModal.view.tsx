@@ -20,6 +20,8 @@ import { BaseForm } from '@/components/BaseForm'
 import { BaseImage } from '@/components/BaseImage'
 import { CloseButton } from '@/components/CloseButton'
 
+import { GAME_LOGS } from '@/game/game.config'
+
 export interface ViewProps extends ControllerProps {}
 
 export type ViewRefs = {
@@ -121,10 +123,9 @@ export const View: FC<ViewProps> = ({
       const apiResponse = response as ApiResponse
 
       if (!apiResponse.IdToken || !apiResponse.AccessToken) {
-        console.error('Error while setting nickname:', apiResponse.message)
+        if (GAME_LOGS) console.error('Error while setting nickname:', apiResponse.message)
         setHasError(true)
       } else {
-        console.log('Nickname set successful:', apiResponse.message)
         saveTokens(apiResponse)
         localState().user.setNickname(nicknameValue)
         onClose()
@@ -206,8 +207,8 @@ export const View: FC<ViewProps> = ({
             name="nickname"
             placeholder={nickname}
             onChange={(e) => handleNicknameChange(e.target.value)}
+            autoComplete="current-password"
             required
-            pattern="^[a-zA-Z0-9._-]{3,10}$"
           />
         </div>
       </BaseForm>

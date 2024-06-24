@@ -36,6 +36,8 @@ import { ScreenNoScript } from '@/components/ScreenNoScript'
 import { SoundSwitch } from '@/components/SoundSwitch'
 import { TopNav } from '@/components/TopNav'
 
+import { GAME_LOGS } from '@/game/game.config'
+
 const ScreenRotate = dynamic(() => import('@/components/ScreenRotate').then((m) => m.ScreenRotate), { ssr: false })
 const CookieBanner = dynamic(() => import('@/components/CookieBanner').then((m) => m.CookieBanner), { ssr: false })
 const AppAdmin = dynamic(() => import('@/components/AppAdmin').then((m) => m.AppAdmin), { ssr: false })
@@ -87,7 +89,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
       return response as ApiResponse
     } catch (error_) {
-      console.error(error_)
+      if (GAME_LOGS) console.error(error_)
     }
   }, [])
 
@@ -241,7 +243,6 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
 
       try {
         const payload = await verifier.verify(idToken)
-        console.log('Token is valid. Payload:', payload)
         localState().user.setIsTokenValid(true)
 
         if (payload.preferred_username) {
@@ -259,7 +260,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
           localState().user.setGameId(gameId)
         }
       } catch (error) {
-        console.log('Token not valid!', error)
+        if (GAME_LOGS) console.log('Token not valid!', error)
         localState().user.resetUser()
       }
     }
