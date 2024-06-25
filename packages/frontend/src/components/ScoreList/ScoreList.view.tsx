@@ -85,7 +85,7 @@ export const View: FC<ViewProps> = ({
           <h3 className={css.rankTitle}>{currentRankText}</h3>
           <div className={classNames(css.item, css.current)}>
             <span className={css.player}>
-              {Number(currentPlayer.rank) > 500 ? '???' : currentPlayer.rank} {truncateText(currentPlayer.nickname, 9)}
+              {Number(currentPlayer.rank) > 500 ? '>500' : currentPlayer.rank} {truncateText(currentPlayer.nickname, 9)}
             </span>
             <span className={css.score}>{currentPlayer.score}</span>
           </div>
