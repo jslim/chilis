@@ -121,11 +121,11 @@ export class Player extends Component {
     this.subscribe(this.onHitByBullet, (bullet) => {
       this.level?.screenShake(3, 0.35)
       this.reduceLife()
-      bullet.entity.destroy()
+      bullet.entity?.destroy()
     })
     this.subscribe(this.onHitByGrease, (bullet) => {
       this.entity.getComponent(PlayerPacManMover).slowDown()
-      bullet.entity.destroy()
+      bullet.entity?.destroy()
     })
   }
 
