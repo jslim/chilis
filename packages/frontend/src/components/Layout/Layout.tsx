@@ -384,7 +384,7 @@ export const Layout: FC<AppProps<PageProps>> = memo(({ Component, pageProps }) =
           setLoginButtonTriggered(true)
           localState().screen.setIsModalOpen(true)
         }}
-        allowSignin={allowSignin}
+        allowSignin={!noNickname || (allowSignin && localState().navigation.pathname !== routes.GAME)}
       />
 
       {refs.pathname.current !== routes.FULL_LEADERBOARD &&
