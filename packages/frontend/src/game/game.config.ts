@@ -23,7 +23,7 @@ export const CHANNEL_SOUND_PATH = IS_ARCADE_BUILD ? '/' : GAME_SOUNDS_BASE_URL
 /* DEBUG */
 
 export const GAME_LOGS = !IS_PRODUCTION_BUILD
-export const DEBUG_KEYS = !!(process.env.SST_STAGE === 'dev' || process.env.SST_STAGE === 'stg')
+export const DEBUG_KEYS = true // !!(process.env.SST_STAGE === 'dev' || process.env.SST_STAGE === 'stg')
 export const DEBUG_SCENES_FROM_URL = !IS_PRODUCTION_BUILD
 
 export const DRAW_DEBUG_GRID = false
