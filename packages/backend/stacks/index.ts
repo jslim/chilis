@@ -1,5 +1,6 @@
 // GENERAL
 export { CICD } from "@/stacks/cicd/cicd";
+export { AlarmStack } from "@/stacks/alarm";
 
 // WEB
 export { FrontendDistribution } from "@/stacks/spa/distribution";

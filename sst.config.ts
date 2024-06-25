@@ -2,6 +2,7 @@ import { SSTConfig } from "sst";
 
 import {
   CICD,
+  AlarmStack,
   FirehoseStack,
   FrontendDistribution,
   S3Origin,
@@ -35,6 +36,7 @@ export default {
     }
 
     app
+      .stack(AlarmStack)
       /* Backend */
       .stack(WafStack)
       .stack(Database)
