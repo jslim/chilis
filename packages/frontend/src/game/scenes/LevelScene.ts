@@ -124,12 +124,15 @@ export default class LevelScene extends Scene {
     //this.containers.mid.visible = false;
 
     this.subscribe(this.onAllBurgersCompleted, () => {
-      this.isPlaying = false
-      this.player.getComponent(Player).state.value = 'victory'
-      for (const cpu of this.cpus) {
-        cpu.getComponent(Cpu).state.value = 'defeat'
+      const player = this.player.getComponent(Player)
+      if (this.isPlaying && player.state.value !== 'die') {
+        this.isPlaying = false
+        this.player.getComponent(Player).state.value = 'victory'
+        for (const cpu of this.cpus) {
+          cpu.getComponent(Cpu).state.value = 'defeat'
+        }
+        createDelay(this.entity, 2, () => this.showWinScreen())
       }
-      createDelay(this.entity, 2, () => this.showWinScreen())
     })
 
     this.playSound('game_music', true)
@@ -224,7 +227,19 @@ export default class LevelScene extends Scene {
             )
 
             const playerComponent = this.player.getComponent(Player)
-            this.subscribe(playerComponent.onDied, () => this.showDefeatScreen())
+            this.subscribe(playerComponent.state.onChanged, (state) => {
+              if (state === 'die' && this.isPlaying) {
+                this.isPlaying = false
+                this.removeAllBullets()
+                this.cpus.forEach((cpu) => (cpu.getComponent(Cpu).state.value = 'defeat'))
+                this.burgers.forEach((burger) => {
+                  burger.getComponent(Burger).state.value = 'stopped'
+                })
+              }
+            })
+            this.subscribe(playerComponent.onDied, () => {
+              this.showDefeatScreen()
+            })
             this.subscribe(playerComponent.onHitCpu, () =>
               this.cpus.forEach((cpu) => (cpu.getComponent(Cpu).state.value = 'defeat'))
             )
@@ -232,14 +247,7 @@ export default class LevelScene extends Scene {
             this.subscribe(playerComponent.onReset, () =>
               this.cpus.forEach((cpu) => {
                 cpu.getComponent(Cpu).reset()
-
-                // remove all bullets
-                const removeIfHasBullet = (bullet: Entity) => {
-                  if (bullet.hasComponent(Bullet)) bullet.destroy()
-                }
-                Object.values(this.containers).forEach((cont: Entity) =>
-                  cont.entities.forEach((e) => removeIfHasBullet(e))
-                )
+                this.removeAllBullets()
               })
             )
           } else if (id === TileId.Cpu || id === TileId.BossCpu) {
@@ -394,6 +402,13 @@ export default class LevelScene extends Scene {
     }
 
     this.emitAction({ a: 'start', l: this.gameState.level.value })
+  }
+
+  removeAllBullets() {
+    const removeIfHasBullet = (bullet: Entity) => {
+      if (bullet.hasComponent(Bullet)) bullet.destroy()
+    }
+    Object.values(this.containers).forEach((cont: Entity) => cont.entities.forEach((e) => removeIfHasBullet(e)))
   }
 
   createIntweenFloorTiles(path: TiledLayerPath, map: TiledMap, spriteSheet: Texture) {
