@@ -26,8 +26,10 @@ export default class GameHistoryServices {
       // Save game score in userGameHistory
       await this.repository.saveGameScoreToHistory(userSub, gameScore);
 
-      // Update the leaderboard with the new game score
-      await this.repository.updateLeaderboard(userSub, { ...gameScore, loyaltyId, nickname });
+      if (score > 0) {
+        // Update the leaderboard with the new game score
+        await this.repository.updateLeaderboard(userSub, { ...gameScore, loyaltyId, nickname });
+      }
     } catch (err) {
       throw new Error(`An error occurred while trying to record the game score. ${err}`);
     }
