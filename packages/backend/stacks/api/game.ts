@@ -26,7 +26,7 @@ export function gameApiStack({ stack, app }: StackContext) {
       // eslint-disable-next-line
       // @ts-ignore
       new PolicyStatement({
-        actions: ["dynamodb:Query", "dynamodb:PutItem"],
+        actions: ["dynamodb:Query", "dynamodb:PutItem", "dynamodb:UpdateItem"],
         effect: Effect.ALLOW,
         resources: [gameSessionTable.tableArn],
       }),
