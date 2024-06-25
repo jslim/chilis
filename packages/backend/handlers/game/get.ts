@@ -8,7 +8,7 @@ import DynamoDBClient from "@/services/dynamodb";
 import { checkCountry } from "@/libs/check-country";
 
 logger.appendKeys({
-  namespace: "Lambda-GET-Game",
+  namespace: "Lambda-GET-New-Game",
   service: "AWS::Lambda",
 });
 
@@ -25,7 +25,7 @@ const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")?.split(","
  * @param {Context} context - The context object providing information about the runtime environment.
  * @returns {Promise<APIGatewayProxyResult>} - The result object containing the HTTP response with leaderboard data.
  */
-export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
+export const handler = async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> =>
   defaultHttpHandler(event, context, async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     logger.info("Handler to create a new game.", { event, ...context });
 

@@ -2,18 +2,26 @@ import { GameStatus, GameEventStep } from "@/types/game";
 import { PutItemOutput, QueryOutput, UpdateItemOutput } from "@aws-sdk/client-dynamodb";
 import type DynamoDBClient from "@/services/dynamodb";
 
+import { logger } from "@/libs/powertools";
+
+logger.appendKeys({
+  namespace: "Lambda-Game-Repositories",
+  service: "AWS::Lambda",
+});
+
 const repository: GameRepository | null = null;
+
+interface activeGame {
+  subReference: string;
+  gameId: string;
+  timestamp: string;
+}
 
 class GameRepository {
   constructor(private client: DynamoDBClient) {}
 
-  /**
-   * Check if a game is active based on the provided userId.
-   * @param id - The userId of the game to check.
-   * @returns Promise<boolean> - A boolean indicating if the game is active.
-   */
-  public async isGameActive(userId: string): Promise<boolean> {
-    const params = {
+  private getActiveGamesParams(userId: string): Object {
+    return {
       KeyConditionExpression: "#subReferenceName = :subReferenceValue",
       FilterExpression: "#statusName = :statusValue",
       ExpressionAttributeValues: {
@@ -24,8 +32,16 @@ class GameRepository {
         "#subReferenceName": "subReference",
         "#statusName": "status",
       },
-      ProjectionExpression: "subReference",
     };
+  }
+
+  /**
+   * Check if a game is active based on the provided userId.
+   * @param id - The userId of the game to check.
+   * @returns Promise<boolean> - A boolean indicating if the game is active.
+   */
+  public async isGameActive(userId: string): Promise<boolean> {
+    const params = { ...this.getActiveGamesParams(userId), ProjectionExpression: "subReference" };
     let activeGames = 0;
     let lastEvaluatedKey = undefined;
 
@@ -49,19 +65,62 @@ class GameRepository {
     return activeGames > 0;
   }
 
+  /**
+   * Manage active games for a specific user.
+   * If the number of active games exceeds 3, mark the oldest game as invalid.
+   * @param userId - The userId of the user.
+   * @returns Promise<void>
+   */
+  public async manageActiveGames(userId: string): Promise<void> {
+    let activeGames: activeGame[] = [];
+    let lastEvaluatedKey = undefined;
+
+    do {
+      const queryResult = await this.client.query(
+        {
+          KeyConditionExpression: "#subReferenceName = :subReferenceValue",
+          FilterExpression: "#statusName = :statusValue",
+          ExpressionAttributeValues: {
+            ":subReferenceValue": userId,
+            ":statusValue": GameStatus.ACTIVE,
+          },
+          ExpressionAttributeNames: {
+            "#subReferenceName": "subReference",
+            "#statusName": "status",
+            "#ts": "timestamp",
+          },
+          ProjectionExpression: "subReference, gameId, #ts",
+          ExclusiveStartKey: lastEvaluatedKey,
+        },
+        true,
+      );
+
+      activeGames = activeGames.concat(queryResult.Items as unknown as activeGame[]);
+      if (activeGames.length >= 3) {
+        activeGames.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+        this.updateGameStatus(String(activeGames[0].subReference), String(activeGames[0].gameId), GameStatus.INVALID);
+
+        logger.error({
+          eventType: "maximumActiveGameInfo",
+          UserId: activeGames[0].subReference,
+          gameId: activeGames[0].gameId,
+          timestamp: new Date().toISOString(),
+          message: "Maximum active games capacity reached; This game was marked invalid.",
+        });
+        break;
+      }
+
+      lastEvaluatedKey = queryResult.LastEvaluatedKey;
+    } while (lastEvaluatedKey);
+  }
+
+  /**
+   * Get the active game for a specific user.
+   * @param userId - The userId of the user.
+   * @returns Promise<QueryOutput> - The query output.
+   */
   public getActiveGameByUser = async (userId: string): Promise<QueryOutput> => {
-    const params = {
-      KeyConditionExpression: "#subReferenceName = :subReferenceValue",
-      FilterExpression: "#statusName = :statusValue",
-      ExpressionAttributeValues: {
-        ":subReferenceValue": userId,
-        ":statusValue": GameStatus.ACTIVE,
-      },
-      ExpressionAttributeNames: {
-        "#subReferenceName": "subReference",
-        "#statusName": "status",
-      },
-    };
+    const params = this.getActiveGamesParams(userId);
 
     try {
       return await this.client.query(
@@ -147,11 +206,15 @@ class GameRepository {
       UpdateExpression: "SET #steps = list_append(#steps, :newStep)",
       ExpressionAttributeValues: {
         ":newStep": [newStep],
+        ":complete": GameStatus.COMPLETED,
+        ":invalid": GameStatus.INVALID,
       },
       ExpressionAttributeNames: {
         "#steps": "steps",
+        "#status": "status",
       },
-      ConditionExpression: "attribute_exists(subReference) AND attribute_exists(gameId)",
+      ConditionExpression:
+        "attribute_exists(subReference) AND attribute_exists(gameId) AND #status <> :complete AND #status <> :invalid",
     };
 
     try {

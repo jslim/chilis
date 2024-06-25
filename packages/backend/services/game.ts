@@ -17,11 +17,8 @@ export default class GameService {
    * @returns The ID of the newly created game or null if creation fails.
    */
   public createNewGame = async (subReference: string): Promise<string | null> => {
-    // Validate that there is no other active game
-    const activeGame = await this.repository.isGameActive(subReference);
-    if (activeGame) {
-      throw new Error("There is currently an active game.");
-    }
+    // Manage active games if the number of active games exceeds 3, mark the oldest game as invalid
+    await this.repository.manageActiveGames(subReference);
 
     try {
       const newGameID = uuidv4();
