@@ -50,7 +50,7 @@ export const burgerHeightByTileId = {
 export const BurgerTileSize = { tilewidth: 30, tileheight: 16 }
 
 export class Burger extends Component {
-  public readonly state = new Value<'idle' | 'bounce' | 'fall' | 'complete'>('idle')
+  public readonly state = new Value<'idle' | 'bounce' | 'fall' | 'complete' | 'stopped'>('idle')
 
   public readonly onHitBurger = new Signal<Entity>()
   public readonly onHitPlate = new Signal<Entity>()
