@@ -36,7 +36,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
 
     certificate = new acm.DnsValidatedCertificate(stack, `${app.stage}-frontend-domain-certificate`, {
       domainName: targetHostedzoneName,
-      subjectAlternativeNames: [domainName],
+      subjectAlternativeNames: [domainName, `*.${domainName}`],
       hostedZone,
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
@@ -83,7 +83,16 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_IOT_ACTION_TOPIC: `${app.stage}/chili/action/`,
     },
     // dev: { deploy: true },
-    ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
+    ...(enableCustomDomain
+      ? {
+          customDomain: {
+            domainName,
+            domainAlias: `www.${domainName}`,
+            hostedZone: targetHostedzoneName,
+            certificate,
+          },
+        }
+      : {}),
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
@@ -92,6 +101,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
         `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`,
         `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`,
       ),
+      certificate,
       distribution: {
         enabled: true,
         enableIpv6: true,
