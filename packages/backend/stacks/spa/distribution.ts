@@ -83,7 +83,16 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       NEXT_PUBLIC_IOT_ACTION_TOPIC: `${app.stage}/chili/action/`,
     },
     // dev: { deploy: true },
-    ...(enableCustomDomain ? { customDomain: { domainName, hostedZone: targetHostedzoneName, certificate } } : {}),
+    ...(enableCustomDomain
+      ? {
+          customDomain: {
+            domainName,
+            alternateNames: [`www.${domainName}`],
+            hostedZone: targetHostedzoneName,
+            certificate,
+          },
+        }
+      : {}),
     cdk: {
       // eslint-disable-next-line
       // @ts-ignore
