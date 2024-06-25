@@ -20,7 +20,6 @@ export function Database({ stack, app }: StackContext) {
           ? {
               removalPolicy: RemovalPolicy.RETAIN,
               pointInTimeRecovery: true,
-              replicationRegions: ["us-east-2"],
               billingMode: BillingMode.PROVISIONED,
               readCapacity: 4,
               writeCapacity: 4,
@@ -48,7 +47,6 @@ export function Database({ stack, app }: StackContext) {
           ? {
               removalPolicy: RemovalPolicy.RETAIN,
               pointInTimeRecovery: true,
-              replicationRegions: ["us-east-2"],
               billingMode: BillingMode.PROVISIONED,
               readCapacity: 4,
               writeCapacity: 4,
@@ -72,7 +70,6 @@ export function Database({ stack, app }: StackContext) {
           ? {
               removalPolicy: RemovalPolicy.RETAIN,
               pointInTimeRecovery: true,
-              replicationRegions: ["us-east-2"],
               billingMode: BillingMode.PROVISIONED,
               readCapacity: 4,
               writeCapacity: 4,
@@ -107,7 +104,6 @@ export function Database({ stack, app }: StackContext) {
           ? {
               removalPolicy: RemovalPolicy.RETAIN,
               pointInTimeRecovery: true,
-              replicationRegions: ["us-east-2"],
               billingMode: BillingMode.PROVISIONED,
               readCapacity: 4,
               writeCapacity: 4,
