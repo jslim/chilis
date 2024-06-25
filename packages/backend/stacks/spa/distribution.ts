@@ -36,7 +36,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
 
     certificate = new acm.DnsValidatedCertificate(stack, `${app.stage}-frontend-domain-certificate`, {
       domainName: targetHostedzoneName,
-      subjectAlternativeNames: [domainName],
+      subjectAlternativeNames: [domainName, `*.${domainName}`],
       hostedZone,
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
@@ -87,7 +87,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
       ? {
           customDomain: {
             domainName,
-            alternateNames: [`www.${domainName}`],
+            domainAlias: `www.${domainName}`,
             hostedZone: targetHostedzoneName,
             certificate,
           },
@@ -101,6 +101,7 @@ export function FrontendDistribution({ stack, app }: StackContext) {
         `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`,
         `${app.stage}-${S3_ORIGIN_BUCKET_NAME}`,
       ),
+      certificate,
       distribution: {
         enabled: true,
         enableIpv6: true,
