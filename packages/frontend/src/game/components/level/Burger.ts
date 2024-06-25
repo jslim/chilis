@@ -76,7 +76,6 @@ export class Burger extends Component {
 
   private readonly fallStats = {
     burgerHit: false,
-    totalCpusHit: 0,
     // this value is passed from one to another burger, to get sum of chain of burgers hit
     chainCollisionCount: 0
   }
@@ -154,12 +153,19 @@ export class Burger extends Component {
         }
 
         case 'fall': {
-          // test if intersects with cpus on the burger
+          // if player lured a enemy on a burgerpart, it should kill them + give 1000 points
+          let totalCpusHit = 0
           for (const cpuEntity of this.level.cpus) {
             if (this.intersectsWith(cpuEntity)) {
+              totalCpusHit++
               this.onHitCpu.emit(cpuEntity)
               this.level.playSound('burger_hit_cpu')
             }
+          }
+          if (totalCpusHit > 0) {
+            const points = POINTS_PER_TOTAL_CPUS_HIT[totalCpusHit]
+            this.level.emitAction({ a: 'drop-enemy', l: this.level.gameState.level.value, p: points })
+            this.level.addScore(this.entity.position, points, 0xffffff, getPixGamerNumberFont())
           }
 
           this.entity.y += 1
@@ -176,11 +182,8 @@ export class Burger extends Component {
 
     this.subscribe(this.onSliceCompleted, () => {
       this.state.value = 'fall'
-
-      this.calculateCPUHitScoreAndShow()
     })
     this.subscribe(this.onHitCpu, (cpu) => {
-      this.fallStats.totalCpusHit++
       cpu.getComponent(Cpu).onHitByBurger.emit(this)
 
       const cpuName = cpu.getComponent(Cpu).name
@@ -314,6 +317,7 @@ export class Burger extends Component {
         // test if intersects with cpu
         for (const cpuEntity of cpus) {
           if (this.intersectsWith(cpuEntity)) {
+            const cpu = cpuEntity.getComponent(Cpu)
             this.onHitCpu.emit(cpuEntity)
             this.level.playSound('burger_hit_cpu')
             break loop
@@ -388,24 +392,6 @@ export class Burger extends Component {
       return aRect.y - bRect.y
     })
     return platesOnSameRow[0]
-  }
-
-  private calculateCPUHitScoreAndShow() {
-    // hack to prevent double scoring
-    if (this.isCompleted) return
-
-    let points = 0
-
-    if (this.fallStats.totalCpusHit) {
-      const pointForCpuHit = POINTS_PER_TOTAL_CPUS_HIT[this.fallStats.totalCpusHit]
-      points += pointForCpuHit
-      // reset
-      this.level.emitAction({ a: 'drop-enemy', l: this.level.gameState.level.value, p: pointForCpuHit })
-    }
-
-    this.fallStats.totalCpusHit = 0
-
-    this.level.addScore(this.entity.position, points, 0xffffff, getPixGamerNumberFont())
   }
 
   private calculateFallEndScoreAndShow() {
