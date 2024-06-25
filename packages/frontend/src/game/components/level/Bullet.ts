@@ -20,6 +20,8 @@ export class Bullet extends Component {
   override onStart() {
     super.onStart()
     this.level = this.entity.getComponent(LevelComponent).level
+
+    this.disposables.push(() => this.onHit.destroy())
   }
 
   override onUpdate(_dt: number) {

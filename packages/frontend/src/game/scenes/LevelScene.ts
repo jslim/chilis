@@ -406,7 +406,7 @@ export default class LevelScene extends Scene {
 
   removeAllBullets() {
     const removeIfHasBullet = (bullet: Entity) => {
-      if (bullet.hasComponent(Bullet)) bullet.destroy()
+      if (bullet?.hasComponent(Bullet)) bullet.destroy()
     }
     Object.values(this.containers).forEach((cont: Entity) => cont.entities.forEach((e) => removeIfHasBullet(e)))
   }
