@@ -2,8 +2,12 @@ import { RemovalPolicy } from "aws-cdk-lib";
 import type { StackContext } from "sst/constructs";
 import { Table as DynamoDbTable } from "sst/constructs";
 import { ALLTIME_LEADERBOARD_INDEX } from "@/libs/config";
+import { detectStage } from "@/libs/detect-stage";
+import { BillingMode } from "aws-cdk-lib/aws-dynamodb";
 
 export function Database({ stack, app }: StackContext) {
+  const { isProd } = detectStage(app.stage);
+
   const gameHistoryTable = new DynamoDbTable(stack, "userGameHistory", {
     fields: {
       subReference: "string",
@@ -12,7 +16,17 @@ export function Database({ stack, app }: StackContext) {
     primaryIndex: { partitionKey: "subReference" },
     cdk: {
       table: {
-        removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+        ...(isProd
+          ? {
+              removalPolicy: RemovalPolicy.RETAIN,
+              pointInTimeRecovery: true,
+              replicationRegions: ["us-east-2"],
+              billingMode: BillingMode.PROVISIONED,
+              readCapacity: 4,
+              writeCapacity: 4,
+              contributorInsightsEnabled: true,
+            }
+          : { removalPolicy: RemovalPolicy.DESTROY }),
       },
     },
   });
@@ -30,7 +44,17 @@ export function Database({ stack, app }: StackContext) {
     primaryIndex: { partitionKey: "subReference", sortKey: "gameId" },
     cdk: {
       table: {
-        removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+        ...(isProd
+          ? {
+              removalPolicy: RemovalPolicy.RETAIN,
+              pointInTimeRecovery: true,
+              replicationRegions: ["us-east-2"],
+              billingMode: BillingMode.PROVISIONED,
+              readCapacity: 4,
+              writeCapacity: 4,
+              contributorInsightsEnabled: true,
+            }
+          : { removalPolicy: RemovalPolicy.DESTROY }),
       },
     },
   });
@@ -44,7 +68,17 @@ export function Database({ stack, app }: StackContext) {
     primaryIndex: { partitionKey: "subReference", sortKey: "timestamp" },
     cdk: {
       table: {
-        removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+        ...(isProd
+          ? {
+              removalPolicy: RemovalPolicy.RETAIN,
+              pointInTimeRecovery: true,
+              replicationRegions: ["us-east-2"],
+              billingMode: BillingMode.PROVISIONED,
+              readCapacity: 4,
+              writeCapacity: 4,
+              contributorInsightsEnabled: true,
+            }
+          : { removalPolicy: RemovalPolicy.DESTROY }),
       },
     },
   });
@@ -69,7 +103,17 @@ export function Database({ stack, app }: StackContext) {
     },
     cdk: {
       table: {
-        removalPolicy: app.stage !== "prod" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+        ...(isProd
+          ? {
+              removalPolicy: RemovalPolicy.RETAIN,
+              pointInTimeRecovery: true,
+              replicationRegions: ["us-east-2"],
+              billingMode: BillingMode.PROVISIONED,
+              readCapacity: 4,
+              writeCapacity: 4,
+              contributorInsightsEnabled: true,
+            }
+          : { removalPolicy: RemovalPolicy.DESTROY }),
       },
     },
   });
