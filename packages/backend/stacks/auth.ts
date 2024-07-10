@@ -105,8 +105,8 @@ export function AuthStack({ stack, app }: StackContext) {
           custom: true,
         },
         preventUserExistenceErrors: true,
-        accessTokenValidity: Duration.days(1),
-        idTokenValidity: Duration.days(1),
+        accessTokenValidity: isProd ? Duration.days(1) : Duration.hours(1),
+        idTokenValidity: isProd ? Duration.days(1) : Duration.hours(1),
       },
     },
   });
