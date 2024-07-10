@@ -97,7 +97,7 @@ export function gameApiStack({ stack, app }: StackContext) {
     handlerFn: putGame,
     // eslint-disable-next-line
     // @ts-ignore
-    authorizer: api.authorizersData.Authorizer,
+    // authorizer: api.authorizersData.Authorizer,
     model: api.cdk.restApi.addModel(putGameModal.modelName, putGameModal as ModelOptions),
     validator,
   });

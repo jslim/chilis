@@ -108,7 +108,7 @@ export default class GameService {
       .map((step: GameEventStep) => step.s)
       .pop();
 
-    if (lastStepComplete === getStepsScore && getStepsScore === score) {
+    if (lastStepComplete === score) {
       logger.info("validateGame: ", { valid: true, gameId, userSub, score, lastStepComplete, getStepsScore });
       await this.repository.updateGameStatus(userSub, gameId);
       return true;
