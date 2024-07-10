@@ -1,4 +1,4 @@
-import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
+import type { APIGatewayEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 
 import { parseBody } from "@/utils/parse";
@@ -21,6 +21,10 @@ logger.appendKeys({
   service: "AWS::Lambda",
 });
 
+interface JwtPayload {
+  [key: string]: any;
+}
+
 const userService = new UserService(new UserRepository(new CognitoIdentityProviderClient()));
 const sessionService = new GameService(
   new GameRepository(new DynamoDBClient(process.env.GAMES_SESSION_TABLE_NAME as string)),
@@ -37,16 +41,21 @@ const COUNTRIES_ALLOW_LIST = (process.env.COUNTRIES_ALLOW_LIST || "")?.split(","
 /**
  * Lambda handler for PUT requests to save user score.
  *
- * @param {APIGatewayProxyEvent} event - The event object containing request details.
+ * @param {APIGatewayEvent} event - The event object containing request details.
  * @param {Context} context - The context object providing information about the runtime environment.
  * @returns {Promise<APIGatewayProxyResult>} - The result object containing the HTTP response.
  */
-export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
-  defaultHttpHandler(event, context, async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: APIGatewayEvent, context: Context) =>
+  defaultHttpHandler(event, context, async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
     logger.info("Handler for PUT requests to save user score", { event, ...context });
 
     const { gameId, score, level } = parseBody(event.body);
-    const userSub = event.requestContext.authorizer?.principalId;
+    const token = event.headers.Authorization?.split(" ");
+
+    if (token?.[0] !== "Bearer") {
+      logger.error(`Authorization header should have a format Bearer JWT Token: ${token}`);
+      return Forbidden();
+    }
 
     try {
       const country = event.headers["CloudFront-Viewer-Country"]!;
@@ -54,15 +63,18 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
         throw new Error("Restricted by geolocation");
       }
 
+      const decodedPayload = decodeJwtPayload(token[1]);
+      const userSub = decodedPayload.sub;
+
       if (!(await sessionService.validateGame(userSub, { gameId, score }))) {
         logger.error("The game could not be validated successfully.");
         return BadRequest("Game could not be validated.");
       }
       logger.info("Validated game.");
 
-      const userData = await userService.getUserData(String(event.headers.Authorization));
-      const loyaltyId = String(userData?.Username);
-      const nickname = userData?.UserAttributes?.find((attr) => attr.Name === "preferred_username")?.Value;
+      const userData = await userService.getUserBySub(userSub);
+      const loyaltyId = String(decodedPayload.username);
+      const nickname = userData?.Attributes?.find((attr) => attr.Name === "preferred_username")?.Value;
 
       // Record game score
       if (nickname) {
@@ -79,3 +91,38 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context) =>
       return Forbidden();
     }
   });
+
+/**
+ * Decodes a base64url encoded string.
+ *
+ * @param {string} str - The base64url encoded string to decode.
+ * @returns {string} The decoded string.
+ */
+const base64UrlDecode = (str: string): string => {
+  str = str.replace(/-/g, "+").replace(/_/g, "/");
+
+  switch (str.length % 4) {
+    case 2:
+      str += "==";
+      break;
+    case 3:
+      str += "=";
+      break;
+  }
+
+  return atob(str);
+};
+
+/**
+ * Decodes the payload of a JWT token.
+ * @param {string} token - The JWT token to decode.
+ * @returns {JwtPayload} The decoded payload of the JWT token.
+ */
+const decodeJwtPayload = (token: string): JwtPayload => {
+  const parts = token.split(".");
+
+  const payload = parts[1];
+  const decodedPayload = base64UrlDecode(payload);
+
+  return JSON.parse(decodedPayload);
+};
