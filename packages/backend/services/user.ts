@@ -163,6 +163,24 @@ export default class UserService {
     }
   };
 
+  public getUserBySub = async (sub: string) => {
+    try {
+      const response = await this.repository.ListUsers({
+        AttributesToGet: ["preferred_username"],
+        UserPoolId: process.env.USER_POOL_ID,
+        Filter: `sub = "${sub}"`,
+      });
+
+      if (response.Users?.length === 0) {
+        throw new Error("Sub does not exist.");
+      }
+
+      return response.Users ? response.Users[0] : {};
+    } catch (error) {
+      throw new Error(`Error sub does not exist: ${error}`);
+    }
+  };
+
   /**
    * Checks if a given nickname already exists in the user pool.
    *

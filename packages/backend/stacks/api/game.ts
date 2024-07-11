@@ -10,10 +10,12 @@ import generateApiMethod from "@/utils/generate-api-method";
 import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 import { type ModelOptions } from "aws-cdk-lib/aws-apigateway";
 import { setDefaultFunctionProps } from "@/utils/set-default-function-props";
+import { AuthStack } from "@/stacks";
 
 export function gameApiStack({ stack, app }: StackContext) {
   const { isProd } = detectStage(app.stage);
   const { api, validator } = use(ApiStack);
+  const { auth } = use(AuthStack);
   const { leaderboardTable, gameSessionTable, gameHistoryTable } = use(Database);
 
   setDefaultFunctionProps({ stack, app }, { environment: { COUNTRIES_ALLOW_LIST: process.env.COUNTRIES_ALLOW_LIST! } });
@@ -65,8 +67,17 @@ export function gameApiStack({ stack, app }: StackContext) {
         effect: Effect.ALLOW,
         resources: [`${leaderboardTable.tableArn}/index/${ALLTIME_LEADERBOARD_INDEX}`],
       }),
+      // eslint-disable-next-line
+      // @ts-ignore
+      new PolicyStatement({
+        actions: ["cognito-idp:ListUsers"],
+        effect: Effect.ALLOW,
+        resources: [auth.userPoolArn],
+      }),
     ],
     environment: {
+      USER_POOL_ID: auth.userPoolId,
+      USER_CLIENT_ID: auth.userPoolClientId,
       LEADERBOARD_TABLE_NAME: leaderboardTable.tableName,
       GAMES_SESSION_TABLE_NAME: gameSessionTable.tableName,
       GAMES_HISTORY_TABLE_NAME: gameHistoryTable.tableName,
@@ -97,7 +108,7 @@ export function gameApiStack({ stack, app }: StackContext) {
     handlerFn: putGame,
     // eslint-disable-next-line
     // @ts-ignore
-    authorizer: api.authorizersData.Authorizer,
+    // authorizer: api.authorizersData.Authorizer,
     model: api.cdk.restApi.addModel(putGameModal.modelName, putGameModal as ModelOptions),
     validator,
   });
