@@ -62,7 +62,7 @@
         "alt": "Chili's Logo"
       },
       "title": "BURGERS FOR LIFE",
-      "description": "Ready to take down the evil Fast-Food Syndicate for a chance to win a Lifetime of Burgers? Login below with your My Chili’s Rewards credentials to have your score saved, added to the leaderboard and be eligible for prizes.\n\n<strong>Don’t have a My Chili’s Rewards account?</strong>\n Click the sign up button below to join now! Once your profile has been created, come back to this page and login",
+      "description": "Ready to take down the evil Fast-Food Syndicate? Login below with your My Chili’s Rewards credentials to have your score saved, added to the leaderboard.\n\n<strong>Don’t have a My Chili’s Rewards account?</strong>\n Click the sign up button below to join now! Once your profile has been created, come back to this page and login",
       "cta": "LOG IN",
       "forgotPassword": "Forgot Password",
       "forgotPasswordLink": "https://www.chilis.com/login/forgot-password",
@@ -197,7 +197,7 @@
           "poster": "burger-loop.jpg"
         },
         "title": "BUILD BURGERS.",
-        "mouse": "*NO PURCHASE NECESSARY. For Official Rules and eligibility, visit <a target='_blank' href='/terms/'>chilisburgertime.com/terms</a>",
+        "mouse": "*COMPETITION IS COMPLETE. Winners will be notified according to Official Rules which can be found at <a target='_blank' href='/terms/'>chilisburgertime.com/terms</a>",
         "hero": {
           "src": "a-lifetime.png",
           "alt": "A lifetime of burgers"
@@ -285,7 +285,7 @@
       },
       "body": {
         "title": "Full Leaderboard Page",
-        "description": "This page previews the top 500 participants on the leaderboard. Check to see if you’ve made the list, or what score you need to achieve this ranking. <b>The leaderboard is open to US residents only for a contesting period.</b>",
+        "description": "This page previews the top 500 participants on the leaderboard. Check to see if you’ve made the list, or what score you need to achieve this ranking.",
         "topLabel": "TOP 20",
         "background": {
           "src": "fullleaderboard-background.jpg",
