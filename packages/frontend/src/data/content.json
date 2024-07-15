@@ -285,7 +285,7 @@
       },
       "body": {
         "title": "Full Leaderboard Page",
-        "description": "This page previews the top 500 participants on the leaderboard. Check to see if you’ve made the list, or what score you need to achieve this ranking.</b>",
+        "description": "This page previews the top 500 participants on the leaderboard. Check to see if you’ve made the list, or what score you need to achieve this ranking.",
         "topLabel": "TOP 20",
         "background": {
           "src": "fullleaderboard-background.jpg",
