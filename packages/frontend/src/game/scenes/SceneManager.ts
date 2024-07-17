@@ -11,7 +11,6 @@ import { clamp01 } from '@/game/utils/math.utils'
 import { CoolDown } from '../core/CoolDown'
 import { Entity } from '../core/Entity'
 import { EndScene } from './EndScene'
-import { GameEndScene } from './GameEndScene'
 import { IntroScene } from './IntroScene'
 import LevelScene from './LevelScene'
 import { PreloadScene } from './PreloadScene'
@@ -66,12 +65,7 @@ export default class SceneManager {
   levelComplete(result: GameStateValues) {
     this.gameController.onLevelComplete.emit(result)
     const nextLevelNo = result.level + 1
-    if (nextLevelNo <= 18) {
-      this.showLevelIntro(nextLevelNo)
-    } else {
-      this.gameController.setPixelated(true)
-      this.goto(new GameEndScene(this))
-    }
+    this.showLevelIntro(nextLevelNo)
   }
 
   gameOver(result: GameStateValues) {

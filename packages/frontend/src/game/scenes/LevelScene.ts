@@ -55,9 +55,7 @@ import { FlumpLibrary } from '../flump/FlumpLibrary'
 import {
   DRAW_DEBUG_GRID,
   FLOOR_OFFSET,
-  FRAME_RATE,
-  FRAME_RATE_HARD,
-  FRAME_RATE_HARDEST,
+  FRAME_RATE_PER_GAME,
   GAME_HEIGHT,
   GAME_WIDTH,
   getWrappedLevelNo,
@@ -101,13 +99,9 @@ export default class LevelScene extends Scene {
 
     this.sceneManager.gameController.onShowGameBorder.emit(true)
 
-    if (this.levelNo <= 6) {
-      this.sceneManager.frameRate = FRAME_RATE
-    } else if (this.levelNo <= 12) {
-      this.sceneManager.frameRate = FRAME_RATE_HARD
-    } else {
-      this.sceneManager.frameRate = FRAME_RATE_HARDEST
-    }
+    const index = Math.floor((this.levelNo - 1) / 6)
+    const frameRateIndex = Math.min(index, FRAME_RATE_PER_GAME.length - 1)
+    this.sceneManager.frameRate = FRAME_RATE_PER_GAME[frameRateIndex]
 
     this.entity.addChild(new Sprite(Assets.get('background')))
 

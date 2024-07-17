@@ -4,10 +4,7 @@
 import type { CpuName } from '@/game/components/cpu/Cpu'
 
 export const FRAME_RATE = 22
-// game speed for level 7-12
-export const FRAME_RATE_HARD = 28
-// game speed for level 13-18
-export const FRAME_RATE_HARDEST = 34
+export const FRAME_RATE_PER_GAME = [22, 28, 34, 38, 40, 42, 44, 46, 48, 50, 52, 54]
 
 export const GAME_WIDTH = 240
 export const GAME_HEIGHT = 240
