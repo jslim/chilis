@@ -38,5 +38,5 @@ Remove all your stacks and all of their resources from AWS. Or optionally remove
 
 Learn more about the SST.
 
-- [Docs](https://docs.sst.dev/)
-- [sst](https://docs.sst.dev/packages/sst)
+- [Docs](https://docs.sst.dev/).
+- [sst](https://docs.sst.dev/packages/sst).
